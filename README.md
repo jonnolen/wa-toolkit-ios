@@ -1,5 +1,3 @@
-This is a test
-
 Windows Azure Toolkit for iOS (Library)
 ===
 
