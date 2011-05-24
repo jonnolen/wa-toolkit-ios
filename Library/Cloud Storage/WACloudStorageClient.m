@@ -490,8 +490,14 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
     NSString* endpoint = [NSString stringWithFormat:@"/%@/messages", [queueName URLEncode]];
     NSString *queueMsgStart = @"<QueueMessage><MessageText>";
 	NSString *queueMsgEnd = @"</MessageText></QueueMessage>";
-	NSString *queueMsg = [NSString stringWithFormat:@"%@%@%@", queueMsgStart, message, queueMsgEnd];
-    NSData *contentData = [queueMsg dataUsingEncoding:NSUTF8StringEncoding];
+    NSMutableString *escapedString = [NSMutableString stringWithString:message];
+    [escapedString replaceOccurrencesOfString:@"&"  withString:@"&amp;"  options:NSLiteralSearch range:NSMakeRange(0, [escapedString length])];
+    [escapedString replaceOccurrencesOfString:@"\"" withString:@"&quot;" options:NSLiteralSearch range:NSMakeRange(0, [escapedString length])];
+    [escapedString replaceOccurrencesOfString:@"'"  withString:@"&#39;" options:NSLiteralSearch range:NSMakeRange(0, [escapedString length])];
+    [escapedString replaceOccurrencesOfString:@">"  withString:@"&gt;"   options:NSLiteralSearch range:NSMakeRange(0, [escapedString length])];
+    [escapedString replaceOccurrencesOfString:@"<"  withString:@"&lt;"   options:NSLiteralSearch range:NSMakeRange(0, [escapedString length])];
+	NSString *queueMsg = [NSString stringWithFormat:@"%@%@%@", queueMsgStart, escapedString, queueMsgEnd];
+	NSData *contentData = [queueMsg dataUsingEncoding:NSUTF8StringEncoding];
     WACloudURLRequest *request = [_credential authenticatedRequestWithEndpoint:endpoint forStorageType:@"queue" httpMethod:@"POST" contentData:contentData contentType:@"text/xml", nil];
     
     [request fetchNoResponseWithCompletionHandler:^(NSError* error)
