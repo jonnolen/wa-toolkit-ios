@@ -14,11 +14,17 @@
  limitations under the License.
  */
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
-@interface NSString (URLEncode)
+@class WACloudAccessControlHomeRealm;
 
-- (NSString*) URLEncode;
-- (NSString*) URLDecode;
+@interface WALoginWebViewController : UIViewController <UIWebViewDelegate> {
+    UIWebView* _webView;
+    NSMutableData* _data;
+    NSURL* _url;
+    WACloudAccessControlHomeRealm* _realm;
+}
+
+- (id)initWithHomeRealm:(WACloudAccessControlHomeRealm*)realm;
 
 @end

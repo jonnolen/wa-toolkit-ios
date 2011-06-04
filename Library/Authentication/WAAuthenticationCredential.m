@@ -77,7 +77,7 @@ const int AUTHENTICATION_DELAY = 2;
 	return self;
 }
 
-- (BOOL)authenticateWithBlock:(void (^)(NSError*))block error:(NSError **)returnError
+- (BOOL)authenticateWithCompletionHandler:(void (^)(NSError*))block error:(NSError **)returnError
 {
     NSString *requestString = [[PROXY_LOGIN_REQUEST_STRING stringByReplacingOccurrencesOfString:@"{password}" withString:_password] stringByReplacingOccurrencesOfString:@"{username}" withString:_username];
     WACloudURLRequest *request = [WACloudURLRequest requestWithURL:[NSURL URLWithString:@"/AuthenticationService/login" relativeToURL:_proxyURL]];
@@ -140,14 +140,14 @@ const int AUTHENTICATION_DELAY = 2;
 {
 	WAAuthenticationCredential* credential = [[[self alloc] initWithProxyURL:proxyURL user:user password:password] autorelease];
 	
-	return [credential authenticateWithBlock:nil error:returnError] ? credential : nil;
+	return [credential authenticateWithCompletionHandler:nil error:returnError] ? credential : nil;
 }
 
 + (WAAuthenticationCredential *)authenticateCredentialSynchronousWithProxyURL:(NSURL *)proxyURL tableServiceURL:(NSURL *)tablesURL blobServiceURL:(NSURL *)blobsURL user:(NSString *)user password:(NSString *)password error:(NSError **)returnError;
 {
 	WAAuthenticationCredential* credential = [[[self alloc] initWithProxyURL:proxyURL tablesService:(NSURL *)tablesURL blobsService:(NSURL *)blobsURL user:user password:password] autorelease];
 	
-	return [credential authenticateWithBlock:nil error:returnError] ? credential : nil;
+	return [credential authenticateWithCompletionHandler:nil error:returnError] ? credential : nil;
 }
 
 + (WAAuthenticationCredential *)authenticateCredentialWithProxyURL:(NSURL *)proxyURL user:(NSString *)user password:(NSString *)password delegate:(id<WAAuthenticationDelegate>)delegate
@@ -169,7 +169,7 @@ const int AUTHENTICATION_DELAY = 2;
 {
 	WAAuthenticationCredential* credential = [[[self alloc] initWithProxyURL:proxyURL user:user password:password] autorelease];
 	
-	[credential authenticateWithBlock:block error:nil];
+	[credential authenticateWithCompletionHandler:block error:nil];
 
 	return credential;
 }
