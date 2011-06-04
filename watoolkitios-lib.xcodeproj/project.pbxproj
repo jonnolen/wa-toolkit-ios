@@ -56,8 +56,18 @@
 		F216A691136F895900FAEAB4 /* WAQueueMessageParser.m in Sources */ = {isa = PBXBuildFile; fileRef = F216A68D136F895900FAEAB4 /* WAQueueMessageParser.m */; };
 		F216A692136F895900FAEAB4 /* WAQueueParser.h in Headers */ = {isa = PBXBuildFile; fileRef = F216A68E136F895900FAEAB4 /* WAQueueParser.h */; };
 		F216A693136F895900FAEAB4 /* WAQueueParser.m in Sources */ = {isa = PBXBuildFile; fileRef = F216A68F136F895900FAEAB4 /* WAQueueParser.m */; };
-		F22358A0135F2C9600565900 /* WASimpleBase64.h in Headers */ = {isa = PBXBuildFile; fileRef = F223589E135F2C9600565900 /* WASimpleBase64.h */; };
+		F22358A0135F2C9600565900 /* WASimpleBase64.h in Headers */ = {isa = PBXBuildFile; fileRef = F223589E135F2C9600565900 /* WASimpleBase64.h */; settings = {ATTRIBUTES = (); }; };
 		F22358A1135F2C9600565900 /* WASimpleBase64.m in Sources */ = {isa = PBXBuildFile; fileRef = F223589F135F2C9600565900 /* WASimpleBase64.m */; };
+		F41F8F48139802B2005986CF /* cloud.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F41F8F47139802B2005986CF /* cloud.jpg */; };
+		F4F998F8138DC6C200254B51 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
+		F4F998F9138DC6C200254B51 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
+		F4F998FA138DC6C200254B51 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 288765FC0DF74451002DB57D /* CoreGraphics.framework */; };
+		F4F99900138DC6C200254B51 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = F4F998FE138DC6C200254B51 /* InfoPlist.strings */; };
+		F4F99903138DC6C200254B51 /* watoolkitios_lib_test.h in Resources */ = {isa = PBXBuildFile; fileRef = F4F99902138DC6C200254B51 /* watoolkitios_lib_test.h */; };
+		F4F99905138DC6C200254B51 /* watoolkitios_lib_test.m in Sources */ = {isa = PBXBuildFile; fileRef = F4F99904138DC6C200254B51 /* watoolkitios_lib_test.m */; };
+		F4F99917138DC8FD00254B51 /* WACloudStorageClientDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F4F99916138DC8FD00254B51 /* WACloudStorageClientDelegate.m */; };
+		F4F9991A138DCBC500254B51 /* libwatoolkitios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F4F5239B1374612A004434B5 /* libwatoolkitios.a */; };
+		F4F9991C138DCBDF00254B51 /* libxml2.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F4F9991B138DCBDF00254B51 /* libxml2.2.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -115,7 +125,17 @@
 		F216A68F136F895900FAEAB4 /* WAQueueParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WAQueueParser.m; sourceTree = "<group>"; };
 		F223589E135F2C9600565900 /* WASimpleBase64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WASimpleBase64.h; sourceTree = "<group>"; };
 		F223589F135F2C9600565900 /* WASimpleBase64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WASimpleBase64.m; sourceTree = "<group>"; };
+		F41F8F47139802B2005986CF /* cloud.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = cloud.jpg; sourceTree = "<group>"; };
 		F4F5239B1374612A004434B5 /* libwatoolkitios.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libwatoolkitios.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		F4F998F7138DC6C100254B51 /* watoolkitios-lib-test.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "watoolkitios-lib-test.octest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F4F998FD138DC6C200254B51 /* watoolkitios-lib-test-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "watoolkitios-lib-test-Info.plist"; sourceTree = "<group>"; };
+		F4F998FF138DC6C200254B51 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		F4F99901138DC6C200254B51 /* watoolkitios-lib-test-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "watoolkitios-lib-test-Prefix.pch"; sourceTree = "<group>"; };
+		F4F99902138DC6C200254B51 /* watoolkitios_lib_test.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = watoolkitios_lib_test.h; sourceTree = "<group>"; };
+		F4F99904138DC6C200254B51 /* watoolkitios_lib_test.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = watoolkitios_lib_test.m; sourceTree = "<group>"; };
+		F4F99915138DC8FD00254B51 /* WACloudStorageClientDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WACloudStorageClientDelegate.h; sourceTree = "<group>"; };
+		F4F99916138DC8FD00254B51 /* WACloudStorageClientDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WACloudStorageClientDelegate.m; sourceTree = "<group>"; };
+		F4F9991B138DCBDF00254B51 /* libxml2.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.2.dylib; path = usr/lib/libxml2.2.dylib; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -127,13 +147,25 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		F4F998F3138DC6C100254B51 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F4F9991C138DCBDF00254B51 /* libxml2.2.dylib in Frameworks */,
+				F4F9991A138DCBC500254B51 /* libwatoolkitios.a in Frameworks */,
+				F4F998F8138DC6C200254B51 /* UIKit.framework in Frameworks */,
+				F4F998F9138DC6C200254B51 /* Foundation.framework in Frameworks */,
+				F4F998FA138DC6C200254B51 /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		19C28FACFE9D520D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				F4F5239B1374612A004434B5 /* libwatoolkitios.a */,
+				F4F998F7138DC6C100254B51 /* watoolkitios-lib-test.octest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -162,7 +194,10 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
+				F4F9991B138DCBDF00254B51 /* libxml2.2.dylib */,
+				F4F5239B1374612A004434B5 /* libwatoolkitios.a */,
 				27E7D65C13450FF500F142F7 /* Library */,
+				F4F998FB138DC6C200254B51 /* Tests */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
 			);
@@ -288,6 +323,38 @@
 			path = Private;
 			sourceTree = "<group>";
 		};
+		F41F8F4513980285005986CF /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				F41F8F47139802B2005986CF /* cloud.jpg */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		F4F998FB138DC6C200254B51 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				F41F8F4513980285005986CF /* Resources */,
+				F4F99902138DC6C200254B51 /* watoolkitios_lib_test.h */,
+				F4F99904138DC6C200254B51 /* watoolkitios_lib_test.m */,
+				F4F998FC138DC6C200254B51 /* Supporting Files */,
+				F4F99915138DC8FD00254B51 /* WACloudStorageClientDelegate.h */,
+				F4F99916138DC8FD00254B51 /* WACloudStorageClientDelegate.m */,
+			);
+			name = Tests;
+			path = "watoolkitios-lib-test";
+			sourceTree = "<group>";
+		};
+		F4F998FC138DC6C200254B51 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				F4F998FD138DC6C200254B51 /* watoolkitios-lib-test-Info.plist */,
+				F4F998FE138DC6C200254B51 /* InfoPlist.strings */,
+				F4F99901138DC6C200254B51 /* watoolkitios-lib-test-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -306,13 +373,13 @@
 				AA8AD01A13454C1C00D5F316 /* WACloudURLRequest.h in Headers */,
 				AA0945641349194600AF7EAB /* WAXMLHelper.h in Headers */,
 				AA094582134A2ACF00AF7EAB /* WABlobParser.h in Headers */,
+				F22358A0135F2C9600565900 /* WASimpleBase64.h in Headers */,
 				AA094584134A2ACF00AF7EAB /* WAContainerParser.h in Headers */,
 				AA09458C134A5A9D00AF7EAB /* WAAuthenticationCredential+Private.h in Headers */,
 				AA81D46A134D0CF400866C7C /* WAAtomPubEntry.h in Headers */,
 				AA6521DC134D1E0C00008ADE /* WAAzureFilterBuilder.h in Headers */,
 				AA6521DE134D1E0C00008ADE /* WAPredicateParser.h in Headers */,
 				AAD7348C134D2C22000AB68A /* NSString+URLEncode.h in Headers */,
-				F22358A0135F2C9600565900 /* WASimpleBase64.h in Headers */,
 				F216A690136F895900FAEAB4 /* WAQueueMessageParser.h in Headers */,
 				F216A692136F895900FAEAB4 /* WAQueueParser.h in Headers */,
 				AA715A9B138F4D3B00AED192 /* WACloudAccessControlClient.h in Headers */,
@@ -344,6 +411,24 @@
 			productReference = F4F5239B1374612A004434B5 /* libwatoolkitios.a */;
 			productType = "com.apple.product-type.library.static";
 		};
+		F4F998F6138DC6C100254B51 /* watoolkitios-lib-test */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F4F99906138DC6C200254B51 /* Build configuration list for PBXNativeTarget "watoolkitios-lib-test" */;
+			buildPhases = (
+				F4F998F2138DC6C100254B51 /* Sources */,
+				F4F998F3138DC6C100254B51 /* Frameworks */,
+				F4F998F4138DC6C100254B51 /* Resources */,
+				F4F998F5138DC6C100254B51 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "watoolkitios-lib-test";
+			productName = "watoolkitios-lib-test";
+			productReference = F4F998F7138DC6C100254B51 /* watoolkitios-lib-test.octest */;
+			productType = "com.apple.product-type.bundle";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -365,9 +450,39 @@
 			projectRoot = "";
 			targets = (
 				27E7D68C1345118600F142F7 /* watoolkitios-lib */,
+				F4F998F6138DC6C100254B51 /* watoolkitios-lib-test */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		F4F998F4138DC6C100254B51 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F4F99900138DC6C200254B51 /* InfoPlist.strings in Resources */,
+				F4F99903138DC6C200254B51 /* watoolkitios_lib_test.h in Resources */,
+				F41F8F48139802B2005986CF /* cloud.jpg in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		F4F998F5138DC6C100254B51 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		27E7D68A1345118600F142F7 /* Sources */ = {
@@ -401,7 +516,27 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		F4F998F2138DC6C100254B51 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F4F99905138DC6C200254B51 /* watoolkitios_lib_test.m in Sources */,
+				F4F99917138DC8FD00254B51 /* WACloudStorageClientDelegate.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		F4F998FE138DC6C200254B51 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F4F998FF138DC6C200254B51 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		27E7D68E1345118700F142F7 /* Debug */ = {
@@ -414,6 +549,7 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				HEADER_SEARCH_PATHS = "/usr/include/libxml2/**";
+				OTHER_LDFLAGS = "";
 				PREBINDING = NO;
 				PRODUCT_NAME = watoolkitios;
 				PUBLIC_HEADERS_FOLDER_PATH = "/watoolkitios-lib/include";
@@ -430,6 +566,7 @@
 				DEPLOYMENT_LOCATION = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				OTHER_LDFLAGS = "";
 				PREBINDING = NO;
 				PRODUCT_NAME = watoolkitios;
 				PUBLIC_HEADERS_FOLDER_PATH = "/watoolkitios-lib/include";
@@ -467,6 +604,59 @@
 			};
 			name = Release;
 		};
+		F4F99907138DC6C200254B51 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
+				);
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "watoolkitios-lib-test/watoolkitios-lib-test-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				INFOPLIST_FILE = "watoolkitios-lib-test/watoolkitios-lib-test-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SenTestingKit,
+					"-ObjC",
+					"-all_load",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Debug;
+		};
+		F4F99908138DC6C200254B51 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
+				);
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "watoolkitios-lib-test/watoolkitios-lib-test-Prefix.pch";
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				INFOPLIST_FILE = "watoolkitios-lib-test/watoolkitios-lib-test-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SenTestingKit,
+					"-ObjC",
+					"-all_load",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -484,6 +674,15 @@
 			buildConfigurations = (
 				C01FCF4F08A954540054247B /* Debug */,
 				C01FCF5008A954540054247B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		F4F99906138DC6C200254B51 /* Build configuration list for PBXNativeTarget "watoolkitios-lib-test" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F4F99907138DC6C200254B51 /* Debug */,
+				F4F99908138DC6C200254B51 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

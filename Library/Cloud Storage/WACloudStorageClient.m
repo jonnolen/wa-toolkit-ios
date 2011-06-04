@@ -519,7 +519,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
          {
              block(nil);
          }
-         else if([(NSObject*)_delegate respondsToSelector:@selector(storageClient:didAddBlobToContainer:blobName:)])
+         else if([(NSObject*)_delegate respondsToSelector:@selector(storageClient:didAddMessageToQueue:blobName:)])
          {
              [_delegate storageClient:self didAddMessageToQueue:message queueName:queueName];
          }
