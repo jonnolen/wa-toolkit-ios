@@ -16,9 +16,17 @@
 
 #import <Foundation/Foundation.h>
 
-@interface NSString (URLEncode)
 
-- (NSString*) URLEncode;
-- (NSString*) URLDecode;
+@interface WACloudAccessControlHomeRealm : NSObject 
+{
+    NSDictionary* _pairs;
+    NSArray* _emailSuffixes;
+}
+
+@property (readonly) NSString* name;
+@property (readonly) NSString* loginUrl;
+@property (readonly) NSString* logoutUrl;
+@property (readonly) NSString* imageUrl;
+@property (readonly) NSArray* emailSuffixes;
 
 @end

@@ -16,9 +16,20 @@
 
 #import <Foundation/Foundation.h>
 
-@interface NSString (URLEncode)
 
-- (NSString*) URLEncode;
-- (NSString*) URLDecode;
+@interface WACloudAccessToken : NSObject 
+{
+        
+}
+
+@property (readonly) NSString* appliesTo;
+@property (readonly) NSString* tokenType;
+@property (readonly) NSInteger expires;
+@property (readonly) NSInteger created;
+@property (readonly) NSDate* expireDate;
+@property (readonly) NSDate* createDate;
+@property (readonly) NSString* securityToken;
+
+- (void)logOut;
 
 @end

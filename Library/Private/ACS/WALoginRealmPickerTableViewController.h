@@ -14,11 +14,12 @@
  limitations under the License.
  */
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
-@interface NSString (URLEncode)
+@interface WALoginRealmPickerTableViewController : UITableViewController {
+    NSArray* _realms;
+}
 
-- (NSString*) URLEncode;
-- (NSString*) URLDecode;
+- (id)initWithRealms:(NSArray*)realms;
 
 @end

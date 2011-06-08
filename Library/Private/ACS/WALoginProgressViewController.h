@@ -14,11 +14,16 @@
  limitations under the License.
  */
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
-@interface NSString (URLEncode)
+@class WACloudAccessControlClient;
 
-- (NSString*) URLEncode;
-- (NSString*) URLDecode;
+@interface WALoginProgressViewController : UIViewController 
+{
+    WACloudAccessControlClient* _client;
+}
+
+- (id)initWithClient:(WACloudAccessControlClient*)client;
+
 
 @end

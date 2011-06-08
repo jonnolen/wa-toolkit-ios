@@ -283,4 +283,10 @@ static NSLock* _lock;
 	return [result autorelease]; 
 }
 
+- (NSString*) URLDecode
+{
+	NSString *result = (NSString *) CFURLCreateStringByReplacingPercentEscapesUsingEncoding(kCFAllocatorDefault, (CFStringRef)self, CFSTR(""), kCFStringEncodingUTF8); 
+	return [result autorelease]; 
+}
+
 @end

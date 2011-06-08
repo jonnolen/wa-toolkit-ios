@@ -16,6 +16,7 @@
 
 #import "WAAuthenticationCredential.h"
 #import "WAAuthenticationCredential+Private.h"
+#import "WACloudAccessToken.h"
 #import <CommonCrypto/CommonDigest.h>
 #import <CommonCrypto/CommonHMAC.h>	
 #import <stdarg.h>
@@ -65,19 +66,31 @@ const int AUTHENTICATION_DELAY = 2;
 - (id)initWithProxyURL:(NSURL *)proxyService tablesService:(NSURL *)tablesService blobsService:(NSURL *)blobsService user:(NSString *)user password:(NSString *)password
 {
 	if ((self = [super init]) != nil)
-		{
+	{
 		_usesProxy = YES;
 		_proxyURL = [proxyService retain];
 		_tableServiceURL = [tablesService retain];
 		_blobServiceURL = [blobsService retain];
         _username = [user copy];
         _password = [password copy];
-		}
+	}
 	
 	return self;
 }
 
-- (BOOL)authenticateWithBlock:(void (^)(NSError*))block error:(NSError **)returnError
+- (id)initWithProxyURL:(NSURL *)proxyService accessToken:(WACloudAccessToken*)accessToken
+{
+	if ((self = [super init]) != nil)
+	{
+		_usesProxy = YES;
+		_proxyURL = [proxyService retain];
+		_accessToken = [accessToken retain];						
+	}
+	
+	return self;
+}
+
+- (BOOL)authenticateWithCompletionHandler:(void (^)(NSError*))block error:(NSError **)returnError
 {
     NSString *requestString = [[PROXY_LOGIN_REQUEST_STRING stringByReplacingOccurrencesOfString:@"{password}" withString:_password] stringByReplacingOccurrencesOfString:@"{username}" withString:_username];
     WACloudURLRequest *request = [WACloudURLRequest requestWithURL:[NSURL URLWithString:@"/AuthenticationService/login" relativeToURL:_proxyURL]];
@@ -140,14 +153,14 @@ const int AUTHENTICATION_DELAY = 2;
 {
 	WAAuthenticationCredential* credential = [[[self alloc] initWithProxyURL:proxyURL user:user password:password] autorelease];
 	
-	return [credential authenticateWithBlock:nil error:returnError] ? credential : nil;
+	return [credential authenticateWithCompletionHandler:nil error:returnError] ? credential : nil;
 }
 
 + (WAAuthenticationCredential *)authenticateCredentialSynchronousWithProxyURL:(NSURL *)proxyURL tableServiceURL:(NSURL *)tablesURL blobServiceURL:(NSURL *)blobsURL user:(NSString *)user password:(NSString *)password error:(NSError **)returnError;
 {
 	WAAuthenticationCredential* credential = [[[self alloc] initWithProxyURL:proxyURL tablesService:(NSURL *)tablesURL blobsService:(NSURL *)blobsURL user:user password:password] autorelease];
 	
-	return [credential authenticateWithBlock:nil error:returnError] ? credential : nil;
+	return [credential authenticateWithCompletionHandler:nil error:returnError] ? credential : nil;
 }
 
 + (WAAuthenticationCredential *)authenticateCredentialWithProxyURL:(NSURL *)proxyURL user:(NSString *)user password:(NSString *)password delegate:(id<WAAuthenticationDelegate>)delegate
@@ -169,9 +182,14 @@ const int AUTHENTICATION_DELAY = 2;
 {
 	WAAuthenticationCredential* credential = [[[self alloc] initWithProxyURL:proxyURL user:user password:password] autorelease];
 	
-	[credential authenticateWithBlock:block error:nil];
+	[credential authenticateWithCompletionHandler:block error:nil];
 
 	return credential;
+}
+
++ (WAAuthenticationCredential *)authenticateCredentialWithProxyURL:(NSURL *)proxyURL accessToken:(WACloudAccessToken*)accessToken
+{
+	return [[[self alloc] initWithProxyURL:proxyURL accessToken:accessToken] autorelease];
 }
 
 #pragma mark -
@@ -251,7 +269,17 @@ const int AUTHENTICATION_DELAY = 2;
     if (_usesProxy)
 	{
 		[authenticatedrequest setValue:@"identity" forHTTPHeaderField:@"Accept-Encoding"];
-		[authenticatedrequest setValue:_token forHTTPHeaderField:@"AuthToken"];
+		
+		if(_accessToken)
+		{
+			[authenticatedrequest setValue:[NSString stringWithFormat:@"OAuth: %@", _accessToken.securityToken]
+						forHTTPHeaderField:@"Authorization"];
+		}
+		else
+		{
+			[authenticatedrequest setValue:_token forHTTPHeaderField:@"AuthToken"];
+		}
+		
 		if(contentType)
 		{
 			[authenticatedrequest addValue:contentType forHTTPHeaderField:@"Content-Type"];
@@ -773,6 +801,7 @@ const int AUTHENTICATION_DELAY = 2;
 	[_password release];
 	[_blobServiceURL release];
 	[_tableServiceURL release];
+	[_accessToken release];
 	
 	[super dealloc];
 }
