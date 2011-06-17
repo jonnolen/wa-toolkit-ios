@@ -14,18 +14,12 @@
  limitations under the License.
  */
 
-#import <UIKit/UIKit.h>
-#import "WACloudAccessToken.h"
+#import <SenTestingKit/SenTestingKit.h>
 
-@class WACloudAccessControlClient;
 
-@interface WALoginProgressViewController : UIViewController 
-{
-    NSURL* _serviceURL;
-	void (^ _block)(WACloudAccessToken* token);
+@interface watoolkitios_lib_test : SenTestCase {
+@private
+    
 }
-
-- (id)initWithURL:(NSURL*)serviceURL withCompletionHandler:(void (^)(WACloudAccessToken* token))block;
-
 
 @end

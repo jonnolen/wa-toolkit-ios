@@ -1,4 +1,4 @@
-Windows Azure Toolkit for iOS (Library)
+Windows Azure Toolkit for iOS (Library) - v1.0.1
 ===
 
 The Windows Azure Toolkit for iOS is a toolkit for developers to make it easy to access Windows Azure storage services from native iOS applications.  The toolkit can be used for both iPhone and iPad applications, developed using Objective-C and XCode.  
@@ -9,7 +9,7 @@ The Windows Azure Toolkit for iOS is made available as an open source product un
 
 ## Downloading the Library
 
-To download the library, select a download package (e.g. v1.0.0).  The download zip contains binaries for iOS 4.3, targeted for both the simulator and devices.  Alternatively, you can download the source and compile your own version.  The project file has been designed to work with XCode 4.
+To download the library, select a download package (e.g. v1.0.1).  The download zip contains binaries for iOS 4.3, targeted for both the simulator and devices.  Alternatively, you can download the source and compile your own version.  The project file has been designed to work with XCode 4.
 
 ## Using the Library in your application
 

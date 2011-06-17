@@ -20,11 +20,12 @@
 
 @implementation WALoginRealmPickerTableViewController
 
-- (id)initWithRealms:(NSArray*)realms
+- (id)initWithRealms:(NSArray*)realms withCompletionHandler:(void (^)(WACloudAccessToken* token))block
 {
     if ((self = [super initWithStyle:UITableViewStylePlain])) 
     {
         _realms = [realms retain];
+		_block = [block retain];
         
         self.title = @"Pick Login Method";
     }
@@ -34,6 +35,7 @@
 - (void)dealloc
 {
     [_realms release];
+	[_block release];
     
     [super dealloc];
 }
@@ -48,7 +50,19 @@
 
 - (void)cancel:(id)sender
 {
+	[_block retain];
     [self dismissModalViewControllerAnimated:YES];
+	_block(nil);
+	[_block release];
+}
+
+-(BOOL)isModal 
+{
+    return 
+		// first check if parent view self is the modalviewcontroller of the parentviewcontroller
+		(self.parentViewController && self.parentViewController.modalViewController == self) || 
+		//or if it has a navigation controller, check if its parent modal view controller is the navigation controller
+		( self.navigationController && self.navigationController.parentViewController && self.navigationController.parentViewController.modalViewController == self.navigationController);
 }
 
 #pragma mark - View lifecycle
@@ -57,9 +71,12 @@
 {
     [super viewDidLoad];
 
-    UIBarButtonItem* item = [[UIBarButtonItem alloc] initWithTitle:@"Close" style:UIBarButtonItemStyleBordered target:self action:@selector(cancel:)];
-    self.navigationItem.leftBarButtonItem = item;
-    [item release];
+	if([self isModal])
+	{
+		UIBarButtonItem* item = [[UIBarButtonItem alloc] initWithTitle:@"Close" style:UIBarButtonItemStyleBordered target:self action:@selector(cancel:)];
+		self.navigationItem.leftBarButtonItem = item;
+		[item release];
+	}
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -87,7 +104,8 @@
     static NSString *CellIdentifier = @"Cell";
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil) {
+    if (cell == nil) 
+	{
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
     }
     
@@ -105,7 +123,8 @@
 {
     WACloudAccessControlHomeRealm* realm = [_realms objectAtIndex:indexPath.row];
 
-    WALoginWebViewController* webController = [[WALoginWebViewController alloc] initWithHomeRealm:realm];
+    WALoginWebViewController* webController = [[WALoginWebViewController alloc] initWithHomeRealm:realm
+																			withCompletionHandler:_block];
     [self.navigationController pushViewController:webController animated:YES];
     [webController release];
 }

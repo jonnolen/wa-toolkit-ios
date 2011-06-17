@@ -23,7 +23,7 @@ const NSString* ScriptNotify = @"<script type=\"text/javascript\">window.externa
 
 @interface WACloudAccessToken (Private)
 
-- (id)initWithDictionary:(NSDictionary*)dictionary;
+- (id)initWithDictionary:(NSDictionary*)dictionary fromRealm:(WACloudAccessControlHomeRealm*)realm;
 
 @end
 
@@ -35,12 +35,12 @@ const NSString* ScriptNotify = @"<script type=\"text/javascript\">window.externa
 
 @implementation WALoginWebViewController
 
-- (id)initWithHomeRealm:(WACloudAccessControlHomeRealm*)realm
+- (id)initWithHomeRealm:(WACloudAccessControlHomeRealm*)realm withCompletionHandler:(void (^)(WACloudAccessToken* token))block
 {
-    self = [super initWithNibName:nil bundle:nil];
-    if (self) 
+    if ((self = [super initWithNibName:nil bundle:nil]))
     {
         _realm = [realm retain];
+		_block = [block retain];
     }
     return self;
 }
@@ -50,6 +50,7 @@ const NSString* ScriptNotify = @"<script type=\"text/javascript\">window.externa
     [_realm release];
     [_data release];
     [_url release];
+    [_block release];
     
     [super dealloc];
 }
@@ -64,18 +65,19 @@ const NSString* ScriptNotify = @"<script type=\"text/javascript\">window.externa
 
 #pragma mark - View lifecycle
 
-// Implement loadView to create a view hierarchy programmatically, without using a nib.
 - (void)loadView
 {
     self.title = _realm.name;
-    
+
+    // create our web view
     _webView = [[UIWebView alloc] init];
     _webView.delegate = self;
     _webView.scalesPageToFit = YES;
     
     self.view = _webView;
     [_webView release];
-    
+
+    // navigate to the login url
     NSURL* url = [NSURL URLWithString:_realm.loginUrl];
     NSURLRequest* request = [NSURLRequest requestWithURL:url];
     [_webView loadRequest:request];
@@ -187,9 +189,13 @@ const NSString* ScriptNotify = @"<script type=\"text/javascript\">window.externa
 		if(pairs)
 		{            
             WACloudAccessToken* accessToken = [[WACloudAccessToken alloc] initWithDictionary:pairs];
-            [WACloudAccessControlClient setToken:accessToken];
             
+			[_block retain];
             [self dismissModalViewControllerAnimated:YES];
+			
+            _block(accessToken);
+			[_block release];
+			[accessToken release];
         }
 
         return NO;
@@ -233,9 +239,7 @@ const NSString* ScriptNotify = @"<script type=\"text/javascript\">window.externa
         [_data release];
         _data = nil;
 
-        content = [ScriptNotify stringByAppendingString:content];
-        
-        [_webView loadHTMLString:content baseURL:_url];
+        [_webView loadHTMLString:[ScriptNotify stringByAppendingString:content] baseURL:_url];
 		[content release];
     }
 }

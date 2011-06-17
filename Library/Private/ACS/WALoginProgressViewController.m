@@ -17,21 +17,32 @@
 #import "WALoginProgressViewController.h"
 #import "WALoginRealmPickerTableViewController.h"
 #import "WACloudAccessControlClient.h"
+#import "WALoginWebViewController.h"
+#import "WACloudAccessControlHomeRealm.h"
+#import "WACloudURLRequest.h"
+
+@interface WACloudAccessControlHomeRealm (Private)
+
+- (id)initWithPairs:(NSDictionary*)pairs emailSuffixes:(NSArray*)emailSuffixes;
+
+@end
 
 @implementation WALoginProgressViewController
 
-- (id)initWithClient:(WACloudAccessControlClient*)client
+- (id)initWithURL:(NSURL*)serviceURL withCompletionHandler:(void (^)(WACloudAccessToken* token))block
 {
     if ((self = [super initWithNibName:nil bundle:nil])) 
     {
-        _client = [client retain];
+        _serviceURL = [serviceURL retain];
+		_block = [block copy];
     }
     return self;
 }
 
 - (void)dealloc
 {
-    [_client release];
+    [_serviceURL release];
+	[_block release];
     
     [super dealloc];
 }
@@ -42,6 +53,93 @@
     [super didReceiveMemoryWarning];
     
     // Release any cached data, images, etc that aren't in use.
+}
+
+- (void)getIdentityProvidersWithBlock:(void (^)(NSArray*, NSError *))block
+{
+    WACloudURLRequest* request = [WACloudURLRequest requestWithURL:_serviceURL];
+    
+    [request fetchDataWithCompletionHandler:^(NSData *data, NSError *error) 
+	 {
+		 if(error)
+		 {
+			 block(nil, error);
+			 return;
+		 }
+		 
+		 NSMutableArray* results = [NSMutableArray arrayWithCapacity:10];
+		 
+		 NSString* json = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
+		 json = [json stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"[]"]];
+		 
+		 NSArray* providers = [json componentsSeparatedByString:@"},{"];
+		 NSCharacterSet* objectMarkers = [NSCharacterSet characterSetWithCharactersInString:@"{}"];
+		 NSTextCheckingResult* result;
+		 NSError* regexError = nil;
+		 NSRegularExpression* nameValuePair = [NSRegularExpression regularExpressionWithPattern:@"\"([^\"]*)\":\"([^\"]*)\""
+																						options:0 
+																						  error:&regexError];
+		 NSRegularExpression* emailSuffixes = [NSRegularExpression regularExpressionWithPattern:@"\"EmailAddressSuffixes\":\\[(\"([^\"]*)\",?)*\\]"
+																						options:0 
+																						  error:&regexError];
+		 for(NSString* provider in providers)
+		 {
+			 provider = [provider stringByTrimmingCharactersInSet:objectMarkers];
+			 
+			 NSArray* matches = [nameValuePair matchesInString:provider options:0 range:NSMakeRange(0, provider.length)];
+			 NSMutableDictionary* pairs = [NSMutableDictionary dictionaryWithCapacity:10];
+			 
+			 for(result in matches)
+			 {
+				 for(int n = 1; n < [result numberOfRanges]; n += 2)
+				 {
+					 NSRange r = [result rangeAtIndex:n];
+					 if(r.length > 0)
+					 {
+						 NSString* name = [provider substringWithRange:r];
+						 
+						 r = [result rangeAtIndex:n + 1];
+						 if(r.length > 0)
+						 {
+							 NSString* value = [provider substringWithRange:r];
+							 
+							 [pairs setObject:value forKey:name];
+						 }
+					 }
+				 }
+			 }
+			 
+			 result = [emailSuffixes firstMatchInString:provider options:0 range:NSMakeRange(0, provider.length)];
+			 
+			 NSMutableArray* emailAddressSuffixes = [NSMutableArray arrayWithCapacity:10];
+			 for(int n = 1; n < [result numberOfRanges]; n++)
+			 {
+				 NSRange r = [result rangeAtIndex:n];
+				 if(r.length > 0)
+				 {
+					 [emailAddressSuffixes addObject:[provider substringWithRange:r]];
+				 }
+			 }
+			 
+			 // mobile URL fixup
+			 NSString* name = [pairs objectForKey:@"Name"];
+			 if([name isEqualToString:@"Windows Live™ ID"])
+			 {
+				 NSString* loginURL = [pairs objectForKey:@"LoginUrl"];
+				 BOOL hasQuery = [loginURL rangeOfString:@"?"].length > 0;
+				 
+				 loginURL = [NSString stringWithFormat:hasQuery ? @"%@&pcexp=false" : @"%@?pcexp=false",
+							 loginURL];
+				 [pairs setObject:loginURL forKey:@"LoginUrl"];
+			 }
+			 
+			 WACloudAccessControlHomeRealm* homeRealm = [[WACloudAccessControlHomeRealm alloc] initWithPairs:pairs emailSuffixes:emailAddressSuffixes];
+			 [results addObject:homeRealm];
+			 [homeRealm release];
+		 }
+		 
+		 block([[results copy] autorelease], nil);
+	 }];
 }
 
 #pragma mark - View lifecycle
@@ -69,11 +167,10 @@
 {
     [super viewDidAppear:animated];
     
-    [_client getIdentityProvidersWithBlock:^(NSArray* realms, NSError* error)
+    [self getIdentityProvidersWithBlock:^(NSArray* realms, NSError* error)
      {
          if(error)
          {
-             //[self dismissModalViewControllerAnimated:YES];
 			 UIAlertView* alert;
 			 
 			 alert = [[UIAlertView alloc] initWithTitle:@"Login" 
@@ -88,12 +185,24 @@
          
          [[self retain] autorelease];
          
-         UINavigationController* controller = self.navigationController;
-         WALoginRealmPickerTableViewController* picker;
-         
-         picker = [[WALoginRealmPickerTableViewController alloc] initWithRealms:realms];
-         controller.viewControllers = [NSArray arrayWithObject:picker];
-         [picker release];
+         UINavigationController* navController = self.navigationController;
+		 UIViewController* controller;
+		 
+		 // don't ask the user to pick from a list of one realm!
+		 if(realms.count == 1)
+		 {
+			 WACloudAccessControlHomeRealm* realm = [realms objectAtIndex:0];
+			 controller = [[WALoginWebViewController alloc] initWithHomeRealm:realm
+														withCompletionHandler:_block];
+		 }
+		 else
+		 {
+			controller = [[WALoginRealmPickerTableViewController alloc] initWithRealms:realms 
+																 withCompletionHandler:_block];
+		 }
+		 
+		 navController.viewControllers = [NSArray arrayWithObject:controller];
+         [controller release];
      }];
 }
 

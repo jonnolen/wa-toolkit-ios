@@ -15,11 +15,13 @@
  */
 
 #import <UIKit/UIKit.h>
+#import "WACloudAccessToken.h"
 
 @interface WALoginRealmPickerTableViewController : UITableViewController {
     NSArray* _realms;
+	void (^ _block)(WACloudAccessToken* token);
 }
 
-- (id)initWithRealms:(NSArray*)realms;
+- (id)initWithRealms:(NSArray*)realms withCompletionHandler:(void (^)(WACloudAccessToken* token))block;
 
 @end

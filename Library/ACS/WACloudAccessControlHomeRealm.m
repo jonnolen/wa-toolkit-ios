@@ -16,7 +16,6 @@
 
 #import "WACloudAccessControlHomeRealm.h"
 
-
 @implementation WACloudAccessControlHomeRealm
 
 - (id)initWithPairs:(NSDictionary*)pairs emailSuffixes:(NSArray*)emailSuffixes

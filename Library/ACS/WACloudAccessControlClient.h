@@ -18,8 +18,7 @@
 #import <UIKit/UIKit.h>
 #import "WACloudAccessToken.h"
 
-extern NSString* CloudAccessTokenChanged;
-
+/*! The cloud access client is used to authenticate against the Windows Azure Access Control Service (ACS). */
 @interface WACloudAccessControlClient : NSObject 
 {
     NSURL* _serviceURL;
@@ -27,15 +26,24 @@ extern NSString* CloudAccessTokenChanged;
     NSString* _serviceNamespace;
 }
 
+/*! Returns the realm the client was initialized with. */
 @property (readonly) NSString* realm;
+/*! Returns the service namespace the client was initialized with. */
 @property (readonly) NSString* serviceNamespace;
 
+/*! Create an access control client initialized with the given service namespace and realm. */
 + (WACloudAccessControlClient*)accessControlClientForNamespace:(NSString*)serviceNamespace realm:(NSString*)realm;
 
-- (void)getIdentityProvidersWithBlock:(void (^)(NSArray*, NSError *))block;
+/*! Present the authentication user interface. The completion handler is called when the process is completed. */
+- (UIViewController*)createViewControllerWithCompletionHandler:(void (^)(BOOL authenticated))block;
 
-- (void)requestAccessInNavigationController:(UINavigationController*)controller;
+/*! Present the authentication user interface. The completion handler is called when the process is completed. */
+- (void)showInViewController:(UIViewController*)controller withCompletionHandler:(void (^)(BOOL authenticated))block;
 
-+ (WACloudAccessToken*)token;
+/*! Returns the security token that was set when the user authenticated through a call to requestAccessInViewController:withCompletionHandler:. */
++ (WACloudAccessToken*)sharedToken;
+
+/*! Instructs the client to release the shared token. */
++ (void)logOut;
 
 @end

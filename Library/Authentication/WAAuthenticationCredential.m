@@ -405,11 +405,6 @@ const int AUTHENTICATION_DELAY = 2;
 		NSData *encodedData = [NSData dataWithBytesNoCopy:buffer length:CC_SHA256_DIGEST_LENGTH freeWhenDone:YES];
 		NSString *hash = [encodedData stringWithBase64EncodedData];
 
-#if FULL_LOGGING
-        // NSLog(@"Request string: %@", requestString);
-        // NSLog(@"Request hash: %@", hash);
-#endif
-        
 		// Append to the Authorization Header
 		NSString *authHeader = [NSString stringWithFormat:@"SharedKey %@:%@", _accountName, hash];
         

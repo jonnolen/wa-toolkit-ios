@@ -19,12 +19,6 @@
 #include "WASimpleBase64.h"
 #include "WACloudAccessControlClient.h"
 
-@interface WACloudAccessControlClient (Private)
-
-+ (void)setToken:(WACloudAccessToken*)token;
-
-@end
-
 @implementation WACloudAccessToken
 
 @synthesize appliesTo = _appliesTo;
@@ -32,8 +26,9 @@
 @synthesize expires = _expires;
 @synthesize created = _created;
 @synthesize securityToken = _securityToken;
+@synthesize realmName = _realmName;
 
-- (id)initWithDictionary:(NSDictionary*)dictionary
+- (id)initWithDictionary:(NSDictionary*)dictionary fromRealm:(WACloudAccessControlHomeRealm*)realm
 {
     if((self = [super init]))
     {
@@ -41,6 +36,7 @@
         _tokenType = [[dictionary objectForKey:@"tokenType"] retain];
         _expires = [[dictionary objectForKey:@"expires"] integerValue];
         _created = [[dictionary objectForKey:@"created"] integerValue];
+		_realmName = [realm.name retain];
         
         NSString* securityTokenXmlStr = [dictionary objectForKey:@"securityToken"];
         
@@ -94,6 +90,7 @@
     [_appliesTo release];
     [_tokenType release];
     [_securityToken release];
+	[_realmName release];
     
     [super dealloc];
 }
@@ -106,11 +103,6 @@
 - (NSDate*)createDate
 {
     return [NSDate dateWithTimeIntervalSince1970:_created];
-}
-
-- (void)logOut
-{
-    [WACloudAccessControlClient setToken:nil];
 }
 
 @end

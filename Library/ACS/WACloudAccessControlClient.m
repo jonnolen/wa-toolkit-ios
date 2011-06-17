@@ -15,20 +15,10 @@
  */
 
 #import "WACloudAccessControlClient.h"
-#import "WACloudURLRequest.h"
-#import "WACloudAccessControlHomeRealm.h"
 #import "WALoginProgressViewController.h"
 #import "NSString+URLEncode.h"
 
-static WACloudAccessToken* _token;
-
-NSString* CloudAccessTokenChanged = @"CloudAccessTokenChanged";
-
-@interface WACloudAccessControlHomeRealm (Private)
-
-- (id)initWithPairs:(NSDictionary*)pairs emailSuffixes:(NSArray*)emailSuffixes;
-
-@end
+static WACloudAccessToken* _token = nil;
 
 @implementation WACloudAccessControlClient
 
@@ -60,128 +50,50 @@ NSString* CloudAccessTokenChanged = @"CloudAccessTokenChanged";
     [super dealloc];
 }
 
++ (WACloudAccessToken*)sharedToken
+{
+	return _token;
+}
+
++ (void)logOut
+{
+	[_token release];
+	_token = nil;
+}
+
 + (WACloudAccessControlClient*)accessControlClientForNamespace:(NSString*)serviceNamespace realm:(NSString*)realm
 {
     return [[[WACloudAccessControlClient alloc] initForNamespace:serviceNamespace realm:realm] autorelease];
 }
 
-- (void)getIdentityProvidersWithBlock:(void (^)(NSArray*, NSError *))block
-{
-    WACloudURLRequest* request = [WACloudURLRequest requestWithURL:_serviceURL];
-    
-    [request fetchDataWithCompletionHandler:^(NSData *data, NSError *error) 
-    {
-        if(error)
-        {
-            block(nil, error);
-            return;
-        }
-        
-        NSMutableArray* results = [NSMutableArray arrayWithCapacity:10];
-        
-        NSString* json = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
-        json = [json stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"[]"]];
-        
-        NSArray* providers = [json componentsSeparatedByString:@"},{"];
-        NSCharacterSet* objectMarkers = [NSCharacterSet characterSetWithCharactersInString:@"{}"];
-        NSTextCheckingResult* result;
-        NSError* regexError = nil;
-        NSRegularExpression* nameValuePair = [NSRegularExpression regularExpressionWithPattern:@"\"([^\"]*)\":\"([^\"]*)\""  // @"\"Name\":\"([^\"]*)\",\"LoginUrl\":\"([^\"]*)\",\"LogoutUrl\":\"([^\"]*)\",\"ImageUrl\":\"([^\"]*)\",\"EmailAddressSuffixes\":\\[(.*)\\]" 
-                                                                                       options:0 
-                                                                                         error:&regexError];
-        NSRegularExpression* emailSuffixes = [NSRegularExpression regularExpressionWithPattern:@"\"EmailAddressSuffixes\":\\[(\"([^\"]*)\",?)*\\]"  // @"\"Name\":\"([^\"]*)\",\"LoginUrl\":\"([^\"]*)\",\"LogoutUrl\":\"([^\"]*)\",\"ImageUrl\":\"([^\"]*)\",\"EmailAddressSuffixes\":\\[(.*)\\]" 
-                                                                               options:0 
-                                                                                 error:&regexError];
-        for(NSString* provider in providers)
-        {
-            provider = [provider stringByTrimmingCharactersInSet:objectMarkers];
-            
-            NSArray* matches = [nameValuePair matchesInString:provider options:0 range:NSMakeRange(0, provider.length)];
-            NSMutableDictionary* pairs = [NSMutableDictionary dictionaryWithCapacity:10];
-
-            for(result in matches)
-            {
-                for(int n = 1; n < [result numberOfRanges]; n += 2)
-                {
-                    NSRange r = [result rangeAtIndex:n];
-                    if(r.length > 0)
-                    {
-                        NSString* name = [provider substringWithRange:r];
-                        
-                        r = [result rangeAtIndex:n + 1];
-                        if(r.length > 0)
-                        {
-                            NSString* value = [provider substringWithRange:r];
-                            
-                            [pairs setObject:value forKey:name];
-                        }
-                    }
-                }
-            }
-            
-            result = [emailSuffixes firstMatchInString:provider options:0 range:NSMakeRange(0, provider.length)];
-            
-            NSMutableArray* emailAddressSuffixes = [NSMutableArray arrayWithCapacity:10];
-            for(int n = 1; n < [result numberOfRanges]; n++)
-            {
-                NSRange r = [result rangeAtIndex:n];
-                if(r.length > 0)
-                {
-                    [emailAddressSuffixes addObject:[provider substringWithRange:r]];
-                }
-            }
-
-			// mobile URL fixup
-			NSString* name = [pairs objectForKey:@"Name"];
-			if([name isEqualToString:@"Windows Live™ ID"])
-			{
-				NSString* loginURL = [pairs objectForKey:@"LoginUrl"];
-				BOOL hasQuery = [loginURL rangeOfString:@"?"].length > 0;
-				
-				loginURL = [NSString stringWithFormat:hasQuery ? @"%@&pcexp=false" : @"%@?pcexp=false",
-							loginURL];
-				[pairs setObject:loginURL forKey:@"LoginUrl"];
-			}
-		
-            WACloudAccessControlHomeRealm* homeRealm = [[WACloudAccessControlHomeRealm alloc] initWithPairs:pairs emailSuffixes:emailAddressSuffixes];
-            [results addObject:homeRealm];
-            [homeRealm release];
-        }
-        
-        block([[results copy] autorelease], nil);
-    }];
-}
-
-- (void)requestAccessInNavigationController:(UINavigationController*)controller
+- (UIViewController*)createViewControllerWithCompletionHandler:(void (^)(BOOL authenticated))block
 {
     UIViewController* progressController;
     
-    progressController = [[WALoginProgressViewController alloc] initWithClient:self];
+    progressController = [[WALoginProgressViewController alloc] initWithURL:_serviceURL 
+													  withCompletionHandler:^(WACloudAccessToken *token) 
+						  {
+							  if(token)
+							  {
+								  [_token release];
+								  _token = [token retain];
+							  }
+							  
+							  block(!!token);
+						  }];
+
+	return [progressController autorelease];
+}
+
+- (void)showInViewController:(UIViewController*)controller withCompletionHandler:(void (^)(BOOL authenticated))block
+{
+    UIViewController* progressController = [self createViewControllerWithCompletionHandler:block];
     
     UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:progressController];
     navController.navigationBar.barStyle = UIBarStyleBlack;
     
     [controller presentModalViewController:navController animated:YES];
-    
     [navController release];
-    [progressController release];
-}
-
-+ (WACloudAccessToken*)token
-{
-    return _token;
-}
-
-+ (void)setToken:(WACloudAccessToken*)token
-{
-    if(token != _token)
-    {
-        [_token release];
-        _token = [token retain];
-        
-        NSNotificationCenter* center = [NSNotificationCenter defaultCenter];
-        [center postNotificationName:CloudAccessTokenChanged object:nil];
-    }
 }
 
 @end

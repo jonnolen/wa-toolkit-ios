@@ -15,6 +15,7 @@
  */
 
 #import <UIKit/UIKit.h>
+#import "WACloudAccessToken.h"
 
 @class WACloudAccessControlHomeRealm;
 
@@ -23,8 +24,9 @@
     NSMutableData* _data;
     NSURL* _url;
     WACloudAccessControlHomeRealm* _realm;
+	void (^ _block)(WACloudAccessToken* token);
 }
 
-- (id)initWithHomeRealm:(WACloudAccessControlHomeRealm*)realm;
+- (id)initWithHomeRealm:(WACloudAccessControlHomeRealm*)realm withCompletionHandler:(void (^)(WACloudAccessToken* token))block;
 
 @end

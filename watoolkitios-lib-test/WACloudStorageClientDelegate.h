@@ -14,18 +14,20 @@
  limitations under the License.
  */
 
-#import <UIKit/UIKit.h>
-#import "WACloudAccessToken.h"
+#import <Foundation/Foundation.h>
+#import "WACloudStorageClient.h"
 
-@class WACloudAccessControlClient;
-
-@interface WALoginProgressViewController : UIViewController 
-{
-    NSURL* _serviceURL;
-	void (^ _block)(WACloudAccessToken* token);
+@interface WACloudStorageClientDelegate : NSObject <WACloudStorageClientDelegate> {
+	id _result;
+	BOOL _complete;
+	NSError* _error;
+	WACloudStorageClient* _client;
 }
 
-- (id)initWithURL:(NSURL*)serviceURL withCompletionHandler:(void (^)(WACloudAccessToken* token))block;
+- (void)waitForResponse;
+- (id)getResponse:(NSError**)error;
+- (void)markAsComplete;
 
++ (WACloudStorageClientDelegate*) createDelegateForClient:(WACloudStorageClient*)client;
 
 @end
