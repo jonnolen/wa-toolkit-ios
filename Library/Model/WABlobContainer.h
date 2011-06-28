@@ -26,7 +26,4 @@
 /*! Metadata associated with the blob container. */
 @property (readonly) NSString *metadata;
 
-/*! Intialize a new container with the name, URL, and any associated metadata */
-- (id)initContainerWithName:(NSString *)name URL:(NSString *)URL metadata:(NSString *)metadata;
-
 @end

@@ -37,14 +37,22 @@
 - (void)fetchBlobContainers;
 /*! Returns a list of blob containers. */
 - (void)fetchBlobContainersWithCompletionHandler:(void (^)(NSArray*, NSError *))block;
+/*! Returnva a blob container. */
+- (void)fetchBlobContainerNamed:(NSString *)containerName;
+/*! Returnva a blob container. */
+- (void)fetchBlobContainerNamed:(NSString *)containerName WithCompletionHandler:(void (^)(WABlobContainer *, NSError *))block;
 /*! Adds a blob container, given a specified container name.  Returns error if the container already exists, or where the name is an invalid format.*/
-- (BOOL)addBlobContainer:(NSString *)containerName;
+- (BOOL)addBlobContainerNamed:(NSString *)containerName;
 /*! Adds a blob container, given a specified container name.  Returns error if the container already exists, or where the name is an invalid format.*/
-- (BOOL)addBlobContainer:(NSString *)containerName withCompletionHandler:(void (^)(NSError *))block;
+- (BOOL)addBlobContainerNamed:(NSString *)containerName withCompletionHandler:(void (^)(NSError *))block;
 /*! Deletes a specified blob container. */
 - (BOOL)deleteBlobContainer:(WABlobContainer *)container;
 /*! Deletes a specified blob container. */
 - (BOOL)deleteBlobContainer:(WABlobContainer *)container withCompletionHandler:(void (^)(NSError *))block;
+/*! Deletes a specified blob container with a name. */
+- (BOOL)deleteBlobContainerNamed:(NSString *)containerName;
+/*! Deletes a specified blob container with a name. */
+- (BOOL)deleteBlobContainerNamed:(NSString *)containerName withCompletionHandler:(void (^)(NSError *))block;
 /*! Returns an array of blobs from the specified blob container. */
 - (void)fetchBlobs:(WABlobContainer *)container;
 /*! Returns an array of blobs from the specified blob container. */
@@ -67,13 +75,13 @@
 /*! Returns a list of queues. */
 - (void)fetchQueuesWithCompletionHandler:(void (^)(NSArray*, NSError *))block;
 /*! Adds a queue, given a specified queue name. */
-- (void)addQueue:(NSString *)queueName;
+- (void)addQueueNamed:(NSString *)queueName;
 /*! Adds a queue, given a specified queue name.  Returns error if the queue already exists, or where the name is an invalid format.*/
-- (void)addQueue:(NSString *)queueName withCompletionHandler:(void (^)(NSError *))block;
+- (void)addQueueNamed:(NSString *)queueName withCompletionHandler:(void (^)(NSError *))block;
 /*! Deletes a queue, given a specified queue name. */
-- (void)deleteQueue:(NSString *)queueName;
+- (void)deleteQueueNamed:(NSString *)queueName;
 /*! Deletes a queue, given a specified queue name. Returns error if failed. */
-- (void)deleteQueue:(NSString *)queueName withCompletionHandler:(void (^)(NSError *))block;
+- (void)deleteQueueNamed:(NSString *)queueName withCompletionHandler:(void (^)(NSError *))block;
 /*! Gets a message, given a specified queue name. */
 - (void)fetchQueueMessages:(NSString *)queueName;
 /*! Gets a message, given a specified queue name. Returns error if failed. */
@@ -151,10 +159,14 @@
 
 /*! Called when the client successfully returns a list of blob containers */
 - (void)storageClient:(WACloudStorageClient *)client didFetchBlobContainers:(NSArray *)containers;
+/*! Called when the client successfully returns a blob container */
+- (void)storageClient:(WACloudStorageClient *)client didFetchBlobContainer:(WABlobContainer *)container;
 /*! Called when the client successsfully adds a new blob container. */
-- (void)storageClient:(WACloudStorageClient *)client didAddBlobContainer:(NSString *)name;
+- (void)storageClient:(WACloudStorageClient *)client didAddBlobContainerNamed:(NSString *)name;
 /*! Called when the client successfully removes an existing blob container. */
 - (void)storageClient:(WACloudStorageClient *)client didDeleteBlobContainer:(WABlobContainer *)name;
+/*! Called when the client successfully removes an existing blob container. */
+- (void)storageClient:(WACloudStorageClient *)client didDeleteBlobContainerNamed:(NSString *)name;
 /*! Called when the client successfully returns blobs from an existing container. */
 - (void)storageClient:(WACloudStorageClient *)client didFetchBlobs:(NSArray *)blobs inContainer:(WABlobContainer *)container;
 /*! Called when the client successfully returns blob data for a given blob. */

@@ -63,8 +63,8 @@
                  onDocument:doc 
                       block:^(xmlNodePtr node)
      {
-         NSString *name = [WAXMLHelper getElementValue:node name:@"BlobName"];
-         NSString *url = [WAXMLHelper getElementValue:node name:@"Uri"];
+         NSString *name = [WAXMLHelper getElementValue:node name:@"Name"];
+         NSString *url = [WAXMLHelper getElementValue:node name:@"Url"];
          
          WABlob *blob = [[WABlob alloc] initBlobWithName:name URL:url container:container];
          [blobs addObject:blob];

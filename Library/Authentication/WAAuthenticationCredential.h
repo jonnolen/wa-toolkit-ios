@@ -18,8 +18,6 @@
 
 #define FULL_LOGGING 0
 
-@class WACloudAccessToken;
-
 /*! When used with the proxy service, the authentication delegate returns indication whether the login was successful. */
 @protocol WAAuthenticationDelegate
 - (void)loginDidSucceed;
@@ -40,7 +38,6 @@
 	NSString				*_password;
 	NSString				*_tableServiceURL;
 	NSString				*_blobServiceURL;
-	WACloudAccessToken		*_accessToken;
 }
 
 /*! Boolean value indicating whether this authentication credential uses the proxy service. */
@@ -71,7 +68,5 @@
 + (WAAuthenticationCredential *)authenticateCredentialWithProxyURL:(NSURL *)proxyURL user:(NSString *)user password:(NSString *)password delegate:(id<WAAuthenticationDelegate>)delegate;
 /*! Initialize a new instance of credentials using a proxy URL, supplying the username and password.*/
 + (WAAuthenticationCredential *)authenticateCredentialWithProxyURL:(NSURL *)proxyURL user:(NSString *)user password:(NSString *)password withCompletionHandler:(void (^)(NSError*))block;
-/*! Initialize a new instance of credentials using a proxy URL, supplying an ACS access token.*/
-+ (WAAuthenticationCredential *)authenticateCredentialWithProxyURL:(NSURL *)proxyURL accessToken:(WACloudAccessToken*)accessToken;
 
 @end

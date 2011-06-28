@@ -59,9 +59,16 @@
 	}
 	
     NSString* containerURI = [WAXMLHelper getElementValue:(xmlNodePtr)doc name:@"anyURI"];
-    WABlobContainer *container = [[WABlobContainer alloc] initContainerWithName:@"$root" URL:containerURI metadata:nil];
+    NSMutableArray* containerNameUri = [[NSMutableArray alloc] initWithArray:[containerURI componentsSeparatedByString:@"?"]];
+    NSString* tempURL = [containerNameUri objectAtIndex:0];
+    NSString* blobProxyUrl = [containerNameUri objectAtIndex:1];
+    NSMutableArray* containerNameUri2 = [[NSMutableArray alloc] initWithArray:[tempURL componentsSeparatedByString:@"/"]];
+    NSString* containerName = [containerNameUri2 objectAtIndex:3];
+    WABlobContainer *container = [[WABlobContainer alloc] initContainerWithName:containerName URL:tempURL metadata:blobProxyUrl];
     NSArray* containers = [NSArray arrayWithObject:container];
     
+    [containerNameUri release];
+    [containerNameUri2 release];
     [container release];
     
     return containers;

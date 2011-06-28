@@ -28,7 +28,10 @@
 #define TEST_ADD_DELETE_BLOB_CONTAINER
 #define TEST_ADD_BLOB
 
-// Tests for table related functions
+// Tests for blob related functions through proxy
+#define TEST_FETCH_BLOBCONTAINERS_BLOBS_PROXY
+
+// Tests for table related functions for direct connection
 #define TEST_FETCH_TABLES
 #define TEST_ADD_DELETE_TABLE
 #define TEST_FETCH_TABLE_ENTITIES
@@ -38,19 +41,41 @@
 #define TEST_MERGE_TABLE_ENTITY
 #define TEST_DELETE_TABLE_ENTITY
 
+// Tests for table related functions through proxy
+#define TEST_FETCH_TABLES_PROXY
+#define TEST_ADD_DELETE_TABLE_PROXY
+#define TEST_FETCH_TABLE_ENTITIES_PROXY
+#define TEST_FETCH_TABLE_ENTITIES_WITH_PREDICATE_PROXY
+#define TEST_INSERT_TABLE_ENTITY_PROXY
+#define TEST_UPDATE_TABLE_ENTITY_PROXY
+#define TEST_MERGE_TABLE_ENTITY_PROXY
+#define TEST_DELETE_TABLE_ENTITY_PROXY
+
 // Tests for queue related functions
 #define TEST_FETCH_QUEUES
 #define TEST_ADD_DELETE_QUEUE
 #define TEST_FETCH_QUEUE_MESSAGES
 
+// Testfor queue related functions through proxy
+#define TEST_FETCH_QUEUES_PROXY
+#define TEST_ADD_DELETE_QUEUE_PROXY
+#define TEST_FETCH_QUEUE_MESSAGES_PROXY
+
 // Account details for testing
 NSString *account = @"iostest";
 NSString *accessKey = @"/9seXadQ9HwOpXUO1jKxFN8qVwluGWrRkDQS+wZrghS9a1wPNh1ysHBvj0q0zL34E/qcWkmygEBqNFSz6Yk2eA==";
+NSString *proxyURL = @"https://wazmobiletoolkit.cloudapp.net";
+NSString *proxyUsername = @"sguest";
+NSString *proxyPassword = @"s1m0n1";
 
 // Use for test setup
-WAAuthenticationCredential *credential;
-WACloudStorageClient *client;
-WACloudStorageClientDelegate *delegate;
+WAAuthenticationCredential *directCredential;
+WACloudStorageClient *directClient;
+WACloudStorageClientDelegate *directDelegate;
+
+WAAuthenticationCredential *proxyCredential;
+WACloudStorageClient *proxyClient;
+WACloudStorageClientDelegate *proxyDelegate;
 
 // Used for container and table cleanup
 NSString *unitTestContainerName = @"unitestcontainer";
@@ -66,10 +91,23 @@ int tableCount = 0;
 
 - (void)setUp
 {
-    credential = [WAAuthenticationCredential credentialWithAzureServiceAccount:account accessKey:accessKey];
-    client = [WACloudStorageClient storageClientWithCredential:credential];
-    delegate = [WACloudStorageClientDelegate createDelegateForClient:client];
+    // Setup the direct credentials
+    directCredential = [WAAuthenticationCredential credentialWithAzureServiceAccount:account accessKey:accessKey];
     
+    // Setup the proxy credentials
+    NSError *error = nil;
+    proxyCredential = [WAAuthenticationCredential authenticateCredentialSynchronousWithProxyURL:[NSURL URLWithString:proxyURL] user:proxyUsername password:proxyPassword error:&error];
+    STAssertNil(error, @"There was an error authenticating against the proxy server: %@",[error localizedDescription]);
+
+    // Setup the direct client and delegate
+    directClient = [WACloudStorageClient storageClientWithCredential:directCredential];
+    directDelegate = [WACloudStorageClientDelegate createDelegateForClient:directClient];
+
+    // Setup the proxy client and delegate
+    proxyClient = [WACloudStorageClient storageClientWithCredential:proxyCredential];
+    proxyDelegate = [WACloudStorageClientDelegate createDelegateForClient:proxyClient];
+
+    // Setup some random strings for unit tests tables, containers, and queues
     randomTableNameString = [NSString stringWithFormat:@"%@%d",unitTestTableName,arc4random() % 1000];
     randomContainerNameString = [NSString stringWithFormat:@"%@%d",unitTestContainerName,arc4random() % 1000];
     randomQueueNameString = [NSString stringWithFormat:@"%@%d",unitTestQueueName,arc4random() % 1000];
@@ -82,19 +120,22 @@ int tableCount = 0;
     [super tearDown];
 }
 
+/*
+ * Tests for Blob Storage via Direct Connection
+ */
 
 #ifdef TEST_FETCH_BLOB_CONTAINERS
 - (void)testFetchBlobContainers_WithCompletionHandler_ReturnsContainerList 
 {    
     NSLog(@"Executing TEST_FETCH_BLOB_CONTAINERS");
-    [client fetchBlobContainersWithCompletionHandler:^(NSArray *containers, NSError *error)
+    [directClient fetchBlobContainersWithCompletionHandler:^(NSArray *containers, NSError *error)
      {
          STAssertNil(error, @"Error returned from fetchBlobContainersWithCompletionHandler: %@",[error localizedDescription]);
          STAssertTrue([containers count] > 0, @"No containers were found under this account");  // assuming that this is an account with at least one container
-         [delegate markAsComplete];
+         [directDelegate markAsComplete];
      }];
     
-    [delegate waitForResponse];
+    [directDelegate waitForResponse];
 }
 #endif
 
@@ -102,47 +143,46 @@ int tableCount = 0;
 -(void)testAddDeleteBlobContainer_WithCompletionHandler_ContainerAddedAndDeleted
 {    
     NSLog(@"Executing TEST_ADD_DELETE_BLOB_CONTAINER");
-    [client fetchBlobContainersWithCompletionHandler:^(NSArray *containers, NSError *error)
+    [directClient fetchBlobContainersWithCompletionHandler:^(NSArray *containers, NSError *error)
      {
          STAssertNil(error, @"Error returned from fetchBlobContainersWithCompletionHandler: %@",[error localizedDescription]);
          STAssertTrue([containers count] > 0, @"No containers were found under this account");  // assuming that this is an account with at least one container
          containerCount = [containers count];
-         [delegate markAsComplete];
+         [directDelegate markAsComplete];
      }];
-    [delegate waitForResponse];
+    [directDelegate waitForResponse];
     
-    [client addBlobContainer:randomContainerNameString withCompletionHandler:^(NSError *error)
+    [directClient addBlobContainerNamed:randomContainerNameString withCompletionHandler:^(NSError *error)
      {
          STAssertNil(error, @"Error returned from addBlobContainer: %@",[error localizedDescription]);
-         [delegate markAsComplete];
+         [directDelegate markAsComplete];
      }];
-    [delegate waitForResponse];
+    [directDelegate waitForResponse];
     
-    [client fetchBlobContainersWithCompletionHandler:^(NSArray *containers, NSError *error)
+    [directClient fetchBlobContainersWithCompletionHandler:^(NSArray *containers, NSError *error)
      {
          STAssertNil(error, @"Error returned from fetchBlobContainersWithCompletionHandler: %@",[error localizedDescription]);
          STAssertTrue([containers count] > 0, @"No containers were found under this account");  // assuming that this is an account with at least one container
          STAssertTrue((containerCount + 1 == [containers count] ),@"A new container doesn't appear to be added.");
-         [delegate markAsComplete];
+         [directDelegate markAsComplete];
      }];
-    [delegate waitForResponse];
+    [directDelegate waitForResponse];
     
-    WABlobContainer *container = [[WABlobContainer alloc] initContainerWithName:randomContainerNameString URL:[NSString stringWithFormat:@"http://iostest.blob.core.windows.net/%@",randomContainerNameString] metadata:@" "];
-    [client deleteBlobContainer:container withCompletionHandler:^(NSError *error)
+    [directClient deleteBlobContainerNamed:randomContainerNameString withCompletionHandler:^(NSError *error)
      {
          STAssertNil(error, @"Error returned from deleteBlobContainer: %@",[error localizedDescription]);
-         [delegate markAsComplete];
+         [directDelegate markAsComplete];
      }];
-    [delegate waitForResponse];
+    [directDelegate waitForResponse];
     
-    [client fetchBlobContainersWithCompletionHandler:^(NSArray *containers, NSError *error)
+    [directClient fetchBlobContainersWithCompletionHandler:^(NSArray *containers, NSError *error)
      {
          STAssertNil(error, @"Error returned from fetchBlobContainersWithCompletionHandler: %@",[error localizedDescription]);
          STAssertTrue([containers count] > 0, @"No containers were found under this account");  // assuming that this is an account with at least one container
          STAssertTrue((containerCount == [containers count] ),@"Unit test container doesn't appear to be deleted.");
-         [delegate markAsComplete];
+         [directDelegate markAsComplete];
      }];
-    [delegate waitForResponse];
+    [directDelegate waitForResponse];
 }
 #endif
 
@@ -151,57 +191,68 @@ int tableCount = 0;
 {
     NSLog(@"Executing TEST_ADD_BLOB");
     
-    [client addBlobContainer:randomContainerNameString withCompletionHandler:^(NSError *error)
+    [directClient addBlobContainerNamed:randomContainerNameString withCompletionHandler:^(NSError *error)
      {
          STAssertNil(error, @"Error returned from addBlobContainer: %@",[error localizedDescription]);
-         [delegate markAsComplete];
+         [directDelegate markAsComplete];
      }];
-    [delegate waitForResponse];
-    
+    [directDelegate waitForResponse];
+    NSLog(@"container added: %@", randomContainerNameString);
     NSBundle *bundle = [NSBundle bundleForClass:[self class]];
     NSString* path = [bundle pathForResource:@"cloud" ofType:@"jpg"];
     NSData* data = [NSData dataWithContentsOfFile:path];
     
-    WABlobContainer *container = [[WABlobContainer alloc] initContainerWithName:randomContainerNameString URL:[NSString stringWithFormat:@"http://iostest.blob.core.windows.net/%@",randomContainerNameString] metadata:@" "];
-    
-    [client addBlobToContainer:container blobName:@"cloud.jpg" contentData:data contentType:@"image/jpeg" withCompletionHandler:^(NSError *error)
+    __block WABlobContainer *mycontainer;
+    [directClient fetchBlobContainerNamed:randomContainerNameString WithCompletionHandler:^(WABlobContainer *container, NSError *error)
      {
-         STAssertNil(error, @"Error returned by addBlob: %@", [error localizedDescription]);
-         [delegate markAsComplete];
+         [directDelegate markAsComplete];
+         [directClient addBlobToContainer:container blobName:@"cloud.jpg" contentData:data contentType:@"image/jpeg" withCompletionHandler:^(NSError *error)
+          {
+              mycontainer = container;
+              STAssertNil(error, @"Error returned by addBlob: %@", [error localizedDescription]);
+              [directDelegate markAsComplete];
+          }];
+         [directDelegate waitForResponse];
+         
      }];
-    [delegate waitForResponse];
+    [directDelegate waitForResponse];
     
-    [client fetchBlobs:container withCompletionHandler:^(NSArray *blobs, NSError *error)
+    [directClient fetchBlobs:mycontainer withCompletionHandler:^(NSArray *blobs, NSError *error)
      {
          STAssertNil(error, @"Error returned by getBlobs: %@", [error localizedDescription]);
          STAssertTrue([blobs count] == 1, @"%i blobs were returned instead of 1",[blobs count]);         
-         [delegate markAsComplete];
+         [directDelegate markAsComplete];
      }];
-    [delegate waitForResponse];
+    [directDelegate waitForResponse];
     
-    [client deleteBlobContainer:container withCompletionHandler:^(NSError *error)
+    [directClient deleteBlobContainer:mycontainer withCompletionHandler:^(NSError *error)
      {
          STAssertNil(error, @"Error returned from deleteBlobContainer: %@",[error localizedDescription]);
-         [delegate markAsComplete];
+         [directDelegate markAsComplete];
      }];
-     [delegate waitForResponse];
+    [directDelegate waitForResponse];
+    
 }
 #endif
+
+/*
+ * Tests for Table Storage via Direct Connection
+ */
 
 #ifdef TEST_FETCH_TABLES
 -(void)testFetchTables_WithCompletionHandler_ReturnsTableList
 {
     NSLog(@"Executing TEST_FETCH_TABLES");
     
-    [client fetchTablesWithCompletionHandler:^(NSArray* tables, NSError* error) 
+    [directClient fetchTablesWithCompletionHandler:^(NSArray* tables, NSError* error) 
      {
          STAssertNil(error, @"Error returned by getTables: %@", [error localizedDescription]);
          STAssertNotNil(tables, @"getTables returned nil");
          STAssertTrue(tables.count > 0, @"getTables returned no tables");
-         [delegate markAsComplete];
+         [directDelegate markAsComplete];
      }];
 	
-	[delegate waitForResponse];	
+	[directDelegate waitForResponse];	
 }
 #endif
 
@@ -210,49 +261,49 @@ int tableCount = 0;
 {
     NSLog(@"Executing TEST_ADD_DELETE_TABLE");
     
-    [client fetchTablesWithCompletionHandler:^(NSArray* tables, NSError* error) 
+    [directClient fetchTablesWithCompletionHandler:^(NSArray* tables, NSError* error) 
      {
          STAssertNil(error, @"Error returned by getTables: %@", [error localizedDescription]);
          STAssertNotNil(tables, @"getTables returned nil");
          STAssertTrue(tables.count > 0, @"getTables returned no tables");
          tableCount = [tables count];
-         [delegate markAsComplete];
+         [directDelegate markAsComplete];
      }];
-    [delegate waitForResponse];
+    [directDelegate waitForResponse];
     
-    [client createTableNamed:randomContainerNameString withCompletionHandler:^(NSError *error)
+    [directClient createTableNamed:randomContainerNameString withCompletionHandler:^(NSError *error)
      {
          STAssertNil(error, @"Error returned by createTableNamed: %@", [error localizedDescription]);   
-         [delegate markAsComplete];
+         [directDelegate markAsComplete];
      }];
-    [delegate waitForResponse];
+    [directDelegate waitForResponse];
     
-    [client fetchTablesWithCompletionHandler:^(NSArray* tables, NSError* error) 
+    [directClient fetchTablesWithCompletionHandler:^(NSArray* tables, NSError* error) 
      {
          STAssertNil(error, @"Error returned by getTables: %@", [error localizedDescription]);
          STAssertNotNil(tables, @"getTables returned nil");
          STAssertTrue(tables.count > 0, @"getTables returned no tables");
          STAssertTrue((tableCount + 1) == [tables count],@"Table didn't appear to be added."); 
-         [delegate markAsComplete];
+         [directDelegate markAsComplete];
      }];
-    [delegate waitForResponse];
+    [directDelegate waitForResponse];
     
-    [client deleteTableNamed:randomContainerNameString withCompletionHandler:^(NSError *error)
+    [directClient deleteTableNamed:randomContainerNameString withCompletionHandler:^(NSError *error)
      {
          STAssertNil(error, @"Error returned by deleteTableNamed: %@", [error localizedDescription]);
-         [delegate markAsComplete];
+         [directDelegate markAsComplete];
      }];
-    [delegate waitForResponse];
+    [directDelegate waitForResponse];
     
-    [client fetchTablesWithCompletionHandler:^(NSArray* tables, NSError* error) 
+    [directClient fetchTablesWithCompletionHandler:^(NSArray* tables, NSError* error) 
      {
          STAssertNil(error, @"Error returned by getTables: %@", [error localizedDescription]);
          STAssertNotNil(tables, @"getTables returned nil");
          STAssertTrue(tables.count > 0, @"getTables returned no tables");
          STAssertTrue(tableCount == [tables count],@"Table didn't appear to be deleted."); 
-         [delegate markAsComplete];
+         [directDelegate markAsComplete];
      }];
-    [delegate waitForResponse];
+    [directDelegate waitForResponse];
 }
 #endif
 
@@ -262,12 +313,12 @@ int tableCount = 0;
     NSLog(@"Executing TEST_FETCH_TABLE_ENTITIES");
     
     WATableFetchRequest *fetchRequest = [WATableFetchRequest fetchRequestForTable:@"Developers"];
-    [client fetchEntities:fetchRequest withCompletionHandler:^(NSArray *entities, NSError *error)
+    [directClient fetchEntities:fetchRequest withCompletionHandler:^(NSArray *entities, NSError *error)
      {
          STAssertNil(error, @"Error returned by getEntities: %@", [error localizedDescription]);
-         [delegate markAsComplete];
+         [directDelegate markAsComplete];
      }];
-    [delegate waitForResponse];
+    [directDelegate waitForResponse];
 }
 #endif
 
@@ -277,12 +328,12 @@ int tableCount = 0;
     NSLog(@"Executing TEST_FETCH_TABLE_ENTITIES_WITH_PREDICATE");
     
     // first create a table to test against
-    [client createTableNamed:randomTableNameString withCompletionHandler:^(NSError *error)
+    [directClient createTableNamed:randomTableNameString withCompletionHandler:^(NSError *error)
      {
          STAssertNil(error, @"Error returned by createTableNamed: %@", [error localizedDescription]);   
-         [delegate markAsComplete];
+         [directDelegate markAsComplete];
      }];
-    [delegate waitForResponse];
+    [directDelegate waitForResponse];
     
     // insert an entry
     WATableEntity *testEntity = [WATableEntity createEntityForTable:randomTableNameString];	
@@ -290,32 +341,32 @@ int tableCount = 0;
 	testEntity.rowKey = @"01021972";
 	[testEntity setObject:@"Steve" forKey:@"Name"];
     
-    [client insertEntity:testEntity withCompletionHandler:^(NSError *error)
+    [directClient insertEntity:testEntity withCompletionHandler:^(NSError *error)
      {
 		 STAssertNil(error, @"Error returned by insertEntity: %@", [error localizedDescription]);
-		 [delegate markAsComplete];
+		 [directDelegate markAsComplete];
      }];
-    [delegate waitForResponse];
+    [directDelegate waitForResponse];
     
     NSError *error = nil;
     NSPredicate* predicate = [NSPredicate predicateWithFormat:@"Name = 'Steve' || Name = 'Eric' || Name = 'Ling'"];
     WATableFetchRequest* fetchRequest = [WATableFetchRequest fetchRequestForTable:randomTableNameString predicate:predicate error:&error];
 	STAssertNil(error, @"Predicate parser error: %@", [error localizedDescription]);
     
-    [client fetchEntities:fetchRequest withCompletionHandler:^(NSArray * entities, NSError * error) {
+    [directClient fetchEntities:fetchRequest withCompletionHandler:^(NSArray * entities, NSError * error) {
         STAssertNil(error, @"Error returned by getEntitiesFromTable: %@", [error localizedDescription]);
         STAssertNotNil(entities, @"getEntitiesFromTable returned nil");
         STAssertTrue(entities.count == 1, @"getEntitiesFromTable returned incorrect number of entities");
-        [delegate markAsComplete];
+        [directDelegate markAsComplete];
     }];
-    [delegate waitForResponse];
+    [directDelegate waitForResponse];
     
-    [client deleteTableNamed:randomTableNameString withCompletionHandler:^(NSError *error)
+    [directClient deleteTableNamed:randomTableNameString withCompletionHandler:^(NSError *error)
      {
          STAssertNil(error, @"Error returned by deleteTableNamed: %@", [error localizedDescription]);
-         [delegate markAsComplete];
+         [directDelegate markAsComplete];
      }];
-    [delegate waitForResponse];
+    [directDelegate waitForResponse];
 }
 #endif
 
@@ -325,39 +376,39 @@ int tableCount = 0;
     NSLog(@"Executing TEST_INSERT_TABLE_ENTITY");
     
     // first create a table to test against
-    [client createTableNamed:randomTableNameString withCompletionHandler:^(NSError *error)
+    [directClient createTableNamed:randomTableNameString withCompletionHandler:^(NSError *error)
      {
          STAssertNil(error, @"Error returned by createTableNamed: %@", [error localizedDescription]);   
-         [delegate markAsComplete];
+         [directDelegate markAsComplete];
      }];
-    [delegate waitForResponse];
+    [directDelegate waitForResponse];
     
 	WATableEntity *testEntity = [WATableEntity createEntityForTable:randomTableNameString];	
 	testEntity.partitionKey = @"a";
 	testEntity.rowKey = @"01021972";
 	[testEntity setObject:@"199" forKey:@"Price"];
     
-    [client insertEntity:testEntity withCompletionHandler:^(NSError *error)
+    [directClient insertEntity:testEntity withCompletionHandler:^(NSError *error)
      {
 		 STAssertNil(error, @"Error returned by insertEntity: %@", [error localizedDescription]);
-		 [delegate markAsComplete];
+		 [directDelegate markAsComplete];
      }];
-    [delegate waitForResponse];
+    [directDelegate waitForResponse];
     
 	// Clean up after ourselves
-    [client deleteEntity:testEntity withCompletionHandler:^(NSError *error)
+    [directClient deleteEntity:testEntity withCompletionHandler:^(NSError *error)
      {
 		 STAssertNil(error, @"Error returned by deleteEntity: %@", [error localizedDescription]);
-		 [delegate markAsComplete];
+		 [directDelegate markAsComplete];
      }];
-    [delegate waitForResponse];
+    [directDelegate waitForResponse];
     
-    [client deleteTableNamed:randomTableNameString withCompletionHandler:^(NSError *error)
+    [directClient deleteTableNamed:randomTableNameString withCompletionHandler:^(NSError *error)
      {
          STAssertNil(error, @"Error returned by deleteTableNamed: %@", [error localizedDescription]);
-         [delegate markAsComplete];
+         [directDelegate markAsComplete];
      }];
-    [delegate waitForResponse];
+    [directDelegate waitForResponse];
 }
 #endif
 
@@ -367,12 +418,12 @@ int tableCount = 0;
     NSLog(@"Executing TEST_UPDATE_TABLE_ENTITY");
 
     // first create a table to test against
-    [client createTableNamed:randomTableNameString withCompletionHandler:^(NSError *error)
+    [directClient createTableNamed:randomTableNameString withCompletionHandler:^(NSError *error)
      {
          STAssertNil(error, @"Error returned by createTableNamed: %@", [error localizedDescription]);   
-         [delegate markAsComplete];
+         [directDelegate markAsComplete];
      }];
-    [delegate waitForResponse];
+    [directDelegate waitForResponse];
     
 	WATableEntity *testEntity = [WATableEntity createEntityForTable:randomTableNameString];	
 	testEntity.partitionKey = @"a";
@@ -380,36 +431,36 @@ int tableCount = 0;
 	[testEntity setObject:@"299" forKey:@"Price"];
     
 	// Setup before we run the actual test
-    [client insertEntity:testEntity withCompletionHandler:^(NSError *error)
+    [directClient insertEntity:testEntity withCompletionHandler:^(NSError *error)
      {
 		 STAssertNil(error, @"Setup: Error returned by insertEntity: %@", [error localizedDescription]);
-		 [delegate markAsComplete];
+		 [directDelegate markAsComplete];
      }];
-    [delegate waitForResponse];
+    [directDelegate waitForResponse];
     
 	// Now run the test
 	[testEntity setObject:@"299" forKey:@"Price"];
-    [client updateEntity:testEntity withCompletionHandler:^(NSError *error)
+    [directClient updateEntity:testEntity withCompletionHandler:^(NSError *error)
      {
 		 STAssertNil(error, @"Error returned by updateEntity: %@", [error localizedDescription]);
-		 [delegate markAsComplete];
+		 [directDelegate markAsComplete];
      }];
-    [delegate waitForResponse];
+    [directDelegate waitForResponse];
     
 	// Clean up after ourselves
-    [client deleteEntity:testEntity withCompletionHandler:^(NSError *error)
+    [directClient deleteEntity:testEntity withCompletionHandler:^(NSError *error)
      {
 		 STAssertNil(error, @"Teardown: Error returned by deleteEntity: %@", [error localizedDescription]);
-		 [delegate markAsComplete];
+		 [directDelegate markAsComplete];
      }];
-    [delegate waitForResponse];
+    [directDelegate waitForResponse];
     
-    [client deleteTableNamed:randomTableNameString withCompletionHandler:^(NSError *error)
+    [directClient deleteTableNamed:randomTableNameString withCompletionHandler:^(NSError *error)
      {
          STAssertNil(error, @"Error returned by deleteTableNamed: %@", [error localizedDescription]);
-         [delegate markAsComplete];
+         [directDelegate markAsComplete];
      }];
-    [delegate waitForResponse];
+    [directDelegate waitForResponse];
 }
 #endif
 
@@ -419,12 +470,12 @@ int tableCount = 0;
     NSLog(@"Executing TEST_MERGE_TABLE_ENTITY");
     
     // first create a table to test against
-    [client createTableNamed:randomTableNameString withCompletionHandler:^(NSError *error)
+    [directClient createTableNamed:randomTableNameString withCompletionHandler:^(NSError *error)
      {
          STAssertNil(error, @"Error returned by createTableNamed: %@", [error localizedDescription]);   
-         [delegate markAsComplete];
+         [directDelegate markAsComplete];
      }];
-    [delegate waitForResponse];
+    [directDelegate waitForResponse];
     
 	WATableEntity *testEntity = [WATableEntity createEntityForTable:randomTableNameString];	
 	testEntity.partitionKey = @"a";
@@ -432,36 +483,36 @@ int tableCount = 0;
 	[testEntity setObject:@"399" forKey:@"Price"];
 	
 	// Setup before we run the actual test
-    [client insertEntity:testEntity withCompletionHandler:^(NSError *error)
+    [directClient insertEntity:testEntity withCompletionHandler:^(NSError *error)
      {
 		 STAssertNil(error, @"Setup: Error returned by insertEntity: %@", [error localizedDescription]);
-		 [delegate markAsComplete];
+		 [directDelegate markAsComplete];
      }];
-    [delegate waitForResponse];
+    [directDelegate waitForResponse];
     
 	// Now run the test
 	[testEntity setObject:@"399" forKey:@"Price"];
-    [client mergeEntity:testEntity withCompletionHandler:^(NSError *error)
+    [directClient mergeEntity:testEntity withCompletionHandler:^(NSError *error)
      {
 		 STAssertNil(error, @"Error returned by mergeEntity: %@", [error localizedDescription]);
-		 [delegate markAsComplete];
+		 [directDelegate markAsComplete];
      }];
-    [delegate waitForResponse];
+    [directDelegate waitForResponse];
     
 	// Clean up after ourselves
-    [client deleteEntity:testEntity withCompletionHandler:^(NSError *error)
+    [directClient deleteEntity:testEntity withCompletionHandler:^(NSError *error)
      {
 		 STAssertNil(error, @"Teardown: Error returned by deleteEntity: %@", [error localizedDescription]);
-		 [delegate markAsComplete];
+		 [directDelegate markAsComplete];
      }];
-    [delegate waitForResponse];
+    [directDelegate waitForResponse];
     
-    [client deleteTableNamed:randomTableNameString withCompletionHandler:^(NSError *error)
+    [directClient deleteTableNamed:randomTableNameString withCompletionHandler:^(NSError *error)
      {
          STAssertNil(error, @"Error returned by deleteTableNamed: %@", [error localizedDescription]);
-         [delegate markAsComplete];
+         [directDelegate markAsComplete];
      }];
-    [delegate waitForResponse];
+    [directDelegate waitForResponse];
 }
 #endif
 
@@ -471,12 +522,12 @@ int tableCount = 0;
     NSLog(@"Executing TEST_DELETE_TABLE_ENTITY");
     
     // first create a table to test against
-    [client createTableNamed:randomTableNameString withCompletionHandler:^(NSError *error)
+    [directClient createTableNamed:randomTableNameString withCompletionHandler:^(NSError *error)
      {
          STAssertNil(error, @"Error returned by createTableNamed: %@", [error localizedDescription]);   
-         [delegate markAsComplete];
+         [directDelegate markAsComplete];
      }];
-    [delegate waitForResponse];
+    [directDelegate waitForResponse];
     
 	WATableEntity *testEntity = [WATableEntity createEntityForTable:randomTableNameString];
 	testEntity.partitionKey = @"a";
@@ -484,43 +535,47 @@ int tableCount = 0;
 	[testEntity setObject:@"199" forKey:@"Price"];
 	
 	// Setup before we run the actual test
-    [client insertEntity:testEntity withCompletionHandler:^(NSError *error)
+    [directClient insertEntity:testEntity withCompletionHandler:^(NSError *error)
      {
 		 STAssertNil(error, @"Setup: Error returned by insertEntity: %@", [error localizedDescription]);
-		 [delegate markAsComplete];
+		 [directDelegate markAsComplete];
      }];
-    [delegate waitForResponse];
+    [directDelegate waitForResponse];
     
 	// Now run the test
-    [client deleteEntity:testEntity withCompletionHandler:^(NSError *error)
+    [directClient deleteEntity:testEntity withCompletionHandler:^(NSError *error)
      {
 		 STAssertNil(error, @"Error returned by deleteEntity: %@", [error localizedDescription]);
-		 [delegate markAsComplete];
+		 [directDelegate markAsComplete];
      }];
-    [delegate waitForResponse];
+    [directDelegate waitForResponse];
     
-    [client deleteTableNamed:randomTableNameString withCompletionHandler:^(NSError *error)
+    [directClient deleteTableNamed:randomTableNameString withCompletionHandler:^(NSError *error)
      {
          STAssertNil(error, @"Error returned by deleteTableNamed: %@", [error localizedDescription]);
-         [delegate markAsComplete];
+         [directDelegate markAsComplete];
      }];
-    [delegate waitForResponse];
+    [directDelegate waitForResponse];
 }
 #endif
+
+/*
+ * Tests for Queue Storage via Direct Connection
+ */
 
 #ifdef TEST_FETCH_QUEUES
 -(void)testFetchQueues_WithCompletionHandler_ReturnsListOfQueues 
 {
     NSLog(@"Executing TEST_FETCH_QUEUES");
     
-    [client fetchQueuesWithCompletionHandler:^(NSArray* queues, NSError* error)
+    [directClient fetchQueuesWithCompletionHandler:^(NSArray* queues, NSError* error)
      {
          STAssertNil(error, @"Error returned from fetchQueue: %@",[error localizedDescription]);
          STAssertTrue([queues count] > 0, @"No queues were found under this account");
-         [delegate markAsComplete];
+         [directDelegate markAsComplete];
      }];
 	
-	[delegate waitForResponse];
+	[directDelegate waitForResponse];
 }
 #endif
 
@@ -529,19 +584,19 @@ int tableCount = 0;
 {
     NSLog(@"Executing TEST_ADD_DELETE_QUEUE");
     
-    [client addQueue:randomQueueNameString withCompletionHandler:^(NSError *error) {
+    [directClient addQueueNamed:randomQueueNameString withCompletionHandler:^(NSError *error) {
         STAssertNil(error, @"Error returned from addQueue: %@",[error localizedDescription]);
-         [delegate markAsComplete];
+         [directDelegate markAsComplete];
         
     }];
-    [delegate waitForResponse];
+    [directDelegate waitForResponse];
     
-    [client deleteQueue:randomQueueNameString withCompletionHandler:^(NSError *error)
+    [directClient deleteQueueNamed:randomQueueNameString withCompletionHandler:^(NSError *error)
      {
          STAssertNil(error, @"Error returned from deleteQueue: %@",[error localizedDescription]);
-         [delegate markAsComplete];
+         [directDelegate markAsComplete];
      }];
-    [delegate waitForResponse];
+    [directDelegate waitForResponse];
 }
 #endif
 
@@ -550,37 +605,483 @@ int tableCount = 0;
 {
     NSLog(@"Executing TEST_FETCH_QUEUE_MESSAGES");
     
-    [client addQueue:randomQueueNameString withCompletionHandler:^(NSError *error) {
+    [directClient addQueueNamed:randomQueueNameString withCompletionHandler:^(NSError *error) {
         STAssertNil(error, @"Error returned from addQueue: %@",[error localizedDescription]);
-        [delegate markAsComplete];
+        [directDelegate markAsComplete];
         
     }];
-    [delegate waitForResponse];
+    [directDelegate waitForResponse];
     
-    [client addMessageToQueue:@"My Message test" queueName:randomQueueNameString withCompletionHandler:^(NSError *error)
+    [directClient addMessageToQueue:@"My Message test" queueName:randomQueueNameString withCompletionHandler:^(NSError *error)
      {
          STAssertNil(error, @"Error returned from adding message to Queue: %@",[error localizedDescription]);
-        [delegate markAsComplete];
+        [directDelegate markAsComplete];
      }];
-	[delegate waitForResponse];
+	[directDelegate waitForResponse];
     
-    [client fetchQueueMessages:randomQueueNameString withCompletionHandler:^(NSArray* queueMessages, NSError* error)
+    [directClient fetchQueueMessages:randomQueueNameString withCompletionHandler:^(NSArray* queueMessages, NSError* error)
      {
          STAssertNil(error, @"Error returned from getQueueMessages: %@",[error localizedDescription]);
          STAssertTrue([queueMessages count] > 0, @"No queueMessages were found under this account");
-         [delegate markAsComplete];
+         [directDelegate markAsComplete];
      }];
-	[delegate waitForResponse];
+	[directDelegate waitForResponse];
     
-    [client deleteQueue:randomQueueNameString withCompletionHandler:^(NSError *error)
+    [directClient deleteQueueNamed:randomQueueNameString withCompletionHandler:^(NSError *error)
      {
          STAssertNil(error, @"Error returned from deleteQueue: %@",[error localizedDescription]);
-         [delegate markAsComplete];
+         [directDelegate markAsComplete];
      }];
-    [delegate waitForResponse];
+    [directDelegate waitForResponse];
 }
 
 #endif
 
+/*
+ * Tests for Blob Storage via the Proxy
+ */
+
+#ifdef TEST_FETCH_BLOBCONTAINERS_BLOBS_PROXY
+-(void)testFetchBlobContainerBlobsProxy_WithCompletionHandler
+{
+    
+    NSLog(@"Executing TEST_FETCH_BLOBCONTAINERS_PROXY");
+    __block WABlobContainer *mycontainer;
+    [proxyClient fetchBlobContainersWithCompletionHandler:^(NSArray *containers, NSError *error)
+     {
+         STAssertNil(error, @"Error returned from fetchBlobContainersWithCompletionHandler: %@",[error localizedDescription]);
+         STAssertTrue([containers count] > 0, @"No containers were found under this account");  // assuming that this is an account with at least one container
+         mycontainer = [containers objectAtIndex:0];
+         [proxyDelegate markAsComplete];
+         
+         NSLog(@"Executing TEST_FETCH_BLOBS_THROUGH_PROXY");
+         [proxyClient fetchBlobs:mycontainer withCompletionHandler:^(NSArray *blobs, NSError *error)
+          {
+              STAssertNil(error, @"Error returned by getBlobs: %@", [error localizedDescription]);
+              STAssertTrue([blobs count] > 0, @"%i blobs were returned instead of 1",[blobs count]);         
+              [proxyDelegate markAsComplete];
+          }];
+         [proxyDelegate waitForResponse];
+         
+     }];    
+    [proxyDelegate waitForResponse];
+    
+    NSLog(@"Executing TEST_ADD_BLOB_TO_CONTAINER_THROUGH_PROXY");
+    NSBundle *bundle = [NSBundle bundleForClass:[self class]];
+    NSString* path = [bundle pathForResource:@"cloud" ofType:@"jpg"];
+    NSData* data = [NSData dataWithContentsOfFile:path];
+    
+    [proxyClient addBlobToContainer:mycontainer blobName:@"cloud.jpg" contentData:data contentType:@"image/jpeg" withCompletionHandler:^(NSError *error)
+     {
+         STAssertNil(error, @"Error returned by addBlob: %@", [error localizedDescription]);
+         [proxyDelegate markAsComplete];
+     }];
+    [proxyDelegate waitForResponse];
+    
+}
+#endif
+
+/*
+ * Tests for Table Storage via Proxy
+ */
+
+#ifdef TEST_FETCH_TABLES_PROXY
+-(void)testFetchTablesProxy_WithCompletionHandler_ReturnsTableList
+{
+    NSLog(@"Executing TEST_FETCH_TABLES_PROXY");
+    
+    [proxyClient fetchTablesWithCompletionHandler:^(NSArray* tables, NSError* error) 
+     {
+         STAssertNil(error, @"Error returned by getTables: %@", [error localizedDescription]);
+         STAssertNotNil(tables, @"getTables returned nil");
+         STAssertTrue(tables.count > 0, @"getTables returned no tables");
+         [proxyDelegate markAsComplete];
+     }];
+	
+	[proxyDelegate waitForResponse];	
+}
+#endif
+
+#ifdef TEST_ADD_DELETE_TABLE_PROXY
+-(void)testAddDeleteTableProxy_WithCompletionHandler_TableAddedAndDeleted
+{
+    NSLog(@"Executing TEST_ADD_DELETE_TABLE_PROXY");
+    
+    [proxyClient fetchTablesWithCompletionHandler:^(NSArray* tables, NSError* error) 
+     {
+         STAssertNil(error, @"Error returned by getTables: %@", [error localizedDescription]);
+         STAssertNotNil(tables, @"getTables returned nil");
+         STAssertTrue(tables.count > 0, @"getTables returned no tables");
+         tableCount = [tables count];
+         [proxyDelegate markAsComplete];
+     }];
+    [proxyDelegate waitForResponse];
+    
+    [proxyClient createTableNamed:randomContainerNameString withCompletionHandler:^(NSError *error)
+     {
+         STAssertNil(error, @"Error returned by createTableNamed: %@", [error localizedDescription]);   
+         [proxyDelegate markAsComplete];
+     }];
+    [proxyDelegate waitForResponse];
+    
+    [proxyClient fetchTablesWithCompletionHandler:^(NSArray* tables, NSError* error) 
+     {
+         STAssertNil(error, @"Error returned by getTables: %@", [error localizedDescription]);
+         STAssertNotNil(tables, @"getTables returned nil");
+         STAssertTrue(tables.count > 0, @"getTables returned no tables");
+         STAssertTrue((tableCount + 1) == [tables count],@"Table didn't appear to be added."); 
+         [proxyDelegate markAsComplete];
+     }];
+    [proxyDelegate waitForResponse];
+    
+    [proxyClient deleteTableNamed:randomContainerNameString withCompletionHandler:^(NSError *error)
+     {
+         STAssertNil(error, @"Error returned by deleteTableNamed: %@", [error localizedDescription]);
+         [proxyDelegate markAsComplete];
+     }];
+    [proxyDelegate waitForResponse];
+    
+    [proxyClient fetchTablesWithCompletionHandler:^(NSArray* tables, NSError* error) 
+     {
+         STAssertNil(error, @"Error returned by getTables: %@", [error localizedDescription]);
+         STAssertNotNil(tables, @"getTables returned nil");
+         STAssertTrue(tables.count > 0, @"getTables returned no tables");
+         STAssertTrue(tableCount == [tables count],@"Table didn't appear to be deleted."); 
+         [proxyDelegate markAsComplete];
+     }];
+    [proxyDelegate waitForResponse];
+}
+#endif
+
+#ifdef TEST_FETCH_TABLE_ENTITIES_PROXY
+-(void)testFetchTableEntitiesProxy_WithCompletionHandler_ReturnsTableEntities
+{
+    NSLog(@"Executing TEST_FETCH_TABLE_ENTITIES_PROXY");
+    
+    WATableFetchRequest *fetchRequest = [WATableFetchRequest fetchRequestForTable:@"Developers"];
+    [proxyClient fetchEntities:fetchRequest withCompletionHandler:^(NSArray *entities, NSError *error)
+     {
+         STAssertNil(error, @"Error returned by getEntities: %@", [error localizedDescription]);
+         [proxyDelegate markAsComplete];
+     }];
+    [proxyDelegate waitForResponse];
+}
+#endif
+
+#ifdef TEST_FETCH_TABLE_ENTITIES_WITH_PREDICATE_PROXY
+-(void)testFetchTableEntitiesWithPredicateProxy_WithCompletionHandler_ReturnsFilteredTableEntities
+{
+    NSLog(@"Executing TEST_FETCH_TABLE_ENTITIES_WITH_PREDICATE_PROXY");
+    
+    // first create a table to test against
+    [proxyClient createTableNamed:randomTableNameString withCompletionHandler:^(NSError *error)
+     {
+         STAssertNil(error, @"Error returned by createTableNamed: %@", [error localizedDescription]);   
+         [proxyDelegate markAsComplete];
+     }];
+    [proxyDelegate waitForResponse];
+    
+    // insert an entry
+    WATableEntity *testEntity = [WATableEntity createEntityForTable:randomTableNameString];	
+	testEntity.partitionKey = @"a";
+	testEntity.rowKey = @"01021972";
+	[testEntity setObject:@"Steve" forKey:@"Name"];
+    
+    [proxyClient insertEntity:testEntity withCompletionHandler:^(NSError *error)
+     {
+		 STAssertNil(error, @"Error returned by insertEntity: %@", [error localizedDescription]);
+		 [proxyDelegate markAsComplete];
+     }];
+    [proxyDelegate waitForResponse];
+    
+    NSError *error = nil;
+    NSPredicate* predicate = [NSPredicate predicateWithFormat:@"Name = 'Steve' || Name = 'Eric' || Name = 'Ling'"];
+    WATableFetchRequest* fetchRequest = [WATableFetchRequest fetchRequestForTable:randomTableNameString predicate:predicate error:&error];
+	STAssertNil(error, @"Predicate parser error: %@", [error localizedDescription]);
+    
+    [proxyClient fetchEntities:fetchRequest withCompletionHandler:^(NSArray * entities, NSError * error) {
+        STAssertNil(error, @"Error returned by getEntitiesFromTable: %@", [error localizedDescription]);
+        STAssertNotNil(entities, @"getEntitiesFromTable returned nil");
+        STAssertTrue(entities.count == 1, @"getEntitiesFromTable returned incorrect number of entities");
+        [proxyDelegate markAsComplete];
+    }];
+    [proxyDelegate waitForResponse];
+    
+    [proxyClient deleteTableNamed:randomTableNameString withCompletionHandler:^(NSError *error)
+     {
+         STAssertNil(error, @"Error returned by deleteTableNamed: %@", [error localizedDescription]);
+         [proxyDelegate markAsComplete];
+     }];
+    [proxyDelegate waitForResponse];
+}
+#endif
+
+#ifdef TEST_INSERT_TABLE_ENTITY_PROXY
+-(void)testInsertTableEntityProxy_withCompletionHandler_InsertsEntityIntoTable
+{
+    NSLog(@"Executing TEST_INSERT_TABLE_ENTITY_PROXY");
+    
+    // first create a table to test against
+    [proxyClient createTableNamed:randomTableNameString withCompletionHandler:^(NSError *error)
+     {
+         STAssertNil(error, @"Error returned by createTableNamed: %@", [error localizedDescription]);   
+         [proxyDelegate markAsComplete];
+     }];
+    [proxyDelegate waitForResponse];
+    
+	WATableEntity *testEntity = [WATableEntity createEntityForTable:randomTableNameString];	
+	testEntity.partitionKey = @"a";
+	testEntity.rowKey = @"01021972";
+	[testEntity setObject:@"199" forKey:@"Price"];
+    
+    [proxyClient insertEntity:testEntity withCompletionHandler:^(NSError *error)
+     {
+		 STAssertNil(error, @"Error returned by insertEntity: %@", [error localizedDescription]);
+		 [proxyDelegate markAsComplete];
+     }];
+    [proxyDelegate waitForResponse];
+    
+	// Clean up after ourselves
+    [proxyClient deleteEntity:testEntity withCompletionHandler:^(NSError *error)
+     {
+		 STAssertNil(error, @"Error returned by deleteEntity: %@", [error localizedDescription]);
+		 [proxyDelegate markAsComplete];
+     }];
+    [proxyDelegate waitForResponse];
+    
+    [proxyClient deleteTableNamed:randomTableNameString withCompletionHandler:^(NSError *error)
+     {
+         STAssertNil(error, @"Error returned by deleteTableNamed: %@", [error localizedDescription]);
+         [proxyDelegate markAsComplete];
+     }];
+    [proxyDelegate waitForResponse];
+}
+#endif
+
+#ifdef TEST_UPDATE_TABLE_ENTITY_PROXY
+-(void)testUpdateTableEntityProxy_withCompletionHandler_UpdatesEntityInTable
+{
+    NSLog(@"Executing TEST_UPDATE_TABLE_ENTITY_PROXY");
+    
+    // first create a table to test against
+    [proxyClient createTableNamed:randomTableNameString withCompletionHandler:^(NSError *error)
+     {
+         STAssertNil(error, @"Error returned by createTableNamed: %@", [error localizedDescription]);   
+         [proxyDelegate markAsComplete];
+     }];
+    [proxyDelegate waitForResponse];
+    
+	WATableEntity *testEntity = [WATableEntity createEntityForTable:randomTableNameString];	
+	testEntity.partitionKey = @"a";
+	testEntity.rowKey = @"01021972";
+	[testEntity setObject:@"299" forKey:@"Price"];
+    
+	// Setup before we run the actual test
+    [proxyClient insertEntity:testEntity withCompletionHandler:^(NSError *error)
+     {
+		 STAssertNil(error, @"Setup: Error returned by insertEntity: %@", [error localizedDescription]);
+		 [proxyDelegate markAsComplete];
+     }];
+    [proxyDelegate waitForResponse];
+    
+	// Now run the test
+	[testEntity setObject:@"299" forKey:@"Price"];
+    [proxyClient updateEntity:testEntity withCompletionHandler:^(NSError *error)
+     {
+		 STAssertNil(error, @"Error returned by updateEntity: %@", [error localizedDescription]);
+		 [proxyDelegate markAsComplete];
+     }];
+    [proxyDelegate waitForResponse];
+    
+	// Clean up after ourselves
+    [proxyClient deleteEntity:testEntity withCompletionHandler:^(NSError *error)
+     {
+		 STAssertNil(error, @"Teardown: Error returned by deleteEntity: %@", [error localizedDescription]);
+		 [proxyDelegate markAsComplete];
+     }];
+    [proxyDelegate waitForResponse];
+    
+    [proxyClient deleteTableNamed:randomTableNameString withCompletionHandler:^(NSError *error)
+     {
+         STAssertNil(error, @"Error returned by deleteTableNamed: %@", [error localizedDescription]);
+         [proxyDelegate markAsComplete];
+     }];
+    [proxyDelegate waitForResponse];
+}
+#endif
+
+#ifdef TEST_MERGE_TABLE_ENTITY_PROXY
+-(void)testMergeTableEntityProxy_WithCompletionHandler_MergesExistingTableEntity
+{
+    NSLog(@"Executing TEST_MERGE_TABLE_ENTITY_PROXY");
+    
+    // first create a table to test against
+    [proxyClient createTableNamed:randomTableNameString withCompletionHandler:^(NSError *error)
+     {
+         STAssertNil(error, @"Error returned by createTableNamed: %@", [error localizedDescription]);   
+         [proxyDelegate markAsComplete];
+     }];
+    [proxyDelegate waitForResponse];
+    
+	WATableEntity *testEntity = [WATableEntity createEntityForTable:randomTableNameString];	
+	testEntity.partitionKey = @"a";
+	testEntity.rowKey = @"01021972";
+	[testEntity setObject:@"399" forKey:@"Price"];
+	
+	// Setup before we run the actual test
+    [proxyClient insertEntity:testEntity withCompletionHandler:^(NSError *error)
+     {
+		 STAssertNil(error, @"Setup: Error returned by insertEntity: %@", [error localizedDescription]);
+		 [proxyDelegate markAsComplete];
+     }];
+    [proxyDelegate waitForResponse];
+    
+	// Now run the test
+	[testEntity setObject:@"399" forKey:@"Price"];
+    [proxyClient mergeEntity:testEntity withCompletionHandler:^(NSError *error)
+     {
+		 STAssertNil(error, @"Error returned by mergeEntity: %@", [error localizedDescription]);
+		 [proxyDelegate markAsComplete];
+     }];
+    [proxyDelegate waitForResponse];
+    
+	// Clean up after ourselves
+    [proxyClient deleteEntity:testEntity withCompletionHandler:^(NSError *error)
+     {
+		 STAssertNil(error, @"Teardown: Error returned by deleteEntity: %@", [error localizedDescription]);
+		 [proxyDelegate markAsComplete];
+     }];
+    [proxyDelegate waitForResponse];
+    
+    [proxyClient deleteTableNamed:randomTableNameString withCompletionHandler:^(NSError *error)
+     {
+         STAssertNil(error, @"Error returned by deleteTableNamed: %@", [error localizedDescription]);
+         [proxyDelegate markAsComplete];
+     }];
+    [proxyDelegate waitForResponse];
+}
+#endif
+
+#ifdef TEST_DELETE_TABLE_ENTITY_PROXY
+-(void)testDeleteTableEntityProxy_WithCompletionHandler_TableEntityIsDeleted
+{
+    NSLog(@"Executing TEST_DELETE_TABLE_ENTITY_PROXY");
+    
+    // first create a table to test against
+    [proxyClient createTableNamed:randomTableNameString withCompletionHandler:^(NSError *error)
+     {
+         STAssertNil(error, @"Error returned by createTableNamed: %@", [error localizedDescription]);   
+         [proxyDelegate markAsComplete];
+     }];
+    [proxyDelegate waitForResponse];
+    
+	WATableEntity *testEntity = [WATableEntity createEntityForTable:randomTableNameString];
+	testEntity.partitionKey = @"a";
+	testEntity.rowKey = @"01021972";
+	[testEntity setObject:@"199" forKey:@"Price"];
+	
+	// Setup before we run the actual test
+    [proxyClient insertEntity:testEntity withCompletionHandler:^(NSError *error)
+     {
+		 STAssertNil(error, @"Setup: Error returned by insertEntity: %@", [error localizedDescription]);
+		 [proxyDelegate markAsComplete];
+     }];
+    [proxyDelegate waitForResponse];
+    
+	// Now run the test
+    [proxyClient deleteEntity:testEntity withCompletionHandler:^(NSError *error)
+     {
+		 STAssertNil(error, @"Error returned by deleteEntity: %@", [error localizedDescription]);
+		 [proxyDelegate markAsComplete];
+     }];
+    [proxyDelegate waitForResponse];
+    
+    [proxyClient deleteTableNamed:randomTableNameString withCompletionHandler:^(NSError *error)
+     {
+         STAssertNil(error, @"Error returned by deleteTableNamed: %@", [error localizedDescription]);
+         [proxyDelegate markAsComplete];
+     }];
+    [proxyDelegate waitForResponse];
+}
+#endif
+
+/* 
+ * Tests for Queue Storage via the Proxy
+ */
+
+#ifdef TEST_FETCH_QUEUES_PROXY
+-(void)testFetchQueuesProxy_WithCompletionHandler_ReturnsListOfQueues 
+{
+    NSLog(@"Executing TEST_FETCH_QUEUES_PROXY");
+    
+    [proxyClient fetchQueuesWithCompletionHandler:^(NSArray* queues, NSError* error)
+     {
+         STAssertNil(error, @"Error returned from fetchQueue: %@",[error localizedDescription]);
+         STAssertTrue([queues count] > 0, @"No queues were found under this account");
+         [proxyDelegate markAsComplete];
+     }];
+	
+	[proxyDelegate waitForResponse];
+}
+#endif
+
+#ifdef TEST_ADD_DELETE_QUEUE_PROXY
+-(void)testAddDeleteQueueProxy_WithCompletionHandler_QueueAddedAndDeleted
+{
+    NSLog(@"Executing TEST_ADD_DELETE_QUEUE_PPOXY");
+    NSLog(@"Adding Queue Named: %@", randomQueueNameString);
+    [proxyClient addQueueNamed:randomQueueNameString withCompletionHandler:^(NSError *error) {
+        STAssertNil(error, @"Error returned from addQueue: %@",[error localizedDescription]);
+        [proxyDelegate markAsComplete];
+        
+    }];
+    [proxyDelegate waitForResponse];
+    
+    NSLog(@"Deleting Queue Named: %@", randomQueueNameString);
+    [proxyClient deleteQueueNamed:randomQueueNameString withCompletionHandler:^(NSError *error)
+     {
+         STAssertNil(error, @"Error returned from deleteQueue: %@",[error localizedDescription]);
+         [proxyDelegate markAsComplete];
+     }];
+    [proxyDelegate waitForResponse];
+}
+#endif
+
+#ifdef TEST_FETCH_QUEUE_MESSAGES_PROXY
+-(void)testFetchQueueMessagesProxy_WithCompletionHandler_QueueMessageAddedAndReturned 
+{
+    NSLog(@"Executing TEST_FETCH_QUEUE_MESSAGES_PROXY");
+    NSLog(@"Adding Queue Named: %@", randomQueueNameString);
+    [proxyClient addQueueNamed:randomQueueNameString withCompletionHandler:^(NSError *error) {
+        STAssertNil(error, @"Error returned from addQueue: %@",[error localizedDescription]);
+        [proxyDelegate markAsComplete];
+        
+    }];
+    [proxyDelegate waitForResponse];
+    
+    [proxyClient addMessageToQueue:@"My Message test" queueName:randomQueueNameString withCompletionHandler:^(NSError *error)
+     {
+         STAssertNil(error, @"Error returned from adding message to Queue: %@",[error localizedDescription]);
+         [proxyDelegate markAsComplete];
+     }];
+	[proxyDelegate waitForResponse];
+    
+    [proxyClient fetchQueueMessages:randomQueueNameString withCompletionHandler:^(NSArray* queueMessages, NSError* error)
+     {
+         STAssertNil(error, @"Error returned from getQueueMessages: %@",[error localizedDescription]);
+         STAssertTrue([queueMessages count] > 0, @"No queueMessages were found under this account");
+         [proxyDelegate markAsComplete];
+     }];
+	[proxyDelegate waitForResponse];
+    
+    NSLog(@"Deleting Queue Named: %@", randomQueueNameString);
+    [proxyClient deleteQueueNamed:randomQueueNameString withCompletionHandler:^(NSError *error)
+     {
+         STAssertNil(error, @"Error returned from deleteQueue: %@",[error localizedDescription]);
+         [proxyDelegate markAsComplete];
+     }];
+    [proxyDelegate waitForResponse];
+}
+#endif
 
 @end

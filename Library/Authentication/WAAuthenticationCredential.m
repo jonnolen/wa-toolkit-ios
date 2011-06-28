@@ -16,7 +16,6 @@
 
 #import "WAAuthenticationCredential.h"
 #import "WAAuthenticationCredential+Private.h"
-#import "WACloudAccessToken.h"
 #import <CommonCrypto/CommonDigest.h>
 #import <CommonCrypto/CommonHMAC.h>	
 #import <stdarg.h>
@@ -66,26 +65,14 @@ const int AUTHENTICATION_DELAY = 2;
 - (id)initWithProxyURL:(NSURL *)proxyService tablesService:(NSURL *)tablesService blobsService:(NSURL *)blobsService user:(NSString *)user password:(NSString *)password
 {
 	if ((self = [super init]) != nil)
-	{
+		{
 		_usesProxy = YES;
 		_proxyURL = [proxyService retain];
 		_tableServiceURL = [tablesService retain];
 		_blobServiceURL = [blobsService retain];
         _username = [user copy];
         _password = [password copy];
-	}
-	
-	return self;
-}
-
-- (id)initWithProxyURL:(NSURL *)proxyService accessToken:(WACloudAccessToken*)accessToken
-{
-	if ((self = [super init]) != nil)
-	{
-		_usesProxy = YES;
-		_proxyURL = [proxyService retain];
-		_accessToken = [accessToken retain];						
-	}
+		}
 	
 	return self;
 }
@@ -187,11 +174,6 @@ const int AUTHENTICATION_DELAY = 2;
 	return credential;
 }
 
-+ (WAAuthenticationCredential *)authenticateCredentialWithProxyURL:(NSURL *)proxyURL accessToken:(WACloudAccessToken*)accessToken
-{
-	return [[[self alloc] initWithProxyURL:proxyURL accessToken:accessToken] autorelease];
-}
-
 #pragma mark -
 #pragma mark Request authentication methods
 
@@ -203,6 +185,7 @@ const int AUTHENTICATION_DELAY = 2;
 	}
 
     BOOL usingTableStorage = [[storageType lowercaseString] isEqualToString:@"table"];
+    BOOL usingQueueStorage = [[storageType lowercaseString] isEqualToString:@"queue"];
     NSURL* serviceURL;
     
 #if 1
@@ -212,6 +195,11 @@ const int AUTHENTICATION_DELAY = 2;
 		{
             endpoint = [NSString stringWithFormat:@"/AzureTablesProxy.axd/%@", endpoint];
             
+            serviceURL = [[NSURL URLWithString:endpoint relativeToURL:_proxyURL] absoluteURL];
+        }
+        else if (usingQueueStorage)
+        {
+            endpoint = [NSString stringWithFormat:@"/AzureQueuesProxy.axd%@", endpoint];
             serviceURL = [[NSURL URLWithString:endpoint relativeToURL:_proxyURL] absoluteURL];
         }
         else
@@ -232,6 +220,10 @@ const int AUTHENTICATION_DELAY = 2;
 		{
 			servicePath = [[_proxyURL absoluteString] stringByAppendingFormat:@"/AzureTablesProxy.axd/%@", endpoint];
 		}
+        else if (usingQueueStorage)
+        {
+            servicePath = [[_proxyURL absoluteString] stringByAppendingFormat:@"/AzureQueuesProxy.axd%@", endpoint];
+        }
 		else
 		{
 			servicePath = [[_proxyURL absoluteString] stringByAppendingFormat:@"/%@", endpoint];
@@ -269,17 +261,7 @@ const int AUTHENTICATION_DELAY = 2;
     if (_usesProxy)
 	{
 		[authenticatedrequest setValue:@"identity" forHTTPHeaderField:@"Accept-Encoding"];
-		
-		if(_accessToken)
-		{
-			[authenticatedrequest setValue:[NSString stringWithFormat:@"OAuth: %@", _accessToken.securityToken]
-						forHTTPHeaderField:@"Authorization"];
-		}
-		else
-		{
-			[authenticatedrequest setValue:_token forHTTPHeaderField:@"AuthToken"];
-		}
-		
+		[authenticatedrequest setValue:_token forHTTPHeaderField:@"AuthToken"];
 		if(contentType)
 		{
 			[authenticatedrequest addValue:contentType forHTTPHeaderField:@"Content-Type"];
@@ -405,6 +387,11 @@ const int AUTHENTICATION_DELAY = 2;
 		NSData *encodedData = [NSData dataWithBytesNoCopy:buffer length:CC_SHA256_DIGEST_LENGTH freeWhenDone:YES];
 		NSString *hash = [encodedData stringWithBase64EncodedData];
 
+#if FULL_LOGGING
+        // NSLog(@"Request string: %@", requestString);
+        // NSLog(@"Request hash: %@", hash);
+#endif
+        
 		// Append to the Authorization Header
 		NSString *authHeader = [NSString stringWithFormat:@"SharedKey %@:%@", _accountName, hash];
         
@@ -454,6 +441,10 @@ const int AUTHENTICATION_DELAY = 2;
 		{
 			[authenticatedrequest setHTTPBody:contentData];
 		}
+        if(queueSemantics)
+        {
+            [authenticatedrequest addValue:@"2009-09-19" forHTTPHeaderField:@"x-ms-version"];
+        }
 	}
 	else
 	{
@@ -796,7 +787,6 @@ const int AUTHENTICATION_DELAY = 2;
 	[_password release];
 	[_blobServiceURL release];
 	[_tableServiceURL release];
-	[_accessToken release];
 	
 	[super dealloc];
 }

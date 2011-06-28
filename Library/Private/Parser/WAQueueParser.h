@@ -20,5 +20,6 @@
 @interface WAQueueParser : NSObject
 
 + (NSArray *)loadQueues:(xmlDocPtr)doc;
++ (NSArray *)loadQueuesForProxy:(xmlDocPtr)doc;
 
 @end

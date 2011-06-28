@@ -172,6 +172,32 @@ static NSLock* _lock;
 	}
 }
 
+// to deal with self-signed certificates
+- (BOOL)connection:(NSURLConnection *)connection
+canAuthenticateAgainstProtectionSpace:(NSURLProtectionSpace *)protectionSpace
+{
+	return [protectionSpace.authenticationMethod
+			isEqualToString:NSURLAuthenticationMethodServerTrust];
+}
+
+- (void)connection:(NSURLConnection *)connection
+didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
+{
+	if ([challenge.protectionSpace.authenticationMethod
+		 isEqualToString:NSURLAuthenticationMethodServerTrust])
+	{
+		// we only trust our own domain
+		if ([challenge.protectionSpace.host isEqualToString:@"wazmobiletoolkit.cloudapp.net"])
+		{
+			NSURLCredential *credential =
+            [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust];
+			[challenge.sender useCredential:credential forAuthenticationChallenge:challenge];
+		}
+	}
+    
+	[challenge.sender continueWithoutCredentialForAuthenticationChallenge:challenge];
+}
+
 -(void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
     if(_noResponseBlock)
