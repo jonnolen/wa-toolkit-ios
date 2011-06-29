@@ -18,6 +18,12 @@
 #import "WAXMLHelper.h"
 #import <libxml/parser.h>
 
+#define SELF_SIGNED_SSL 1 // indicates that the library supports self signed SSL certs
+
+#if SELF_SIGNED_SSL
+static NSString* proxyAddress = @"wazmobiletoolkit.cloudapp.net";
+#endif
+
 #if USE_QUEUE
 static WACloudURLRequest* _head = nil;
 static WACloudURLRequest* _tail = nil;
@@ -172,7 +178,8 @@ static NSLock* _lock;
 	}
 }
 
-// to deal with self-signed certificates
+#ifdef SELF_SIGNED_SSL
+
 - (BOOL)connection:(NSURLConnection *)connection
 canAuthenticateAgainstProtectionSpace:(NSURLProtectionSpace *)protectionSpace
 {
@@ -186,17 +193,16 @@ didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
 	if ([challenge.protectionSpace.authenticationMethod
 		 isEqualToString:NSURLAuthenticationMethodServerTrust])
 	{
-		// we only trust our own domain
-		if ([challenge.protectionSpace.host isEqualToString:@"wazmobiletoolkit.cloudapp.net"])
+		if ([challenge.protectionSpace.host isEqualToString:proxyAddress])
 		{
 			NSURLCredential *credential =
             [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust];
 			[challenge.sender useCredential:credential forAuthenticationChallenge:challenge];
 		}
 	}
-    
 	[challenge.sender continueWithoutCredentialForAuthenticationChallenge:challenge];
 }
+#endif
 
 -(void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
@@ -243,14 +249,6 @@ didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
         
         xmlDocPtr doc = xmlReadMemory([_data bytes], (int)[_data length], baseURL, encoding, (XML_PARSE_NOCDATA | XML_PARSE_NOBLANKS)); 
         
-        /*if (doc == NULL) 
-        {
-            _xmlBlock(nil, [NSError errorWithDomain:@"com.microsoft.AzureIOSToolkit"
-                                               code:-1
-                                           userInfo:nil]);
-            return;
-        }*/
-        
         NSError* error = [WAXMLHelper checkForError:doc];
 
         if(error)
@@ -270,7 +268,6 @@ didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
 	}
 
 #if USE_QUEUE
-//  [self performSelector:@selector(startNext) withObject:nil afterDelay:0.0];
     [self startNext];
 #endif
 }
@@ -291,7 +288,6 @@ didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
     }
 
 #if USE_QUEUE
-//  [self performSelector:@selector(startNext) withObject:nil afterDelay:0.0];
     [self startNext];
 #endif
 }

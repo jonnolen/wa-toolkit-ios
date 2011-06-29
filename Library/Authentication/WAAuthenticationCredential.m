@@ -111,7 +111,6 @@ const int AUTHENTICATION_DELAY = 2;
          }
      }];
 	
-    // process the call synchronously...
 	if(!block)
 	{
 		while(!_token && !_authError)
@@ -309,7 +308,6 @@ const int AUTHENTICATION_DELAY = 2;
             }
         }
         
-        // Construct the date in the right format
 		NSDate *date = [NSDate date];
 		NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
 		[dateFormatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
@@ -588,7 +586,7 @@ const int AUTHENTICATION_DELAY = 2;
 		NSString *hash = [encodedData stringWithBase64EncodedData];
         
 #if FULL_LOGGING
-         NSLog(@"Request string: %@", requestString);
+        // NSLog(@"Request string: %@", requestString);
         // NSLog(@"Request hash: %@", hash);
 #endif
         
@@ -680,13 +678,6 @@ const int AUTHENTICATION_DELAY = 2;
     BOOL queueSemantics = [[storageType lowercaseString] isEqualToString:@"queue"];
     NSURL* serviceURL = [self URLforEndpoint:endpoint forStorageType:storageType];
     
-    /*CloudURLRequest* request = [self authenticatedRequestWithURL:serviceURL 
-                                                   blobSemantics:blobSemantics
-                                                      httpMethod:@"GET" 
-                                                     contentData:nil 
-                                                     contentType:nil
-                                                            args:arg];*/
-    
     WACloudURLRequest* request = [self authenticatedRequestWithURL:serviceURL 
                                                    blobSemantics:blobSemantics
                                                   queueSemantics:queueSemantics
@@ -708,13 +699,7 @@ const int AUTHENTICATION_DELAY = 2;
     BOOL blobSemantics = [[storageType lowercaseString] isEqualToString:@"blob"];
     BOOL queueSemantics = [[storageType lowercaseString] isEqualToString:@"queue"];
     NSURL* serviceURL = [self URLforEndpoint:endpoint forStorageType:storageType];
-    
-    /*CloudURLRequest* request = [self authenticatedRequestWithURL:serviceURL 
-                                                   blobSemantics:blobSemantics
-                                                      httpMethod:httpMethod 
-                                                     contentData:nil 
-                                                     contentType:nil
-                                                            args:arg];*/
+
     WACloudURLRequest* request = [self authenticatedRequestWithURL:serviceURL 
                                                    blobSemantics:blobSemantics
                                                   queueSemantics:queueSemantics
@@ -736,13 +721,7 @@ const int AUTHENTICATION_DELAY = 2;
     BOOL blobSemantics = [[storageType lowercaseString] isEqualToString:@"blob"];
     BOOL queueSemantics = [[storageType lowercaseString] isEqualToString:@"queue"];
     NSURL* serviceURL = [self URLforEndpoint:endpoint forStorageType:storageType];
-    
-    /*CloudURLRequest* request = [self authenticatedRequestWithURL:serviceURL 
-                                                   blobSemantics:blobSemantics
-                                                      httpMethod:httpMethod 
-                                                     contentData:contentData 
-                                                     contentType:contentType
-                                                            args:arg];*/
+
      WACloudURLRequest* request = [self authenticatedRequestWithURL:serviceURL 
                                                     blobSemantics:blobSemantics
                                                    queueSemantics:queueSemantics

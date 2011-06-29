@@ -212,11 +212,6 @@
 - (void)storageClient:(WACloudStorageClient *)client didMergeEntity:(WATableEntity *)entity;
 /*! Called when the client successfully deletes an entity from a table. */
 - (void)storageClient:(WACloudStorageClient *)client didDeleteEntity:(WATableEntity *)entity;
-/*
-- (void)storageClient:(CloudStorageClient *)client didInsertEntity:(NSDictionary *)entity intoTableNamed:(NSString *)tableName;
-- (void)storageClient:(CloudStorageClient *)client didUpdateEntity:(NSDictionary *)entity inTableNamed:(NSString *)tableName;
-- (void)storageClient:(CloudStorageClient *)client didMergeEntity:(NSDictionary *)entity inTableNamed:(NSString *)tableName;
-- (void)storageClient:(CloudStorageClient *)client didDeleteEntity:(NSDictionary *)entity inTableNamed:(NSString *)tableName;
- */
+
 
 @end

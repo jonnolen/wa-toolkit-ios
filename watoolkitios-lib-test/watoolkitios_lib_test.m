@@ -678,6 +678,10 @@ int tableCount = 0;
      }];
     [proxyDelegate waitForResponse];
     
+    NSLog(@"Dealy 5 seconds for adding blob data to be done in Azure Cloud!");
+    NSDate *delay = [NSDate dateWithTimeIntervalSinceNow: 0.05 ];
+    [NSThread sleepUntilDate:delay];
+    
 }
 #endif
 

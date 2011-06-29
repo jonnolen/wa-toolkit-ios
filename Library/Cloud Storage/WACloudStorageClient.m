@@ -667,7 +667,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
              }
              
              NSArray* containers = [WAContainerParser loadContainersForProxy:doc];
-             WABlobContainer *container;
+             WABlobContainer *container = nil;
              for (WABlobContainer *tempContainer in containers) {
                  if ([tempContainer.name isEqualToString:[containerName lowercaseString]]) {
                      container = tempContainer;
@@ -706,7 +706,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
              }
              
              NSArray* containers = [WAContainerParser loadContainers:doc];
-             WABlobContainer *container;
+             WABlobContainer *container = nil;
              for (WABlobContainer *tempContainer in containers) {
                  if ([tempContainer.name isEqualToString:[containerName lowercaseString]]) {
                      container = tempContainer;
@@ -941,35 +941,34 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
 
 - (void)fetchBlobData:(WABlob *)blob withCompletionHandler:(void (^)(NSData*, NSError*))block
 {
-    //CloudURLRequest* request = [_credential authenticatedBlobRequestWithURL:blob.URL forStorageType:@"blob", nil];
-    
-    NSString* endpoint = [NSString stringWithFormat:@"/%@/%@", blob.container.name, blob.name];
-    WACloudURLRequest* request = [_credential authenticatedRequestWithEndpoint:endpoint forStorageType:@"blob", nil];
-    
-    [request fetchDataWithCompletionHandler:^(NSData* data, NSError* error)
-     {
-         if(error)
+        NSString* endpoint = [NSString stringWithFormat:@"/%@/%@", blob.container.name, blob.name];
+         WACloudURLRequest* request = [_credential authenticatedRequestWithEndpoint:endpoint forStorageType:@"blob", nil];
+        
+        [request fetchDataWithCompletionHandler:^(NSData* data, NSError* error)
          {
+             if(error)
+             {
+                 if(block)
+                 {
+                     block(nil, error);
+                 }
+                 else if([(NSObject*)_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
+                 {
+                     [_delegate storageClient:self didFailRequest:request withError:error];
+                 }
+                 return;
+             }
+             
              if(block)
              {
-                 block(nil, error);
+                 block(data, nil);
              }
-             else if([(NSObject*)_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
+             else if([(NSObject*)_delegate respondsToSelector:@selector(storageClient:didFetchBlobData:blob:)])
              {
-                 [_delegate storageClient:self didFailRequest:request withError:error];
+                 [_delegate storageClient:self didFetchBlobData:data blob:blob];
              }
-             return;
-         }
-         
-         if(block)
-         {
-             block(data, nil);
-         }
-         else if([(NSObject*)_delegate respondsToSelector:@selector(storageClient:didFetchBlobData:blob:)])
-         {
-             [_delegate storageClient:self didFetchBlobData:data blob:blob];
-         }
-     }];
+         }];
+    
 }
 
 - (void)addBlobToContainer:(WABlobContainer *)container blobName:(NSString *)blobName contentData:(NSData *)contentData contentType:(NSString*)contentType
