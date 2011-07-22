@@ -25,8 +25,9 @@
     NSURL* _url;
     WACloudAccessControlHomeRealm* _realm;
 	void (^ _block)(WACloudAccessToken* token);
+	BOOL _allowsClose;
 }
 
-- (id)initWithHomeRealm:(WACloudAccessControlHomeRealm*)realm withCompletionHandler:(void (^)(WACloudAccessToken* token))block;
+- (id)initWithHomeRealm:(WACloudAccessControlHomeRealm*)realm allowsClose:(BOOL)allowsClose withCompletionHandler:(void (^)(WACloudAccessToken* token))block;
 
 @end

@@ -21,6 +21,7 @@
 @interface WABlob (Private)
 
 - (id)initBlobWithName:(NSString *)name URL:(NSString *)URL container:(WABlobContainer*)container;
+- (id)initBlobWithName:(NSString *)name URL:(NSString *)URL;
 
 @end
 
@@ -67,6 +68,30 @@
          NSString *url = [WAXMLHelper getElementValue:node name:@"Url"];
          
          WABlob *blob = [[WABlob alloc] initBlobWithName:name URL:url container:container];
+         [blobs addObject:blob];
+         [blob release];
+     }];
+	
+	return [[blobs copy] autorelease];
+}
+
++ (NSArray *)loadBlobsForProxy:(xmlDocPtr)doc
+{
+    if (doc == nil) 
+    { 
+		return nil; 
+	}
+    
+	NSMutableArray *blobs = [NSMutableArray arrayWithCapacity:30];
+    
+    [WAXMLHelper performXPath:@"/*/*/*" 
+                   onDocument:doc 
+                        block:^(xmlNodePtr node)
+     {
+         NSString *name = [WAXMLHelper getElementValue:node name:@"Name"];
+         NSString *url = [WAXMLHelper getElementValue:node name:@"Url"];
+         
+         WABlob *blob = [[WABlob alloc] initBlobWithName:name URL:url];
          [blobs addObject:blob];
          [blob release];
      }];

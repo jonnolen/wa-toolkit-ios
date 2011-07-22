@@ -15,7 +15,6 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "WACloudAccessControlHomeRealm.h"
 
 @interface WACloudAccessToken : NSObject 
 {
@@ -29,6 +28,9 @@
 @property (readonly) NSDate* expireDate;
 @property (readonly) NSDate* createDate;
 @property (readonly) NSString* securityToken;
-@property (readonly) NSString* realmName;
+@property (readonly) NSString* identityProvider;
+@property (readonly) NSDictionary* claims;
+
+- (void)signRequest:(NSMutableURLRequest*)request;
 
 @end

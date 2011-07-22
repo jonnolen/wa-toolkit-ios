@@ -18,6 +18,8 @@
 #include <libxml/tree.h>
 #include "WASimpleBase64.h"
 #include "WACloudAccessControlClient.h"
+#include "WACloudAccessControlHomeRealm.h"
+#include "NSString+URLEncode.h"
 
 @implementation WACloudAccessToken
 
@@ -26,7 +28,8 @@
 @synthesize expires = _expires;
 @synthesize created = _created;
 @synthesize securityToken = _securityToken;
-@synthesize realmName = _realmName;
+@synthesize identityProvider = _identityProvider;
+@synthesize claims = _claims;
 
 - (id)initWithDictionary:(NSDictionary*)dictionary fromRealm:(WACloudAccessControlHomeRealm*)realm
 {
@@ -36,7 +39,7 @@
         _tokenType = [[dictionary objectForKey:@"tokenType"] retain];
         _expires = [[dictionary objectForKey:@"expires"] integerValue];
         _created = [[dictionary objectForKey:@"created"] integerValue];
-		_realmName = [realm.name retain];
+		_identityProvider = [realm.name retain];
         
         NSString* securityTokenXmlStr = [dictionary objectForKey:@"securityToken"];
         
@@ -71,6 +74,29 @@
             NSData* securityTokenData = [securityTokenEncoded dataWithBase64DecodedString];
             
             _securityToken = [[NSString alloc] initWithData:securityTokenData encoding:NSUTF8StringEncoding];
+			
+			NSMutableDictionary* claims = [NSMutableDictionary dictionaryWithCapacity:10];
+			NSString* claimsPrefix = @"http://schemas.xmlsoap.org/ws/2005/05/identity/claims/";
+			
+			for(NSString* part in [_securityToken componentsSeparatedByString:@"&"])
+			{
+				NSRange split = [part rangeOfString:@"="];
+				if(!split.length)
+				{
+					continue; // weird
+				}
+				
+				NSString* key = [[part substringToIndex:split.location] URLDecode];
+				NSString* value = [[part substringFromIndex:split.location + 1] URLDecode];
+				
+				if([key hasPrefix:claimsPrefix])
+				{
+					key = [key substringFromIndex:claimsPrefix.length];
+					[claims setObject:value forKey:key];
+				}
+			}
+			
+			_claims = [claims copy];
             
             xmlFreeDoc(doc);
         }
@@ -81,8 +107,8 @@
 
 - (NSString*)description
 {
-    return [NSString stringWithFormat:@"CloudAccessToken: { appliesTo = %@, tokenType = %@, expireDate = %@, createDate = %@, securityToken = %@ }",
-            _appliesTo, _tokenType, [self expireDate], [self createDate], _securityToken];
+    return [NSString stringWithFormat:@"CloudAccessToken: { appliesTo = %@, tokenType = %@, expireDate = %@, createDate = %@, securityToken = %@, claims = %@ }",
+            _appliesTo, _tokenType, [self expireDate], [self createDate], _securityToken, _claims];
 }
 
 - (void)dealloc
@@ -90,7 +116,8 @@
     [_appliesTo release];
     [_tokenType release];
     [_securityToken release];
-	[_realmName release];
+	[_identityProvider release];
+	[_claims release];
     
     [super dealloc];
 }
@@ -103,6 +130,12 @@
 - (NSDate*)createDate
 {
     return [NSDate dateWithTimeIntervalSince1970:_created];
+}
+
+- (void)signRequest:(NSMutableURLRequest*)request
+{
+	NSString* authHeader = [NSString stringWithFormat:@"OAuth %@", _securityToken];
+	[request setValue:authHeader forHTTPHeaderField:@"Authorization"];
 }
 
 @end

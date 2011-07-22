@@ -20,12 +20,13 @@
 
 @implementation WALoginRealmPickerTableViewController
 
-- (id)initWithRealms:(NSArray*)realms withCompletionHandler:(void (^)(WACloudAccessToken* token))block
+- (id)initWithRealms:(NSArray*)realms allowsClose:(BOOL)allowsClose withCompletionHandler:(void (^)(WACloudAccessToken* token))block
 {
     if ((self = [super initWithStyle:UITableViewStylePlain])) 
     {
         _realms = [realms retain];
 		_block = [block retain];
+		_allowsClose = allowsClose;
         
         self.title = @"Pick Login Method";
     }
@@ -71,12 +72,16 @@
 {
     [super viewDidLoad];
 
-	if([self isModal])
+	if([self isModal] && _allowsClose)
 	{
 		UIBarButtonItem* item = [[UIBarButtonItem alloc] initWithTitle:@"Close" style:UIBarButtonItemStyleBordered target:self action:@selector(cancel:)];
 		self.navigationItem.leftBarButtonItem = item;
 		[item release];
 	}
+
+	UIBarButtonItem* backButton = [[UIBarButtonItem alloc] initWithTitle:@"Pick" style:UIBarButtonItemStyleBordered target:nil action:nil];
+	[self.navigationItem setBackBarButtonItem:backButton];
+	[backButton release];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -124,6 +129,7 @@
     WACloudAccessControlHomeRealm* realm = [_realms objectAtIndex:indexPath.row];
 
     WALoginWebViewController* webController = [[WALoginWebViewController alloc] initWithHomeRealm:realm
+																					  allowsClose:_allowsClose
 																			withCompletionHandler:_block];
     [self.navigationController pushViewController:webController animated:YES];
     [webController release];

@@ -21,7 +21,7 @@
 #define SELF_SIGNED_SSL 1 // indicates that the library supports self signed SSL certs
 
 #if SELF_SIGNED_SSL
-static NSString* proxyAddress = @"wazmobiletoolkit.cloudapp.net";
+static NSString* proxyAddress = nil;
 #endif
 
 #if USE_QUEUE
@@ -31,6 +31,14 @@ static NSLock* _lock;
 #endif
 
 @implementation WACloudURLRequest
+
+void ignoreSSLErrorFor(NSString* host)
+{
+#if SELF_SIGNED_SSL
+	[proxyAddress release];
+	proxyAddress = [[NSString stringWithFormat:@"%@.cloudapp.net", host] copy];
+#endif
+}
 
 #if USE_QUEUE
 #pragma mark Request Queuing support
@@ -180,23 +188,18 @@ static NSLock* _lock;
 
 #ifdef SELF_SIGNED_SSL
 
-- (BOOL)connection:(NSURLConnection *)connection
-canAuthenticateAgainstProtectionSpace:(NSURLProtectionSpace *)protectionSpace
+- (BOOL)connection:(NSURLConnection *)connection canAuthenticateAgainstProtectionSpace:(NSURLProtectionSpace *)protectionSpace
 {
-	return [protectionSpace.authenticationMethod
-			isEqualToString:NSURLAuthenticationMethodServerTrust];
+	return [protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust];
 }
 
-- (void)connection:(NSURLConnection *)connection
-didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
+- (void)connection:(NSURLConnection *)connection didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
 {
-	if ([challenge.protectionSpace.authenticationMethod
-		 isEqualToString:NSURLAuthenticationMethodServerTrust])
+	if (proxyAddress && [challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust])
 	{
 		if ([challenge.protectionSpace.host isEqualToString:proxyAddress])
 		{
-			NSURLCredential *credential =
-            [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust];
+			NSURLCredential *credential = [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust];
 			[challenge.sender useCredential:credential forAuthenticationChallenge:challenge];
 		}
 	}
@@ -229,6 +232,9 @@ didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
             if(error)
             {
                 _noResponseBlock(error);
+#if USE_QUEUE
+				[self startNext];
+#endif
                 return;
             }
         }
@@ -308,7 +314,9 @@ didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
 - (NSString*) URLDecode
 {
 	NSString *result = (NSString *) CFURLCreateStringByReplacingPercentEscapesUsingEncoding(kCFAllocatorDefault, (CFStringRef)self, CFSTR(""), kCFStringEncodingUTF8); 
-	return [result autorelease]; 
+	[result autorelease]; 
+	
+	return [result stringByReplacingOccurrencesOfString:@"+" withString:@" "];
 }
 
 @end

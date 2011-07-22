@@ -27,11 +27,11 @@
 		AA6521DF134D1E0C00008ADE /* WAPredicateParser.m in Sources */ = {isa = PBXBuildFile; fileRef = AA6521D9134D1E0C00008ADE /* WAPredicateParser.m */; };
 		AA6521E4134D1EE800008ADE /* WATableFetchRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = AA6521E2134D1EE800008ADE /* WATableFetchRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AA6521E5134D1EE800008ADE /* WATableFetchRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = AA6521E3134D1EE800008ADE /* WATableFetchRequest.m */; };
-		AA715A9B138F4D3B00AED192 /* WACloudAccessControlClient.h in Headers */ = {isa = PBXBuildFile; fileRef = AA715A95138F4D3B00AED192 /* WACloudAccessControlClient.h */; };
+		AA715A9B138F4D3B00AED192 /* WACloudAccessControlClient.h in Headers */ = {isa = PBXBuildFile; fileRef = AA715A95138F4D3B00AED192 /* WACloudAccessControlClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AA715A9C138F4D3B00AED192 /* WACloudAccessControlClient.m in Sources */ = {isa = PBXBuildFile; fileRef = AA715A96138F4D3B00AED192 /* WACloudAccessControlClient.m */; };
 		AA715A9D138F4D3B00AED192 /* WACloudAccessControlHomeRealm.h in Headers */ = {isa = PBXBuildFile; fileRef = AA715A97138F4D3B00AED192 /* WACloudAccessControlHomeRealm.h */; };
 		AA715A9E138F4D3B00AED192 /* WACloudAccessControlHomeRealm.m in Sources */ = {isa = PBXBuildFile; fileRef = AA715A98138F4D3B00AED192 /* WACloudAccessControlHomeRealm.m */; };
-		AA715A9F138F4D3B00AED192 /* WACloudAccessToken.h in Headers */ = {isa = PBXBuildFile; fileRef = AA715A99138F4D3B00AED192 /* WACloudAccessToken.h */; };
+		AA715A9F138F4D3B00AED192 /* WACloudAccessToken.h in Headers */ = {isa = PBXBuildFile; fileRef = AA715A99138F4D3B00AED192 /* WACloudAccessToken.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AA715AA0138F4D3B00AED192 /* WACloudAccessToken.m in Sources */ = {isa = PBXBuildFile; fileRef = AA715A9A138F4D3B00AED192 /* WACloudAccessToken.m */; };
 		AA715AA8138F4E8F00AED192 /* WALoginProgressViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = AA715AA2138F4E8F00AED192 /* WALoginProgressViewController.h */; };
 		AA715AA9138F4E8F00AED192 /* WALoginProgressViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA715AA3138F4E8F00AED192 /* WALoginProgressViewController.m */; };
@@ -39,6 +39,7 @@
 		AA715AAB138F4E8F00AED192 /* WALoginRealmPickerTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA715AA5138F4E8F00AED192 /* WALoginRealmPickerTableViewController.m */; };
 		AA715AAC138F4E8F00AED192 /* WALoginWebViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = AA715AA6138F4E8F00AED192 /* WALoginWebViewController.h */; };
 		AA715AAD138F4E8F00AED192 /* WALoginWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA715AA7138F4E8F00AED192 /* WALoginWebViewController.m */; };
+		AA72B26F13D4B35000CB1B16 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA72B26E13D4B34F00CB1B16 /* SenTestingKit.framework */; };
 		AA81D46A134D0CF400866C7C /* WAAtomPubEntry.h in Headers */ = {isa = PBXBuildFile; fileRef = AA81D468134D0CF400866C7C /* WAAtomPubEntry.h */; };
 		AA81D46B134D0CF400866C7C /* WAAtomPubEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = AA81D469134D0CF400866C7C /* WAAtomPubEntry.m */; };
 		AA8ACF4D134524B200D5F316 /* WAAuthenticationCredential.h in Headers */ = {isa = PBXBuildFile; fileRef = AA8ACF4B134524B200D5F316 /* WAAuthenticationCredential.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -106,6 +107,7 @@
 		AA715AA5138F4E8F00AED192 /* WALoginRealmPickerTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WALoginRealmPickerTableViewController.m; sourceTree = "<group>"; };
 		AA715AA6138F4E8F00AED192 /* WALoginWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WALoginWebViewController.h; sourceTree = "<group>"; };
 		AA715AA7138F4E8F00AED192 /* WALoginWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WALoginWebViewController.m; sourceTree = "<group>"; };
+		AA72B26E13D4B34F00CB1B16 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
 		AA81D468134D0CF400866C7C /* WAAtomPubEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WAAtomPubEntry.h; sourceTree = "<group>"; };
 		AA81D469134D0CF400866C7C /* WAAtomPubEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WAAtomPubEntry.m; sourceTree = "<group>"; };
 		AA8ACF4B134524B200D5F316 /* WAAuthenticationCredential.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WAAuthenticationCredential.h; sourceTree = "<group>"; };
@@ -151,6 +153,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AA72B26F13D4B35000CB1B16 /* SenTestingKit.framework in Frameworks */,
 				F4F9991C138DCBDF00254B51 /* libxml2.2.dylib in Frameworks */,
 				F4F9991A138DCBC500254B51 /* libwatoolkitios.a in Frameworks */,
 				F4F998F8138DC6C200254B51 /* UIKit.framework in Frameworks */,
@@ -211,6 +214,7 @@
 				1DF5F4DF0D08C38300B7A737 /* UIKit.framework */,
 				1D30AB110D05D00D00671497 /* Foundation.framework */,
 				288765FC0DF74451002DB57D /* CoreGraphics.framework */,
+				AA72B26E13D4B34F00CB1B16 /* SenTestingKit.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -370,6 +374,8 @@
 				F216A68A136F88BC00FAEAB4 /* WAQueueMessage.h in Headers */,
 				AABD4A50134D02C400B6E7D1 /* WATableEntity.h in Headers */,
 				AA094579134A2ABB00AF7EAB /* WABlob.h in Headers */,
+				AA715A9B138F4D3B00AED192 /* WACloudAccessControlClient.h in Headers */,
+				AA715A9F138F4D3B00AED192 /* WACloudAccessToken.h in Headers */,
 				AA8AD01A13454C1C00D5F316 /* WACloudURLRequest.h in Headers */,
 				AA0945641349194600AF7EAB /* WAXMLHelper.h in Headers */,
 				AA094582134A2ACF00AF7EAB /* WABlobParser.h in Headers */,
@@ -382,9 +388,7 @@
 				AAD7348C134D2C22000AB68A /* NSString+URLEncode.h in Headers */,
 				F216A690136F895900FAEAB4 /* WAQueueMessageParser.h in Headers */,
 				F216A692136F895900FAEAB4 /* WAQueueParser.h in Headers */,
-				AA715A9B138F4D3B00AED192 /* WACloudAccessControlClient.h in Headers */,
 				AA715A9D138F4D3B00AED192 /* WACloudAccessControlHomeRealm.h in Headers */,
-				AA715A9F138F4D3B00AED192 /* WACloudAccessToken.h in Headers */,
 				AA715AA8138F4E8F00AED192 /* WALoginProgressViewController.h in Headers */,
 				AA715AAA138F4E8F00AED192 /* WALoginRealmPickerTableViewController.h in Headers */,
 				AA715AAC138F4E8F00AED192 /* WALoginWebViewController.h in Headers */,

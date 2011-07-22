@@ -29,7 +29,7 @@
 
 @implementation WALoginProgressViewController
 
-- (id)initWithURL:(NSURL*)serviceURL withCompletionHandler:(void (^)(WACloudAccessToken* token))block
+- (id)initWithURL:(NSURL*)serviceURL allowsClose:(BOOL)allowsClose withCompletionHandler:(void (^)(WACloudAccessToken* token))block
 {
     if ((self = [super initWithNibName:nil bundle:nil])) 
     {
@@ -193,11 +193,13 @@
 		 {
 			 WACloudAccessControlHomeRealm* realm = [realms objectAtIndex:0];
 			 controller = [[WALoginWebViewController alloc] initWithHomeRealm:realm
+																  allowsClose:_allowsClose
 														withCompletionHandler:_block];
 		 }
 		 else
 		 {
 			controller = [[WALoginRealmPickerTableViewController alloc] initWithRealms:realms 
+																		   allowsClose:_allowsClose
 																 withCompletionHandler:_block];
 		 }
 		 

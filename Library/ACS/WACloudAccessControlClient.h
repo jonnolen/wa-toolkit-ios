@@ -35,10 +35,10 @@
 + (WACloudAccessControlClient*)accessControlClientForNamespace:(NSString*)serviceNamespace realm:(NSString*)realm;
 
 /*! Present the authentication user interface. The completion handler is called when the process is completed. */
-- (UIViewController*)createViewControllerWithCompletionHandler:(void (^)(BOOL authenticated))block;
+- (UIViewController*)createViewControllerAllowsClose:(BOOL)allowsClose withCompletionHandler:(void (^)(BOOL authenticated))block;
 
 /*! Present the authentication user interface. The completion handler is called when the process is completed. */
-- (void)showInViewController:(UIViewController*)controller withCompletionHandler:(void (^)(BOOL authenticated))block;
+- (void)showInViewController:(UIViewController*)controller allowsClose:(BOOL)allowsClose withCompletionHandler:(void (^)(BOOL authenticated))block;
 
 /*! Returns the security token that was set when the user authenticated through a call to requestAccessInViewController:withCompletionHandler:. */
 + (WACloudAccessToken*)sharedToken;

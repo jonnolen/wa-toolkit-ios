@@ -20,8 +20,9 @@
 @interface WALoginRealmPickerTableViewController : UITableViewController {
     NSArray* _realms;
 	void (^ _block)(WACloudAccessToken* token);
+	BOOL _allowsClose;
 }
 
-- (id)initWithRealms:(NSArray*)realms withCompletionHandler:(void (^)(WACloudAccessToken* token))block;
+- (id)initWithRealms:(NSArray*)realms allowsClose:(BOOL)allowsClose withCompletionHandler:(void (^)(WACloudAccessToken* token))block;
 
 @end

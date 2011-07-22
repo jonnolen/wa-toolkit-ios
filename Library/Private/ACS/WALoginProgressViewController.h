@@ -23,9 +23,10 @@
 {
     NSURL* _serviceURL;
 	void (^ _block)(WACloudAccessToken* token);
+	BOOL _allowsClose;
 }
 
-- (id)initWithURL:(NSURL*)serviceURL withCompletionHandler:(void (^)(WACloudAccessToken* token))block;
+- (id)initWithURL:(NSURL*)serviceURL allowsClose:(BOOL)allowsClose withCompletionHandler:(void (^)(WACloudAccessToken* token))block;
 
 
 @end

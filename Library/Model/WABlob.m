@@ -33,6 +33,16 @@
     return self;	
 }
 
+- (id)initBlobWithName:(NSString *)name URL:(NSString *)URL 
+{	
+    if ((self = [super init])) {
+        _name = [name retain];
+        _URL = [[NSURL URLWithString:URL] retain];
+    }    
+    
+    return self;	
+}
+
 - (NSString*) description
 {
     return [NSString stringWithFormat:@"Blob { name = %@, url = %@, container = %@ }", _name, _URL, _container];

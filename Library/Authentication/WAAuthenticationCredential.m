@@ -14,16 +14,17 @@
  limitations under the License.
  */
 
+#import <stdarg.h>
 #import "WAAuthenticationCredential.h"
 #import "WAAuthenticationCredential+Private.h"
+#import "WACloudAccessToken.h"
 #import <CommonCrypto/CommonDigest.h>
 #import <CommonCrypto/CommonHMAC.h>	
-#import <stdarg.h>
 #import "WASimpleBase64.h"
 #import "WACloudURLRequest.h"
 #import "WAXMLHelper.h"
 
-static NSString* PROXY_LOGIN_REQUEST_STRING =@"<Login xmlns:i=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns=\"http://schemas.datacontract.org/2004/07/Microsoft.Samples.WindowsPhoneCloud.StorageClient.Credentials\"><Password>{password}</Password><UserName>{username}</UserName></Login>";
+static NSString* PROXY_LOGIN_REQUEST_STRING = @"<Login xmlns:i=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns=\"http://schemas.datacontract.org/2004/07/Microsoft.Samples.WindowsPhoneCloud.StorageClient.Credentials\"><Password>{password}</Password><UserName>{username}</UserName></Login>";
 
 const int AUTHENTICATION_DELAY = 2;
 
@@ -65,14 +66,26 @@ const int AUTHENTICATION_DELAY = 2;
 - (id)initWithProxyURL:(NSURL *)proxyService tablesService:(NSURL *)tablesService blobsService:(NSURL *)blobsService user:(NSString *)user password:(NSString *)password
 {
 	if ((self = [super init]) != nil)
-		{
+	{
 		_usesProxy = YES;
 		_proxyURL = [proxyService retain];
 		_tableServiceURL = [tablesService retain];
 		_blobServiceURL = [blobsService retain];
         _username = [user copy];
         _password = [password copy];
-		}
+	}
+	
+	return self;
+}
+
+- (id)initWithProxyURL:(NSURL *)proxyService accessToken:(WACloudAccessToken*)accessToken
+{
+	if ((self = [super init]) != nil)
+	{
+		_usesProxy = YES;
+		_proxyURL = [proxyService retain];
+		_accessToken = [accessToken retain];						
+	}
 	
 	return self;
 }
@@ -173,6 +186,11 @@ const int AUTHENTICATION_DELAY = 2;
 	return credential;
 }
 
++ (WAAuthenticationCredential *)authenticateCredentialWithProxyURL:(NSURL *)proxyURL accessToken:(WACloudAccessToken*)accessToken
+{
+	return [[[self alloc] initWithProxyURL:proxyURL accessToken:accessToken] autorelease];
+}
+
 #pragma mark -
 #pragma mark Request authentication methods
 
@@ -245,7 +263,7 @@ const int AUTHENTICATION_DELAY = 2;
     return serviceURL;
 }
 
-- (WACloudURLRequest *)authenticatedRequestWithURL:(NSURL *)serviceURL blobSemantics:(BOOL)blobSemantics httpMethod:(NSString*)httpMethod contentData:(NSData *)contentData contentType:(NSString*)contentType args:(va_list)args
+/*- (WACloudURLRequest *)authenticatedRequestWithURL:(NSURL *)serviceURL blobSemantics:(BOOL)blobSemantics httpMethod:(NSString*)httpMethod contentData:(NSData *)contentData contentType:(NSString*)contentType args:(va_list)args
 {
     NSString* contentLength = contentData ? [NSString stringWithFormat:@"%d", contentData.length] : @"";
     
@@ -260,7 +278,16 @@ const int AUTHENTICATION_DELAY = 2;
     if (_usesProxy)
 	{
 		[authenticatedrequest setValue:@"identity" forHTTPHeaderField:@"Accept-Encoding"];
-		[authenticatedrequest setValue:_token forHTTPHeaderField:@"AuthToken"];
+		
+		if(_accessToken)
+		{
+			[_accessToken signRequest:authenticatedrequest];
+		}
+		else
+		{
+			[authenticatedrequest setValue:_token forHTTPHeaderField:@"AuthToken"];
+		}
+		
 		if(contentType)
 		{
 			[authenticatedrequest addValue:contentType forHTTPHeaderField:@"Content-Type"];
@@ -412,16 +439,16 @@ const int AUTHENTICATION_DELAY = 2;
         }
 	}
 	return (authenticatedrequest);
-}
+}*/
 
 - (WACloudURLRequest *)authenticatedRequestWithURL:(NSURL *)serviceURL blobSemantics:(BOOL)blobSemantics queueSemantics:(BOOL)queueSemantics httpMethod:(NSString*)httpMethod contentData:(NSData *)contentData contentType:(NSString*)contentType args:(va_list)args
 {
-    NSString* contentLength = contentData ? [NSString stringWithFormat:@"%d", contentData.length] : @"";
-    
 	if (!serviceURL)
 	{
 		return nil;
 	}
+    
+    NSString* contentLength = contentData ? [NSString stringWithFormat:@"%d", contentData.length] : @"";
     
 	WACloudURLRequest* authenticatedrequest = [WACloudURLRequest requestWithURL:serviceURL];
     [authenticatedrequest setHTTPMethod:httpMethod];
@@ -429,7 +456,21 @@ const int AUTHENTICATION_DELAY = 2;
     if (_usesProxy)
 	{
 		[authenticatedrequest setValue:@"identity" forHTTPHeaderField:@"Accept-Encoding"];
-		[authenticatedrequest setValue:_token forHTTPHeaderField:@"AuthToken"];
+
+		if(_accessToken)
+		{
+			[_accessToken signRequest:authenticatedrequest];
+		}
+		else if(_token)
+		{
+			[authenticatedrequest setValue:_token forHTTPHeaderField:@"AuthToken"];
+		}
+		
+        if(queueSemantics)
+        {
+			[authenticatedrequest addValue:@"2009-09-19" forHTTPHeaderField:@"x-ms-version"];
+        }
+		
 		if(contentType)
 		{
 			[authenticatedrequest addValue:contentType forHTTPHeaderField:@"Content-Type"];
@@ -439,179 +480,178 @@ const int AUTHENTICATION_DELAY = 2;
 		{
 			[authenticatedrequest setHTTPBody:contentData];
 		}
-        if(queueSemantics)
-        {
-            [authenticatedrequest addValue:@"2009-09-19" forHTTPHeaderField:@"x-ms-version"];
-        }
+		
+		return authenticatedrequest;
+	}
+
+	NSString* endpoint = [[[serviceURL path] copy] autorelease];
+	NSString* query = [serviceURL query];
+	if(query && query.length > 0)
+	{
+		// for table storage, look for the comp= parameter
+		NSArray* args = [query componentsSeparatedByString:@"&"];
+		
+		if(blobSemantics)
+		{
+			NSMutableString* q = [NSMutableString stringWithCapacity:100];
+			
+			for(NSString* arg in [args sortedArrayUsingSelector:@selector(compare:)])
+			{
+				[q appendString:@"\n"];
+				[q appendString:[arg stringByReplacingOccurrencesOfString:@"=" withString:@":"]];
+			}
+			
+			query = q;
+		}
+		else if(queueSemantics)
+		{
+			NSString *noQuery = @"numofmessages";
+			NSString *noQuery2 = @"popreceipt";
+			NSRange range = [query rangeOfString : noQuery];
+			NSRange range2 = [query rangeOfString : noQuery2];
+			if ((range.location == NSNotFound) && (range2.location == NSNotFound)) {
+			   query = [@"?" stringByAppendingString:query];
+			}
+			else {
+				query = nil;
+			}
+		}
+		else
+		{
+			query = nil;
+			
+			for(NSString* arg in args)
+			{
+				if([arg hasPrefix:@"comp="])
+				{
+					arg = [arg stringByReplacingOccurrencesOfString:@"=" withString:@":"];
+					query = [@"\n" stringByAppendingString:arg];
+					break;
+				}
+			}
+		}
+	}
+	
+	// Construct the date in the right format
+	NSDate *date = [NSDate date];
+	NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+	[dateFormatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
+	[dateFormatter setDateFormat:@"EEE, dd MMM yyyy HH:mm:ss 'GMT'"];
+	NSString *dateString = [dateFormatter stringFromDate:date];
+	[dateFormatter release];
+	
+	NSMutableArray* headers = [NSMutableArray arrayWithCapacity:20];
+	NSString* name;
+	NSString* header;
+	BOOL isName = YES;
+	while((header = va_arg(args, NSString*)))
+	{
+		if(isName)
+		{
+			name = header;
+		}
+		else
+		{
+			[headers addObject:[NSString stringWithFormat:@"%@:%@", name, header]];
+			[authenticatedrequest setValue:header forHTTPHeaderField:name];
+		}
+		isName = !isName;
+	}
+	[headers addObject:[NSString stringWithFormat:@"x-ms-date:%@", dateString]];
+	if (!queueSemantics) 
+	{
+		[headers addObject:@"x-ms-version:2009-09-19"];
+	}
+	[headers sortUsingSelector:@selector(compare:)];
+	
+	NSString* headerString = [headers componentsJoinedByString:@"\n"];        
+	NSMutableString *requestString;
+	
+	const NSData *cKey  = [_accessKey dataWithBase64DecodedString];
+	
+	if(blobSemantics)
+	{
+		requestString = [NSMutableString stringWithFormat:@"%@\n\n\n%@\n\n%@\n\n\n\n\n\n\n%@\n/%@/", 
+						 httpMethod, contentLength, contentType ? contentType : @"", headerString, _accountName];
+	}
+	else if(queueSemantics)
+	{
+		if (contentType != nil && [contentType length] > 0) {
+			requestString = [NSMutableString stringWithFormat:@"%@\n\n%@\n\n%@\n/%@/", 
+							 httpMethod, contentType, headerString, _accountName];
+		}
+		else {
+			requestString = [NSMutableString stringWithFormat:@"%@\n\n\n\n%@\n/%@/", 
+							 httpMethod, headerString, _accountName];
+		}
 	}
 	else
 	{
-        NSString* endpoint = [[[serviceURL path] copy] autorelease];
-        NSString* query = [serviceURL query];
-        if(query && query.length > 0)
-        {
-            // for table storage, look for the comp= parameter
-            NSArray* args = [query componentsSeparatedByString:@"&"];
-            
-            if(blobSemantics)
-            {
-                NSMutableString* q = [NSMutableString stringWithCapacity:100];
-                
-                for(NSString* arg in [args sortedArrayUsingSelector:@selector(compare:)])
-                {
-                    [q appendString:@"\n"];
-                    [q appendString:[arg stringByReplacingOccurrencesOfString:@"=" withString:@":"]];
-                }
-                
-                query = q;
-            }
-            else if(queueSemantics)
-            {
-                NSString *noQuery = @"numofmessages";
-                NSString *noQuery2 = @"popreceipt";
-                NSRange range = [query rangeOfString : noQuery];
-                NSRange range2 = [query rangeOfString : noQuery2];
-                if ((range.location == NSNotFound) && (range2.location == NSNotFound)) {
-                   query = [@"?" stringByAppendingString:query];
-                }
-                else {
-                    query = nil;
-                }
-            }
-            else
-            {
-                query = nil;
-                
-                for(NSString* arg in args)
-                {
-                    if(arg.length > 5 && [[arg substringToIndex:5] isEqualToString:@"comp="])
-                    {
-                        arg = [arg stringByReplacingOccurrencesOfString:@"=" withString:@":"];
-                        query = [@"\n" stringByAppendingString:arg];
-                        break;
-                    }
-                }
-            }
-        }
-        
-        // Construct the date in the right format
-		NSDate *date = [NSDate date];
-		NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-		[dateFormatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
-		[dateFormatter setDateFormat:@"EEE, dd MMM yyyy HH:mm:ss 'GMT'"];
-		NSString *dateString = [dateFormatter stringFromDate:date];
-        [dateFormatter release];
+		NSString *contentMD5;
 		
-		NSMutableArray* headers = [NSMutableArray arrayWithCapacity:20];
-        NSString* name;
-        NSString* header;
-        BOOL isName = YES;
-        while((header = va_arg(args, NSString*)))
-        {
-            if(isName)
-            {
-                name = header;
-            }
-            else
-            {
-                [headers addObject:[NSString stringWithFormat:@"%@:%@", name, header]];
-                [authenticatedrequest setValue:header forHTTPHeaderField:name];
-            }
-            isName = !isName;
-        }
-        [headers addObject:[NSString stringWithFormat:@"x-ms-date:%@", dateString]];
-        if (!queueSemantics) {
-            [headers addObject:@"x-ms-version:2009-09-19"];
-        }
-        [headers sortUsingSelector:@selector(compare:)];
-        
-        NSString* headerString = [headers componentsJoinedByString:@"\n"];        
-        NSMutableString *requestString;
-        
-        const NSData *cKey  = [_accessKey dataWithBase64DecodedString];
-        
-        if(blobSemantics)
-        {
-            requestString = [NSMutableString stringWithFormat:@"%@\n\n\n%@\n\n%@\n\n\n\n\n\n\n%@\n/%@/", 
-                             httpMethod, contentLength, contentType ? contentType : @"", headerString, _accountName];
-        }
-        else if(queueSemantics)
-        {
-            if (contentType != nil && [contentType length] > 0) {
-                requestString = [NSMutableString stringWithFormat:@"%@\n\n%@\n\n%@\n/%@/", 
-                                 httpMethod, contentType, headerString, _accountName];
-            }
-            else {
-                requestString = [NSMutableString stringWithFormat:@"%@\n\n\n\n%@\n/%@/", 
-                                 httpMethod, headerString, _accountName];
-            }
-        }
-        else
-        {
-            NSString *contentMD5;
-            
-            if(contentData)
-            {
-                void* buffer = malloc(CC_SHA256_DIGEST_LENGTH);
-                CCHmac(kCCHmacAlgSHA256, [cKey bytes], [cKey length], [contentData bytes], [contentData length], buffer);
-                NSData *encodedData = [NSData dataWithBytesNoCopy:buffer length:CC_SHA256_DIGEST_LENGTH freeWhenDone:YES];
-                contentMD5 = [encodedData stringWithBase64EncodedData];
-                
-                [authenticatedrequest addValue:contentMD5 forHTTPHeaderField:@"content-md5"];
-            }
-            else
-            {
-                contentMD5 = @"";
-            }
-            
-            requestString = [NSMutableString stringWithFormat:@"%@\n%@\n%@\n%@\n/%@/", 
-                             httpMethod, contentMD5, contentType ? contentType : @"", dateString, _accountName];
-        }
-        
-        if(endpoint.length > 1)
-        {
-            [requestString appendString:[endpoint substringFromIndex:1]];
-        }             
-        if(query)
-        {
-            [requestString appendString:query];
-        }
-		// Create the hash
-		const NSData *cData = [requestString dataUsingEncoding:NSASCIIStringEncoding];
+		if(contentData)
+		{
+			void* buffer = malloc(CC_SHA256_DIGEST_LENGTH);
+			CCHmac(kCCHmacAlgSHA256, [cKey bytes], [cKey length], [contentData bytes], [contentData length], buffer);
+			NSData *encodedData = [NSData dataWithBytesNoCopy:buffer length:CC_SHA256_DIGEST_LENGTH freeWhenDone:YES];
+			contentMD5 = [encodedData stringWithBase64EncodedData];
+			free(buffer);
+			
+			[authenticatedrequest addValue:contentMD5 forHTTPHeaderField:@"content-md5"];
+		}
+		else
+		{
+			contentMD5 = @"";
+		}
 		
-        void* buffer = malloc(CC_SHA256_DIGEST_LENGTH);
-		CCHmac(kCCHmacAlgSHA256, [cKey bytes], [cKey length], [cData bytes], [cData length], buffer);
-		
-		NSData *encodedData = [NSData dataWithBytesNoCopy:buffer length:CC_SHA256_DIGEST_LENGTH freeWhenDone:YES];
-		NSString *hash = [encodedData stringWithBase64EncodedData];
-        
-#if FULL_LOGGING
-        // NSLog(@"Request string: %@", requestString);
-        // NSLog(@"Request hash: %@", hash);
-#endif
-        
-		// Append to the Authorization Header
-		NSString *authHeader = [NSString stringWithFormat:@"SharedKey %@:%@", _accountName, hash];
-        
-        // Set the request headers
-        [authenticatedrequest addValue:dateString forHTTPHeaderField:@"x-ms-date"];
-        if(blobSemantics)
-        {
-            [authenticatedrequest addValue:@"2009-09-19" forHTTPHeaderField:@"x-ms-version"];
-        }
-        [authenticatedrequest addValue:authHeader forHTTPHeaderField:@"Authorization"];
-        
-        if(contentType)
-        {
-            [authenticatedrequest addValue:contentType forHTTPHeaderField:@"Content-Type"];
-        }
-        
-        if(contentData && [contentData length] > 0 )
-        {
-            [authenticatedrequest setHTTPBody:contentData];
-        }
+		requestString = [NSMutableString stringWithFormat:@"%@\n%@\n%@\n%@\n/%@/", 
+						 httpMethod, contentMD5, contentType ? contentType : @"", dateString, _accountName];
 	}
-	return (authenticatedrequest);
+	
+	if(endpoint.length > 1)
+	{
+		[requestString appendString:[endpoint substringFromIndex:1]];
+	}             
+	if(query)
+	{
+		[requestString appendString:query];
+	}
+	// Create the hash
+	const NSData *cData = [requestString dataUsingEncoding:NSASCIIStringEncoding];
+	
+	void* buffer = malloc(CC_SHA256_DIGEST_LENGTH);
+	CCHmac(kCCHmacAlgSHA256, [cKey bytes], [cKey length], [cData bytes], [cData length], buffer);
+	
+	NSData *encodedData = [NSData dataWithBytesNoCopy:buffer length:CC_SHA256_DIGEST_LENGTH freeWhenDone:YES];
+	NSString *hash = [encodedData stringWithBase64EncodedData];
+	
+#if FULL_LOGGING
+	// NSLog(@"Request string: %@", requestString);
+	// NSLog(@"Request hash: %@", hash);
+#endif
+	
+	// Append to the Authorization Header
+	NSString *authHeader = [NSString stringWithFormat:@"SharedKey %@:%@", _accountName, hash];
+	
+	// Set the request headers
+	[authenticatedrequest addValue:dateString forHTTPHeaderField:@"x-ms-date"];
+	if(blobSemantics)
+	{
+		[authenticatedrequest addValue:@"2009-09-19" forHTTPHeaderField:@"x-ms-version"];
+	}
+	[authenticatedrequest addValue:authHeader forHTTPHeaderField:@"Authorization"];
+	
+	if(contentType)
+	{
+		[authenticatedrequest addValue:contentType forHTTPHeaderField:@"Content-Type"];
+	}
+	
+	if(contentData && [contentData length] > 0 )
+	{
+		[authenticatedrequest setHTTPBody:contentData];
+	}
+
+	return authenticatedrequest;
 }
 
 - (WACloudURLRequest *)authenticatedRequestWithURL:(NSURL *)serviceURL forStorageType:(NSString *)storageType, ...
@@ -620,13 +660,15 @@ const int AUTHENTICATION_DELAY = 2;
     va_start(arg, storageType);
     
     BOOL blobSemantics = [[storageType lowercaseString] isEqualToString:@"blob"];
+    BOOL queueSemantics = [[storageType lowercaseString] isEqualToString:@"queue"];
 
     WACloudURLRequest* request = [self authenticatedRequestWithURL:serviceURL 
-                                                   blobSemantics:blobSemantics
-                                                      httpMethod:@"GET" 
-                                                     contentData:nil 
-                                                     contentType:nil
-                                                            args:arg];
+													 blobSemantics:blobSemantics
+													queueSemantics:queueSemantics
+														httpMethod:@"GET" 
+													   contentData:nil 
+													   contentType:nil
+															  args:arg];
     va_end(arg);
     
     return request;
@@ -638,13 +680,15 @@ const int AUTHENTICATION_DELAY = 2;
     va_start(arg, httpMethod);
     
     BOOL blobSemantics = [[storageType lowercaseString] isEqualToString:@"blob"];
+    BOOL queueSemantics = [[storageType lowercaseString] isEqualToString:@"queue"];
 
     WACloudURLRequest* request = [self authenticatedRequestWithURL:serviceURL 
-                                                   blobSemantics:blobSemantics
-                                                      httpMethod:httpMethod 
-                                                     contentData:nil 
-                                                     contentType:nil
-                                                            args:arg];
+													 blobSemantics:blobSemantics
+													queueSemantics:queueSemantics
+														httpMethod:httpMethod 
+													   contentData:nil 
+													   contentType:nil
+															  args:arg];
     va_end(arg);
     
     return request;
@@ -656,13 +700,15 @@ const int AUTHENTICATION_DELAY = 2;
     va_start(arg, contentType);
 
     BOOL blobSemantics = [[storageType lowercaseString] isEqualToString:@"blob"];
+    BOOL queueSemantics = [[storageType lowercaseString] isEqualToString:@"queue"];
     
     WACloudURLRequest* request = [self authenticatedRequestWithURL:serviceURL 
-                                                   blobSemantics:blobSemantics
-                                                      httpMethod:httpMethod 
-                                                     contentData:contentData 
-                                                     contentType:contentType
-                                                            args:arg];
+													 blobSemantics:blobSemantics
+													queueSemantics:queueSemantics
+														httpMethod:httpMethod 
+													   contentData:contentData 
+													   contentType:contentType
+															  args:arg];
     va_end(arg);
     
     return request;
@@ -744,11 +790,12 @@ const int AUTHENTICATION_DELAY = 2;
     BOOL blobSemantics = [[storageType lowercaseString] isEqualToString:@"blob"];
     
     WACloudURLRequest* request = [self authenticatedRequestWithURL:serviceURL 
-                                                   blobSemantics:blobSemantics
-                                                      httpMethod:httpMethod 
-                                                     contentData:contentData 
-                                                     contentType:contentType
-                                                            args:arg];
+													 blobSemantics:blobSemantics
+													queueSemantics:NO
+														httpMethod:httpMethod 
+													   contentData:contentData 
+													   contentType:contentType
+															  args:arg];
     va_end(arg);
     
     return request;
@@ -766,6 +813,7 @@ const int AUTHENTICATION_DELAY = 2;
 	[_password release];
 	[_blobServiceURL release];
 	[_tableServiceURL release];
+	[_accessToken release];
 	
 	[super dealloc];
 }

@@ -35,12 +35,13 @@ const NSString* ScriptNotify = @"<script type=\"text/javascript\">window.externa
 
 @implementation WALoginWebViewController
 
-- (id)initWithHomeRealm:(WACloudAccessControlHomeRealm*)realm withCompletionHandler:(void (^)(WACloudAccessToken* token))block
+- (id)initWithHomeRealm:(WACloudAccessControlHomeRealm*)realm allowsClose:(BOOL)allowsClose withCompletionHandler:(void (^)(WACloudAccessToken* token))block
 {
     if ((self = [super initWithNibName:nil bundle:nil]))
     {
         _realm = [realm retain];
 		_block = [block retain];
+		_allowsClose = allowsClose;
     }
     return self;
 }
@@ -63,6 +64,16 @@ const NSString* ScriptNotify = @"<script type=\"text/javascript\">window.externa
     // Release any cached data, images, etc that aren't in use.
 }
 
+- (void)showProgress
+{
+	UIActivityIndicatorView* view = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+	self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithCustomView:view] autorelease];
+	[view startAnimating];
+	[view release];
+}
+
+
+
 #pragma mark - View lifecycle
 
 - (void)loadView
@@ -81,6 +92,8 @@ const NSString* ScriptNotify = @"<script type=\"text/javascript\">window.externa
     NSURL* url = [NSURL URLWithString:_realm.loginUrl];
     NSURLRequest* request = [NSURLRequest requestWithURL:url];
     [_webView loadRequest:request];
+	
+	[self showProgress];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -167,6 +180,11 @@ const NSString* ScriptNotify = @"<script type=\"text/javascript\">window.externa
 	return pairs;
 }
 
+- (void)webViewDidFinishLoad:(UIWebView *)webView
+{
+	self.navigationItem.rightBarButtonItem = nil;
+}
+
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
     if(_url)
@@ -188,7 +206,7 @@ const NSString* ScriptNotify = @"<script type=\"text/javascript\">window.externa
 		NSDictionary* pairs = [self parsePairs:[_url absoluteString]];
 		if(pairs)
 		{            
-            WACloudAccessToken* accessToken = [[WACloudAccessToken alloc] initWithDictionary:pairs];
+            WACloudAccessToken* accessToken = [[WACloudAccessToken alloc] initWithDictionary:pairs fromRealm:_realm];
             
 			[_block retain];
             [self dismissModalViewControllerAnimated:YES];
@@ -202,6 +220,7 @@ const NSString* ScriptNotify = @"<script type=\"text/javascript\">window.externa
     }
     
     [NSURLConnection connectionWithRequest:request delegate:self];
+	[self showProgress];
     
     return NO;
 }
@@ -241,6 +260,8 @@ const NSString* ScriptNotify = @"<script type=\"text/javascript\">window.externa
 
         [_webView loadHTMLString:[ScriptNotify stringByAppendingString:content] baseURL:_url];
 		[content release];
+		
+		self.navigationItem.rightBarButtonItem = nil;
     }
 }
 

@@ -33,6 +33,8 @@
 
 @property (assign) id<WACloudStorageClientDelegate> delegate;
 
++ (void) ignoreSSLErrorFor:(NSString*)host;
+
 /*! Returns a list of blob containers. */
 - (void)fetchBlobContainers;
 /*! Returns a list of blob containers. */
@@ -40,7 +42,7 @@
 /*! Returnva a blob container. */
 - (void)fetchBlobContainerNamed:(NSString *)containerName;
 /*! Returnva a blob container. */
-- (void)fetchBlobContainerNamed:(NSString *)containerName WithCompletionHandler:(void (^)(WABlobContainer *, NSError *))block;
+- (void)fetchBlobContainerNamed:(NSString *)containerName withCompletionHandler:(void (^)(WABlobContainer *, NSError *))block;
 /*! Adds a blob container, given a specified container name.  Returns error if the container already exists, or where the name is an invalid format.*/
 - (BOOL)addBlobContainerNamed:(NSString *)containerName;
 /*! Adds a blob container, given a specified container name.  Returns error if the container already exists, or where the name is an invalid format.*/
@@ -177,9 +179,9 @@
 - (void)storageClient:(WACloudStorageClient *)client didDeleteBlob:(WABlob *)blob;
 
 /*! Called when the client successfully add a queue */
-- (void)storageClient:(WACloudStorageClient *)client didAddQueue:(NSString *)queueName;
+- (void)storageClient:(WACloudStorageClient *)client didAddQueueNamed:(NSString *)queueName;
 /*! Called when the client successfully removes an existing queue. */
-- (void)storageClient:(WACloudStorageClient *)client didDeleteQueue:(NSString *)queueName;
+- (void)storageClient:(WACloudStorageClient *)client didDeleteQueueNamed:(NSString *)queueName;
 /*! Called when the client successfully returns a list of queues */
 - (void)storageClient:(WACloudStorageClient *)client didFetchQueues:(NSArray *)queues;
 /*! Called when the client successfully got a single message from the specified queue */

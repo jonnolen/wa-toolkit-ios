@@ -23,13 +23,16 @@
 #import "WAQueue.h"
 #import "WAQueueMessage.h"
 
+// Tests for blob related functions through proxy
+#define TEST_FETCH_BLOBCONTAINERS_BLOBS_PROXY
+
+
+/*
+
 // Tests for blob related functions
 #define TEST_FETCH_BLOB_CONTAINERS
 #define TEST_ADD_DELETE_BLOB_CONTAINER
 #define TEST_ADD_BLOB
-
-// Tests for blob related functions through proxy
-#define TEST_FETCH_BLOBCONTAINERS_BLOBS_PROXY
 
 // Tests for table related functions for direct connection
 #define TEST_FETCH_TABLES
@@ -59,7 +62,7 @@
 // Testfor queue related functions through proxy
 #define TEST_FETCH_QUEUES_PROXY
 #define TEST_ADD_DELETE_QUEUE_PROXY
-#define TEST_FETCH_QUEUE_MESSAGES_PROXY
+#define TEST_FETCH_QUEUE_MESSAGES_PROXY	*/
 
 // Account details for testing
 NSString *account = @"iostest";
