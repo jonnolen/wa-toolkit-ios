@@ -105,9 +105,9 @@
         if(xmlStrcmp(child->name, nameStr) == 0)
         {
             xmlChar* value = xmlNodeGetContent(child);
-            NSString* str = [NSString stringWithUTF8String:(const char*)value];
+			NSString* str = [[NSString alloc] initWithUTF8String:(const char*)value];
             xmlFree(value);
-            return str;
+            return [str autorelease];
         }
     }
     

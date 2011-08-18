@@ -104,7 +104,8 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
         ticks += 621355968000000000;                                        
         NSString *endpoint = [NSString stringWithFormat:@"?comp=list&incrementalSeed=%llu", ticks];
         request = [_credential authenticatedRequestWithEndpoint:endpoint forStorageType:@"queue", nil];
-        [request fetchXMLWithCompletionHandler:^(xmlDocPtr doc, NSError* error)
+
+        [request fetchXMLWithCompletionHandler:^(WACloudURLRequest* request, xmlDocPtr doc, NSError* error)
          {
              if(error)
              {
@@ -134,7 +135,8 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
     else
     {
         request = [_credential authenticatedRequestWithEndpoint:@"?comp=list" forStorageType:@"queue", nil];
-        [request fetchXMLWithCompletionHandler:^(xmlDocPtr doc, NSError* error)
+
+        [request fetchXMLWithCompletionHandler:^(WACloudURLRequest* request, xmlDocPtr doc, NSError* error)
          {
              if(error)
              {
@@ -176,7 +178,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
     NSString* endpoint = [NSString stringWithFormat:@"/%@", [queueName URLEncode]];
     WACloudURLRequest* request = [_credential authenticatedRequestWithEndpoint:endpoint forStorageType:@"queue" httpMethod:@"PUT", nil];
     
-	[request fetchXMLWithCompletionHandler:^(xmlDocPtr doc, NSError* error)
+	[request fetchXMLWithCompletionHandler:^(WACloudURLRequest* request, xmlDocPtr doc, NSError* error)
      {
          if(error)
          {
@@ -213,7 +215,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
     NSString* endpoint = [NSString stringWithFormat:@"/%@", [queueName URLEncode]];
     WACloudURLRequest* request = [_credential authenticatedRequestWithEndpoint:endpoint forStorageType:@"queue" httpMethod:@"DELETE", nil];
     
-	[request fetchXMLWithCompletionHandler:^(xmlDocPtr doc, NSError* error)
+	[request fetchXMLWithCompletionHandler:^(WACloudURLRequest* request, xmlDocPtr doc, NSError* error)
      {
          if(error)
          {
@@ -407,7 +409,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
 
 - (void)peekQueueMessages:(NSString *)queueName fetchCount:(NSInteger)fetchCount
 {
-	[self privateGetQueueMessages:queueName fetchCount:1 useBlockError:NO peekOnly:YES withBlock:^(NSArray* items, NSError* error)
+	[self privateGetQueueMessages:queueName fetchCount:fetchCount useBlockError:NO peekOnly:YES withBlock:^(NSArray* items, NSError* error)
 	 {
 		 if(![(NSObject*)_delegate respondsToSelector:@selector(storageClient:didPeekQueueMessages:)])
 		 {
@@ -420,7 +422,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
 
 - (void)peekQueueMessages:(NSString *)queueName fetchCount:(NSInteger)fetchCount withCompletionHandler:(void (^)(NSArray *, NSError *))block
 {
-	[self privateGetQueueMessages:queueName fetchCount:1 useBlockError:!!block peekOnly:YES withBlock:^(NSArray* items, NSError* error)
+	[self privateGetQueueMessages:queueName fetchCount:fetchCount useBlockError:!!block peekOnly:YES withBlock:^(NSArray* items, NSError* error)
 	 {
 		 if(error)
 		 {
@@ -456,7 +458,8 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
     queueName = [queueName lowercaseString];
     NSString* endpoint = [NSString stringWithFormat:@"/%@/messages?numofmessages=32", [queueName URLEncode]];
     WACloudURLRequest* request = [_credential authenticatedRequestWithEndpoint:endpoint forStorageType:@"queue", nil];
-    [request fetchXMLWithCompletionHandler:^(xmlDocPtr doc, NSError* error)
+
+    [request fetchXMLWithCompletionHandler:^(WACloudURLRequest* request, xmlDocPtr doc, NSError* error)
      {
          if(error)
          {
@@ -495,7 +498,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
     NSString* endpoint = [NSString stringWithFormat:@"/%@/messages/%@?popreceipt=%@", [queueName URLEncode], queueMessage.messageId, queueMessage.popReceipt];
     WACloudURLRequest* request = [_credential authenticatedRequestWithEndpoint:endpoint forStorageType:@"queue" httpMethod:@"DELETE", nil];
     
-	[request fetchXMLWithCompletionHandler:^(xmlDocPtr doc, NSError* error)
+	[request fetchXMLWithCompletionHandler:^(WACloudURLRequest* request, xmlDocPtr doc, NSError* error)
      {
          if(error)
          {
@@ -544,7 +547,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
 	NSData *contentData = [queueMsg dataUsingEncoding:NSUTF8StringEncoding];
     WACloudURLRequest *request = [_credential authenticatedRequestWithEndpoint:endpoint forStorageType:@"queue" httpMethod:@"POST" contentData:contentData contentType:@"text/xml", nil];
     
-    [request fetchNoResponseWithCompletionHandler:^(NSError* error)
+    [request fetchNoResponseWithCompletionHandler:^(WACloudURLRequest* request, NSError* error)
      {
          if(error)
          {
@@ -563,7 +566,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
          {
              block(nil);
          }
-         else if([(NSObject*)_delegate respondsToSelector:@selector(storageClient:didAddMessageToQueue:blobName:)])
+         else if([(NSObject*)_delegate respondsToSelector:@selector(storageClient:didAddMessageToQueue:queueName:)])
          {
              [_delegate storageClient:self didAddMessageToQueue:message queueName:queueName];
          }
@@ -585,7 +588,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
     {
         WACloudURLRequest* request = [_credential authenticatedRequestWithEndpoint:@"/SharedAccessSignatureService/container" forStorageType:@"blob", nil];
         
-        [request fetchXMLWithCompletionHandler:^(xmlDocPtr doc, NSError* error)
+        [request fetchXMLWithCompletionHandler:^(WACloudURLRequest* request, xmlDocPtr doc, NSError* error)
          {
              if(error)
              {
@@ -617,7 +620,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
         WACloudURLRequest* request = [_credential authenticatedRequestWithEndpoint:@"?comp=list&include=metadata" forStorageType:@"blob",
                                     @"x-ms-blob-type", @"BlockBlob", nil];
         
-        [request fetchXMLWithCompletionHandler:^(xmlDocPtr doc, NSError* error)
+        [request fetchXMLWithCompletionHandler:^(WACloudURLRequest* request, xmlDocPtr doc, NSError* error)
          {
              if(error)
              {
@@ -657,7 +660,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
     {
         WACloudURLRequest* request = [_credential authenticatedRequestWithEndpoint:@"/SharedAccessSignatureService/container" forStorageType:@"blob", nil];
         
-        [request fetchXMLWithCompletionHandler:^(xmlDocPtr doc, NSError* error)
+        [request fetchXMLWithCompletionHandler:^(WACloudURLRequest* request, xmlDocPtr doc, NSError* error)
          {
              if(error)
              {
@@ -696,7 +699,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
         WACloudURLRequest* request = [_credential authenticatedRequestWithEndpoint:@"?comp=list&include=metadata" forStorageType:@"blob",
                                       @"x-ms-blob-type", @"BlockBlob", nil];
         
-        [request fetchXMLWithCompletionHandler:^(xmlDocPtr doc, NSError* error)
+        [request fetchXMLWithCompletionHandler:^(WACloudURLRequest* request, xmlDocPtr doc, NSError* error)
          {
              if(error)
              {
@@ -748,7 +751,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
     NSString* endpoint = [NSString stringWithFormat:@"/%@?restype=container", [containerName URLEncode]];
     WACloudURLRequest* request = [_credential authenticatedRequestWithEndpoint:endpoint forStorageType:@"blob" httpMethod:@"PUT" contentData:[NSData data] contentType:nil, nil];
 
-	[request fetchXMLWithCompletionHandler:^(xmlDocPtr doc, NSError* error)
+	[request fetchXMLWithCompletionHandler:^(WACloudURLRequest* request, xmlDocPtr doc, NSError* error)
      {
          if(error)
          {
@@ -792,7 +795,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
     NSString* endpoint = [NSString stringWithFormat:@"/%@?restype=container", [containerName URLEncode]];
     WACloudURLRequest* request = [_credential authenticatedRequestWithEndpoint:endpoint forStorageType:@"blob" httpMethod:@"DELETE" contentData:[NSData data] contentType:nil, nil];
     	
-	[request fetchXMLWithCompletionHandler:^(xmlDocPtr doc, NSError* error)
+	[request fetchXMLWithCompletionHandler:^(WACloudURLRequest* request, xmlDocPtr doc, NSError* error)
      {
          if(error)
          {
@@ -836,7 +839,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
     NSString* endpoint = [NSString stringWithFormat:@"/%@?restype=container", [containerName URLEncode]];
     WACloudURLRequest* request = [_credential authenticatedRequestWithEndpoint:endpoint forStorageType:@"blob" httpMethod:@"DELETE" contentData:[NSData data] contentType:nil, nil];
     
-	[request fetchXMLWithCompletionHandler:^(xmlDocPtr doc, NSError* error)
+	[request fetchXMLWithCompletionHandler:^(WACloudURLRequest* request, xmlDocPtr doc, NSError* error)
      {
          if(error)
          {
@@ -877,7 +880,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
         WACloudURLRequest* request = [_credential authenticatedRequestWithEndpoint:@"/SharedAccessSignatureService/blob" forStorageType:@"blob",
                                     @"x-ms-blob-type", @"BlockBlob", nil];
         
-        [request fetchXMLWithCompletionHandler:^(xmlDocPtr doc, NSError* error)
+        [request fetchXMLWithCompletionHandler:^(WACloudURLRequest* request, xmlDocPtr doc, NSError* error)
          {
              if(error)
              {
@@ -911,7 +914,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
         WACloudURLRequest* request = [_credential authenticatedRequestWithEndpoint:endpoint forStorageType:@"blob",
                                     @"x-ms-blob-type", @"BlockBlob", nil];
         
-        [request fetchXMLWithCompletionHandler:^(xmlDocPtr doc, NSError* error)
+        [request fetchXMLWithCompletionHandler:^(WACloudURLRequest* request, xmlDocPtr doc, NSError* error)
          {
              if(error)
              {
@@ -951,7 +954,8 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
 	if(_credential.usesProxy)
     {
         request = [_credential authenticatedRequestWithEndpoint:@"/SharedAccessSignatureService/blob" forStorageType:@"blob", nil];
-        [request fetchXMLWithCompletionHandler:^(xmlDocPtr doc, NSError* error)
+
+        [request fetchXMLWithCompletionHandler:^(WACloudURLRequest* request, xmlDocPtr doc, NSError* error)
          {
              if(error)
 			 {
@@ -977,12 +981,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
              NSString* endpoint = [NSString stringWithFormat:@"%@", toBeDisplayedBlob.URL];
              NSURL* serviceURL = [NSURL URLWithString:endpoint];
 			 WACloudURLRequest* blobRequest = [WACloudURLRequest requestWithURL:serviceURL];
-		/*	 WACloudURLRequest* blobRequest = [_credential authenticatedBlobRequestWithURL:serviceURL 
-																			forStorageType:@"blob" 
-																				httpMethod:@"GET" 
-																			   contentData:nil 
-																			   contentType:nil, nil, nil, nil];*/
-             [blobRequest fetchDataWithCompletionHandler:^(NSData* data, NSError* error)
+             [blobRequest fetchDataWithCompletionHandler:^(WACloudURLRequest* request, NSData* data, NSError* error)
               {
                   if(error)
                   {
@@ -1007,15 +1006,13 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
                   }
               }];
          }];
-        
     }
     else
     {
-
         NSString* endpoint = [NSString stringWithFormat:@"/%@/%@", blob.container.name, blob.name];
 		request = [_credential authenticatedRequestWithEndpoint:endpoint forStorageType:@"blob", nil];
         
-        [request fetchDataWithCompletionHandler:^(NSData* data, NSError* error)
+        [request fetchDataWithCompletionHandler:^(WACloudURLRequest* request, NSData* data, NSError* error)
          {
              if(error)
              {
@@ -1053,7 +1050,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
     if(_credential.usesProxy)
     {
 		request = [_credential authenticatedRequestWithEndpoint:@"/SharedAccessSignatureService/container" forStorageType:@"blob", nil];
-        [request fetchXMLWithCompletionHandler:^(xmlDocPtr doc, NSError* error)
+        [request fetchXMLWithCompletionHandler:^(WACloudURLRequest* request, xmlDocPtr doc, NSError* error)
          {
 			 if(error)
 			 {
@@ -1072,14 +1069,13 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
              WABlobContainer* theOnlyContainer = [containers objectAtIndex:0];
              NSString* endpoint = [NSString stringWithFormat:@"%@/%@?%@", theOnlyContainer.URL, [blobName URLEncode], theOnlyContainer.metadata];
              NSURL* serviceURL = [NSURL URLWithString:endpoint]; 
-		/*	 WACloudURLRequest* blobRequest = [_credential authenticatedBlobRequestWithURL:serviceURL forStorageType:@"blob" httpMethod:@"PUT" contentData:contentData contentType:contentType, @"x-ms-blob-type", @"BlockBlob", nil];*/
 			 WACloudURLRequest* blobRequest = [WACloudURLRequest requestWithURL:serviceURL];
 			 [blobRequest setHTTPMethod:@"PUT"];
 			 [blobRequest addValue:contentType forHTTPHeaderField:@"Content-Type"];
 			 [blobRequest addValue:@"BlockBlob" forHTTPHeaderField:@"x-ms-blob-type"];
 			 [blobRequest setHTTPBody:contentData];
 
-			 [blobRequest fetchNoResponseWithCompletionHandler:^(NSError* error)
+			 [blobRequest fetchNoResponseWithCompletionHandler:^(WACloudURLRequest* request, NSError* error)
               {
                   if(error)
                   {
@@ -1111,7 +1107,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
         NSString*   endpoint = [NSString stringWithFormat:@"/%@/%@", [containerName URLEncode], [blobName URLEncode]]; 
         request = [_credential authenticatedRequestWithEndpoint:endpoint forStorageType:@"blob" httpMethod:@"PUT" contentData:contentData contentType:contentType, @"x-ms-blob-type", @"BlockBlob", nil];
         
-        [request fetchNoResponseWithCompletionHandler:^(NSError* error)
+        [request fetchNoResponseWithCompletionHandler:^(WACloudURLRequest* request, NSError* error)
          {
              if(error)
              {
@@ -1149,15 +1145,20 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
     if (_credential.usesProxy) 
 	{
         request = [_credential authenticatedRequestWithEndpoint:@"/SharedAccessSignatureService/container" forStorageType:@"blob", nil];
-        [request fetchXMLWithCompletionHandler:^(xmlDocPtr doc, NSError* error)
+
+        [request fetchXMLWithCompletionHandler:^(WACloudURLRequest* request, xmlDocPtr doc, NSError* error)
          {
              
              NSArray* containers = [WAContainerParser loadContainersForProxy:doc];
              WABlobContainer* theOnlyContainer = [containers objectAtIndex:0];
              NSString* endpoint = [NSString stringWithFormat:@"%@/%@?%@", theOnlyContainer.URL, [blob.name URLEncode], theOnlyContainer.metadata];
              NSURL* serviceURL = [NSURL URLWithString:endpoint]; 
-             WACloudURLRequest* blobRequest = [_credential authenticatedBlobRequestWithURL:serviceURL forStorageType:@"blob" httpMethod:@"DELETE" contentData:[NSData data] contentType:nil, nil];
-             [blobRequest fetchNoResponseWithCompletionHandler:^(NSError* error)
+             // WACloudURLRequest* blobRequest = [_credential authenticatedBlobRequestWithURL:serviceURL forStorageType:@"blob" httpMethod:@"DELETE" contentData:[NSData data] contentType:nil, nil];
+			 
+			 WACloudURLRequest* blobRequest = [WACloudURLRequest requestWithURL:serviceURL];
+			 [blobRequest setHTTPMethod:@"DELETE"];
+			 
+             [blobRequest fetchNoResponseWithCompletionHandler:^(WACloudURLRequest* request, NSError* error)
               {
                   if(error)
                   {
@@ -1187,7 +1188,8 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
 	{
         NSString* endpoint = [NSString stringWithFormat:@"/%@/%@", [blob.container.name URLEncode], [blob.name URLEncode]];
         request = [_credential authenticatedRequestWithEndpoint:endpoint forStorageType:@"blob" httpMethod:@"DELETE" contentData:[NSData data] contentType:nil, nil];
-        [request fetchNoResponseWithCompletionHandler:^(NSError* error)
+
+        [request fetchNoResponseWithCompletionHandler:^(WACloudURLRequest* request, NSError* error)
          {
              if(error)
              {
@@ -1227,7 +1229,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
     WACloudURLRequest* request = [_credential authenticatedRequestWithEndpoint:@"Tables" forStorageType:@"table" httpMethod:@"GET", nil];
     [self prepareTableRequest:request];
     
-    [request fetchXMLWithCompletionHandler:^(xmlDocPtr doc, NSError* error)
+    [request fetchXMLWithCompletionHandler:^(WACloudURLRequest* request, xmlDocPtr doc, NSError* error)
      {
          if(error)
          {
@@ -1289,7 +1291,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
                                                                  contentType:@"application/atom+xml", nil];    
     [self prepareTableRequest:request];
 
-    [request fetchNoResponseWithCompletionHandler:^(NSError* error)
+    [request fetchNoResponseWithCompletionHandler:^(WACloudURLRequest* request, NSError* error)
      {
          if(error)
          {
@@ -1325,7 +1327,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
     WACloudURLRequest* request = [_credential authenticatedRequestWithEndpoint:[@"Tables" stringByAppendingFormat:@"(\'%@\')", tableName] forStorageType:@"table" httpMethod:@"DELETE", nil];
 	[self prepareTableRequest:request];
 	
-    [request fetchNoResponseWithCompletionHandler:^(NSError* error)
+    [request fetchNoResponseWithCompletionHandler:^(WACloudURLRequest* request, NSError* error)
      {
          if (error)
          {
@@ -1363,7 +1365,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
 	
     [self prepareTableRequest:request];
     
-	[request fetchXMLWithCompletionHandler:^(xmlDocPtr doc, NSError *error)
+	[request fetchXMLWithCompletionHandler:^(WACloudURLRequest* request, xmlDocPtr doc, NSError *error)
      {
          if (error)
          {
@@ -1443,7 +1445,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
                                                                  contentType:@"application/atom+xml", nil];
     [self prepareTableRequest:request];
     
-    [request fetchNoResponseWithCompletionHandler:^(NSError* error)
+    [request fetchNoResponseWithCompletionHandler:^(WACloudURLRequest* request, NSError* error)
      {
          if (error)
          {
@@ -1514,7 +1516,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
     [self prepareTableRequest:request];
 	[request setValue:@"*" forHTTPHeaderField:@"If-Match"];
 	
-    [request fetchNoResponseWithCompletionHandler:^(NSError* error)
+    [request fetchNoResponseWithCompletionHandler:^(WACloudURLRequest* request, NSError* error)
      {
          if (error)
          {
@@ -1584,7 +1586,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
     [self prepareTableRequest:request];
 	[request setValue:@"*" forHTTPHeaderField:@"If-Match"];
 	
-    [request fetchNoResponseWithCompletionHandler:^(NSError* error)
+    [request fetchNoResponseWithCompletionHandler:^(WACloudURLRequest* request, NSError* error)
      {
          if (error)
          {
@@ -1641,7 +1643,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
 
 	[request setValue:@"*" forHTTPHeaderField:@"If-Match"];
 	
-    [request fetchNoResponseWithCompletionHandler:^(NSError* error)
+    [request fetchNoResponseWithCompletionHandler:^(WACloudURLRequest* request, NSError* error)
      {
          if (error)
          {
@@ -1674,6 +1676,12 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
 
 - (void)privateGetQueueMessages:(NSString *)queueName fetchCount:(NSInteger)fetchCount useBlockError:(BOOL)useBlockError peekOnly:(BOOL)peekOnly withBlock:(void (^)(NSArray *, NSError *))block
 {
+	if(fetchCount > 32)
+	{
+		// apply Azure queue fetch limit...
+		fetchCount = 32;
+	}
+	
 	queueName = [queueName lowercaseString];
     NSString* endpoint = [NSString stringWithFormat:@"/%@/messages?numofmessages=%d", [queueName URLEncode], fetchCount];
 	if(peekOnly)
@@ -1687,7 +1695,8 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
 	}
 	
     WACloudURLRequest* request = [_credential authenticatedRequestWithEndpoint:endpoint forStorageType:@"queue", nil];
-    [request fetchXMLWithCompletionHandler:^(xmlDocPtr doc, NSError* error)
+
+    [request fetchXMLWithCompletionHandler:^(WACloudURLRequest* request, xmlDocPtr doc, NSError* error)
      {
          if(error)
          {

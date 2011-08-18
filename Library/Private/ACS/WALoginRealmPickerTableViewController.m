@@ -17,6 +17,7 @@
 #import "WALoginRealmPickerTableViewController.h"
 #import "WACloudAccessControlHomeRealm.h"
 #import "WALoginWebViewController.h"
+#import "Logging.h"
 
 @implementation WALoginRealmPickerTableViewController
 
@@ -127,6 +128,10 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     WACloudAccessControlHomeRealm* realm = [_realms objectAtIndex:indexPath.row];
+	
+	WA_BEGIN_LOGGING_CUSTOM(WALoggingACS)
+	NSLog(@"Picked identity provider: %@", realm.name);
+	WA_END_LOGGING
 
     WALoginWebViewController* webController = [[WALoginWebViewController alloc] initWithHomeRealm:realm
 																					  allowsClose:_allowsClose

@@ -50,9 +50,9 @@
         return nil;
     }
 
-#if FULL_LOGGING
-    NSLog(@"Filter=%@", filter);
-#endif
+	WA_BEGIN_LOGGING
+		NSLog(@"Filter=%@", filter);
+	WA_END_LOGGING
     
     WATableFetchRequest* request = [[[WATableFetchRequest alloc] initWithTable:tableName] autorelease];
     

@@ -110,6 +110,10 @@ void ignoreSSLErrorFor(NSString* host)
 - (void) fetchNoResponseWithCompletionHandler:(WANoResponseHandler)block
 {
     _noResponseBlock = [block copy];
+
+	WA_BEGIN_LOGGING
+		NSLog(@"Request URL: %@", [self URL]);
+	WA_END_LOGGING
 	
 #if USE_QUEUE
     [self queueRequest];
@@ -122,6 +126,10 @@ void ignoreSSLErrorFor(NSString* host)
 {
     _xmlBlock = [block copy];
 	
+	WA_BEGIN_LOGGING
+		NSLog(@"Request URL: %@", [self URL]);
+	WA_END_LOGGING
+	
 #if USE_QUEUE
     [self queueRequest];
 #else
@@ -133,6 +141,10 @@ void ignoreSSLErrorFor(NSString* host)
 {
     _dataBlock = [block copy];
 	
+	WA_BEGIN_LOGGING
+		NSLog(@"Request URL: %@", [self URL]);
+	WA_END_LOGGING
+	
 #if USE_QUEUE
     [self queueRequest];
 #else
@@ -142,9 +154,12 @@ void ignoreSSLErrorFor(NSString* host)
 
 - (void)dealloc
 {
+	[_noResponseBlock release];
 	[_xmlBlock release];
 	[_dataBlock release];
+	
 	[_data release];
+	[_contentType release];
 	
 	[super dealloc];
 }
@@ -153,7 +168,7 @@ void ignoreSSLErrorFor(NSString* host)
 {
     if(_dataBlock)
     {
-        _dataBlock(data, err);
+        _dataBlock(self, data, err);
         return;
     }
 }
@@ -162,7 +177,7 @@ void ignoreSSLErrorFor(NSString* host)
 {
     if(_xmlBlock)
     {
-        _xmlBlock(doc, err);
+        _xmlBlock(self, doc, err);
         return;
     }
 }
@@ -172,6 +187,7 @@ void ignoreSSLErrorFor(NSString* host)
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
 {
     _expectedContentLength = [response expectedContentLength];
+	_contentType = [[response MIMEType] copy];
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
@@ -209,17 +225,45 @@ void ignoreSSLErrorFor(NSString* host)
 
 -(void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
+	if(_contentType && [_contentType compare:@"text/html" options:NSCaseInsensitiveSearch] == NSOrderedSame)
+	{
+		NSString* htmlStr = [[[NSString alloc] initWithData:_data encoding:NSUTF8StringEncoding] autorelease];
+		NSError* regexError;
+		NSError* contentError = nil;
+		NSRegularExpression* unauthorized = [NSRegularExpression regularExpressionWithPattern:@"401 - Unauthorized: (.*)</h2>"
+																					   options:0 
+																						 error:&regexError];
+		NSTextCheckingResult* result = [unauthorized firstMatchInString:htmlStr options:0 range:NSMakeRange(0, htmlStr.length)];
+		int found = [result numberOfRanges];
+		if(found == 2)
+		{
+			// need to convert this into an error...
+			NSRange r = [result rangeAtIndex:1];
+			NSString* msg = [htmlStr substringWithRange:r];
+			
+			contentError = [NSError errorWithDomain:@"CloudStorageClient" 
+											   code:401 
+										   userInfo:[NSDictionary dictionaryWithObjectsAndKeys:msg, NSLocalizedDescriptionKey, nil]];
+		}
+
+		if(contentError)
+		{
+			[self connection:connection didFailWithError:contentError];
+			return;
+		}
+	}
+	
     if(_noResponseBlock)
     {
-#if FULL_LOGGING
+		WA_BEGIN_LOGGING_CUSTOM(WALoggingResponse)
         if(_data)
         {
-            NSString* xmlStr = [[NSString alloc] initWithData:_data encoding:NSUTF8StringEncoding];
-            NSLog(@"Request URL: %@", [self URL]);
-            NSLog(@"XML response: %@", xmlStr);
-            [xmlStr release];
+			NSString* xmlStr = [[NSString alloc] initWithData:_data encoding:NSUTF8StringEncoding];
+			NSLog(@"XML response: %@", xmlStr);
+			[xmlStr release];
         }
-#endif
+		WA_END_LOGGING
+		
         if(_data)
         {
             const char *baseURL = NULL;
@@ -231,7 +275,7 @@ void ignoreSSLErrorFor(NSString* host)
             
             if(error)
             {
-                _noResponseBlock(error);
+                _noResponseBlock(self, error);
 #if USE_QUEUE
 				[self startNext];
 #endif
@@ -239,19 +283,18 @@ void ignoreSSLErrorFor(NSString* host)
             }
         }
         
-        _noResponseBlock(nil);
+        _noResponseBlock(self, nil);
     }
 	else if(_xmlBlock)
 	{
         const char *baseURL = NULL;
         const char *encoding = NULL;
-        
-#if FULL_LOGGING
-        NSString* xmlStr = [[NSString alloc] initWithData:_data encoding:NSUTF8StringEncoding];
-        NSLog(@"Request URL: %@", [self URL]);
-        NSLog(@"XML response: %@", xmlStr);
-        [xmlStr release];
-#endif
+
+		WA_BEGIN_LOGGING_CUSTOM(WALoggingResponse)
+			NSString* xmlStr = [[NSString alloc] initWithData:_data encoding:NSUTF8StringEncoding];
+			NSLog(@"XML response: %@", xmlStr);
+			[xmlStr release];
+		WA_END_LOGGING
         
         xmlDocPtr doc = xmlReadMemory([_data bytes], (int)[_data length], baseURL, encoding, (XML_PARSE_NOCDATA | XML_PARSE_NOBLANKS)); 
         
@@ -259,18 +302,18 @@ void ignoreSSLErrorFor(NSString* host)
 
         if(error)
         {
-            _xmlBlock(nil, error);
+            _xmlBlock(self, nil, error);
         }
         else
         {
-            _xmlBlock(doc, nil);
+            _xmlBlock(self, doc, nil);
         }
 		
 		xmlFreeDoc(doc);
 	}
 	else if(_dataBlock)
 	{
-        _dataBlock(_data, nil);
+        _dataBlock(self, _data, nil);
 	}
 
 #if USE_QUEUE
@@ -282,15 +325,15 @@ void ignoreSSLErrorFor(NSString* host)
 {
     if(_noResponseBlock)
     {
-        _noResponseBlock(error);
+        _noResponseBlock(self, error);
     }
 	else if(_xmlBlock)
 	{
-        _xmlBlock(nil, error);
+        _xmlBlock(self, nil, error);
     }
     else if(_dataBlock)
     {
-        _dataBlock(nil, error);
+        _dataBlock(self, nil, error);
     }
 
 #if USE_QUEUE

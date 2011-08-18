@@ -72,6 +72,8 @@
             
             NSString* securityTokenEncoded = [NSString stringWithCString:(const char*)xmlValue encoding:NSUTF8StringEncoding];
             NSData* securityTokenData = [securityTokenEncoded dataWithBase64DecodedString];
+			
+			xmlFree(xmlValue);
             
             _securityToken = [[NSString alloc] initWithData:securityTokenData encoding:NSUTF8StringEncoding];
 			

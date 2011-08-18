@@ -15,7 +15,7 @@
  */
 
 #import "WAQueueMessage.h"
-
+#import "WASimpleBase64.h"
 
 @implementation WAQueueMessage
 
@@ -33,7 +33,9 @@
         _expirationTime = [expirationTime retain];
 		_popReceipt = [popReceipt retain];
         _timeNextVisible = [timeNextVisible retain];
-        self.messageText = messageText;
+		
+		NSData* data = [messageText dataWithBase64DecodedString];
+        self.messageText = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
     }    
     return self;
 }

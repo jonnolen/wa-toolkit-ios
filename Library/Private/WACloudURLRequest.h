@@ -16,13 +16,15 @@
 
 #import <Foundation/Foundation.h>
 #import <libxml/tree.h>
+#import "Logging.h"
 
-#define USE_QUEUE	1   // set to 1 to perform requests in order rather than all at once
-#define FULL_LOGGING 0  // set to 1 to enable logging of request/response data
+#define USE_QUEUE	 1  // set to 1 to perform requests in order rather than all at once
 
-typedef void (^WAFetchXMLHandler)(xmlDocPtr doc, NSError* err);
-typedef void (^WAFetchDataHandler)(NSData* data, NSError* err);
-typedef void (^WANoResponseHandler)(NSError* err);
+@class WACloudURLRequest;
+
+typedef void (^WAFetchXMLHandler)(WACloudURLRequest* request, xmlDocPtr doc, NSError* err);
+typedef void (^WAFetchDataHandler)(WACloudURLRequest* request, NSData* data, NSError* err);
+typedef void (^WANoResponseHandler)(WACloudURLRequest* request, NSError* err);
 
 @interface WACloudURLRequest : NSMutableURLRequest {
     WANoResponseHandler _noResponseBlock;
@@ -30,6 +32,7 @@ typedef void (^WANoResponseHandler)(NSError* err);
     WAFetchDataHandler _dataBlock;
     long long _expectedContentLength;
 	NSMutableData* _data;
+	NSString* _contentType;
 #if USE_QUEUE
     WACloudURLRequest* _next;
 #endif

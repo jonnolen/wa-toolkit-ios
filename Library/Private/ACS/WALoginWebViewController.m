@@ -18,6 +18,7 @@
 #import "WACloudAccessControlHomeRealm.h"
 #import "WACloudAccessControlClient.h"
 #import "NSString+URLEncode.h"
+#import "Logging.h"
 
 const NSString* ScriptNotify = @"<script type=\"text/javascript\">window.external = { 'Notify': function(s) { document.location = 'acs://settoken?token=' + s; }, 'notify': function(s) { document.location = 'acs://settoken?token=' + s; } };</script>";
 
@@ -208,6 +209,10 @@ const NSString* ScriptNotify = @"<script type=\"text/javascript\">window.externa
 		{            
             WACloudAccessToken* accessToken = [[WACloudAccessToken alloc] initWithDictionary:pairs fromRealm:_realm];
             
+			WA_BEGIN_LOGGING_CUSTOM(WALoggingACS)
+			NSLog(@"Setting access token");
+			WA_END_LOGGING
+
 			[_block retain];
             [self dismissModalViewControllerAnimated:YES];
 			

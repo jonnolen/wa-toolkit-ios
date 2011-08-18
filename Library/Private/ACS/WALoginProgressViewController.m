@@ -59,7 +59,11 @@
 {
     WACloudURLRequest* request = [WACloudURLRequest requestWithURL:_serviceURL];
     
-    [request fetchDataWithCompletionHandler:^(NSData *data, NSError *error) 
+	WA_BEGIN_LOGGING_CUSTOM(WALoggingACS)
+	NSLog(@"Fetching identity providers");
+	WA_END_LOGGING
+
+    [request fetchDataWithCompletionHandler:^(WACloudURLRequest* request, NSData *data, NSError *error) 
 	 {
 		 if(error)
 		 {
@@ -138,7 +142,24 @@
 			 [homeRealm release];
 		 }
 		 
-		 block([[results copy] autorelease], nil);
+		 NSArray* sorted = [results sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) 
+		 {
+			 WACloudAccessControlHomeRealm* realm1 = obj1;
+			 WACloudAccessControlHomeRealm* realm2 = obj2;
+			 
+			 return [realm1.name compare:realm2.name];
+		 }];
+		 
+		 WA_BEGIN_LOGGING_CUSTOM(WALoggingACS)
+		 NSMutableArray* providerNames = [NSMutableArray arrayWithCapacity:sorted.count];
+		 [sorted enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) 
+		 {
+			 [providerNames addObject:[obj name]];
+		 }];
+		 NSLog(@"Found identity providers: %@", providerNames);
+		 WA_END_LOGGING
+		 
+		 block(sorted, nil);
 	 }];
 }
 
@@ -150,10 +171,12 @@
     UIView* view = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     view.backgroundColor = [UIColor whiteColor];
     self.view = view;
+	[view release];
     
     UIActivityIndicatorView* activityView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     activityView.frame = CGRectMake(100, 140, 25, 25);
     [self.view addSubview:activityView];
+    [activityView release];
     
     [activityView startAnimating];
     
@@ -161,6 +184,7 @@
     label.text = @"Loading";
     label.textColor = [UIColor darkGrayColor];
     [self.view addSubview:label];
+    [label release];
 }
 
 - (void)viewDidAppear:(BOOL)animated

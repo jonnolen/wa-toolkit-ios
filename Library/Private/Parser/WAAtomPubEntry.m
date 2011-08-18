@@ -40,6 +40,7 @@
         xmlChar* xmlValue = xmlNodeGetContent(child);
         NSString* name = [NSString stringWithUTF8String:(const char*)child->name];
         NSString* value = [NSString stringWithUTF8String:(const char*)xmlValue];
+		xmlFree(xmlValue);
         block(name, value);
     }];
 }

@@ -15,6 +15,10 @@ To download the library, select a download package (e.g. v1.2.0).  The download 
 
 To use the library in your own application, add a reference to the static library (libwatoolkitios.a) and reference the include folder on your header search path.  The walkthrough document at http://www.wadewegner.com/2011/05/windows-azure-toolkit-for-ios/ provides a more thorough example of creating a new XCode 4 project and adding references to the library.
 
+or
+
+Drag the library project into your Xcode 4 workspace. Set the watoolkitios-lib project as a target dependency of your project and a dd libwatoolkitios.a to your set of linked libraries in the build phases of your project.
+
 ## Using the Sample Application
 
 The watoolkitios-samples project contains a working iPhone project sample to demonstrate the functionality of the library.  To use this, download the XCode 4 project and compile.  Before running, be sure to enter your Windows Azure storage account name and access key in RootViewController.m.  Your account name and access key can be obtained from the Windows Azure portal.
