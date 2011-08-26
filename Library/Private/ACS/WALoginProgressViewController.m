@@ -60,7 +60,7 @@
     WACloudURLRequest* request = [WACloudURLRequest requestWithURL:_serviceURL];
     
 	WA_BEGIN_LOGGING_CUSTOM(WALoggingACS)
-	NSLog(@"Fetching identity providers");
+        NSLog(@"Fetching identity providers");
 	WA_END_LOGGING
 
     [request fetchDataWithCompletionHandler:^(WACloudURLRequest* request, NSData *data, NSError *error) 

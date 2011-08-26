@@ -38,6 +38,7 @@ const int AUTHENTICATION_DELAY = 2;
 @synthesize tableServiceURL = _tableServiceURL;
 @synthesize blobServiceURL = _blobServiceURL;
 
+
 - (id)initWithAzureServiceAccount:(NSString*)name accessKey:(NSString*)key
 {	
 	if ((self = [super init]) != nil)
@@ -415,7 +416,7 @@ const int AUTHENTICATION_DELAY = 2;
 		{
 			void* buffer = malloc(CC_SHA256_DIGEST_LENGTH);
 			CCHmac(kCCHmacAlgSHA256, [cKey bytes], [cKey length], [contentData bytes], [contentData length], buffer);
-			NSData *encodedData = [NSData dataWithBytesNoCopy:buffer length:CC_SHA256_DIGEST_LENGTH freeWhenDone:YES];
+			NSData *encodedData = [NSData dataWithBytesNoCopy:buffer length:CC_SHA256_DIGEST_LENGTH freeWhenDone:NO];
 			contentMD5 = [encodedData stringWithBase64EncodedData];
 			free(buffer);
 			
@@ -447,12 +448,11 @@ const int AUTHENTICATION_DELAY = 2;
 	NSData *encodedData = [NSData dataWithBytesNoCopy:buffer length:CC_SHA256_DIGEST_LENGTH freeWhenDone:YES];
 	NSString *hash = [encodedData stringWithBase64EncodedData];
 	
-#if FULL_LOGGING
-/*	WA_BEGIN_LOGGING
+    WA_BEGIN_LOGGING
 		NSLog(@"Request string: %@", requestString);
 		NSLog(@"Request hash: %@", hash);
-	WA_END_LOGGING	*/
-#endif
+	WA_END_LOGGING
+
 	
 	// Append to the Authorization Header
 	NSString *authHeader = [NSString stringWithFormat:@"SharedKey %@:%@", _accountName, hash];

@@ -152,7 +152,7 @@
 @end
 
 /*! The CloudStorageClientDelegate is a protocol for handling delegated requests from CloudStorageClient. */
-@protocol WACloudStorageClientDelegate
+@protocol WACloudStorageClientDelegate <NSObject>
 
 @optional
 

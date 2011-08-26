@@ -14,26 +14,13 @@
  limitations under the License.
  */
 
-#import <Foundation/Foundation.h>
 
-@class WAPredicateParser;
+#import <SenTestingKit/SenTestingKit.h>
+#import <UIKit/UIKit.h>
 
-@protocol WAPredicateParserDelegate <NSObject>
-
-@required
-
-- (void) writeComparison:(NSPredicateOperatorType)predicateOperatorType left:(NSExpression*)left right:(NSExpression*)right;
-- (void) writeAnd:(NSArray*)predicates;
-- (void) writeOr:(NSArray*)predicates;
-- (void) writeNot:(NSPredicate*)predicate;
-
-- (void) parserFailedWithError:(NSError*)error;
-
-@end
-
-
-@interface WAPredicateParser : NSObject
-
-+ (void) parse:(NSPredicate*)predicate delegate:(id<WAPredicateParserDelegate>)delegate;
+@interface Base64Tests : SenTestCase {
+@private
+    
+}
 
 @end

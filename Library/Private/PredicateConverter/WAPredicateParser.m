@@ -20,7 +20,7 @@
 
 + (void) error:(NSString*)errorDesc code:(NSInteger)code delegate:(id<WAPredicateParserDelegate>)delegate
 {
-	if([(NSObject*)delegate respondsToSelector:@selector(parserFailedWithError:)])
+	if([delegate respondsToSelector:@selector(parserFailedWithError:)])
 	{
 		NSError* error = [NSError errorWithDomain:@"PredicateParser" 
 											 code:code 

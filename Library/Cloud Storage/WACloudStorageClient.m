@@ -113,7 +113,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
                  {
                      block(nil, error);
                  }
-                 else if([(NSObject*)_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
+                 else if([_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
                  {
                      [_delegate storageClient:self didFailRequest:request withError:error];
                  }
@@ -126,7 +126,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
              {
                  block(queues, nil);
              }
-             else if([(NSObject*)_delegate respondsToSelector:@selector(storageClient:didFetchQueues:)])
+             else if([_delegate respondsToSelector:@selector(storageClient:didFetchQueues:)])
              {
                  [_delegate storageClient:self didFetchQueues:queues];
              }
@@ -144,7 +144,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
                  {
                      block(nil, error);
                  }
-                 else if([(NSObject*)_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
+                 else if([_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
                  {
                      [_delegate storageClient:self didFailRequest:request withError:error];
                  }
@@ -157,7 +157,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
              {
                  block(queues, nil);
              }
-             else if([(NSObject*)_delegate respondsToSelector:@selector(storageClient:didFetchQueues:)])
+             else if([_delegate respondsToSelector:@selector(storageClient:didFetchQueues:)])
              {
                  [_delegate storageClient:self didFetchQueues:queues];
              }
@@ -186,7 +186,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
              {
                  block(error);
              }
-             else if([(NSObject*)_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
+             else if([_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
              {
                  [_delegate storageClient:self didFailRequest:request withError:error];
              }
@@ -197,7 +197,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
          {
              block(nil);
          }
-         else if([(NSObject*)_delegate respondsToSelector:@selector(storageClient:didAddQueueNamed:)])
+         else if([_delegate respondsToSelector:@selector(storageClient:didAddQueueNamed:)])
          {
              [_delegate storageClient:self didAddQueueNamed:queueName];
          }
@@ -223,7 +223,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
              {
                  block(error);
              }
-             else if([(NSObject*)_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
+             else if([_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
              {
                  [_delegate storageClient:self didFailRequest:request withError:error];
              }
@@ -234,7 +234,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
          {
              block(nil);
          }
-         else if([(NSObject*)_delegate respondsToSelector:@selector(storageClient:didDeleteQueueNamed:)])
+         else if([_delegate respondsToSelector:@selector(storageClient:didDeleteQueueNamed:)])
          {
              [_delegate storageClient:self didDeleteQueueNamed:queueName];
          }
@@ -246,7 +246,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
 {
 	[self privateGetQueueMessages:queueName fetchCount:1 useBlockError:NO peekOnly:NO withBlock:^(NSArray* items, NSError* error) 
 	 {
-		 if(![(NSObject*)_delegate respondsToSelector:@selector(storageClient:didFetchQueueMessage:)])
+		 if(![_delegate respondsToSelector:@selector(storageClient:didFetchQueueMessage:)])
 		 {
 			 return;
 		 }
@@ -272,7 +272,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
 			{
 				block(nil, error);
 			}
-			else if([(NSObject*)_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
+			else if([_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
 			{
 				[_delegate storageClient:self didFailRequest:nil withError:error];
 			}
@@ -290,7 +290,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
 				block(nil, nil);
 			}
 		}
-		else if(![(NSObject*)_delegate respondsToSelector:@selector(storageClient:didFetchQueueMessage:)])
+		else if(![_delegate respondsToSelector:@selector(storageClient:didFetchQueueMessage:)])
 		{
 			if(items.count >= 1)
 			{
@@ -308,7 +308,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
 {
 	[self privateGetQueueMessages:queueName fetchCount:fetchCount useBlockError:NO peekOnly:NO withBlock:^(NSArray* items, NSError* error)
 	 {
-		 if(![(NSObject*)_delegate respondsToSelector:@selector(storageClient:didFetchQueueMessages:)])
+		 if(![_delegate respondsToSelector:@selector(storageClient:didFetchQueueMessages:)])
 		 {
 			 return;
 		 }
@@ -327,7 +327,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
 			 {
 				 block(nil, error);
 			 }
-			 else if([(NSObject*)_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
+			 else if([_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
 			 {
 				 [_delegate storageClient:self didFailRequest:nil withError:error];
 			 }
@@ -338,7 +338,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
 		 {
 			 block(items, nil);
 		 }
-		 else if(![(NSObject*)_delegate respondsToSelector:@selector(storageClient:didFetchQueueMessages:)])
+		 else if(![_delegate respondsToSelector:@selector(storageClient:didFetchQueueMessages:)])
 		 {
 			 [_delegate storageClient:self didFetchQueueMessages:items];
 		 }
@@ -349,7 +349,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
 {
 	[self privateGetQueueMessages:queueName fetchCount:1 useBlockError:NO peekOnly:YES withBlock:^(NSArray* items, NSError* error) 
 	 {
-		 if(![(NSObject*)_delegate respondsToSelector:@selector(storageClient:didPeekQueueMessage:)])
+		 if(![_delegate respondsToSelector:@selector(storageClient:didPeekQueueMessage:)])
 		 {
 			 return;
 		 }
@@ -375,7 +375,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
 			 {
 				 block(nil, error);
 			 }
-			 else if([(NSObject*)_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
+			 else if([_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
 			 {
 				 [_delegate storageClient:self didFailRequest:nil withError:error];
 			 }
@@ -393,7 +393,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
 				 block(nil, nil);
 			 }
 		 }
-		 else if(![(NSObject*)_delegate respondsToSelector:@selector(storageClient:didPeekQueueMessage:)])
+		 else if(![_delegate respondsToSelector:@selector(storageClient:didPeekQueueMessage:)])
 		 {
 			 if(items.count >= 1)
 			 {
@@ -411,7 +411,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
 {
 	[self privateGetQueueMessages:queueName fetchCount:fetchCount useBlockError:NO peekOnly:YES withBlock:^(NSArray* items, NSError* error)
 	 {
-		 if(![(NSObject*)_delegate respondsToSelector:@selector(storageClient:didPeekQueueMessages:)])
+		 if(![_delegate respondsToSelector:@selector(storageClient:didPeekQueueMessages:)])
 		 {
 			 return;
 		 }
@@ -430,7 +430,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
 			 {
 				 block(nil, error);
 			 }
-			 else if([(NSObject*)_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
+			 else if([_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
 			 {
 				 [_delegate storageClient:self didFailRequest:nil withError:error];
 			 }
@@ -441,7 +441,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
 		 {
 			 block(items, nil);
 		 }
-		 else if(![(NSObject*)_delegate respondsToSelector:@selector(storageClient:didPeekQueueMessages:)])
+		 else if(![_delegate respondsToSelector:@selector(storageClient:didPeekQueueMessages:)])
 		 {
 			 [_delegate storageClient:self didPeekQueueMessages:items];
 		 }
@@ -467,7 +467,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
              {
                  block(nil, error);
              }
-             else if([(NSObject*)_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
+             else if([_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
              {
                  [_delegate storageClient:self didFailRequest:request withError:error];
              }
@@ -480,7 +480,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
          {
              block(queueMessages, nil);
          }
-         else if([(NSObject*)_delegate respondsToSelector:@selector(storageClient:didFetchQueueMessages:)])
+         else if([_delegate respondsToSelector:@selector(storageClient:didFetchQueueMessages:)])
          {
              [_delegate storageClient:self didFetchQueueMessages:queueMessages];
          }
@@ -506,7 +506,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
              {
                  block(error);
              }
-             else if([(NSObject*)_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
+             else if([_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
              {
                  [_delegate storageClient:self didFailRequest:request withError:error];
              }
@@ -517,7 +517,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
          {
              block(nil);
          }
-         else if([(NSObject*)_delegate respondsToSelector:@selector(storageClient:didDeleteQueueMessage:queueName:)])
+         else if([_delegate respondsToSelector:@selector(storageClient:didDeleteQueueMessage:queueName:)])
          {
              [_delegate storageClient:self didDeleteQueueMessage:queueMessage queueName:queueName];
          }
@@ -555,7 +555,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
              {
                  block(error);
              }
-             else if([(NSObject*)_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
+             else if([_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
              {
                  [_delegate storageClient:self didFailRequest:request withError:error];
              }
@@ -566,7 +566,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
          {
              block(nil);
          }
-         else if([(NSObject*)_delegate respondsToSelector:@selector(storageClient:didAddMessageToQueue:queueName:)])
+         else if([_delegate respondsToSelector:@selector(storageClient:didAddMessageToQueue:queueName:)])
          {
              [_delegate storageClient:self didAddMessageToQueue:message queueName:queueName];
          }
@@ -596,7 +596,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
                  {
                      block(nil, error);
                  }
-                 else if([(NSObject*)_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
+                 else if([_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
                  {
                      [_delegate storageClient:self didFailRequest:request withError:error];
                  }
@@ -609,7 +609,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
              {
                  block(containers, nil);
              }
-             else if([(NSObject*)_delegate respondsToSelector:@selector(storageClient:didFetchBlobContainers:)])
+             else if([_delegate respondsToSelector:@selector(storageClient:didFetchBlobContainers:)])
              {
                  [_delegate storageClient:self didFetchBlobContainers:containers];
              }
@@ -628,7 +628,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
                  {
                      block(nil, error);
                  }
-                 else if([(NSObject*)_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
+                 else if([_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
                  {
                      [_delegate storageClient:self didFailRequest:request withError:error];
                  }
@@ -641,7 +641,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
              {
                  block(containers, nil);
              }
-             else if([(NSObject*)_delegate respondsToSelector:@selector(storageClient:didFetchBlobContainers:)])
+             else if([_delegate respondsToSelector:@selector(storageClient:didFetchBlobContainers:)])
              {
                  [_delegate storageClient:self didFetchBlobContainers:containers];
              }
@@ -668,7 +668,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
                  {
                      block(nil, error);
                  }
-                 else if([(NSObject*)_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
+                 else if([_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
                  {
                      [_delegate storageClient:self didFailRequest:request withError:error];
                  }
@@ -688,7 +688,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
              {
                  block(container, nil);
              }
-             else if([(NSObject*)_delegate respondsToSelector:@selector(storageClient:didFetchBlobContainer:)])
+             else if([_delegate respondsToSelector:@selector(storageClient:didFetchBlobContainer:)])
              {
                  [_delegate storageClient:self didFetchBlobContainer:container];
              }
@@ -707,7 +707,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
                  {
                      block(nil, error);
                  }
-                 else if([(NSObject*)_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
+                 else if([_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
                  {
                      [_delegate storageClient:self didFailRequest:request withError:error];
                  }
@@ -727,7 +727,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
              {
                  block(container, nil);
              }
-             else if([(NSObject*)_delegate respondsToSelector:@selector(storageClient:didFetchBlobContainer:)])
+             else if([_delegate respondsToSelector:@selector(storageClient:didFetchBlobContainer:)])
              {
                  [_delegate storageClient:self didFetchBlobContainer:container];
              }
@@ -759,7 +759,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
              {
                  block(error);
              }
-             else if([(NSObject*)_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
+             else if([_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
              {
                  [_delegate storageClient:self didFailRequest:request withError:error];
              }
@@ -770,7 +770,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
          {
              block(nil);
          }
-         else if([(NSObject*)_delegate respondsToSelector:@selector(storageClient:didAddBlobContainerNamed:)])
+         else if([_delegate respondsToSelector:@selector(storageClient:didAddBlobContainerNamed:)])
          {
              [_delegate storageClient:self didAddBlobContainerNamed:containerName];
          }
@@ -803,7 +803,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
              {
                  block(error);
              }
-             else if([(NSObject*)_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
+             else if([_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
              {
                  [_delegate storageClient:self didFailRequest:request withError:error];
              }
@@ -814,7 +814,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
          {
              block(nil);
          }
-         else if([(NSObject*)_delegate respondsToSelector:@selector(storageClient:didDeleteBlobContainer:)])
+         else if([_delegate respondsToSelector:@selector(storageClient:didDeleteBlobContainer:)])
          {
              [_delegate storageClient:self didDeleteBlobContainer:container];
          }
@@ -847,7 +847,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
              {
                  block(error);
              }
-             else if([(NSObject*)_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
+             else if([_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
              {
                  [_delegate storageClient:self didFailRequest:request withError:error];
              }
@@ -858,7 +858,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
          {
              block(nil);
          }
-         else if([(NSObject*)_delegate respondsToSelector:@selector(storageClient:didDeleteBlobContainerNamed:)])
+         else if([_delegate respondsToSelector:@selector(storageClient:didDeleteBlobContainerNamed:)])
          {
              [_delegate storageClient:self didDeleteBlobContainerNamed:containerName];
          }
@@ -888,7 +888,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
                  {
                      block(nil, error);
                  }
-                 else if([(NSObject*)_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
+                 else if([_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
                  {
                      [_delegate storageClient:self didFailRequest:request withError:error];
                  }
@@ -901,7 +901,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
              {
                  block(items, nil);
              }
-             else if([(NSObject*)_delegate respondsToSelector:@selector(storageClient:didFetchBlobs:inContainer:)])
+             else if([_delegate respondsToSelector:@selector(storageClient:didFetchBlobs:inContainer:)])
              {
                  [_delegate storageClient:self didFetchBlobs:items inContainer:container];
              }
@@ -922,7 +922,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
                  {
                      block(nil, error);
                  }
-                 else if([(NSObject*)_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
+                 else if([_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
                  {
                      [_delegate storageClient:self didFailRequest:request withError:error];
                  }
@@ -935,7 +935,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
              {
                  block(items, nil);
              }
-             else if([(NSObject*)_delegate respondsToSelector:@selector(storageClient:didFetchBlobs:inContainer:)])
+             else if([_delegate respondsToSelector:@selector(storageClient:didFetchBlobs:inContainer:)])
              {
                  [_delegate storageClient:self didFetchBlobs:items inContainer:container];
              }
@@ -963,7 +963,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
 				 {
 					 block(nil, error);
 				 }
-				 else if([(NSObject*)_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
+				 else if([_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
 				 {
 					 [_delegate storageClient:self didFailRequest:request withError:error];
 				 }
@@ -989,7 +989,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
                       {
                           block(nil, error);
                       }
-                      else if([(NSObject*)_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
+                      else if([_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
                       {
                           [_delegate storageClient:self didFailRequest:request withError:error];
                       }
@@ -1000,7 +1000,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
                   {
                       block(data, nil);
                   }
-                  else if([(NSObject*)_delegate respondsToSelector:@selector(storageClient:didFetchBlobData:blob:)])
+                  else if([_delegate respondsToSelector:@selector(storageClient:didFetchBlobData:blob:)])
                   {
                       [_delegate storageClient:self didFetchBlobData:data blob:blob];
                   }
@@ -1020,7 +1020,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
                  {
                      block(nil, error);
                  }
-                 else if([(NSObject*)_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
+                 else if([_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
                  {
                      [_delegate storageClient:self didFailRequest:request withError:error];
                  }
@@ -1031,7 +1031,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
              {
                  block(data, nil);
              }
-             else if([(NSObject*)_delegate respondsToSelector:@selector(storageClient:didFetchBlobData:blob:)])
+             else if([_delegate respondsToSelector:@selector(storageClient:didFetchBlobData:blob:)])
              {
                  [_delegate storageClient:self didFetchBlobData:data blob:blob];
              }
@@ -1058,7 +1058,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
 				 {
 					 block(error);
 				 }
-				 else if([(NSObject*)_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
+				 else if([_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
 				 {
 					 [_delegate storageClient:self didFailRequest:request withError:error];
 				 }
@@ -1083,7 +1083,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
                       {
                           block(error);
                       }
-                      else if([(NSObject*)_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
+                      else if([_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
                       {
                           [_delegate storageClient:self didFailRequest:request withError:error];
                       }
@@ -1094,7 +1094,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
                   {
                       block(nil);
                   }
-                  else if([(NSObject*)_delegate respondsToSelector:@selector(storageClient:didAddBlobToContainer:blobName:)])
+                  else if([_delegate respondsToSelector:@selector(storageClient:didAddBlobToContainer:blobName:)])
                   {
                       [_delegate storageClient:self didAddBlobToContainer:container blobName:blobName];
                   }
@@ -1115,7 +1115,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
                  {
                      block(error);
                  }
-                 else if([(NSObject*)_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
+                 else if([_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
                  {
                      [_delegate storageClient:self didFailRequest:request withError:error];
                  }
@@ -1126,7 +1126,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
              {
                  block(nil);
              }
-             else if([(NSObject*)_delegate respondsToSelector:@selector(storageClient:didAddBlobToContainer:blobName:)])
+             else if([_delegate respondsToSelector:@selector(storageClient:didAddBlobToContainer:blobName:)])
              {
                  [_delegate storageClient:self didAddBlobToContainer:container blobName:blobName];
              }
@@ -1166,7 +1166,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
                       {
                           block(error);
                       }
-                      else if([(NSObject*)_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
+                      else if([_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
                       {
                           [_delegate storageClient:self didFailRequest:request withError:error];
                       }
@@ -1177,7 +1177,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
                   {
                       block(nil);
                   }
-                  else if([(NSObject*)_delegate respondsToSelector:@selector(storageClient:didDeleteBlob:)])
+                  else if([_delegate respondsToSelector:@selector(storageClient:didDeleteBlob:)])
                   {
                       [_delegate storageClient:self didDeleteBlob:blob];
                   }
@@ -1197,7 +1197,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
                  {
                      block(error);
                  }
-                 else if([(NSObject*)_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
+                 else if([_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
                  {
                      [_delegate storageClient:self didFailRequest:request withError:error];
                  }
@@ -1208,7 +1208,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
              {
                  block(nil);
              }
-             else if([(NSObject*)_delegate respondsToSelector:@selector(storageClient:didDeleteBlob:)])
+             else if([_delegate respondsToSelector:@selector(storageClient:didDeleteBlob:)])
              {
                  [_delegate storageClient:self didDeleteBlob:blob];
              }
@@ -1237,7 +1237,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
              {
                  block(nil, error);
              }
-             else if([(NSObject*)_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
+             else if([_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
              {
                  [_delegate storageClient:self didFailRequest:request withError:error];
              }
@@ -1260,7 +1260,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
          {
              block(tables, nil);
          }
-         else if([(NSObject*)_delegate respondsToSelector:@selector(storageClient:didFetchTables:)])
+         else if([_delegate respondsToSelector:@selector(storageClient:didFetchTables:)])
          {
              [_delegate storageClient:self didFetchTables:tables];
          }
@@ -1299,7 +1299,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
              {
                  block(error);
              }
-             else if([(NSObject*)_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
+             else if([_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
              {
                  [_delegate storageClient:self didFailRequest:request withError:error];
              }
@@ -1704,7 +1704,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
              {
                  block(nil, error);
              }
-             else if([(NSObject*)_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
+             else if([_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
              {
                  [_delegate storageClient:self didFailRequest:request withError:error];
              }

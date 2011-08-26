@@ -51,6 +51,7 @@
 		AABD4A50134D02C400B6E7D1 /* WATableEntity.h in Headers */ = {isa = PBXBuildFile; fileRef = AABD4A4E134D02C400B6E7D1 /* WATableEntity.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AABD4A51134D02C400B6E7D1 /* WATableEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = AABD4A4F134D02C400B6E7D1 /* WATableEntity.m */; };
 		AAD7348C134D2C22000AB68A /* NSString+URLEncode.h in Headers */ = {isa = PBXBuildFile; fileRef = AAD7348A134D2C21000AB68A /* NSString+URLEncode.h */; };
+		DEF6901A140827D4006FF7E5 /* Base64Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = DEF69019140827D4006FF7E5 /* Base64Tests.m */; };
 		F216A688136F88BC00FAEAB4 /* WAQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = F216A684136F88BC00FAEAB4 /* WAQueue.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F216A689136F88BC00FAEAB4 /* WAQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = F216A685136F88BC00FAEAB4 /* WAQueue.m */; };
 		F216A68A136F88BC00FAEAB4 /* WAQueueMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = F216A686136F88BC00FAEAB4 /* WAQueueMessage.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -66,12 +67,21 @@
 		F4F998F9138DC6C200254B51 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		F4F998FA138DC6C200254B51 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 288765FC0DF74451002DB57D /* CoreGraphics.framework */; };
 		F4F99900138DC6C200254B51 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = F4F998FE138DC6C200254B51 /* InfoPlist.strings */; };
-		F4F99903138DC6C200254B51 /* watoolkitios_lib_test.h in Resources */ = {isa = PBXBuildFile; fileRef = F4F99902138DC6C200254B51 /* watoolkitios_lib_test.h */; };
 		F4F99905138DC6C200254B51 /* watoolkitios_lib_test.m in Sources */ = {isa = PBXBuildFile; fileRef = F4F99904138DC6C200254B51 /* watoolkitios_lib_test.m */; };
 		F4F99917138DC8FD00254B51 /* WACloudStorageClientDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F4F99916138DC8FD00254B51 /* WACloudStorageClientDelegate.m */; };
 		F4F9991A138DCBC500254B51 /* libwatoolkitios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F4F5239B1374612A004434B5 /* libwatoolkitios.a */; };
 		F4F9991C138DCBDF00254B51 /* libxml2.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F4F9991B138DCBDF00254B51 /* libxml2.2.dylib */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		DEF69016140822F7006FF7E5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 27E7D68C1345118600F142F7;
+			remoteInfo = "watoolkitios-lib";
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -121,6 +131,8 @@
 		AABD4A4E134D02C400B6E7D1 /* WATableEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WATableEntity.h; sourceTree = "<group>"; };
 		AABD4A4F134D02C400B6E7D1 /* WATableEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WATableEntity.m; sourceTree = "<group>"; };
 		AAD7348A134D2C21000AB68A /* NSString+URLEncode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+URLEncode.h"; sourceTree = "<group>"; };
+		DEF69018140827D4006FF7E5 /* Base64Tests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Base64Tests.h; sourceTree = "<group>"; };
+		DEF69019140827D4006FF7E5 /* Base64Tests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Base64Tests.m; sourceTree = "<group>"; };
 		F216A684136F88BC00FAEAB4 /* WAQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WAQueue.h; sourceTree = "<group>"; };
 		F216A685136F88BC00FAEAB4 /* WAQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WAQueue.m; sourceTree = "<group>"; };
 		F216A686136F88BC00FAEAB4 /* WAQueueMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WAQueueMessage.h; sourceTree = "<group>"; };
@@ -201,8 +213,6 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
-				F4F9991B138DCBDF00254B51 /* libxml2.2.dylib */,
-				F4F5239B1374612A004434B5 /* libwatoolkitios.a */,
 				27E7D65C13450FF500F142F7 /* Library */,
 				F4F998FB138DC6C200254B51 /* Tests */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
@@ -214,6 +224,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F4F5239B1374612A004434B5 /* libwatoolkitios.a */,
 				AA0945501348EE2900AF7EAB /* libxml2.2.dylib */,
 				1DF5F4DF0D08C38300B7A737 /* UIKit.framework */,
 				1D30AB110D05D00D00671497 /* Foundation.framework */,
@@ -333,6 +344,14 @@
 			path = Private;
 			sourceTree = "<group>";
 		};
+		DEF68FE114082266006FF7E5 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				F4F9991B138DCBDF00254B51 /* libxml2.2.dylib */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		F41F8F4513980285005986CF /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -344,12 +363,15 @@
 		F4F998FB138DC6C200254B51 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
-				F41F8F4513980285005986CF /* Resources */,
 				F4F99902138DC6C200254B51 /* watoolkitios_lib_test.h */,
 				F4F99904138DC6C200254B51 /* watoolkitios_lib_test.m */,
-				F4F998FC138DC6C200254B51 /* Supporting Files */,
+				DEF69018140827D4006FF7E5 /* Base64Tests.h */,
+				DEF69019140827D4006FF7E5 /* Base64Tests.m */,
 				F4F99915138DC8FD00254B51 /* WACloudStorageClientDelegate.h */,
 				F4F99916138DC8FD00254B51 /* WACloudStorageClientDelegate.m */,
+				DEF68FE114082266006FF7E5 /* Frameworks */,
+				F4F998FC138DC6C200254B51 /* Supporting Files */,
+				F41F8F4513980285005986CF /* Resources */,
 			);
 			name = Tests;
 			path = "watoolkitios-lib-test";
@@ -434,6 +456,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				DEF69017140822F7006FF7E5 /* PBXTargetDependency */,
 			);
 			name = "watoolkitios-lib-test";
 			productName = "watoolkitios-lib-test";
@@ -472,7 +495,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				F4F99900138DC6C200254B51 /* InfoPlist.strings in Resources */,
-				F4F99903138DC6C200254B51 /* watoolkitios_lib_test.h in Resources */,
 				F41F8F48139802B2005986CF /* cloud.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -534,10 +556,19 @@
 			files = (
 				F4F99905138DC6C200254B51 /* watoolkitios_lib_test.m in Sources */,
 				F4F99917138DC8FD00254B51 /* WACloudStorageClientDelegate.m in Sources */,
+				DEF6901A140827D4006FF7E5 /* Base64Tests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		DEF69017140822F7006FF7E5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 27E7D68C1345118600F142F7 /* watoolkitios-lib */;
+			targetProxy = DEF69016140822F7006FF7E5 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		F4F998FE138DC6C200254B51 /* InfoPlist.strings */ = {
@@ -563,6 +594,7 @@
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				HEADER_SEARCH_PATHS = "/usr/include/libxml2/**";
 				INSTALL_PATH = "\"$(BUILT_PRODUCTS_DIR)\"";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				OTHER_LDFLAGS = "";
 				PREBINDING = NO;
 				PRODUCT_NAME = watoolkitios;
@@ -583,6 +615,7 @@
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				HEADER_SEARCH_PATHS = "/usr/include/libxml2/**";
 				INSTALL_PATH = "\"$(BUILT_PRODUCTS_DIR)\"";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				OTHER_LDFLAGS = "";
 				PREBINDING = NO;
 				PRODUCT_NAME = watoolkitios;
@@ -601,6 +634,7 @@
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				PREBINDING = NO;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -615,6 +649,7 @@
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				PREBINDING = NO;
 				SDKROOT = iphoneos;
@@ -638,7 +673,7 @@
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				INFOPLIST_FILE = "watoolkitios-lib-test/watoolkitios-lib-test-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				OTHER_LDFLAGS = (
 					"-framework",
 					SenTestingKit,
@@ -663,7 +698,7 @@
 				GCC_PREFIX_HEADER = "watoolkitios-lib-test/watoolkitios-lib-test-Prefix.pch";
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				INFOPLIST_FILE = "watoolkitios-lib-test/watoolkitios-lib-test-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				OTHER_LDFLAGS = (
 					"-framework",
 					SenTestingKit,

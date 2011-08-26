@@ -23,11 +23,10 @@
 #import "WAQueue.h"
 #import "WAQueueMessage.h"
 
+/*
+
 // Tests for blob related functions through proxy
 #define TEST_FETCH_BLOBCONTAINERS_BLOBS_PROXY
-
-
-/*
 
 // Tests for blob related functions
 #define TEST_FETCH_BLOB_CONTAINERS
@@ -65,11 +64,11 @@
 #define TEST_FETCH_QUEUE_MESSAGES_PROXY	*/
 
 // Account details for testing
-NSString *account = @"iostest";
-NSString *accessKey = @"/9seXadQ9HwOpXUO1jKxFN8qVwluGWrRkDQS+wZrghS9a1wPNh1ysHBvj0q0zL34E/qcWkmygEBqNFSz6Yk2eA==";
-NSString *proxyURL = @"https://wazmobiletoolkit.cloudapp.net";
-NSString *proxyUsername = @"sguest";
-NSString *proxyPassword = @"s1m0n1";
+NSString *account = @"<your account>";
+NSString *accessKey = @"<your access key>";
+NSString *proxyURL = @"https://<proxyhost>.cloudapp.net";
+NSString *proxyUsername = @"proxy user name";
+NSString *proxyPassword = @"proxy password";
 
 // Use for test setup
 WAAuthenticationCredential *directCredential;

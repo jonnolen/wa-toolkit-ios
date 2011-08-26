@@ -14,26 +14,21 @@
  limitations under the License.
  */
 
-#import <Foundation/Foundation.h>
+#import "Base64Tests.h"
+#import "WASimpleBase64.h"
 
-@class WAPredicateParser;
+@implementation Base64Tests
 
-@protocol WAPredicateParserDelegate <NSObject>
-
-@required
-
-- (void) writeComparison:(NSPredicateOperatorType)predicateOperatorType left:(NSExpression*)left right:(NSExpression*)right;
-- (void) writeAnd:(NSArray*)predicates;
-- (void) writeOr:(NSArray*)predicates;
-- (void) writeNot:(NSPredicate*)predicate;
-
-- (void) parserFailedWithError:(NSError*)error;
-
-@end
-
-
-@interface WAPredicateParser : NSObject
-
-+ (void) parse:(NSPredicate*)predicate delegate:(id<WAPredicateParserDelegate>)delegate;
+- (void)testShouldEncodeStringProperly
+{
+    NSString *key = @"wlQ7pyhrrDexICQ+vXAPDJ+9UojvI9Yz3DCZdnWCcN4VHnNwgEUSeOGPksHMR59POgCtvz2T3iJQ95vGcPH49g==";
+    
+    NSData *data = [key dataWithBase64DecodedString];
+    
+    NSString *retKey = [data stringWithBase64EncodedData];
+    
+    
+    STAssertEqualObjects(key, retKey, @"Encoded and Decoded key should be the same.");
+}
 
 @end

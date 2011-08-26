@@ -210,7 +210,7 @@ const NSString* ScriptNotify = @"<script type=\"text/javascript\">window.externa
             WACloudAccessToken* accessToken = [[WACloudAccessToken alloc] initWithDictionary:pairs fromRealm:_realm];
             
 			WA_BEGIN_LOGGING_CUSTOM(WALoggingACS)
-			NSLog(@"Setting access token");
+                NSLog(@"Setting access token");
 			WA_END_LOGGING
 
 			[_block retain];

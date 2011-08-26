@@ -130,7 +130,7 @@
     WACloudAccessControlHomeRealm* realm = [_realms objectAtIndex:indexPath.row];
 	
 	WA_BEGIN_LOGGING_CUSTOM(WALoggingACS)
-	NSLog(@"Picked identity provider: %@", realm.name);
+        NSLog(@"Picked identity provider: %@", realm.name);
 	WA_END_LOGGING
 
     WALoginWebViewController* webController = [[WALoginWebViewController alloc] initWithHomeRealm:realm

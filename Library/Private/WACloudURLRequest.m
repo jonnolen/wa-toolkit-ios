@@ -154,12 +154,11 @@ void ignoreSSLErrorFor(NSString* host)
 
 - (void)dealloc
 {
-	[_noResponseBlock release];
-	[_xmlBlock release];
-	[_dataBlock release];
-	
-	[_data release];
-	[_contentType release];
+	[_noResponseBlock release]; 
+	[_xmlBlock release]; 
+	[_dataBlock release]; 
+	[_data release]; 
+	[_contentType release]; 
 	
 	[super dealloc];
 }

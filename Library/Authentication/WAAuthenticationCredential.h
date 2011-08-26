@@ -19,7 +19,7 @@
 @class WACloudAccessToken;
 
 /*! When used with the proxy service, the authentication delegate returns indication whether the login was successful. */
-@protocol WAAuthenticationDelegate
+@protocol WAAuthenticationDelegate <NSObject>
 - (void)loginDidSucceed;
 - (void)loginDidFailWithError:(NSError *)error;
 @end

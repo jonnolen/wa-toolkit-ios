@@ -1,4 +1,4 @@
-Windows Azure Toolkit for iOS (Library) - v1.2.0
+Windows Azure Toolkit for iOS (Library) - v1.2.1
 ===
 
 The Windows Azure Toolkit for iOS is a toolkit for developers to make it easy to access Windows Azure storage services from native iOS applications.  The toolkit can be used for both iPhone and iPad applications, developed using Objective-C and XCode.  
@@ -9,7 +9,7 @@ The Windows Azure Toolkit for iOS is made available as an open source product un
 
 ## Downloading the Library
 
-To download the library, select a download package (e.g. v1.2.0).  The download zip contains binaries for iOS 4.3, targeted for both the simulator and devices.  Alternatively, you can download the source and compile your own version.  The project file has been designed to work with XCode 4.
+To download the library, select a download package (e.g. v1.2.1).  The download zip contains binaries for iOS 4.3, targeted for both the simulator and devices.  Alternatively, you can download the source and compile your own version.  The project file has been designed to work with XCode 4.
 
 ## Using the Library in your application
 
@@ -18,6 +18,10 @@ To use the library in your own application, add a reference to the static librar
 or
 
 Drag the library project into your Xcode 4 workspace. Set the watoolkitios-lib project as a target dependency of your project and a dd libwatoolkitios.a to your set of linked libraries in the build phases of your project.
+
+## Logging
+You can enable logging for the library when you are working with it in debug mode by setting an environment variable for your run.
+Go into your project schema and add the environment variable WALogging and set it to YES and logging information will print in the console.
 
 ## Using the Sample Application
 
