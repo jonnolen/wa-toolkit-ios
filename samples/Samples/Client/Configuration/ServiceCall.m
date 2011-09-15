@@ -15,11 +15,10 @@
  */
 
 #import "ServiceCall.h"
-#include <libxml/xmlwriter.h>
-#include "WACloudAccessControlClient.h"
+#import <libxml/xmlwriter.h>
+#import "WACloudAccessControlClient.h"
 #import "WAConfiguration.h"
 
-#define LOG 0
 
 @interface ServiceRequest : NSObject {
 @private
@@ -71,7 +70,7 @@
 	const char *encoding = NULL;
 	
     NSString *xml = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-	NSLog(@"XML Response: %@", xml);
+	LOG(@"XML Response: %@", xml);
 	[xml release];
 	
 	xmlDocPtr doc = xmlReadMemory([data bytes], (int)[data length], baseURL, encoding, (XML_PARSE_NOCDATA | XML_PARSE_NOBLANKS)); 
@@ -251,7 +250,7 @@
 	
 	buf = xmlBufferCreate();
     if (buf == NULL) {
-        NSLog(@"Error creating the xml buffer");
+        LOG(@"Error creating the xml buffer");
         return nil;
     }
 	
@@ -259,7 +258,7 @@
 	if (buf == NULL) {
 		xmlBufferFree(buf);
 		
-        NSLog(@"Error creating the xml writer");
+        LOG(@"Error creating the xml writer");
         return nil;
     }
 	
@@ -327,8 +326,8 @@
 			[token signRequest:request];
 		}
 		
-		NSLog(@"%@ %@", httpMethod, url);
-		NSLog(@"Headers: %@", [request allHTTPHeaderFields]);
+		LOG(@"%@ %@", httpMethod, url);
+		LOG(@"Headers: %@", [request allHTTPHeaderFields]);
 		
 		_connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
 	}

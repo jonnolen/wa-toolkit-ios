@@ -15,11 +15,11 @@
  */
 
 #import "WACloudAccessToken.h"
-#include <libxml/tree.h>
-#include "WASimpleBase64.h"
-#include "WACloudAccessControlClient.h"
-#include "WACloudAccessControlHomeRealm.h"
-#include "NSString+URLEncode.h"
+#import <libxml/tree.h>
+#import "WASimpleBase64.h"
+#import "WACloudAccessControlClient.h"
+#import "WACloudAccessControlHomeRealm.h"
+#import "NSString+URLEncode.h"
 
 @implementation WACloudAccessToken
 

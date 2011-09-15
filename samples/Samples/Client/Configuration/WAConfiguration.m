@@ -35,21 +35,21 @@
 	NSBundle *bundle = [NSBundle mainBundle];
 	NSDictionary *values = [[bundle infoDictionary] objectForKey:@"ToolkitConfig"];
 	if(!values) {
-		NSLog(@"ToolkitConfig not specified");
+		LOG(@"ToolkitConfig not specified");
 		[self autorelease];
 		return nil;
 	}
 	
 	NSString *type = [values objectForKey:@"ConnectionType"];
 	if(!values) {
-		NSLog(@"ConnectionType not specified");
+		LOG(@"ConnectionType not specified");
 		[self autorelease];
 		return nil;
 	}
 
 	values = [values objectForKey:type];
 	if(!values || !values.count) {
-		NSLog(@"Missing values associated with ConnectionType");
+		LOG(@"Missing values associated with ConnectionType");
 		[self autorelease];
 		return nil;
 	}
@@ -65,7 +65,7 @@
 	for(NSString *key in [values allKeys]) {
 		NSString *value = [values objectForKey:key];
 		if(!value || !value.length || [value hasPrefix:@"{"]) {
-			NSLog(@"Missing value for key \"%@\"", key);
+			LOG(@"Missing value for key \"%@\"", key);
 			[self autorelease];
 			return nil;
 		}

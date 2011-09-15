@@ -17,7 +17,7 @@
 #import "EntityTableViewCell.h"
 #import "WATableEntity.h"
 #import "WAQueueMessage.h"
-#include <stdarg.h>
+#import <stdarg.h>
 
 @interface KeyPair : NSObject
 {

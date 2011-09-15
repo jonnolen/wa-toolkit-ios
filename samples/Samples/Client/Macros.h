@@ -12,17 +12,29 @@
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the License for the specific language governing permissions and
  limitations under the License.
+*/
+
+#ifndef watoolkitios_samples_Macros_h
+#define watoolkitios_samples_Macros_h
+
+/*
+ LOG -- calls NSLog only if DEBUG is defined
  */
-
-#import <Availability.h>
-
-#ifndef __IPHONE_3_0
-#warning "This project uses features only available in iPhone SDK 3.0 and later."
+#ifdef DEBUG
+#define LOG(...) NSLog(__VA_ARGS__)
+#else
+#define LOG(...) /* */
 #endif
 
-#ifdef __OBJC__
-	#import <UIKit/UIKit.h>
-	#import <Foundation/Foundation.h>
-    #import "Macros.h"
+/*
+ LOGLINE -- calls NSLog only if DEBUG is defined, also adds in file, line numbers
+ */
+#ifdef DEBUG
+#define LOGLINE(fmt, ...) NSLog((@"%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);
+#define FTLOGCALL LOG(@"[%@ %@]", NSStringFromClass([self class]), NSStringFromSelector(_cmd))
+#else
+#define LOGLINE(...) /* */
+#define FTLOGCALL /* */
 #endif
 
+#endif
