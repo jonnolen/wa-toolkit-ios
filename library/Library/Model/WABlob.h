@@ -27,4 +27,10 @@
 /*! Container that the blob object belongs to */
 @property (readonly) WABlobContainer* container;
 
+/*! Returns an WABlob object initialized with a name and the url of the blob.*/
+- (id)initBlobWithName:(NSString *)name URL:(NSString *)URL;
+
+/*! Returns an WABlob object initialized with a name, the url of the blob and the parent contaner for the blob.*/
+- (id)initBlobWithName:(NSString *)name URL:(NSString *)URL container:(WABlobContainer*)container;
+
 @end
