@@ -1271,6 +1271,61 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
      }];
 }
 
+- (void)fetchTablesSegmented:(WAResultContinuation *)resultContinuation
+{
+    [self fetchTablesSegmented:resultContinuation withCompletionHandler:nil];
+}
+
+- (void)fetchTablesSegmented:(WAResultContinuation *)resultContinuation withCompletionHandler:(void (^)(NSArray *, WAResultContinuation *, NSError *))block
+{
+    NSMutableString *endpoint = [NSMutableString stringWithString:@"Tables"];
+    if (resultContinuation.nextTableKey != nil) {
+        [endpoint appendFormat:@"?NextTableKey=%@", [resultContinuation.nextTableKey URLEncode]];
+    }
+    
+    WACloudURLRequest* request = [_credential authenticatedRequestWithEndpoint:endpoint forStorageType:@"table" httpMethod:@"GET", nil];
+    [self prepareTableRequest:request];
+    
+    [request fetchXMLWithCompletionHandler:^(WACloudURLRequest* request, xmlDocPtr doc, NSError* error)
+     {
+         if(error)
+         {
+             if(block)
+             {
+                 block(nil, nil, error);
+             }
+             else if([_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
+             {
+                 [_delegate storageClient:self didFailRequest:request withError:error];
+             }
+             return;
+         }
+         
+         NSMutableArray* tables = [NSMutableArray arrayWithCapacity:20];
+         
+         [WAXMLHelper parseAtomPub:doc block:^(WAAtomPubEntry* entry) 
+          {
+              [entry processContentPropertiesWithBlock:^(NSString * name, NSString * value) {
+                  if([name isEqualToString:@"TableName"])
+                  {
+                      [tables addObject:value];
+                  }
+              }];
+          }];
+         
+         WAResultContinuation *continuation = [[[WAResultContinuation alloc] initWithNextTableKey:request.nextTableKey] autorelease];
+         
+         if(block)
+         {
+             block(tables, continuation, nil);
+         }
+         else if([_delegate respondsToSelector:@selector(storageClient:didFetchTables:withResultContinuation:)])
+         {
+             [_delegate storageClient:self didFetchTables:tables withResultContinuation:continuation];
+         }
+     }];
+}
+
 - (void)createTableNamed:(NSString *)newTableName
 {
     [self createTableNamed:newTableName withCompletionHandler:nil];
