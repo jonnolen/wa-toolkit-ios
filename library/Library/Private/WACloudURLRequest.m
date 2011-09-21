@@ -18,6 +18,10 @@
 #import "WAXMLHelper.h"
 #import <libxml/parser.h>
 
+NSString * const WANextPartitionKeyHeader = @"X-Ms-Continuation-Nextpartitionkey";
+NSString * const WANextRowKeyHeader = @"X-Ms-Continuation-Nextrowkey";
+NSString * const WANextTableKeyHeader = @"x-ms-continuation-NextTableName";
+
 #define SELF_SIGNED_SSL 1 // indicates that the library supports self signed SSL certs
 
 #if SELF_SIGNED_SSL
@@ -31,6 +35,10 @@ static NSLock* _lock;
 #endif
 
 @implementation WACloudURLRequest
+
+@synthesize nextRowKey = _nextRowKey;
+@synthesize nextPartitionKey = _nextPartitionKey;
+@synthesize nextTableKey = _nextTableKey;
 
 void ignoreSSLErrorFor(NSString* host)
 {
@@ -154,12 +162,15 @@ void ignoreSSLErrorFor(NSString* host)
 
 - (void)dealloc
 {
+    [_nextPartitionKey release];
+    [_nextRowKey release];
+	[_nextTableKey release];
 	[_noResponseBlock release]; 
 	[_xmlBlock release]; 
 	[_dataBlock release]; 
 	[_data release]; 
-	[_contentType release]; 
-	
+	[_contentType release];
+    
 	[super dealloc];
 }
 
@@ -185,6 +196,19 @@ void ignoreSSLErrorFor(NSString* host)
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
 {
+    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse*)response;
+    
+    if ([response respondsToSelector:@selector(allHeaderFields)]) {
+		NSDictionary *dictionary = [httpResponse allHeaderFields];
+        WA_BEGIN_LOGGING_CUSTOM(WALoggingResponse)
+            NSLog(@"Respone Headers: %@", [dictionary description]);
+        WA_END_LOGGING
+        
+        _nextPartitionKey = [[dictionary objectForKey:WANextPartitionKeyHeader] copy];
+        _nextRowKey = [[dictionary objectForKey:WANextRowKeyHeader] copy];
+        _nextTableKey = [[dictionary objectForKey:WANextTableKeyHeader] copy];
+    }
+    
     _expectedContentLength = [response expectedContentLength];
 	_contentType = [[response MIMEType] copy];
 }

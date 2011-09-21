@@ -21,16 +21,22 @@
 #define ENTITY_TYPE_QUEUE				2
 #define QUEUE_MESSAGE_NUMBER_FIELDS		6
 
+@class WAResultContinuation;
+
 @interface EntityListController : UITableViewController <WACloudStorageClientDelegate>
 {
-	
-	WACloudStorageClient*	tableClient;
-	NSMutableArray*			entityList;
+@private
+	WACloudStorageClient    *tableClient;
+	NSMutableArray			*entityList;
 	int						entityType;
+    WAResultContinuation    *_resultContinuation;
+    NSMutableArray          *_localEntityList;
 }
 
 @property (nonatomic, retain) NSArray *entityList;
 @property (nonatomic, assign) int entityType;
+@property (nonatomic, retain) WAResultContinuation *resultContinuation;
+@property (nonatomic, retain) NSMutableArray *localEntityList;
 
 - (IBAction)addEntity:(id)sender;
 

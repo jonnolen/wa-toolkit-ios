@@ -15,7 +15,8 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "WABlobContainer.h"
+
+@class WABlobContainer;
 
 /*! Blob is a class used to represent blobs within Windows Azure blob storage.*/
 @interface WABlob : NSObject

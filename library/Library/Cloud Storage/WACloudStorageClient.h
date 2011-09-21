@@ -22,6 +22,9 @@
 #import "WATableFetchRequest.h"
 #import "WAQueueMessage.h"
 
+
+@class WAResultContinuation;
+
 @protocol WACloudStorageClientDelegate;
 
 /*! The cloud storage client is used to invoke operations on, and return data from, Windows Azure storage. */
@@ -129,6 +132,10 @@
 - (void)fetchEntities:(WATableFetchRequest*)fetchRequest;
 /*! Returns the entities for a given table. */
 - (void)fetchEntities:(WATableFetchRequest*)fetchRequest withCompletionHandler:(void (^)(NSArray *, NSError *))block;
+/*! Returns the entities for a given table with a continuation result to fetch the next set of entities. */
+- (void)fetchEntitiesSegmented:(WATableFetchRequest*)fetchRequest;
+/*! Returns the entities for a given table with a continuation result to fetch the next set of entities. */
+- (void)fetchEntitiesSegmented:(WATableFetchRequest*)fetchRequest withCompletionHandler:(void (^)(NSArray *, WAResultContinuation *, NSError *))block;
 /*! Inserts a new entity into an existing table. */
 - (BOOL)insertEntity:(WATableEntity *)newEntity;
 /*! Inserts a new entity into an existing table. */
@@ -205,6 +212,7 @@
 - (void)storageClient:(WACloudStorageClient *)client didDeleteTableNamed:(NSString *)tableName;
 /*! Called when the client successfully returns a list of entities from a table. */
 - (void)storageClient:(WACloudStorageClient *)client didFetchEntities:(NSArray *)entities fromTableNamed:(NSString *)tableName;
+- (void)storageClient:(WACloudStorageClient *)client didFetchEntities:(NSArray *)entities fromTableNamed:(NSString *)tableName withResultContinuation:(WAResultContinuation *)resultContinuation;
 
 /*! Called when the client successfully inserts an entity into a table. */
 - (void)storageClient:(WACloudStorageClient *)client didInsertEntity:(WATableEntity *)entity;

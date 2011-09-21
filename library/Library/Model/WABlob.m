@@ -14,7 +14,7 @@
  limitations under the License.
  */
 #import "WABlob.h"
-
+#import "WABlobContainer.h"
 
 @implementation WABlob
 

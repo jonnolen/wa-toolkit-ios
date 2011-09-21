@@ -18,6 +18,7 @@
 #import "WAAzureFilterBuilder.h"
 #import "WACloudURLRequest.h"
 #import "NSString+URLEncode.h"
+#import "WAResultContinuation.h"
 
 @implementation WATableFetchRequest
 
@@ -26,6 +27,7 @@
 @synthesize rowKey = _rowKey;
 @synthesize filter = _filter;
 @synthesize topRows = _topRows;
+@synthesize resultContinuation = _resultContinuation;
 
 - (id) initWithTable:(NSString*)tableName
 {
@@ -36,6 +38,18 @@
     
     return self;
 }
+
+- (void)dealloc
+{
+    [_tableName release];
+    [_partitionKey release];
+    [_rowKey release];
+    [_filter release];
+    [_resultContinuation release];
+    
+    [super dealloc];
+}
+
 
 + (WATableFetchRequest*)fetchRequestForTable:(NSString*)tableName
 {
@@ -63,6 +77,38 @@
 
 - (NSString*)endpoint
 {
+    NSMutableString *ep = [NSMutableString stringWithString:_tableName];
+    
+    if (_partitionKey || _rowKey) {
+        if (_partitionKey && _rowKey) {
+            [ep stringByAppendingFormat:@"(PartitionKey=\'%@\',RowKey=\'%@\')", [_partitionKey URLEncode], [_rowKey URLEncode]];
+        } else if (_partitionKey) {
+            [ep stringByAppendingFormat:@"(PartitionKey=\'%@\')", [_partitionKey URLEncode]];
+        } else if (_rowKey) {
+            return [ep stringByAppendingFormat:@"(RowKey=\'%@\')", [_rowKey URLEncode]];
+        }
+    } else {
+        [ep appendString:@"()"];
+    }
+    
+    if (_filter || _topRows || _resultContinuation) {
+        [ep appendString:@"?"];
+        if (_filter) {
+            [ep appendFormat:@"$filter=%@", [_filter URLEncode]];
+        }
+        if (_topRows) {
+            [ep appendFormat:@"$top=%d", _topRows];
+        }
+        if (_resultContinuation) {
+            [ep appendFormat:@"&NextPartitionKey=%@&NextRowKey=%@", [_resultContinuation.nextPartitionKey URLEncode], [_resultContinuation.nextRowKey URLEncode]];
+        }
+    }
+    
+    WA_BEGIN_LOGGING
+        NSLog(@"endpoint = %@", ep);
+	WA_END_LOGGING
+    
+    /*
     if (_partitionKey && _rowKey)
     {
 		return [_tableName stringByAppendingFormat:@"(PartitionKey=\'%@\',RowKey=\'%@\')", [_partitionKey URLEncode], [_rowKey URLEncode]];
@@ -89,15 +135,10 @@
     }
 
     return [_tableName stringByAppendingString:@"()"];
+    */
+    return ep;
 }
 
-- (void)dealloc
-{
-    [_tableName release];
-    [_partitionKey release];
-    [_rowKey release];
-    [_filter release];
-    
-    [super dealloc];
-}
+
 @end
+
