@@ -20,7 +20,7 @@
 
 NSString * const WANextPartitionKeyHeader = @"X-Ms-Continuation-Nextpartitionkey";
 NSString * const WANextRowKeyHeader = @"X-Ms-Continuation-Nextrowkey";
-NSString * const WANextTableKeyHeader = @"x-ms-continuation-NextTableName";
+NSString * const WANextTableKeyHeader = @"X-Ms-Continuation-Nexttablename";
 
 #define SELF_SIGNED_SSL 1 // indicates that the library supports self signed SSL certs
 

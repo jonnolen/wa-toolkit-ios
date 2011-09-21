@@ -120,6 +120,10 @@
 - (void)fetchTables;
 /*! Returns a list of tables. */
 - (void)fetchTablesWithCompletionHandler:(void (^)(NSArray *, NSError *))block;
+/*! Returns a list of tables using a continuation. */
+- (void)fetchTablesSegmented:(WAResultContinuation *)resultContinuation;
+/*! Returns a list of tables using a continuation. */
+- (void)fetchTablesSegmented:(WAResultContinuation *)resultContinuation withCompletionHandler:(void (^)(NSArray *, WAResultContinuation *, NSError *))block;
 /*! Creates a new table with a specified name. */
 - (void)createTableNamed:(NSString *)newTableName;
 /*! Creates a new table with a specified name. */
@@ -206,6 +210,8 @@
 
 /*! Called when the client successfully returns a list of tables. */
 - (void)storageClient:(WACloudStorageClient *)client didFetchTables:(NSArray *)tables;
+/*! Called when the client successfully returns a list of tables. */
+- (void)storageClient:(WACloudStorageClient *)client didFetchTables:(NSArray *)tables withResultContinuation:(WAResultContinuation *)resultContinuation;
 /*! Called when the client successfully creates a table. */
 - (void)storageClient:(WACloudStorageClient *)client didCreateTableNamed:(NSString *)tableName;
 /*! Called when the client successfully deletes a specified table. */
