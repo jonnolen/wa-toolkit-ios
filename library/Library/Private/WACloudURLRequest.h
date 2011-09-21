@@ -20,6 +20,10 @@
 
 #define USE_QUEUE	 1  // set to 1 to perform requests in order rather than all at once
 
+extern NSString * const WANextPartitionKeyHeader;
+extern NSString * const WANextRowKeyHeader;
+extern NSString * const WANextTableKeyHeader;
+
 @class WACloudURLRequest;
 
 typedef void (^WAFetchXMLHandler)(WACloudURLRequest* request, xmlDocPtr doc, NSError* err);
@@ -33,6 +37,9 @@ typedef void (^WANoResponseHandler)(WACloudURLRequest* request, NSError* err);
     long long _expectedContentLength;
 	NSMutableData* _data;
 	NSString* _contentType;
+    NSString *_nextRowKey;
+    NSString *_nextPartitionKey;
+    NSString *_nextTableKey;
 #if USE_QUEUE
     WACloudURLRequest* _next;
 #endif
@@ -41,5 +48,9 @@ typedef void (^WANoResponseHandler)(WACloudURLRequest* request, NSError* err);
 - (void) fetchNoResponseWithCompletionHandler:(WANoResponseHandler)block;
 - (void) fetchXMLWithCompletionHandler:(WAFetchXMLHandler)block;
 - (void) fetchDataWithCompletionHandler:(WAFetchDataHandler)block;
+
+@property (nonatomic, readonly) NSString *nextRowKey;
+@property (nonatomic, readonly) NSString *nextPartitionKey;
+@property (nonatomic, readonly) NSString *nextTableKey;
 
 @end

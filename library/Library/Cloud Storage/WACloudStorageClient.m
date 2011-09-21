@@ -27,6 +27,7 @@
 #import "WAQueueParser.h"
 #import "WAQueueMessageParser.h"
 #import "WASimpleBase64.h"
+#import "WAResultContinuation.h"
 
 void ignoreSSLErrorFor(NSString* host);
 
@@ -35,7 +36,10 @@ static NSString *TABLE_INSERT_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
 static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?><entry xmlns:d=\"http://schemas.microsoft.com/ado/2007/08/dataservices\" xmlns:m=\"http://schemas.microsoft.com/ado/2007/08/dataservices/metadata\" xmlns=\"http://www.w3.org/2005/Atom\"><title /><updated>$UPDATEDDATE$</updated><author><name /></author><id>$ENTITYID$</id><content type=\"application/xml\"><m:properties>$PROPERTIES$</m:properties></content></entry>";
 
 @interface WACloudStorageClient (Private)
+
 - (void)privateGetQueueMessages:(NSString *)queueName fetchCount:(NSInteger)fetchCount useBlockError:(BOOL)useBlockError peekOnly:(BOOL)peekOnly withBlock:(void (^)(NSArray *, NSError *))block;
+- (void)prepareTableRequest:(WACloudURLRequest*)request;
+
 @end
 
 @interface WATableEntity (Private)
@@ -1363,6 +1367,11 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
 	NSString* endpoint = [fetchRequest endpoint];
     WACloudURLRequest* request = [_credential authenticatedRequestWithEndpoint:endpoint forStorageType:@"table" httpMethod:@"GET", nil];
 	
+    WA_BEGIN_LOGGING
+        NSDictionary *dictionary = [request allHTTPHeaderFields];
+        NSLog(@"Request Headers: %@", [dictionary description]);
+    WA_END_LOGGING
+    
     [self prepareTableRequest:request];
     
 	[request fetchXMLWithCompletionHandler:^(WACloudURLRequest* request, xmlDocPtr doc, NSError *error)
@@ -1403,6 +1412,72 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
          else if ([(id)_delegate respondsToSelector:@selector(storageClient:didFetchEntities:fromTableNamed:)])
          {
              [_delegate storageClient:self didFetchEntities:entities fromTableNamed:fetchRequest.tableName];
+         }
+     }];
+}
+
+- (void)fetchEntitiesSegmented:(WATableFetchRequest*)fetchRequest
+{
+    [self fetchEntitiesSegmented:fetchRequest withCompletionHandler:nil];
+}
+
+- (void)fetchEntitiesSegmented:(WATableFetchRequest*)fetchRequest withCompletionHandler:(void (^)(NSArray *, WAResultContinuation *, NSError *))block
+{
+    NSString* endpoint = [fetchRequest endpoint];
+    WACloudURLRequest* request = [_credential authenticatedRequestWithEndpoint:endpoint forStorageType:@"table" httpMethod:@"GET", nil];
+    
+    [self prepareTableRequest:request];
+    
+    WA_BEGIN_LOGGING
+        NSDictionary *dictionary = [request allHTTPHeaderFields];
+        NSLog(@"Request Headers: %@", [dictionary description]);
+    WA_END_LOGGING
+
+    
+	[request fetchXMLWithCompletionHandler:^(WACloudURLRequest* request, xmlDocPtr doc, NSError *error)
+     {
+         if (error)
+         {
+             if (block)
+             {
+                 block (nil, nil, error);
+             }
+             else if ([(id)_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
+             {
+                 [_delegate storageClient:self didFailRequest:request withError:error];
+             }
+             return;
+         }
+         
+         // NSArray *entities = [self parseEntities:doc];
+         NSMutableArray* entities = [NSMutableArray arrayWithCapacity:50];
+         [WAXMLHelper parseAtomPub:doc block:^(WAAtomPubEntry* entry) 
+          {
+              NSMutableDictionary* dict = [NSMutableDictionary dictionaryWithCapacity:10];
+              
+              [entry processContentPropertiesWithBlock:^(NSString * name, NSString * value) 
+               {
+                   [dict setObject:value forKey:name];
+               }];
+              
+              WATableEntity* entity = [[WATableEntity alloc] initWithDictionary:dict fromTable:fetchRequest.tableName];
+              [entities addObject:entity];
+              [entity release];
+          }];
+         WA_BEGIN_LOGGING
+            NSLog(@"NextPartitionKey: %@", request.nextPartitionKey);
+            NSLog(@"NextRowKey: %@", request.nextRowKey);
+         WA_END_LOGGING
+         
+         WAResultContinuation *continuation = [[[WAResultContinuation alloc] initWithNextParitionKey:request.nextPartitionKey nextRowKey:request.nextRowKey] autorelease];
+         
+         if (block)
+         {   
+             block(entities, continuation, nil);
+         }
+         else if ([(id)_delegate respondsToSelector:@selector(storageClient:didFetchEntities:fromTableNamed:withResultContinuation:)])
+         {
+             [_delegate storageClient:self didFetchEntities:entities fromTableNamed:fetchRequest.tableName withResultContinuation:continuation  ];
          }
      }];
 }

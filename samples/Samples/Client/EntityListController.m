@@ -20,11 +20,23 @@
 #import "WAQueueMessage.h"
 #import "EntityTableViewCell.h"
 #import "UIViewController+ShowError.h"
+#import "WAResultContinuation.h"
+
+#define TOP_ROWS 20
+
+@interface EntityListController()
+
+- (void)fetchEntities;
+- (void)editEntity:(NSUInteger)index;
+
+@end
 
 @implementation EntityListController
 
 @synthesize entityList;
 @synthesize entityType;
+@synthesize resultContinuation=_resultContinuation;
+@synthesize localEntityList = _localEntityList;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -39,6 +51,9 @@
 {
 	[tableClient release];
 	[entityList release];
+    [_resultContinuation release];
+    [_localEntityList release];
+    
     [super dealloc];
 }
 
@@ -50,24 +65,40 @@
     // Release any cached data, images, etc that aren't in use.
 }
 
+#pragma - Private methods
+
+- (void)fetchEntities
+{
+    WATableFetchRequest *fetchRequest = [WATableFetchRequest fetchRequestForTable:self.navigationItem.title];
+    fetchRequest.resultContinuation = self.resultContinuation;
+    fetchRequest.topRows = TOP_ROWS;
+    [tableClient fetchEntitiesSegmented:fetchRequest];
+}
+
+- (void)editEntity:(NSUInteger)index
+{
+    ModifyEntityController *newController = [[ModifyEntityController alloc] initWithNibName:@"ModifyEntityController" bundle:nil];
+    newController.navigationItem.title = @"Edit Entity";
+    newController.entity = [self.entityList objectAtIndex:index];
+    [self.navigationController pushViewController:newController animated:YES];
+    [newController release];
+}
+
+#pragma - Action methods
+
 - (IBAction)addEntity:(id)sender
 {
 	
 	ModifyEntityController	*newController = [[ModifyEntityController alloc] initWithNibName:@"ModifyEntityController" bundle:nil];
 	
-	if ([self.entityList count] > 0 || entityType == ENTITY_TYPE_QUEUE)
-	{
-		if (entityType == ENTITY_TYPE_TABLE)
-		{
+	if ([self.localEntityList count] > 0 || entityType == ENTITY_TYPE_QUEUE) {
+		if (entityType == ENTITY_TYPE_TABLE) {
 			newController.navigationItem.title = @"Add Entity";
 			newController.entity = [WATableEntity createEntityForTable:self.navigationItem.title];
-			for (NSString *key in [[self.entityList objectAtIndex:0] keys])
-			{
+			for (NSString *key in [[self.entityList objectAtIndex:0] keys]) {
 				[newController.entity setObject:@"" forKey:key];
 			}
-		}
-		else if (entityType == ENTITY_TYPE_QUEUE)
-		{
+		} else if (entityType == ENTITY_TYPE_QUEUE) {
 			newController.navigationItem.title = @"Add Queue Message";
 			newController.queueName = self.navigationItem.title;
 		}
@@ -82,7 +113,7 @@
 
 - (void)viewDidLoad
 {
-	Azure_Storage_ClientAppDelegate		*appDelegate = (Azure_Storage_ClientAppDelegate *)[[UIApplication sharedApplication] delegate];
+	Azure_Storage_ClientAppDelegate *appDelegate = (Azure_Storage_ClientAppDelegate *)[[UIApplication sharedApplication] delegate];
 	
     [super viewDidLoad];
 	
@@ -91,6 +122,7 @@
 																							action:@selector(addEntity:)] autorelease];
 	tableClient = [[WACloudStorageClient storageClientWithCredential:appDelegate.authenticationCredential] retain];
 	tableClient.delegate = self;
+    _localEntityList = [[NSMutableArray alloc] initWithCapacity:20];
 }
 
 - (void)viewDidUnload
@@ -102,16 +134,11 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-	
     [super viewWillAppear:animated];
 	
-	if (entityType == ENTITY_TYPE_TABLE)
-	{
-		WATableFetchRequest *fetchRequest = [WATableFetchRequest fetchRequestForTable:self.navigationItem.title];
-		[tableClient fetchEntities:fetchRequest];
-	}
-	else if (entityType == ENTITY_TYPE_QUEUE)
-	{
+	if (entityType == ENTITY_TYPE_TABLE) {
+		[self fetchEntities];
+	} else if (entityType == ENTITY_TYPE_QUEUE) {
 		[tableClient peekQueueMessages:self.navigationItem.title fetchCount:1000];
 	}
 }
@@ -141,7 +168,14 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-	return self.entityList.count;
+	NSUInteger count = self.entityList.count;
+    NSUInteger localCount = self.localEntityList.count;
+    
+    if (count >= TOP_ROWS) {
+        localCount += 1;
+    }
+    
+    return localCount;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -149,26 +183,46 @@
 	static NSString* CellIdentifier = @"Cell2";
     
     EntityTableViewCell *cell = (EntityTableViewCell*) [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil)
-	{
-        cell = [[[EntityTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
-	}
+    
+    if (indexPath.row != self.localEntityList.count) {
+        if (cell == nil) {
+            cell = [[[EntityTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+        }
 	
-	if (entityType == ENTITY_TYPE_TABLE)
-	{
-		WATableEntity *entity = [self.entityList objectAtIndex:indexPath.row];
-		[cell setKeysAndObjects:@"PartitionKey", [entity partitionKey], @"RowKey", [entity rowKey], entity, nil];
-		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-		cell.selectionStyle = UITableViewCellSelectionStyleBlue;
-	}
-	else if (entityType == ENTITY_TYPE_QUEUE)
-	{
-		WAQueueMessage *queueMessage = [self.entityList objectAtIndex:indexPath.row];
-		[cell setKeysAndObjects:queueMessage, nil];
-		cell.accessoryType = UITableViewCellAccessoryNone;
-		cell.selectionStyle = UITableViewCellSelectionStyleNone;
-	}
+        if (entityType == ENTITY_TYPE_TABLE) {
+            WATableEntity *entity = [self.localEntityList objectAtIndex:indexPath.row];
+            [cell setKeysAndObjects:@"PartitionKey", [entity partitionKey], @"RowKey", [entity rowKey], entity, nil];
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+        } else if (entityType == ENTITY_TYPE_QUEUE) {
+            WAQueueMessage *queueMessage = [self.localEntityList objectAtIndex:indexPath.row];
+            [cell setKeysAndObjects:queueMessage, nil];
+            cell.accessoryType = UITableViewCellAccessoryNone;
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        }
+    }
 	
+    if (self.entityList.count == TOP_ROWS) {
+        if (indexPath.row == self.localEntityList.count) {
+            UITableViewCell *loadMoreCell = [tableView dequeueReusableCellWithIdentifier:@"LoadMore"];
+            if (loadMoreCell == nil) {
+                loadMoreCell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"LoadMore"] autorelease];
+            }
+            
+            UILabel *loadMore =[[UILabel alloc] initWithFrame:CGRectMake(0,0,362,40)];
+            loadMore.textColor = [UIColor blackColor];
+            loadMore.highlightedTextColor = [UIColor darkGrayColor];
+            loadMore.backgroundColor = [UIColor clearColor];
+            //loadMore.font = [UIFont fontWithName:@"Verdana" size:20];
+            loadMore.textAlignment = UITextAlignmentCenter;
+            loadMore.font = [UIFont boldSystemFontOfSize:20];
+            loadMore.text = @"Show more results...";
+            [loadMoreCell addSubview:loadMore];
+            [loadMore release];
+            return loadMoreCell;
+        }
+    }
+    
 	return cell;
 }
 
@@ -178,17 +232,14 @@
 {
 	int count = 0;
 	
-	if (entityType == ENTITY_TYPE_TABLE)
-	{
-		WATableEntity *entity = [self.entityList objectAtIndex:indexPath.row];
+    if (indexPath.row >= self.localEntityList.count) {
+        return 40;  
+    } else if (entityType == ENTITY_TYPE_TABLE) {
+		WATableEntity *entity = [self.localEntityList objectAtIndex:indexPath.row];
 		count = entity.keys.count + 2;
-	}
-	else if (entityType == ENTITY_TYPE_QUEUE)
-	{
+	} else if (entityType == ENTITY_TYPE_QUEUE) {
 		count = 6;
-	}
-	else
-	{
+	} else {
 		return 44;
 	}
 	
@@ -197,18 +248,27 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	if (entityType == ENTITY_TYPE_TABLE)
-	{
-		ModifyEntityController *newController = [[ModifyEntityController alloc] initWithNibName:@"ModifyEntityController" bundle:nil];
-		newController.navigationItem.title = @"Edit Entity";
-		newController.entity = [self.entityList objectAtIndex:indexPath.row];
-		[self.navigationController pushViewController:newController animated:YES];
-		[newController release];
-	}
+	if (entityType == ENTITY_TYPE_TABLE) {
+        if (self.entityList.count == TOP_ROWS && indexPath.row == self.localEntityList.count) {
+            //if (indexPath.row == self.localEntityList.count) {
+                [self fetchEntities];
+                [entityList removeAllObjects];
+                [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] 
+                                      withRowAnimation:UITableViewScrollPositionBottom];
+            //} else {
+            //    [self editEntity:indexPath.row];
+            //}
+        } else {
+            [self editEntity:indexPath.row];
+        }
+    }
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if (self.entityList.count == TOP_ROWS && indexPath.row == self.localEntityList.count) {
+        return NO;
+    }
 	return YES;
 }
 
@@ -216,30 +276,25 @@
 {
 	void(^block)(NSError*) = ^(NSError* error) 
 	{
-		if(error)
-		{
+		if (error) {
 			[self showError:error withTitle:@"Deleting Entry"];
 			return;
 		}
 		
-		[entityList removeObjectAtIndex:indexPath.row];
+		[self.localEntityList removeObjectAtIndex:indexPath.row];
 		[self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] 
 							  withRowAnimation:UITableViewScrollPositionBottom];
 		
-		if (entityType == ENTITY_TYPE_TABLE && !entityList.count)
-		{
+		if (entityType == ENTITY_TYPE_TABLE && !entityList.count) {
 			self.navigationItem.rightBarButtonItem = nil;
 		}
 	};	
 	
-	if (entityType == ENTITY_TYPE_TABLE)
-	{
-		WATableEntity *entity = [self.entityList objectAtIndex:indexPath.row];
+	if (entityType == ENTITY_TYPE_TABLE) {
+		WATableEntity *entity = [self.localEntityList objectAtIndex:indexPath.row];
 		[tableClient deleteEntity:entity withCompletionHandler:block];
-	}
-	else if (entityType == ENTITY_TYPE_QUEUE)
-	{
-		WAQueueMessage *queueMessage = [self.entityList objectAtIndex:indexPath.row];
+	} else if (entityType == ENTITY_TYPE_QUEUE) {
+		WAQueueMessage *queueMessage = [self.localEntityList objectAtIndex:indexPath.row];
 		
 		[tableClient deleteQueueMessage:queueMessage 
 							  queueName:self.navigationItem.title 
@@ -255,19 +310,21 @@
 	[self showError:error];
 }
 
-- (void)storageClient:(WACloudStorageClient *)client didFetchEntities:(NSArray *)entities fromTableNamed:(NSString *)tableName
+- (void)storageClient:(WACloudStorageClient *)client didFetchEntities:(NSArray *)entities fromTableNamed:(NSString *)tableName withResultContinuation:(WAResultContinuation *)resultContinuation
 {
-	self.entityList = [[entities mutableCopy] autorelease];
-	if ([entities count] == 0)
-	{
+    self.entityList = [[entities mutableCopy] autorelease];
+    self.resultContinuation = resultContinuation;
+	if ([entities count] == 0) {
 		self.navigationItem.rightBarButtonItem = nil;
 	}
+    [self.localEntityList addObjectsFromArray:self.entityList];    
 	[self.tableView reloadData];
 }
 
 - (void)storageClient:(WACloudStorageClient *)client didPeekQueueMessages:(NSArray *)queueMessages
 {
 	self.entityList = [[queueMessages mutableCopy] autorelease];
+    [self.localEntityList addObjectsFromArray:self.entityList];
 	[self.tableView reloadData];
 }
 
