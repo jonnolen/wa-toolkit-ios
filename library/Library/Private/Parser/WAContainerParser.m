@@ -26,6 +26,29 @@
 
 @implementation WAContainerParser
 
++ (NSString *)retrieveMarker:(xmlDocPtr)doc
+{
+    if (doc == nil) { 
+		return nil; 
+	}
+    
+    __block NSMutableString *marker = nil; 
+    [WAXMLHelper performXPath:@"/EnumerationResults/NextMarker" 
+                   onDocument:doc 
+                        block:^(xmlNodePtr node)
+     {
+         xmlChar *value = xmlNodeGetContent(node);
+         NSString *str = [[NSString alloc] initWithUTF8String:(const char*)value];
+         xmlFree(value);
+         if (str != nil) {
+             marker = [NSMutableString stringWithString:str];
+         }
+         [str release];
+     }];
+    
+     return marker;
+}
+
 + (NSArray *)loadContainers:(xmlDocPtr)doc {
     
     if (doc == nil) 
