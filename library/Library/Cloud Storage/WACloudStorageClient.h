@@ -42,6 +42,10 @@
 - (void)fetchBlobContainers;
 /*! Returns a list of blob containers. */
 - (void)fetchBlobContainersWithCompletionHandler:(void (^)(NSArray*, NSError *))block;
+/*! Returns a list of blob containers. */
+- (void)fetchBlobContainersSegmented:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult;
+/*! Returns a list of blob containers. */
+- (void)fetchBlobContainersSegmented:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult withCompletionHandler:(void (^)(NSArray*, WAResultContinuation *, NSError*))block;
 /*! Returnva a blob container. */
 - (void)fetchBlobContainerNamed:(NSString *)containerName;
 /*! Returnva a blob container. */
@@ -172,6 +176,8 @@
 
 /*! Called when the client successfully returns a list of blob containers */
 - (void)storageClient:(WACloudStorageClient *)client didFetchBlobContainers:(NSArray *)containers;
+/*! Called when the client successfully returns a list of blob containers */
+- (void)storageClient:(WACloudStorageClient *)client didFetchBlobContainers:(NSArray *)containers withResultContinuation:(WAResultContinuation *)resultContinuation;
 /*! Called when the client successfully returns a blob container */
 - (void)storageClient:(WACloudStorageClient *)client didFetchBlobContainer:(WABlobContainer *)container;
 /*! Called when the client successsfully adds a new blob container. */
@@ -218,8 +224,8 @@
 - (void)storageClient:(WACloudStorageClient *)client didDeleteTableNamed:(NSString *)tableName;
 /*! Called when the client successfully returns a list of entities from a table. */
 - (void)storageClient:(WACloudStorageClient *)client didFetchEntities:(NSArray *)entities fromTableNamed:(NSString *)tableName;
+/*! Called when the client successfully returns a list of entities from a table. */
 - (void)storageClient:(WACloudStorageClient *)client didFetchEntities:(NSArray *)entities fromTableNamed:(NSString *)tableName withResultContinuation:(WAResultContinuation *)resultContinuation;
-
 /*! Called when the client successfully inserts an entity into a table. */
 - (void)storageClient:(WACloudStorageClient *)client didInsertEntity:(WATableEntity *)entity;
 /*! Called when the client successfully updates an entity within a table. */

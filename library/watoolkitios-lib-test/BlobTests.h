@@ -14,13 +14,21 @@
  limitations under the License.
  */
 
-#import <Foundation/Foundation.h>
-#import <libxml/tree.h>
+#import <SenTestingKit/SenTestingKit.h>
+#import <UIKit/UIKit.h>
 
-@interface WAContainerParser : NSObject
+@class WAAuthenticationCredential;
+@class WACloudStorageClient;
+@class WACloudStorageClientDelegate;
 
-+ (NSArray *)loadContainers:(xmlDocPtr)doc;
-+ (NSArray *)loadContainersForProxy:(xmlDocPtr)doc;
-+ (NSString *)retrieveMarker:(xmlDocPtr)doc;
+
+@interface BlobTests : SenTestCase {
+@private
+    NSString *account;
+    NSString *accessKey;
+    WAAuthenticationCredential *directCredential;
+    WACloudStorageClient *directClient;
+    WACloudStorageClientDelegate *directDelegate;    
+}
 
 @end

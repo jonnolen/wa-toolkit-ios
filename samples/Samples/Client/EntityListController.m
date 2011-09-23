@@ -22,7 +22,7 @@
 #import "UIViewController+ShowError.h"
 #import "WAResultContinuation.h"
 
-#define TOP_ROWS 20
+#define TOP_ROWS 3
 
 @interface EntityListController()
 
@@ -33,7 +33,7 @@
 
 @implementation EntityListController
 
-@synthesize entityList;
+//@synthesize entityList;
 @synthesize entityType;
 @synthesize resultContinuation=_resultContinuation;
 @synthesize localEntityList = _localEntityList;
@@ -50,7 +50,7 @@
 - (void)dealloc
 {
 	[tableClient release];
-	[entityList release];
+	//[entityList release];
     [_resultContinuation release];
     [_localEntityList release];
     
@@ -79,7 +79,7 @@
 {
     ModifyEntityController *newController = [[ModifyEntityController alloc] initWithNibName:@"ModifyEntityController" bundle:nil];
     newController.navigationItem.title = @"Edit Entity";
-    newController.entity = [self.entityList objectAtIndex:index];
+    newController.entity = [self.localEntityList objectAtIndex:index];
     [self.navigationController pushViewController:newController animated:YES];
     [newController release];
 }
@@ -88,14 +88,13 @@
 
 - (IBAction)addEntity:(id)sender
 {
-	
 	ModifyEntityController	*newController = [[ModifyEntityController alloc] initWithNibName:@"ModifyEntityController" bundle:nil];
 	
 	if ([self.localEntityList count] > 0 || entityType == ENTITY_TYPE_QUEUE) {
 		if (entityType == ENTITY_TYPE_TABLE) {
 			newController.navigationItem.title = @"Add Entity";
 			newController.entity = [WATableEntity createEntityForTable:self.navigationItem.title];
-			for (NSString *key in [[self.entityList objectAtIndex:0] keys]) {
+			for (NSString *key in [[self.localEntityList objectAtIndex:0] keys]) {
 				[newController.entity setObject:@"" forKey:key];
 			}
 		} else if (entityType == ENTITY_TYPE_QUEUE) {
@@ -113,9 +112,9 @@
 
 - (void)viewDidLoad
 {
-	Azure_Storage_ClientAppDelegate *appDelegate = (Azure_Storage_ClientAppDelegate *)[[UIApplication sharedApplication] delegate];
-	
     [super viewDidLoad];
+    
+	Azure_Storage_ClientAppDelegate *appDelegate = (Azure_Storage_ClientAppDelegate *)[[UIApplication sharedApplication] delegate];
 	
     self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd 
 																							target:self 
@@ -168,7 +167,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-	NSUInteger count = self.entityList.count;
+	NSUInteger count = entityListCount; //self.entityList.count;
     NSUInteger localCount = self.localEntityList.count;
     
     if (count >= TOP_ROWS) {
@@ -202,8 +201,8 @@
         }
     }
 	
-    if (self.entityList.count == TOP_ROWS) {
-        if (indexPath.row == self.localEntityList.count) {
+    if (indexPath.row == self.localEntityList.count) {
+        if (/*self.entityList.count*/entityListCount == TOP_ROWS) {
             UITableViewCell *loadMoreCell = [tableView dequeueReusableCellWithIdentifier:@"LoadMore"];
             if (loadMoreCell == nil) {
                 loadMoreCell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"LoadMore"] autorelease];
@@ -213,7 +212,6 @@
             loadMore.textColor = [UIColor blackColor];
             loadMore.highlightedTextColor = [UIColor darkGrayColor];
             loadMore.backgroundColor = [UIColor clearColor];
-            //loadMore.font = [UIFont fontWithName:@"Verdana" size:20];
             loadMore.textAlignment = UITextAlignmentCenter;
             loadMore.font = [UIFont boldSystemFontOfSize:20];
             loadMore.text = @"Show more results...";
@@ -249,15 +247,13 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	if (entityType == ENTITY_TYPE_TABLE) {
-        if (self.entityList.count == TOP_ROWS && indexPath.row == self.localEntityList.count) {
-            //if (indexPath.row == self.localEntityList.count) {
-                [self fetchEntities];
-                [entityList removeAllObjects];
-                [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] 
-                                      withRowAnimation:UITableViewScrollPositionBottom];
-            //} else {
-            //    [self editEntity:indexPath.row];
-            //}
+        if (entityListCount == TOP_ROWS && indexPath.row == self.localEntityList.count) {
+            [tableView beginUpdates];
+            entityListCount--;
+            [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] 
+                                  withRowAnimation:UITableViewScrollPositionBottom];
+            [tableView endUpdates];
+            [self fetchEntities];
         } else {
             [self editEntity:indexPath.row];
         }
@@ -266,7 +262,7 @@
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (self.entityList.count == TOP_ROWS && indexPath.row == self.localEntityList.count) {
+    if (entityListCount == TOP_ROWS && indexPath.row == self.localEntityList.count) {
         return NO;
     }
 	return YES;
@@ -281,11 +277,11 @@
 			return;
 		}
 		
-		[self.localEntityList removeObjectAtIndex:indexPath.row];
+		[_localEntityList removeObjectAtIndex:indexPath.row];
 		[self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] 
 							  withRowAnimation:UITableViewScrollPositionBottom];
 		
-		if (entityType == ENTITY_TYPE_TABLE && !entityList.count) {
+		if (entityType == ENTITY_TYPE_TABLE && !_localEntityList.count) {
 			self.navigationItem.rightBarButtonItem = nil;
 		}
 	};	
@@ -312,19 +308,19 @@
 
 - (void)storageClient:(WACloudStorageClient *)client didFetchEntities:(NSArray *)entities fromTableNamed:(NSString *)tableName withResultContinuation:(WAResultContinuation *)resultContinuation
 {
-    self.entityList = [[entities mutableCopy] autorelease];
+    entityListCount = [entities count];
     self.resultContinuation = resultContinuation;
 	if ([entities count] == 0) {
 		self.navigationItem.rightBarButtonItem = nil;
 	}
-    [self.localEntityList addObjectsFromArray:self.entityList];    
+    [self.localEntityList addObjectsFromArray:/*self.entityList*/entities];    
 	[self.tableView reloadData];
 }
 
 - (void)storageClient:(WACloudStorageClient *)client didPeekQueueMessages:(NSArray *)queueMessages
 {
-	self.entityList = [[queueMessages mutableCopy] autorelease];
-    [self.localEntityList addObjectsFromArray:self.entityList];
+    entityListCount = [queueMessages count];
+    [self.localEntityList addObjectsFromArray:/*self.entityList*/queueMessages];
 	[self.tableView reloadData];
 }
 

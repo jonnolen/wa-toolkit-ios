@@ -61,6 +61,11 @@
     return [self initWithNextParitionKey:nil nextRowKey:nil nextTableKey:nextTableKey nextMarker:nil continuationType:WAContinuationTable];
 }
 
+- (id)initWithContainerMarker:(NSString*)marker
+{
+    return [self initWithNextParitionKey:nil nextRowKey:nil nextTableKey:nil nextMarker:marker continuationType:WAContinuationContainer];
+}
+
 - (void)dealloc 
 {
     [_nextTableKey release];

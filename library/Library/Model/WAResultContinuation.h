@@ -55,4 +55,7 @@ typedef enum WAContinuationType {
 /*! Intialize a new continuation with the next table key. */
 - (id)initWithNextTableKey:(NSString*)nextTableKey;
 
+/*! Intialize a new continuation with the container marker. */
+- (id)initWithContainerMarker:(NSString*)marker;
+
 @end
