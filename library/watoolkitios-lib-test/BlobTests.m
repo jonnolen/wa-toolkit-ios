@@ -30,8 +30,8 @@
 - (void)setUp
 {
     [super setUp];
-    account = [NSString stringWithString:@"iosteststore"];
-    accessKey = [NSString stringWithString:@"1EZqKKhdTtBDZgGMrUrNi77DrpcleBvSz93gPDvC+G7+Tr9xfyWKJhJr/Xt9MX0yp9fYzJ9gnQ+WNNtciTcJYA=="];
+    account = [NSString stringWithString:@"<your account>"];
+    accessKey = [NSString stringWithString:@"<your account key>"];
     
     directCredential = [WAAuthenticationCredential credentialWithAzureServiceAccount:account accessKey:accessKey];
     directClient = [WACloudStorageClient storageClientWithCredential:directCredential];

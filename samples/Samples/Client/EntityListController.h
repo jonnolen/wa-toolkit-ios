@@ -27,13 +27,12 @@
 {
 @private
 	WACloudStorageClient    *tableClient;
-	NSMutableArray			*entityList;
+    NSUInteger              entityListCount;
 	int						entityType;
     WAResultContinuation    *_resultContinuation;
     NSMutableArray          *_localEntityList;
 }
 
-@property (nonatomic, retain) NSArray *entityList;
 @property (nonatomic, assign) int entityType;
 @property (nonatomic, retain) WAResultContinuation *resultContinuation;
 @property (nonatomic, retain) NSMutableArray *localEntityList;

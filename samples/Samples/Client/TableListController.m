@@ -18,13 +18,21 @@
 #import "Azure_Storage_ClientAppDelegate.h"
 #import "CreateTableController.h"
 #import "EntityListController.h"
+#import "BlobViewerController.h"
+#import "UIViewController+ShowError.h"
+#import "WAConfiguration.h"
+
 #import "WAAuthenticationCredential.h"
 #import "WABlobContainer.h"
 #import "WABlob.h"
-#import "BlobViewerController.h"
 #import "WAQueue.h"
-#import "WAConfiguration.h"
-#import "UIViewController+ShowError.h"
+#import "WAResultContinuation.h"
+#import "WAQueue.h"
+
+#define MAX_ROWS 3
+
+#define ENTITY_TYPE_TABLE 1
+#define ENTITY_TYPE_QUEUE 2
 
 typedef enum 
 {
@@ -36,15 +44,16 @@ typedef enum
 
 @implementation TableListController
 
-@synthesize storageList;
 @synthesize selectedContainer;
 @synthesize selectedQueue;
+@synthesize resultContinuation = _resultContinuation;
+@synthesize localStorageList = _localStorageList;
+
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
-    if (self) 
-	{
+    if (self) {
         // Custom initialization
     }
     return self;
@@ -53,9 +62,11 @@ typedef enum
 - (void)dealloc
 {
 	[storageClient release];
-	[storageList release];
 	[selectedContainer release];
 	[selectedQueue release];
+    [_resultContinuation release];
+    [_localStorageList release];
+    
     [super dealloc];
 }
 
@@ -164,7 +175,6 @@ typedef enum
 
 - (void)viewDidLoad
 {
-
     [super viewDidLoad];
 
 	storageClient = nil;
@@ -173,6 +183,7 @@ typedef enum
 	{
 		self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(modifyStorage:)] autorelease];
 	}
+    _localStorageList = [[NSMutableArray alloc] initWithCapacity:20];
 }
 
 - (void)viewDidUnload
@@ -192,7 +203,7 @@ typedef enum
 	}
 	else if ([self.navigationItem.title isEqualToString:@"Blob Storage"])
 	{
-		[storageClient fetchBlobContainers];
+		[storageClient fetchBlobContainersSegmented:self.resultContinuation maxResult:MAX_ROWS];
 	}
 	else
 	{
@@ -212,13 +223,11 @@ typedef enum
 
 - (void)viewWillAppear:(BOOL)animated
 {
-	
-	Azure_Storage_ClientAppDelegate		*appDelegate = (Azure_Storage_ClientAppDelegate *)[[UIApplication sharedApplication] delegate];
-	
     [super viewWillAppear:animated];
+    
+    Azure_Storage_ClientAppDelegate *appDelegate = (Azure_Storage_ClientAppDelegate *)[[UIApplication sharedApplication] delegate];
 	
-	if(storageClient)
-	{
+	if (storageClient) {
 		[storageClient release];
 	}
 	
@@ -248,40 +257,59 @@ typedef enum
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [self.storageList count];
+    NSUInteger count = storageListCount; 
+    NSUInteger localCount = self.localStorageList.count;
+    
+    if (count >= MAX_ROWS) {
+        localCount += 1;
+    }
+    
+    return localCount;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-
     static NSString *CellIdentifier = @"Cell";
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil)
-	{
+    if (cell == nil) {
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
 	}
     
-	if ([self.navigationItem.title isEqualToString:@"Table Storage"])
-	{
-		cell.textLabel.text = [self.storageList objectAtIndex:indexPath.row];
-	}
-	else if ([self.navigationItem.title isEqualToString:@"Queue Storage"])
-	{
-		WAQueue *queue = [self.storageList objectAtIndex:indexPath.row];
-		cell.textLabel.text = queue.queueName;
-	}
-	else if ([self.navigationItem.title isEqualToString:@"Blob Storage"])
-	{
-		WABlobContainer *container = [self.storageList objectAtIndex:indexPath.row];
-		cell.textLabel.text = container.name;
-	}
-	else
-	{
-		WABlob *blob = [self.storageList objectAtIndex:indexPath.row];
-		cell.textLabel.text = blob.name;
-	}
+    if (indexPath.row != self.localStorageList.count) {
+        if ([self.navigationItem.title isEqualToString:@"Table Storage"]) {
+            cell.textLabel.text = [self.localStorageList objectAtIndex:indexPath.row];
+        } else if ([self.navigationItem.title isEqualToString:@"Queue Storage"]) {
+            WAQueue *queue = [self.localStorageList objectAtIndex:indexPath.row];
+            cell.textLabel.text = queue.queueName;
+        } else if ([self.navigationItem.title isEqualToString:@"Blob Storage"]) {
+            WABlobContainer *container = [self.localStorageList objectAtIndex:indexPath.row];
+            cell.textLabel.text = container.name;
+        } else {
+            WABlob *blob = [self.localStorageList objectAtIndex:indexPath.row];
+            cell.textLabel.text = blob.name;
+        }
+    }
 
+    if (indexPath.row == self.localStorageList.count) {
+        if (storageListCount == MAX_ROWS) {
+            UITableViewCell *loadMoreCell = [tableView dequeueReusableCellWithIdentifier:@"LoadMore"];
+            if (loadMoreCell == nil) {
+                loadMoreCell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"LoadMore"] autorelease];
+            }
+            
+            UILabel *loadMore =[[UILabel alloc] initWithFrame:CGRectMake(0,0,362,40)];
+            loadMore.textColor = [UIColor blackColor];
+            loadMore.highlightedTextColor = [UIColor darkGrayColor];
+            loadMore.backgroundColor = [UIColor clearColor];
+            loadMore.textAlignment = UITextAlignmentCenter;
+            loadMore.font = [UIFont boldSystemFontOfSize:20];
+            loadMore.text = @"Show more results...";
+            [loadMoreCell addSubview:loadMore];
+            [loadMore release];
+            return loadMoreCell;
+        }
+    }
     return cell;
 }
 
@@ -294,7 +322,7 @@ typedef enum
 	{
 		EntityListController *newController = [[EntityListController alloc] initWithNibName:@"EntityListController" bundle:nil];
 		
-		newController.navigationItem.title = [self.storageList objectAtIndex:indexPath.row];
+		newController.navigationItem.title = [self.localStorageList objectAtIndex:indexPath.row];
 		newController.entityType = ENTITY_TYPE_TABLE;
 		[self.navigationController pushViewController:newController animated:YES];
 		[newController release];
@@ -302,7 +330,7 @@ typedef enum
 	else if ([self.navigationItem.title isEqualToString:@"Queue Storage"])
 	{
 		EntityListController *newController = [[EntityListController alloc] initWithNibName:@"EntityListController" bundle:nil];
-		WAQueue *queue = [self.storageList objectAtIndex:indexPath.row];
+		WAQueue *queue = [self.localStorageList objectAtIndex:indexPath.row];
 		
 		newController.navigationItem.title = queue.queueName;
 		newController.entityType = ENTITY_TYPE_QUEUE;
@@ -311,17 +339,26 @@ typedef enum
 	}
 	else if ([self.navigationItem.title isEqualToString:@"Blob Storage"])
 	{
-		TableListController *newController = [[TableListController alloc] initWithNibName:@"TableListController" bundle:nil];
+        if (storageListCount == MAX_ROWS && indexPath.row == self.localStorageList.count) {
+            [tableView beginUpdates];
+            storageListCount--;
+            [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] 
+                                  withRowAnimation:UITableViewScrollPositionBottom];
+            [tableView endUpdates];
+            [self fetchData];
+        } else {
+            TableListController *newController = [[TableListController alloc] initWithNibName:@"TableListController" bundle:nil];
 		
-		newController.selectedContainer = [self.storageList objectAtIndex:indexPath.row];
-		newController.navigationItem.title = newController.selectedContainer.name;
-		[self.navigationController pushViewController:newController animated:YES];
-		[newController release];
+            newController.selectedContainer = [self.localStorageList objectAtIndex:indexPath.row];
+            newController.navigationItem.title = newController.selectedContainer.name;
+            [self.navigationController pushViewController:newController animated:YES];
+            [newController release];
+        }
 	}
 	else
 	{
 		BlobViewerController *newController = [[BlobViewerController alloc] initWithNibName:@"BlobViewerController" bundle:nil];
-		WABlob *blob = [self.storageList objectAtIndex:indexPath.row];
+		WABlob *blob = [self.localStorageList objectAtIndex:indexPath.row];
 		
 		newController.navigationItem.title = blob.name;
 		newController.blob = blob;
@@ -332,6 +369,10 @@ typedef enum
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if (storageListCount == MAX_ROWS && indexPath.row == self.localStorageList.count) {
+        return NO;
+    }
+
 	return [self canModify];
 }
 
@@ -351,7 +392,7 @@ typedef enum
 			return;
 		}
 		
-		[storageList removeObjectAtIndex:indexPath.row];
+		[self.localStorageList removeObjectAtIndex:indexPath.row];
 		[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] 
 						 withRowAnimation:UITableViewScrollPositionBottom];
 	};
@@ -368,7 +409,7 @@ typedef enum
 	{
 		case TableStorage:
 		{
-			[storageClient deleteTableNamed:[storageList objectAtIndex:indexPath.row] withCompletionHandler:^(NSError* error) 
+			[storageClient deleteTableNamed:[self.localStorageList objectAtIndex:indexPath.row] withCompletionHandler:^(NSError* error) 
 			{
 				block(error, @"Error Deleting Table");
 			}];
@@ -377,7 +418,7 @@ typedef enum
 			
 		case QueueStorage:
 		{
-			WAQueue *queue = [storageList objectAtIndex:indexPath.row];
+			WAQueue *queue = [self.localStorageList objectAtIndex:indexPath.row];
 			[storageClient deleteQueueNamed:queue.queueName withCompletionHandler:^(NSError* error) 
 			{
 				block(error, @"Error Deleting Queue");
@@ -387,7 +428,7 @@ typedef enum
 			
 		case BlobStorage:
 		{
-			[storageClient deleteBlobContainer:[storageList objectAtIndex:indexPath.row] withCompletionHandler:^(NSError* error) 
+			[storageClient deleteBlobContainer:[self.localStorageList objectAtIndex:indexPath.row] withCompletionHandler:^(NSError* error) 
 			 {
 				 block(error, @"Error Deleting Container");
 			 }];
@@ -396,19 +437,13 @@ typedef enum
 			
 		default:
 		{
-			[storageClient deleteBlob:[storageList objectAtIndex:indexPath.row] withCompletionHandler:^(NSError* error) 
+			[storageClient deleteBlob:[self.localStorageList objectAtIndex:indexPath.row] withCompletionHandler:^(NSError* error) 
 			 {
 				 block(error, @"Error Deleting Block");
 			 }];
 			break;
 		}
 	}
-	
-	// remove the item from your data
-	//	[myItems removeObjectAtIndex:indexPath.row];
-	
-	// refresh the table view
-	//[tableView reloadData];
 }
 
 #pragma mark - CloudStorageClientDelegate methods
@@ -420,25 +455,30 @@ typedef enum
 
 - (void)storageClient:(WACloudStorageClient *)client didFetchTables:(NSArray *)tables
 {
-	self.storageList = [[tables mutableCopy] autorelease];
+    storageListCount = [tables count];
+    [self.localStorageList addObjectsFromArray:/*self.storageList*/tables];
 	[self.tableView reloadData];
 }
 
-- (void)storageClient:(WACloudStorageClient *)client didFetchBlobContainers:(NSArray *)containers
+- (void)storageClient:(WACloudStorageClient *)client didFetchBlobContainers:(NSArray *)containers withResultContinuation:(WAResultContinuation *)resultContinuation
 {
-	self.storageList = [[containers mutableCopy] autorelease];
+    storageListCount = [containers count];
+    self.resultContinuation = resultContinuation;
+    [self.localStorageList addObjectsFromArray:containers];
 	[self.tableView reloadData];
 }
 
 - (void)storageClient:(WACloudStorageClient *)client didFetchBlobs:(NSArray *)blobs inContainer:(WABlobContainer *)container
 {
-	self.storageList = [[blobs mutableCopy] autorelease];
+    storageListCount = [blobs count];
+    [self.localStorageList addObjectsFromArray:blobs];
 	[self.tableView reloadData];
 }
 
 - (void)storageClient:(WACloudStorageClient *)client didFetchQueues:(NSArray *)queues
 {
-	self.storageList = [[queues mutableCopy] autorelease];
+    storageListCount = [queues count];
+    [self.localStorageList addObjectsFromArray:queues];
 	[self.tableView reloadData];
 }
 
