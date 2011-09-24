@@ -26,4 +26,9 @@
 /*! Metadata associated with the blob container. */
 @property (readonly) NSString *metadata;
 
+/*! Returns an WABlobContainer object initialized with a name of the container.*/
+- (id)initContainerWithName:(NSString *)name;
+/*! Returns an WABlobContainer object initialized with a name, url and metadata of the container.*/
+- (id)initContainerWithName:(NSString *)name URL:(NSString *)URL metadata:(NSString *)metadata;
+    
 @end

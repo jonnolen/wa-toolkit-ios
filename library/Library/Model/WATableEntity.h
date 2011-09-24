@@ -17,8 +17,8 @@
 #import <Foundation/Foundation.h>
 
 /*! TableEntity is a class used to represent entities with Windows Azure table storage.*/
-@interface WATableEntity : NSObject 
-{
+@interface WATableEntity : NSObject {
+@private
     NSString* _tableName;
     NSString* _partitionKey;
     NSString* _rowKey;

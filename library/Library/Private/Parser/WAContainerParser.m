@@ -18,11 +18,13 @@
 #import "WABlobContainer.h"
 #import "WAXMLHelper.h"
 
+/*
 @interface WABlobContainer (Private)
 
 - (id)initContainerWithName:(NSString *)name URL:(NSString *)URL metadata:(NSString *)metadata;
 
 @end
+*/
 
 @implementation WAContainerParser
 

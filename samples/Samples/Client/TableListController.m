@@ -29,7 +29,7 @@
 #import "WAResultContinuation.h"
 #import "WAQueue.h"
 
-#define MAX_ROWS 3
+#define MAX_ROWS 10
 
 #define ENTITY_TYPE_TABLE 1
 #define ENTITY_TYPE_QUEUE 2
@@ -61,6 +61,7 @@ typedef enum
 
 - (void)dealloc
 {
+    storageClient.delegate = nil;
 	[storageClient release];
 	[selectedContainer release];
 	[selectedQueue release];
@@ -193,32 +194,17 @@ typedef enum
 
 - (void)fetchData
 {
-	if ([self.navigationItem.title isEqualToString:@"Table Storage"])
-	{
+	if ([self.navigationItem.title isEqualToString:@"Table Storage"]) {
 		[storageClient fetchTables];
-	}
-	else if ([self.navigationItem.title isEqualToString:@"Queue Storage"])
-	{
+	} else if ([self.navigationItem.title isEqualToString:@"Queue Storage"]) {
 		[storageClient fetchQueues];
-	}
-	else if ([self.navigationItem.title isEqualToString:@"Blob Storage"])
-	{
+	} else if ([self.navigationItem.title isEqualToString:@"Blob Storage"]) {
 		[storageClient fetchBlobContainersSegmented:self.resultContinuation maxResult:MAX_ROWS];
-	}
-	else
-	{
-		[storageClient fetchBlobContainersWithCompletionHandler:^(NSArray *containers, NSError *error)
-		 {
-			 for (WABlobContainer *container in containers)
-			 {
-				 if ([container.name isEqualToString:self.navigationItem.title])
-				 {
-					 [storageClient fetchBlobs:container];
-					 break;
-				 }
-			 }
-		 }];
-	}
+	} else {
+        WABlobContainer *container = [[WABlobContainer alloc] initContainerWithName:self.navigationItem.title];
+		[storageClient fetchBlobsSegmented:container resultContinuation:self.resultContinuation maxResult:MAX_ROWS];
+        [container release];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -234,7 +220,9 @@ typedef enum
 	storageClient = [[WACloudStorageClient storageClientWithCredential:appDelegate.authenticationCredential] retain];
 	storageClient.delegate = self;
 	
-	[self fetchData];
+    if (self.localStorageList.count == 0) {
+        [self fetchData];
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -257,7 +245,7 @@ typedef enum
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    NSUInteger count = storageListCount; 
+    NSUInteger count = fetchCount; 
     NSUInteger localCount = self.localStorageList.count;
     
     if (count >= MAX_ROWS) {
@@ -292,7 +280,7 @@ typedef enum
     }
 
     if (indexPath.row == self.localStorageList.count) {
-        if (storageListCount == MAX_ROWS) {
+        if (fetchCount == MAX_ROWS) {
             UITableViewCell *loadMoreCell = [tableView dequeueReusableCellWithIdentifier:@"LoadMore"];
             if (loadMoreCell == nil) {
                 loadMoreCell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"LoadMore"] autorelease];
@@ -339,9 +327,9 @@ typedef enum
 	}
 	else if ([self.navigationItem.title isEqualToString:@"Blob Storage"])
 	{
-        if (storageListCount == MAX_ROWS && indexPath.row == self.localStorageList.count) {
+        if (fetchCount == MAX_ROWS && indexPath.row == self.localStorageList.count) {
             [tableView beginUpdates];
-            storageListCount--;
+            fetchCount--;
             [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] 
                                   withRowAnimation:UITableViewScrollPositionBottom];
             [tableView endUpdates];
@@ -357,19 +345,28 @@ typedef enum
 	}
 	else
 	{
-		BlobViewerController *newController = [[BlobViewerController alloc] initWithNibName:@"BlobViewerController" bundle:nil];
-		WABlob *blob = [self.localStorageList objectAtIndex:indexPath.row];
+        if (fetchCount == MAX_ROWS && indexPath.row == self.localStorageList.count) {
+            [tableView beginUpdates];
+            fetchCount--;
+            [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] 
+                                  withRowAnimation:UITableViewScrollPositionBottom];
+            [tableView endUpdates];
+            [self fetchData];
+        } else {
+            BlobViewerController *newController = [[BlobViewerController alloc] initWithNibName:@"BlobViewerController" bundle:nil];
+            WABlob *blob = [self.localStorageList objectAtIndex:indexPath.row];
 		
-		newController.navigationItem.title = blob.name;
-		newController.blob = blob;
-		[self.navigationController pushViewController:newController animated:YES];
-		[newController release];
+            newController.navigationItem.title = blob.name;
+            newController.blob = blob;
+            [self.navigationController pushViewController:newController animated:YES];
+            [newController release];
+        }
 	}
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (storageListCount == MAX_ROWS && indexPath.row == self.localStorageList.count) {
+    if (fetchCount == MAX_ROWS && indexPath.row == self.localStorageList.count) {
         return NO;
     }
 
@@ -455,29 +452,30 @@ typedef enum
 
 - (void)storageClient:(WACloudStorageClient *)client didFetchTables:(NSArray *)tables
 {
-    storageListCount = [tables count];
-    [self.localStorageList addObjectsFromArray:/*self.storageList*/tables];
+    //fetchCount = [tables count];
+    [self.localStorageList addObjectsFromArray:tables];
 	[self.tableView reloadData];
 }
 
 - (void)storageClient:(WACloudStorageClient *)client didFetchBlobContainers:(NSArray *)containers withResultContinuation:(WAResultContinuation *)resultContinuation
 {
-    storageListCount = [containers count];
+    fetchCount = [containers count];
     self.resultContinuation = resultContinuation;
     [self.localStorageList addObjectsFromArray:containers];
 	[self.tableView reloadData];
 }
 
-- (void)storageClient:(WACloudStorageClient *)client didFetchBlobs:(NSArray *)blobs inContainer:(WABlobContainer *)container
+- (void)storageClient:(WACloudStorageClient *)client didFetchBlobs:(NSArray *)blobs inContainer:(WABlobContainer *)container withResultContinuation:(WAResultContinuation *)resultContinuation
 {
-    storageListCount = [blobs count];
+    fetchCount = [blobs count];
+    self.resultContinuation = resultContinuation;
     [self.localStorageList addObjectsFromArray:blobs];
 	[self.tableView reloadData];
 }
 
 - (void)storageClient:(WACloudStorageClient *)client didFetchQueues:(NSArray *)queues
 {
-    storageListCount = [queues count];
+    //fetchCount = [queues count];
     [self.localStorageList addObjectsFromArray:queues];
 	[self.tableView reloadData];
 }
