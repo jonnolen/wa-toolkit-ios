@@ -23,6 +23,11 @@
 @synthesize URL = _URL;
 @synthesize metadata = _metadata;
 
+- (id)initContainerWithName:(NSString *)name 
+{
+    return [self initContainerWithName:name URL:nil metadata:nil];
+}
+
 - (id)initContainerWithName:(NSString *)name URL:(NSString *)URL metadata:(NSString *)metadata {
 	
     if ((self = [super init])) {

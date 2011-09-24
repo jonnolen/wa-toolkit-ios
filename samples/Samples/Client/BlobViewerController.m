@@ -51,10 +51,9 @@
 
 - (void)viewDidLoad
 {
-
-	Azure_Storage_ClientAppDelegate		*appDelegate = (Azure_Storage_ClientAppDelegate *)[[UIApplication sharedApplication] delegate];
-
     [super viewDidLoad];
+
+	Azure_Storage_ClientAppDelegate	*appDelegate = (Azure_Storage_ClientAppDelegate *)[[UIApplication sharedApplication] delegate];
 
 	storageClient = [[WACloudStorageClient storageClientWithCredential:appDelegate.authenticationCredential] retain];
 	if ([blob.name hasSuffix:@"png"] || [blob.name hasSuffix:@"jpg"] || [blob.name hasSuffix:@"jpeg"])

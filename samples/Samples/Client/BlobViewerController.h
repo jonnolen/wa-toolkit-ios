@@ -22,7 +22,6 @@
 {
     
 	UIImageView				*blobImageView;
-	
 	WACloudStorageClient	*storageClient;
 	WABlob					*blob;
 }

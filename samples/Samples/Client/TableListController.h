@@ -24,7 +24,7 @@
 @interface TableListController : UITableViewController <WACloudStorageClientDelegate> {
 @private
 	WACloudStorageClient		*storageClient;
-    NSUInteger                  storageListCount;
+    NSUInteger                  fetchCount;
 	WABlobContainer				*selectedContainer;
 	WAQueue						*selectedQueue;
     WAResultContinuation        *_resultContinuation;

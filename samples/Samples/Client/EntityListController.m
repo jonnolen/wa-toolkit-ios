@@ -22,7 +22,7 @@
 #import "UIViewController+ShowError.h"
 #import "WAResultContinuation.h"
 
-#define TOP_ROWS 3
+#define TOP_ROWS 10
 
 @interface EntityListController()
 

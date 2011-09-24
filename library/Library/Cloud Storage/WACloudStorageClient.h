@@ -66,6 +66,10 @@
 - (void)fetchBlobs:(WABlobContainer *)container;
 /*! Returns an array of blobs from the specified blob container. */
 - (void)fetchBlobs:(WABlobContainer *)container withCompletionHandler:(void (^)(NSArray *, NSError *))block;
+/*! Returns an array of blobs from the specified blob container. */
+- (void)fetchBlobsSegmented:(WABlobContainer *)container resultContinuation:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult;
+/*! Returns an array of blobs from the specified blob container. */
+- (void)fetchBlobsSegmented:(WABlobContainer *)container resultContinuation:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult withCompletionHandler:(void (^)(NSArray *, WAResultContinuation *, NSError *))block;
 /*! Returns the binary data (NSData) object for the specified blob. */
 - (void)fetchBlobData:(WABlob *)blob;
 /*! Returns the binary data (NSData) object for the specified blob. */
@@ -188,6 +192,8 @@
 - (void)storageClient:(WACloudStorageClient *)client didDeleteBlobContainerNamed:(NSString *)name;
 /*! Called when the client successfully returns blobs from an existing container. */
 - (void)storageClient:(WACloudStorageClient *)client didFetchBlobs:(NSArray *)blobs inContainer:(WABlobContainer *)container;
+/*! Called when the client successfully returns blobs from an existing container. */
+- (void)storageClient:(WACloudStorageClient *)client didFetchBlobs:(NSArray *)blobs inContainer:(WABlobContainer *)container withResultContinuation:(WAResultContinuation *)resultContinuation;
 /*! Called when the client successfully returns blob data for a given blob. */
 - (void)storageClient:(WACloudStorageClient *)client didFetchBlobData:(NSData *)data blob:(WABlob *)blob;
 /*! Called when the client successfully adds a blob to a specified container. */
