@@ -314,7 +314,7 @@ const int AUTHENTICATION_DELAY = 2;
 		// for table storage, look for the comp= parameter
 		NSArray* args = [query componentsSeparatedByString:@"&"];
 		
-		if(blobSemantics)
+		if(blobSemantics || queueSemantics)
 		{
 			NSMutableString* q = [NSMutableString stringWithCapacity:100];
 			
@@ -325,19 +325,6 @@ const int AUTHENTICATION_DELAY = 2;
 			}
 			
 			query = q;
-		}
-		else if(queueSemantics)
-		{
-			NSString *noQuery = @"numofmessages";
-			NSString *noQuery2 = @"popreceipt";
-			NSRange range = [query rangeOfString : noQuery];
-			NSRange range2 = [query rangeOfString : noQuery2];
-			if ((range.location == NSNotFound) && (range2.location == NSNotFound)) {
-			   query = [@"?" stringByAppendingString:query];
-			}
-			else {
-				query = nil;
-			}
 		}
 		else
 		{
@@ -381,10 +368,7 @@ const int AUTHENTICATION_DELAY = 2;
 		isName = !isName;
 	}
 	[headers addObject:[NSString stringWithFormat:@"x-ms-date:%@", dateString]];
-	if (!queueSemantics) 
-	{
-		[headers addObject:@"x-ms-version:2009-09-19"];
-	}
+    [headers addObject:@"x-ms-version:2009-09-19"];
 	[headers sortUsingSelector:@selector(compare:)];
 	
 	NSString* headerString = [headers componentsJoinedByString:@"\n"];        
@@ -392,21 +376,10 @@ const int AUTHENTICATION_DELAY = 2;
 	
 	const NSData *cKey  = [_accessKey dataWithBase64DecodedString];
 	
-	if(blobSemantics)
+	if(blobSemantics || queueSemantics)
 	{
 		requestString = [NSMutableString stringWithFormat:@"%@\n\n\n%@\n\n%@\n\n\n\n\n\n\n%@\n/%@/", 
 						 httpMethod, contentLength, contentType ? contentType : @"", headerString, _accountName];
-	}
-	else if(queueSemantics)
-	{
-		if (contentType != nil && [contentType length] > 0) {
-			requestString = [NSMutableString stringWithFormat:@"%@\n\n%@\n\n%@\n/%@/", 
-							 httpMethod, contentType, headerString, _accountName];
-		}
-		else {
-			requestString = [NSMutableString stringWithFormat:@"%@\n\n\n\n%@\n/%@/", 
-							 httpMethod, headerString, _accountName];
-		}
 	}
 	else
 	{
@@ -459,7 +432,7 @@ const int AUTHENTICATION_DELAY = 2;
 	
 	// Set the request headers
 	[authenticatedrequest addValue:dateString forHTTPHeaderField:@"x-ms-date"];
-	if(blobSemantics)
+	if(blobSemantics || queueSemantics)
 	{
 		[authenticatedrequest addValue:@"2009-09-19" forHTTPHeaderField:@"x-ms-version"];
 	}

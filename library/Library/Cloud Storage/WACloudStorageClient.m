@@ -170,6 +170,96 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
     
 }
 
+- (void)fetchQueuesSegmented:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult
+{
+    [self fetchQueuesSegmented:resultContinuation maxResult:maxResult withCompletionHandler:nil];
+}
+
+- (void)fetchQueuesSegmented:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult withCompletionHandler:(void (^)(NSArray *, WAResultContinuation *, NSError *))block
+{
+    WACloudURLRequest* request;
+    if(_credential.usesProxy)
+    {
+        // 100ns intervals since 1/1/1970
+        long long ticks = [[NSDate date] timeIntervalSince1970] * 10000000;
+        // adjust relative to 1/1/0001
+        ticks += 621355968000000000;                                        
+        NSString *endpoint = [NSString stringWithFormat:@"?comp=list&incrementalSeed=%llu", ticks];
+        request = [_credential authenticatedRequestWithEndpoint:endpoint forStorageType:@"queue", nil];
+        
+        [request fetchXMLWithCompletionHandler:^(WACloudURLRequest* request, xmlDocPtr doc, NSError* error)
+         {
+             if(error)
+             {
+                 if(block)
+                 {
+                     block(nil, nil, error);
+                 }
+                 else if([_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
+                 {
+                     [_delegate storageClient:self didFailRequest:request withError:error];
+                 }
+                 return;
+             }
+             
+             NSArray* queues = [WAQueueParser loadQueues:doc];
+             NSString *marker = [WAContainerParser retrieveMarker:doc];
+             WAResultContinuation *continuation = [[[WAResultContinuation alloc] initWithContainerMarker:marker continuationType:WAContinuationQueue] autorelease];
+
+             if(block)
+             {
+                 block(queues, continuation, nil);
+             }
+             else if([_delegate respondsToSelector:@selector(storageClient:didFetchQueues:withResultContinuation:)])
+             {
+                 [_delegate storageClient:self didFetchQueues:queues withResultContinuation:continuation];
+             }
+         }];
+    }
+    else
+    {
+        NSMutableString *endpoint = [NSMutableString stringWithString:@"?comp=list"];
+        
+        if (maxResult > 0) {
+            [endpoint appendFormat:@"&maxresults=%d", maxResult];
+        }
+        if (resultContinuation.nextMarker != nil) {
+            [endpoint appendFormat:@"&marker=%@", resultContinuation.nextMarker];
+        }
+        
+        request = [_credential authenticatedRequestWithEndpoint:endpoint forStorageType:@"queue", nil];
+                
+        [request fetchXMLWithCompletionHandler:^(WACloudURLRequest* request, xmlDocPtr doc, NSError* error)
+         {
+             if(error)
+             {
+                 if(block)
+                 {
+                     block(nil, nil, error);
+                 }
+                 else if([_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
+                 {
+                     [_delegate storageClient:self didFailRequest:request withError:error];
+                 }
+                 return;
+             }
+             
+             NSArray* queues = [WAQueueParser loadQueues:doc];
+             NSString *marker = [WAContainerParser retrieveMarker:doc];
+             WAResultContinuation *continuation = [[[WAResultContinuation alloc] initWithContainerMarker:marker continuationType:WAContinuationBlob] autorelease];
+             
+             if(block)
+             {
+                 block(queues, continuation, nil);
+             }
+             else if([_delegate respondsToSelector:@selector(storageClient:didFetchQueues:withResultContinuation:)])
+             {
+                 [_delegate storageClient:self didFetchQueues:queues withResultContinuation:continuation];
+             }
+         }];
+    }
+    
+}
 
 - (void)addQueueNamed:(NSString *)queueName
 {
@@ -681,7 +771,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
              
              NSArray *containers = [WAContainerParser loadContainersForProxy:doc];
              NSString *marker = [WAContainerParser retrieveMarker:doc];
-             WAResultContinuation *continuation = [[[WAResultContinuation alloc] initWithContainerMarker:marker] autorelease];
+             WAResultContinuation *continuation = [[[WAResultContinuation alloc] initWithContainerMarker:marker continuationType:WAContinuationContainer] autorelease];
              
              if(block)
              {
@@ -723,7 +813,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
              
              NSArray *containers = [WAContainerParser loadContainers:doc];
              NSString *marker = [WAContainerParser retrieveMarker:doc];
-             WAResultContinuation *continuation = [[[WAResultContinuation alloc] initWithContainerMarker:marker] autorelease];
+             WAResultContinuation *continuation = [[[WAResultContinuation alloc] initWithContainerMarker:marker continuationType:WAContinuationContainer] autorelease];
              
              if(block)
              {
@@ -1062,7 +1152,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
              
              NSArray* items = [WABlobParser loadBlobsForProxy:doc container:container];
              NSString *marker = [WAContainerParser retrieveMarker:doc];
-             WAResultContinuation *continuation = [[[WAResultContinuation alloc] initWithContainerMarker:marker] autorelease];
+             WAResultContinuation *continuation = [[[WAResultContinuation alloc] initWithContainerMarker:marker continuationType:WAContinuationBlob] autorelease];
              
              if(block)
              {
@@ -1084,8 +1174,6 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
             [endpoint appendFormat:@"&marker=%@", resultContinuation.nextMarker];
         }
         
-        //NSString* containerName = container.name;
-        //NSString* endpoint = [NSString stringWithFormat:@"/%@?comp=list&restype=container", [containerName URLEncode]];
         WACloudURLRequest* request = [_credential authenticatedRequestWithEndpoint:endpoint forStorageType:@"blob",
                                       @"x-ms-blob-type", @"BlockBlob", nil];
         
@@ -1106,7 +1194,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
              
              NSArray* items = [WABlobParser loadBlobs:doc container:container];
              NSString *marker = [WAContainerParser retrieveMarker:doc];
-             WAResultContinuation *continuation = [[[WAResultContinuation alloc] initWithContainerMarker:marker] autorelease];
+             WAResultContinuation *continuation = [[[WAResultContinuation alloc] initWithContainerMarker:marker continuationType:WAContinuationBlob] autorelease];
              
              if(block)
              {
