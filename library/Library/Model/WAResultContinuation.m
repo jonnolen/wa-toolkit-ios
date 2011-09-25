@@ -18,7 +18,7 @@
 
 @interface WAResultContinuation()
 
-- (id)initWithNextParitionKey:(NSString*)nextParitionKey nextRowKey:(NSString*)nextRowKey nextTableKey:(NSString*)nextTableKey nextMarker:(NSString *)nextMarker continuationType:(enum WAContinuationType)continuationType;
+- (id)initWithNextParitionKey:(NSString*)nextParitionKey nextRowKey:(NSString*)nextRowKey nextTableKey:(NSString*)nextTableKey nextMarker:(NSString *)nextMarker continuationType:(WAContinuationType)continuationType;
 
 @end
 
@@ -61,9 +61,9 @@
     return [self initWithNextParitionKey:nil nextRowKey:nil nextTableKey:nextTableKey nextMarker:nil continuationType:WAContinuationTable];
 }
 
-- (id)initWithContainerMarker:(NSString*)marker
+- (id)initWithContainerMarker:(NSString*)marker continuationType:(WAContinuationType)continuationType
 {
-    return [self initWithNextParitionKey:nil nextRowKey:nil nextTableKey:nil nextMarker:marker continuationType:WAContinuationContainer];
+    return [self initWithNextParitionKey:nil nextRowKey:nil nextTableKey:nil nextMarker:marker continuationType:continuationType];
 }
 
 - (void)dealloc 

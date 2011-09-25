@@ -87,6 +87,10 @@
 - (void)fetchQueues;
 /*! Returns a list of queues. */
 - (void)fetchQueuesWithCompletionHandler:(void (^)(NSArray*, NSError *))block;
+/*! Returns a list of queues. */
+- (void)fetchQueuesSegmented:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult;
+/*! Returns a list of queues. */
+- (void)fetchQueuesSegmented:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult withCompletionHandler:(void (^)(NSArray*, WAResultContinuation *, NSError *))block;
 /*! Adds a queue, given a specified queue name. */
 - (void)addQueueNamed:(NSString *)queueName;
 /*! Adds a queue, given a specified queue name.  Returns error if the queue already exists, or where the name is an invalid format.*/
@@ -207,6 +211,8 @@
 - (void)storageClient:(WACloudStorageClient *)client didDeleteQueueNamed:(NSString *)queueName;
 /*! Called when the client successfully returns a list of queues */
 - (void)storageClient:(WACloudStorageClient *)client didFetchQueues:(NSArray *)queues;
+/*! Called when the client successfully returns a list of queues */
+- (void)storageClient:(WACloudStorageClient *)client didFetchQueues:(NSArray *)queues withResultContinuation:(WAResultContinuation *)resultContinuation;
 /*! Called when the client successfully got a single message from the specified queue */
 - (void)storageClient:(WACloudStorageClient *)client didFetchQueueMessage:(WAQueueMessage *)queueMessage;
 /*! Called when the client successfully get messages from the specified queue */

@@ -20,7 +20,8 @@
 
 @implementation WAQueueParser
 
-+ (NSArray *)loadQueues:(xmlDocPtr)doc {
++ (NSArray *)loadQueues:(xmlDocPtr)doc 
+{
     
     if (doc == nil) 
     { 
@@ -32,30 +33,6 @@
     [WAXMLHelper performXPath:@"/EnumerationResults/Queues/Queue" 
                  onDocument:doc 
                       block:^(xmlNodePtr node)
-     {
-         NSString *name = [WAXMLHelper getElementValue:node name:@"QueueName"];
-         NSString *url = [WAXMLHelper getElementValue:node name:@"Url"];
-         
-         WAQueue *queue = [[WAQueue alloc] initQueueWithName:name URL:url];
-         [queues addObject:queue];
-         [queue release];
-     }];
-    
-    return [[queues copy] autorelease];
-}
-
-+ (NSArray *)loadQueuesForProxy:(xmlDocPtr)doc {
-    
-    if (doc == nil) 
-    { 
-		return nil; 
-	}
-	
-    NSMutableArray *queues = [NSMutableArray arrayWithCapacity:30];
-    
-    [WAXMLHelper performXPath:@"/EnumerationResults/Queues/Queue" 
-                   onDocument:doc 
-                        block:^(xmlNodePtr node)
      {
          NSString *name = [WAXMLHelper getElementValue:node name:@"Name"];
          NSString *url = [WAXMLHelper getElementValue:node name:@"Url"];

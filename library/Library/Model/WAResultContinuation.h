@@ -17,7 +17,7 @@
 #import <Foundation/Foundation.h>
 
 /*! WAContinuationType represents the type of continuation in a WAResultContinuation.*/
-typedef enum WAContinuationType {
+typedef enum {
     WAContinuationNone = 0,
     WAContinuationBlob = 1,
     WAContinuationQueue = 2,
@@ -33,7 +33,7 @@ typedef enum WAContinuationType {
     NSString *_nextRowKey;
     NSString *_nextTableKey;
     NSString *_nextMarker;
-    enum WAContinuationType _continuationType;
+    WAContinuationType _continuationType;
 }
 
 /*! The next partition key in a continuation. */
@@ -56,6 +56,6 @@ typedef enum WAContinuationType {
 - (id)initWithNextTableKey:(NSString*)nextTableKey;
 
 /*! Intialize a new continuation with the container marker. */
-- (id)initWithContainerMarker:(NSString*)marker;
+- (id)initWithContainerMarker:(NSString*)marker continuationType:(WAContinuationType)continuationType;
 
 @end

@@ -108,34 +108,6 @@
         NSLog(@"endpoint = %@", ep);
 	WA_END_LOGGING
     
-    /*
-    if (_partitionKey && _rowKey)
-    {
-		return [_tableName stringByAppendingFormat:@"(PartitionKey=\'%@\',RowKey=\'%@\')", [_partitionKey URLEncode], [_rowKey URLEncode]];
-    }
-	else if (_partitionKey)
-    {
-		return [_tableName stringByAppendingFormat:@"(PartitionKey=\'%@\')", [_partitionKey URLEncode]];
-    }
-	else if (_rowKey)
-    {
-		return [_tableName stringByAppendingFormat:@"(RowKey=\'%@\')", [_rowKey URLEncode]];
-    }
-	else if (_filter && _topRows > 0)
-    {
-		return [_tableName stringByAppendingFormat:@"()?$filter=%@&$top=%d", [_filter URLEncode], _topRows];
-    }
-	else if (_filter)
-    {
-		return [_tableName stringByAppendingFormat:@"()?$filter=%@", [_filter URLEncode]];
-    }
-	else if (_topRows > 0)
-    {
-		return [_tableName stringByAppendingFormat:@"()?$top=%d", _topRows];
-    }
-
-    return [_tableName stringByAppendingString:@"()"];
-    */
     return ep;
 }
 

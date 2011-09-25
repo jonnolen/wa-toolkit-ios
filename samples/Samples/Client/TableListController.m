@@ -221,7 +221,8 @@ typedef enum {
             break;
         }
         case QueueStorage: {
-            [storageClient fetchQueues];
+            [storageClient fetchQueuesSegmented:self.resultContinuation maxResult:MAX_ROWS];
+            //[storageClient fetchQueues];
             break;
         }
         case BlobStorage: {
@@ -315,7 +316,7 @@ typedef enum {
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    /*
+    
     if (fetchCount == MAX_ROWS && indexPath.row == self.localStorageList.count) {
         [tableView beginUpdates];
         fetchCount--;
@@ -323,28 +324,18 @@ typedef enum {
                               withRowAnimation:UITableViewScrollPositionBottom];
         [tableView endUpdates];
         [self fetchData];
-    }*/
+        return;
+    }
     
-	if ([self.navigationItem.title isEqualToString:@"Table Storage"])
-	{
-        if (fetchCount == MAX_ROWS && indexPath.row == self.localStorageList.count) {
-            [tableView beginUpdates];
-            fetchCount--;
-            [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] 
-                                  withRowAnimation:UITableViewScrollPositionBottom];
-            [tableView endUpdates];
-            [self fetchData];
-        } else {
-            EntityListController *newController = [[EntityListController alloc] initWithNibName:@"EntityListController" bundle:nil];
+	if ([self.navigationItem.title isEqualToString:@"Table Storage"]) {
+        EntityListController *newController = [[EntityListController alloc] initWithNibName:@"EntityListController" bundle:nil];
 		
-            newController.navigationItem.title = [self.localStorageList objectAtIndex:indexPath.row];
-            newController.entityType = ENTITY_TYPE_TABLE;
-            [self.navigationController pushViewController:newController animated:YES];
-            [newController release];
-        }
-	}
-	else if ([self.navigationItem.title isEqualToString:@"Queue Storage"])
-	{
+        newController.navigationItem.title = [self.localStorageList objectAtIndex:indexPath.row];
+        newController.entityType = ENTITY_TYPE_TABLE;
+        [self.navigationController pushViewController:newController animated:YES];
+        [newController release];
+       
+	} else if ([self.navigationItem.title isEqualToString:@"Queue Storage"]) {
 		EntityListController *newController = [[EntityListController alloc] initWithNibName:@"EntityListController" bundle:nil];
 		WAQueue *queue = [self.localStorageList objectAtIndex:indexPath.row];
 		
@@ -352,41 +343,22 @@ typedef enum {
 		newController.entityType = ENTITY_TYPE_QUEUE;
 		[self.navigationController pushViewController:newController animated:YES];
 		[newController release];
-	}
-	else if ([self.navigationItem.title isEqualToString:@"Blob Storage"])
-	{
-        if (fetchCount == MAX_ROWS && indexPath.row == self.localStorageList.count) {
-            [tableView beginUpdates];
-            fetchCount--;
-            [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] 
-                                  withRowAnimation:UITableViewScrollPositionBottom];
-            [tableView endUpdates];
-            [self fetchData];
-        } else {
-            TableListController *newController = [[TableListController alloc] initWithNibName:@"TableListController" bundle:nil];
+	} else if ([self.navigationItem.title isEqualToString:@"Blob Storage"]) {
+        TableListController *newController = [[TableListController alloc] initWithNibName:@"TableListController" bundle:nil];
 		
-            newController.selectedContainer = [self.localStorageList objectAtIndex:indexPath.row];
-            newController.navigationItem.title = newController.selectedContainer.name;
-            [self.navigationController pushViewController:newController animated:YES];
-            [newController release];
-        }
+        newController.selectedContainer = [self.localStorageList objectAtIndex:indexPath.row];
+        newController.navigationItem.title = newController.selectedContainer.name;
+        [self.navigationController pushViewController:newController animated:YES];
+        [newController release];
 	} else {
-        if (fetchCount == MAX_ROWS && indexPath.row == self.localStorageList.count) {
-            [tableView beginUpdates];
-            fetchCount--;
-            [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] 
-                                  withRowAnimation:UITableViewScrollPositionBottom];
-            [tableView endUpdates];
-            [self fetchData];
-        } else {
-            BlobViewerController *newController = [[BlobViewerController alloc] initWithNibName:@"BlobViewerController" bundle:nil];
-            WABlob *blob = [self.localStorageList objectAtIndex:indexPath.row];
+        BlobViewerController *newController = [[BlobViewerController alloc] initWithNibName:@"BlobViewerController" bundle:nil];
+        WABlob *blob = [self.localStorageList objectAtIndex:indexPath.row];
 		
-            newController.navigationItem.title = blob.name;
-            newController.blob = blob;
-            [self.navigationController pushViewController:newController animated:YES];
-            [newController release];
-        }
+        newController.navigationItem.title = blob.name;
+        newController.blob = blob;
+        [self.navigationController pushViewController:newController animated:YES];
+        [newController release];
+        
 	}
 }
 
@@ -489,11 +461,21 @@ typedef enum {
 	[self.tableView reloadData];
 }
 
-- (void)storageClient:(WACloudStorageClient *)client didFetchQueues:(NSArray *)queues
+- (void)storageClient:(WACloudStorageClient *)client didFetchQueues:(NSArray *)queues withResultContinuation:(WAResultContinuation *)resultContinuation
 {
-    //fetchCount = [queues count];
+    fetchCount = [queues count];
+    self.resultContinuation = resultContinuation;
     [self.localStorageList addObjectsFromArray:queues];
 	[self.tableView reloadData];
 }
 
+/*
+- (void)storageClient:(WACloudStorageClient *)client didFetchQueues:(NSArray *)queues 
+{
+    fetchCount = [queues count];
+    //self.resultContinuation = resultContinuation;
+    [self.localStorageList addObjectsFromArray:queues];
+	[self.tableView reloadData];
+}
+*/
 @end
