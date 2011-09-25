@@ -15,12 +15,14 @@
  */
 
 #import "EntityTableViewCell.h"
-#import "WATableEntity.h"
-#import "WAQueueMessage.h"
 #import <stdarg.h>
 
-@interface KeyPair : NSObject
-{
+#import "WATableEntity.h"
+#import "WAQueueMessage.h"
+
+
+@interface KeyPair : NSObject {
+@private
 	NSString* _key;
 	NSString* _value;
 }
@@ -31,6 +33,7 @@
 + (KeyPair*)keyPairWithKey:(NSString*)key value:(NSString*)value;
 
 @end
+
 
 @implementation EntityTableViewCell
 
@@ -44,6 +47,15 @@
     return self;
 }
 
+- (void)dealloc
+{
+	RELEASE(_subviews);
+    
+    [super dealloc];
+}
+
+#pragma mark - View Life cycle
+
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
 {
     [super setSelected:selected animated:animated];
@@ -51,11 +63,7 @@
     // Configure the view for the selected state
 }
 
-- (void)dealloc
-{
-	[_subviews release];
-    [super dealloc];
-}
+#pragma mark - Methods
 
 - (void)setKeysAndObjects:(NSString*)key, ...
 {
@@ -64,29 +72,22 @@
 	
 	NSMutableArray* a = [NSMutableArray arrayWithCapacity:10];
 	
-	while(key)
-	{
-		if([key isKindOfClass:[WATableEntity class]])
-		{
-			WATableEntity* tableEntity = (WATableEntity*)key;
-			for(NSString* key in [tableEntity keys])
-			{
+	while (key) {
+		if ([key isKindOfClass:[WATableEntity class]]) {
+			WATableEntity *tableEntity = (WATableEntity*)key;
+			for (NSString *key in [tableEntity keys]) {
 				[a addObject:[KeyPair keyPairWithKey:key value:[tableEntity objectForKey:key]]];
 			}
-		}
-		else if([key isKindOfClass:[WAQueueMessage class]])
-		{
-			WAQueueMessage* queueMessage = (WAQueueMessage*)key;
+		} else if([key isKindOfClass:[WAQueueMessage class]]) {
+			WAQueueMessage *queueMessage = (WAQueueMessage*)key;
 			[a addObject:[KeyPair keyPairWithKey:@"Message ID" value:[queueMessage messageId]]];
 			[a addObject:[KeyPair keyPairWithKey:@"Insertion Time" value:[queueMessage insertionTime]]];
 			[a addObject:[KeyPair keyPairWithKey:@"Expiration Time" value:[queueMessage expirationTime]]];
 			[a addObject:[KeyPair keyPairWithKey:@"Pop Receipt" value:[queueMessage popReceipt]]];
 			[a addObject:[KeyPair keyPairWithKey:@"Time Next Visible" value:[queueMessage timeNextVisible]]];
 			[a addObject:[KeyPair keyPairWithKey:@"Message Text" value:[queueMessage messageText]]];
-		}
-		else
-		{
-			NSString* value = va_arg(args, NSString*);
+		} else {
+			NSString *value = va_arg(args, NSString*);
 			[a addObject:[KeyPair keyPairWithKey:key value:value]];
 		}
 		
@@ -95,31 +96,27 @@
 	
 	va_end(args);
 	
-	if(_subviews.count)
-	{
-		for(UIView* view in _subviews)
-		{
+	if(_subviews.count) {
+		for(UIView *view in _subviews) {
 			[view removeFromSuperview];
 		}
 		
 		[_subviews removeAllObjects];
 	}
 	
-	UIFont* labelFont = [UIFont boldSystemFontOfSize:12];
-	UIFont* detailFont = [UIFont systemFontOfSize:14];
+	UIFont *labelFont = [UIFont boldSystemFontOfSize:12];
+	UIFont *detailFont = [UIFont systemFontOfSize:14];
 	NSInteger labelWidth = 0;
-	NSMutableArray* labels = [NSMutableArray arrayWithCapacity:a.count];
-	NSMutableArray* details = [NSMutableArray arrayWithCapacity:a.count];
-	UILabel* label;
-	UILabel* detail;
-	UIColor* labelColor = [UIColor colorWithRed:3/15.0 green:6/15.0 blue:9/15.0 alpha:1.0];
+	NSMutableArray *labels = [NSMutableArray arrayWithCapacity:a.count];
+	NSMutableArray *details = [NSMutableArray arrayWithCapacity:a.count];
+	UILabel *label;
+	UILabel *detail;
+	UIColor *labelColor = [UIColor colorWithRed:3/15.0 green:6/15.0 blue:9/15.0 alpha:1.0];
 	
-	for(KeyPair* pair in a)
-	{
+	for (KeyPair* pair in a) {
 		CGSize size = [pair.key sizeWithFont:labelFont forWidth:100 lineBreakMode:UILineBreakModeTailTruncation];
 		
-		if(size.width > labelWidth)
-		{
+		if (size.width > labelWidth) {
 			labelWidth = size.width;
 		}
 		
@@ -155,8 +152,7 @@
 
 	int width = (self.accessoryType == UITableViewCellAccessoryDisclosureIndicator) ? 275 : 295;
 	
-	for(int n = 0; n < labels.count; n++)
-	{
+	for (int n = 0; n < labels.count; n++) {
 		label = [labels objectAtIndex:n];
 		detail = [details objectAtIndex:n];
 		CGRect rc;
@@ -179,8 +175,7 @@
 
 - (id)initWithKey:(NSString*)key value:(NSString*)value
 {
-	if((self = [super init]))
-	{
+	if ((self = [super init])) {
 		_key = [key copy];
 		_value = [value copy];
 	}
@@ -190,9 +185,9 @@
 
 - (void)dealloc
 {
-	[_key release];
-	[_value release];
-
+    RELEASE(_key);
+    RELEASE(_value);
+    
 	[super dealloc];
 }
 

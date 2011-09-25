@@ -16,14 +16,15 @@
 
 #import <UIKit/UIKit.h>
 #import "WACloudStorageClient.h"
-#import "WABlob.h"
+
+@class WABlob;
 
 @interface BlobViewerController : UIViewController
 {
-    
-	UIImageView				*blobImageView;
-	WACloudStorageClient	*storageClient;
-	WABlob					*blob;
+@private
+	UIImageView *blobImageView;
+	WACloudStorageClient *storageClient;
+	WABlob *blob;
 }
 @property (nonatomic, retain) IBOutlet UIImageView *blobImageView;
 @property (nonatomic, retain) WABlob *blob;

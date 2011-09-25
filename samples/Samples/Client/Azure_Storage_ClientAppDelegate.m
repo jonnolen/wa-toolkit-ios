@@ -17,8 +17,10 @@
 #import "Azure_Storage_ClientAppDelegate.h"
 #import "WAConfiguration.h"
 #import "StorageTypeSelector.h"
+
 #import "WACloudAccessControlClient.h"
 #import "WACloudStorageClient.h"
+#import "WAAuthenticationCredential.h"
 
 @implementation Azure_Storage_ClientAppDelegate
 
@@ -27,15 +29,23 @@
 @synthesize authenticationCredential;
 @synthesize use_proxy;
 
+- (void)dealloc
+{
+    RELEASE(_window);
+    RELEASE(_navigationController);
+    RELEASE(authenticationCredential);
+
+    [super dealloc];
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
 	// Override point for customization after application launch.
 	// Add the navigation controller's view to the window and display.
 	
-	WAConfiguration* config = [WAConfiguration sharedConfiguration];	
-	if(!config)
-	{
-		UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Configuration Error" 
+	WAConfiguration *config = [WAConfiguration sharedConfiguration];	
+	if(!config) {
+		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Configuration Error" 
 															message:@"You must update the ToolkitConfig section in the application's info.plist file before running the first time."
 														   delegate:self 
 												  cancelButtonTitle:@"Close" 
@@ -45,8 +55,7 @@
 		return YES;
 	}
 	
-	if(config.connectionType != WAConnectDirect)
-	{
+	if(config.connectionType != WAConnectDirect) {
 		[WACloudStorageClient ignoreSSLErrorFor:config.proxyNamespace];
 	}
     
@@ -73,14 +82,13 @@
 {
 	WAConfiguration* config = [WAConfiguration sharedConfiguration];
 
-	if(config.connectionType != WAConnectProxyACS)
-	{
+	if(config.connectionType != WAConnectProxyACS) {
 		return;
 	}
 	
-	Azure_Storage_ClientAppDelegate* appDelegate = (Azure_Storage_ClientAppDelegate *)[[UIApplication sharedApplication] delegate];
-	NSString* proxyURL = [config proxyURL];
-	WACloudAccessToken* sharedToken = [WACloudAccessControlClient sharedToken];
+	Azure_Storage_ClientAppDelegate *appDelegate = (Azure_Storage_ClientAppDelegate *)[[UIApplication sharedApplication] delegate];
+	NSString *proxyURL = [config proxyURL];
+	WACloudAccessToken *sharedToken = [WACloudAccessControlClient sharedToken];
 	
 /*	
     LOG(@"appliesTo: %@", sharedToken.appliesTo);
@@ -113,8 +121,7 @@
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
     
-    for (id key in userInfo) 
-    {
+    for (id key in userInfo) {
         LOG(@"key: %@, value: %@", key, [userInfo objectForKey:key]);
     }    
 }
@@ -156,14 +163,6 @@
 	 Save data if appropriate.
 	 See also applicationDidEnterBackground:.
 	 */
-}
-
-- (void)dealloc
-{
-	[_window release];
-	[_navigationController release];
-	[authenticationCredential release];
-    [super dealloc];
 }
 
 @end

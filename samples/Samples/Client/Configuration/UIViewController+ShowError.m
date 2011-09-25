@@ -19,22 +19,15 @@
 
 @implementation UIViewController (ShowError)
 
-- (void)showError:(NSError*)error
+- (void)showError:(NSError *)error
 {
 	[self showError:error withTitle:@"Error"];
 }
 
-- (void)showError:(NSError*)error withTitle:(NSString*)title
+- (void)showError:(NSError *)error withTitle:(NSString *)title
 {
-/*	if([error code] == 401)
-	{
-		UIViewController* root = [self.navigationController.viewControllers objectAtIndex:0];
-		[self.navigationController popToRootViewControllerAnimated:YES];
-		[root performSelector:@selector(logout:) withObject:error afterDelay:0.3];
-		return;
-	}	*/
 	
-	UIAlertView* alert = [[UIAlertView alloc] initWithTitle:title
+	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
 													message:[error localizedDescription]
 												   delegate:nil 
 										  cancelButtonTitle:@"OK"
@@ -42,7 +35,5 @@
 	[alert show];
 	[alert release];
 }
-
-
 
 @end

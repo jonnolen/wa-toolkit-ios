@@ -16,9 +16,9 @@
 
 #import "ServiceCall.h"
 #import <libxml/xmlwriter.h>
-#import "WACloudAccessControlClient.h"
 #import "WAConfiguration.h"
 
+#import "WACloudAccessControlClient.h"
 
 @interface ServiceRequest : NSObject {
 @private
@@ -321,7 +321,7 @@
 			[request setValue:contentType forHTTPHeaderField:@"Content-Type"];
 		}
 		
-		WACloudAccessToken* token = [WACloudAccessControlClient sharedToken];
+		WACloudAccessToken *token = [WACloudAccessControlClient sharedToken];
 		if (token) {
 			[token signRequest:request];
 		}
@@ -337,9 +337,10 @@
 
 - (void)dealloc
 {
-	[_connection release];
-	[_block release];
-	[_data release];
+    RELEASE(_connection);
+    RELEASE(_block);
+    RELEASE(_data);
+    
 	[super dealloc];
 }
 
@@ -374,10 +375,10 @@
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
-	NSError* error = nil;
-	
+	NSError *error = nil;
+	    
 	if (_statusCode >= 300) {
-		NSString* msg = [NSString stringWithFormat:@"Invalid HTTP status returned (%d)", _statusCode];
+		NSString *msg = [NSString stringWithFormat:@"Invalid HTTP status returned (%d)", _statusCode];
 		error = [NSError errorWithDomain:@"com.microsoft.WAToolkitConfig" 
 									code:_statusCode 
 								userInfo:[NSDictionary dictionaryWithObject:msg forKey:NSLocalizedDescriptionKey]];
@@ -398,8 +399,8 @@
 {
 	if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
 		// we only trust our own domain
-		NSString* host = challenge.protectionSpace.host;
-		NSString* ours = [NSString stringWithFormat:@"%@.cloudapp.net", [WAConfiguration sharedConfiguration].proxyNamespace];
+		NSString *host = challenge.protectionSpace.host;
+		NSString *ours = [NSString stringWithFormat:@"%@.cloudapp.net", [WAConfiguration sharedConfiguration].proxyNamespace];
 		
 		if ([host compare:ours options:NSCaseInsensitiveSearch] == NSOrderedSame) {
 			NSURLCredential *credential = [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust];

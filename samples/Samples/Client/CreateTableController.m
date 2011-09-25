@@ -18,6 +18,10 @@
 #import "Azure_Storage_ClientAppDelegate.h"
 #import "UIViewController+ShowError.h"
 
+#import "WABlobContainer.h"
+#import "WAQueue.h"
+
+
 @implementation CreateTableController
 
 @synthesize newItemName;
@@ -38,13 +42,15 @@
 
 - (void)dealloc
 {
-    [newItemName release];
-    [createButton release];
-    [uploadDefaultImageButton release];
-    [nameLabel release];
-	[storageClient release];
-	[selectedContainer release];
-	[selectedQueue release];
+    RELEASE(newItemName);
+    RELEASE(createButton);
+    RELEASE(uploadDefaultImageButton);
+    RELEASE(nameLabel);
+	storageClient.delegate = nil;
+    RELEASE(storageClient);
+    RELEASE(selectedContainer);
+    RELEASE(selectedQueue);
+    
     [super dealloc];
 }
 
@@ -56,119 +62,28 @@
     // Release any cached data, images, etc that aren't in use.
 }
 
-- (IBAction)createItem:(id)sender
-{
-    [newItemName resignFirstResponder];
-	
-	if ([[newItemName text] length] == 0)
-	{
-		return;
-	}
-	
-	if (![self.navigationItem.title hasSuffix:@"Blob"])
-	{
-		UIActivityIndicatorView* view = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
-		self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithCustomView:view] autorelease];
-		[view startAnimating];
-		[view release];
-	}
-	
-	if ([self.navigationItem.title hasSuffix:@"Table"])
-	{
-		[storageClient createTableNamed:newItemName.text];
-	}
-	else if ([self.navigationItem.title hasSuffix:@"Container"])
-	{
-		[storageClient addBlobContainerNamed:newItemName.text];
-	}
-	else if ([self.navigationItem.title hasSuffix:@"Blob"])
-	{
-		if(![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera])
-		{
-			[self actionSheet:nil didDismissWithButtonIndex:1];
-			return;
-		}
-		
-		UIActionSheet* sheet = [[UIActionSheet alloc] initWithTitle:nil 
-														   delegate:self 
-												  cancelButtonTitle:@"Cancel"
-											 destructiveButtonTitle:nil 
-												  otherButtonTitles:@"Take Photo", @"Choose Existing", nil];
-		[sheet showInView:self.view];
-		[sheet release];
-	}
-	else if ([self.navigationItem.title hasSuffix:@"Queue"])
-	{
-		[storageClient addQueueNamed:newItemName.text];
-	}
-}
-
-- (void) actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
-{
-	UIImagePickerController* imagePicker = [[UIImagePickerController alloc] init];
-	imagePicker.delegate = self;
-	
-	if(buttonIndex == 0)
-	{
-		imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
-	}
-
-	[self presentModalViewController:imagePicker animated:YES];
-	[imagePicker release];
-}
-
-- (IBAction)uploadDefaultImage:(id)sender
-{
-	[storageClient addBlobToContainer:self.selectedContainer 
-							 blobName:@"windows_azure.jpg" 
-						  contentData:UIImageJPEGRepresentation([UIImage imageNamed:@"windows_azure.jpg"], 1.0) 
-						  contentType:@"image/jpeg"
-	 withCompletionHandler:^(NSError* error) 
-	{
-		if(error)
-		{
-			[self showError:error];
-			return;
-		}
-		
-		[self.navigationController popViewControllerAnimated:YES];
-	 }];
-}
 
 #pragma mark - View lifecycle
 
 - (void)viewDidLoad
 {
-
-	Azure_Storage_ClientAppDelegate		*appDelegate = (Azure_Storage_ClientAppDelegate *)[[UIApplication sharedApplication] delegate];
-	
     [super viewDidLoad];
-
-	storageClient = [[WACloudStorageClient storageClientWithCredential:appDelegate.authenticationCredential] retain];
+    
+	Azure_Storage_ClientAppDelegate *appDelegate = (Azure_Storage_ClientAppDelegate *)[[UIApplication sharedApplication] delegate];
+	
+    storageClient = [[WACloudStorageClient storageClientWithCredential:appDelegate.authenticationCredential] retain];
 	storageClient.delegate = self;
 
-//	[newItemName addTarget:self action:@selector(textDidChange:) forControlEvents:UIControlEventEditingChanged];
-
-	if ([self.navigationItem.title hasSuffix:@"Table"])
-	{
+	if ([self.navigationItem.title hasSuffix:@"Table"]) {
 		nameLabel.text = @"Table Name:";
-	}
-	else if ([self.navigationItem.title hasSuffix:@"Container"])
-	{
+	} else if ([self.navigationItem.title hasSuffix:@"Container"]) {
 		nameLabel.text = @"Container Name:";
-	}
-	else if ([self.navigationItem.title hasSuffix:@"Blob"])
-	{
+	} else if ([self.navigationItem.title hasSuffix:@"Blob"]) {
 		nameLabel.text = @"Blob Name:";
-		//	uploadDefaultImageButton.hidden = NO;
 		[createButton setTitle:@"Pick Image" forState:UIControlStateNormal];
-	}
-	else if ([self.navigationItem.title hasSuffix:@"Queue"])
-	{
+	} else if ([self.navigationItem.title hasSuffix:@"Queue"]) {
 		nameLabel.text = @"Queue Name:";
-	}
-	else if ([self.navigationItem.title hasSuffix:@"QueueMessage"])
-	{
+	} else if ([self.navigationItem.title hasSuffix:@"QueueMessage"]) {
 		nameLabel.text = @"Queue Message Name:";
 	}
 
@@ -178,6 +93,8 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
     storageClient.delegate = nil;
+    
+    [super viewWillDisappear:animated];
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
@@ -185,23 +102,20 @@
 	if (![self.navigationItem.title hasSuffix:@"Table"] &&
 		![self.navigationItem.title hasSuffix:@"Container"] &&
 		![self.navigationItem.title hasSuffix:@"Queue"] &&
-		![self.navigationItem.title hasSuffix:@"Blob"])
-	{
+		![self.navigationItem.title hasSuffix:@"Blob"]) {
 		createButton.enabled = YES;
 		return YES;
 	}
 	
-	NSString* newStr = [textField.text stringByReplacingCharactersInRange:range withString:string];
+	NSString *newStr = [textField.text stringByReplacingCharactersInRange:range withString:string];
 	
-	if(!newStr.length)
-	{
+	if (!newStr.length) {
 		createButton.enabled = NO;
 		return YES;
 	}
 	
-	if([newStr rangeOfString:@"^[A-Za-z][A-Za-z0-9\\-\\_]*" 
-					 options:NSRegularExpressionSearch].length == newStr.length)
-	{
+	if ([newStr rangeOfString:@"^[A-Za-z][A-Za-z0-9\\-\\_]*" 
+					 options:NSRegularExpressionSearch].length == newStr.length) {
 		createButton.enabled = YES;
 		return YES;
 	}
@@ -211,13 +125,12 @@
 
 - (void)viewDidUnload
 {
-	[self setNewItemName:nil];
-	[self setCreateButton:nil];
-    [self setUploadDefaultImageButton:nil];
-    [self setNameLabel:nil];
+    self.newItemName = nil;
+    self.createButton = nil;
+    self.uploadDefaultImageButton = nil;
+    self.nameLabel = nil;
+    
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -226,7 +139,77 @@
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
-#pragma mark - CloudStorageClientDelegate methods
+#pragma mark - Action Methods
+
+- (IBAction)createItem:(id)sender
+{
+    [newItemName resignFirstResponder];
+	
+	if ([[newItemName text] length] == 0) {
+		return;
+	}
+	
+	if (![self.navigationItem.title hasSuffix:@"Blob"]) {
+		UIActivityIndicatorView *view = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+		self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithCustomView:view] autorelease];
+		[view startAnimating];
+		[view release];
+	}
+	
+	if ([self.navigationItem.title hasSuffix:@"Table"]) {
+		[storageClient createTableNamed:newItemName.text];
+	} else if ([self.navigationItem.title hasSuffix:@"Container"]) {
+		[storageClient addBlobContainerNamed:newItemName.text];
+	} else if ([self.navigationItem.title hasSuffix:@"Blob"]) {
+		if (![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
+			[self actionSheet:nil didDismissWithButtonIndex:1];
+			return;
+		}
+		
+		UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:nil 
+														   delegate:self 
+												  cancelButtonTitle:@"Cancel"
+											 destructiveButtonTitle:nil 
+												  otherButtonTitles:@"Take Photo", @"Choose Existing", nil];
+		[sheet showInView:self.view];
+		[sheet release];
+	} else if ([self.navigationItem.title hasSuffix:@"Queue"]) {
+		[storageClient addQueueNamed:newItemName.text];
+	}
+}
+
+- (IBAction)uploadDefaultImage:(id)sender
+{
+	[storageClient addBlobToContainer:self.selectedContainer 
+							 blobName:@"windows_azure.jpg" 
+						  contentData:UIImageJPEGRepresentation([UIImage imageNamed:@"windows_azure.jpg"], 1.0) 
+						  contentType:@"image/jpeg"
+                withCompletionHandler:^(NSError* error) {
+         if(error) {
+             [self showError:error];
+             return;
+         }
+         
+         [self.navigationController popViewControllerAnimated:YES];
+	 }];
+}
+
+#pragma mark - UIActionSheetDelegate Methods
+
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+	UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
+	imagePicker.delegate = self;
+	
+	if (buttonIndex == 0) {
+		imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
+	}
+    
+	[self presentModalViewController:imagePicker animated:YES];
+	[imagePicker release];
+}
+
+#pragma mark - CloudStorageClientDelegate Methods
 
 - (void)storageClient:(WACloudStorageClient *)client didFailRequest:request withError:(NSError*)error
 {
@@ -261,34 +244,30 @@
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingImage:(UIImage *)selectedImage editingInfo:(NSDictionary *)editingInfo
 {
+    NSString *imageName = newItemName.text;
 
-	NSString *imageName = newItemName.text;
-
-	if ([imageName hasSuffix:@".jpg"] == NO && [imageName hasSuffix:@".jpeg"] == NO)
-	{
+	if ([imageName hasSuffix:@".jpg"] == NO && [imageName hasSuffix:@".jpeg"] == NO) {
 		imageName = [newItemName.text stringByAppendingString:@".jpg"];
 	}
-	[storageClient addBlobToContainer:self.selectedContainer 
+	
+    [storageClient addBlobToContainer:self.selectedContainer 
 							 blobName:imageName 
 						  contentData:UIImageJPEGRepresentation(selectedImage, 1.0)
-						  contentType:@"image/jpeg"
-	 withCompletionHandler:^(NSError* error) 
-	 {
-		 if(error)
-		 {
-			 [self showError:error];
-			 return;
-		 }
+						  contentType:@"image/jpeg" 
+                withCompletionHandler:^(NSError* error)  {
+                    if(error) {
+                        [self showError:error];
+                        return;
+                    }
 		 
-		 [self dismissModalViewControllerAnimated:NO];
-		 [self.navigationController popViewControllerAnimated:YES];
-	 }];
+                    [self dismissModalViewControllerAnimated:NO];
+                    [self.navigationController popViewControllerAnimated:YES];
+                }];
 }
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
 {
 	[self dismissModalViewControllerAnimated:YES];
-//	[self.navigationController popViewControllerAnimated:YES];
 }
 
 @end

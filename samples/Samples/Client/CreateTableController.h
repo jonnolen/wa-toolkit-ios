@@ -16,27 +16,29 @@
 
 #import <UIKit/UIKit.h>
 #import "WACloudStorageClient.h"
-#import "WABlobContainer.h"
-#import "WAQueue.h"
+
+@class WABlobContainer;
+@class WAQueue;
 
 @interface CreateTableController : UIViewController <WACloudStorageClientDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIActionSheetDelegate>
 {
-    
+@private
 	UITextField *newItemName;
 	UIButton *createButton;
 	UIButton *uploadDefaultImageButton;
 	UILabel *nameLabel;
-
-	WACloudStorageClient		*storageClient;
-	WABlobContainer				*selectedContainer;
-	WAQueue						*selectedQueue;
+	WACloudStorageClient *storageClient;
+	WABlobContainer *selectedContainer;
+	WAQueue *selectedQueue;
 }
+
 @property (nonatomic, retain) IBOutlet UITextField *newItemName;
 @property (nonatomic, retain) IBOutlet UIButton *createButton;
 @property (nonatomic, retain) IBOutlet UIButton *uploadDefaultImageButton;
 @property (nonatomic, retain) IBOutlet UILabel *nameLabel;
 @property (nonatomic, retain) WABlobContainer *selectedContainer;
 @property (nonatomic, retain) WAQueue *selectedQueue;
+
 - (IBAction)createItem:(id)sender;
 - (IBAction)uploadDefaultImage:(id)sender;
 @end

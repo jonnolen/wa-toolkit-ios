@@ -30,13 +30,24 @@
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) 
-	{
+    if (self) {
         // Custom initialization
 		self.title = @"Login";
     }
     return self;
 }
+
+- (void)dealloc
+{
+    RELEASE(usernameField);
+    RELEASE(passwordField);
+    RELEASE(activity);
+    RELEASE(actionButton);
+    
+    [super dealloc];
+}
+
+#pragma mark - View lifecycle
 
 - (void)viewDidLoad
 {
@@ -44,15 +55,26 @@
     // Do any additional setup after loading the view from its nib.
 	
     self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:@"Register" style:UIBarButtonItemStyleBordered target:self action:@selector(registration:)] autorelease];
-
+    
 	[usernameField becomeFirstResponder];
 }
 
+- (void)viewDidUnload
+{
+    self.usernameField = nil;
+    self.passwordField = nil;
+    self.activity = nil;
+    self.actionButton = nil;
+    
+    [super viewDidUnload];
+}
+
+#pragma mark - Action Methods
+
 - (IBAction)login:(id)sender
 {
-	if(!usernameField.text.length || !passwordField.text.length)
-	{
-		UIAlertView* view = [[UIAlertView alloc] initWithTitle:@"Login" 
+	if(!usernameField.text.length || !passwordField.text.length) {
+		UIAlertView *view = [[UIAlertView alloc] initWithTitle:@"Login" 
 													   message:@"All fields must be filled in."
 													  delegate:self 
 											 cancelButtonTitle:@"OK" 
@@ -61,14 +83,14 @@
 		[view release];
 		return;
 	}
-
-	Azure_Storage_ClientAppDelegate* appDelegate = (Azure_Storage_ClientAppDelegate *)[[UIApplication sharedApplication] delegate];
-	WAConfiguration* config = [WAConfiguration sharedConfiguration];
-	NSString* proxyURL = [config proxyURL];
+    
+	Azure_Storage_ClientAppDelegate *appDelegate = (Azure_Storage_ClientAppDelegate *)[[UIApplication sharedApplication] delegate];
+	WAConfiguration *config = [WAConfiguration sharedConfiguration];
+	NSString *proxyURL = [config proxyURL];
 	
 	[usernameField resignFirstResponder];
 	[passwordField resignFirstResponder];
-
+    
 	[activity startAnimating];
 	actionButton.enabled = NO;
 	self.navigationItem.rightBarButtonItem.enabled = NO;
@@ -85,6 +107,8 @@
 	[self.navigationController pushViewController:newController animated:YES];
     [newController release];
 }
+
+#pragma mark - WAAuthenticationDelegate Methods
 
 - (void)loginDidSucceed
 {
@@ -104,35 +128,10 @@
 	UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Login Error" message:[NSString stringWithFormat:@"An error occurred: %@", [error localizedDescription]] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
 	[alertView show];
 	[alertView release];
-
-	//	usernameField.text = @"";
+    
 	passwordField.text = @"";
 	[passwordField becomeFirstResponder];
 }
 
-- (void)dealloc
-{
-    [usernameField release];
-    [passwordField release];
-    
-	[activity release];
-	[actionButton release];
-    [super dealloc];
-}
-
-#pragma mark - View lifecycle
-
-- (void)viewDidUnload
-{
-    self.usernameField = nil;
-    self.passwordField = nil;
-
-	[self setActivity:nil];
-	[self setActionButton:nil];
-    [super viewDidUnload];
-
-    // Relinquish ownership of anything that can be recreated in viewDidLoad or on demand.
-    // For example: self.myOutlet = nil;
-}
 
 @end
