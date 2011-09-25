@@ -27,8 +27,8 @@
 	[self setTitleShadowColor:[UIColor clearColor] forState:UIControlStateDisabled];
 	self.titleLabel.shadowOffset = CGSizeMake(0, 1);
 	
-	UIImage* img = [UIImage imageNamed:@"buttonImage.png"];
-	UIImage* image = [img stretchableImageWithLeftCapWidth:10 topCapHeight:0];
+	UIImage *img = [UIImage imageNamed:@"buttonImage.png"];
+	UIImage *image = [img stretchableImageWithLeftCapWidth:10 topCapHeight:0];
 	[self setBackgroundImage:image forState:UIControlStateNormal];
 }
 

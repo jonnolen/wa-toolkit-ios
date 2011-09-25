@@ -19,7 +19,7 @@
 
 @interface UIViewController (ShowError)
 
-- (void)showError:(NSError*)error;
-- (void)showError:(NSError*)error withTitle:(NSString*)title;
+- (void)showError:(NSError *)error;
+- (void)showError:(NSError *)error withTitle:(NSString *)title;
 
 @end

@@ -21,10 +21,18 @@
 #import "RootViewController.h"
 #import "RegisterViewController.h"
 #import "AcsRegisterViewController.h"
+#import "Azure_Storage_ClientAppDelegate.h"
+
 #import "WACloudAccessControlClient.h"
 #import "WACloudAccessToken.h"
-#import "Azure_Storage_ClientAppDelegate.h"
 #import "WAAuthenticationCredential.h"
+
+@interface StorageTypeSelector()
+
+- (void)login:(id)sender;
+- (void)logout:(id)sender;
+
+@end
 
 @implementation StorageTypeSelector
 
@@ -41,39 +49,12 @@
     return self;
 }
 
-- (IBAction)showTableStorage:(id)sender
-{
-
-	TableListController *newController = [[TableListController alloc] initWithNibName:@"TableListController" bundle:nil];
-
-	newController.navigationItem.title = @"Table Storage";
-	[self.navigationController pushViewController:newController animated:YES];
-	[newController release];
-}
-
-- (IBAction)showBlobStorage:(id)sender
-{
-	
-	TableListController *newController = [[TableListController alloc] initWithNibName:@"TableListController" bundle:nil];
-	
-	newController.navigationItem.title = @"Blob Storage";
-	[self.navigationController pushViewController:newController animated:YES];
-	[newController release];
-}
-
-- (IBAction)showQueueStorage:(id)sender
-{
-	
-	TableListController *newController = [[TableListController alloc] initWithNibName:@"TableListController" bundle:nil];
-	
-	newController.navigationItem.title = @"Queue Storage";
-	[self.navigationController pushViewController:newController animated:YES];
-	[newController release];
-}
-
 - (void)dealloc
 {
-	[tableStorage release];
+    RELEASE(tableStorage);
+    RELEASE(queueStorage);
+    RELEASE(blobStorage);
+    
     [super dealloc];
 }
 
@@ -85,21 +66,82 @@
     // Release any cached data, images, etc that aren't in use.
 }
 
+#pragma mark - View lifecycle
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+	
+	WAConfiguration *config = [WAConfiguration sharedConfiguration];	
+	if(config.connectionType != WAConnectDirect) {
+		UIBarButtonItem* item = [[UIBarButtonItem alloc] initWithTitle:@"Logout" style:UIBarButtonItemStyleBordered target:self action:@selector(logout:)];
+		self.navigationItem.leftBarButtonItem = item;
+		[item release];
+	}	
+	
+	UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStyleBordered target:nil action:nil];
+	[self.navigationItem setBackBarButtonItem:backButton];
+	[backButton release];
+}
+
+- (void)viewDidUnload
+{
+    self.tableStorage = nil;
+    self.blobStorage = nil;
+    self.queueStorage = nil;
+    
+    [super viewDidUnload];
+}
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+    // Return YES for supported orientations
+    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+
+#pragma - Action Methods
+
+- (IBAction)showTableStorage:(id)sender
+{
+	TableListController *newController = [[TableListController alloc] initWithNibName:@"TableListController" bundle:nil];
+    
+	newController.navigationItem.title = @"Table Storage";
+	[self.navigationController pushViewController:newController animated:YES];
+	[newController release];
+}
+
+- (IBAction)showBlobStorage:(id)sender
+{
+	TableListController *newController = [[TableListController alloc] initWithNibName:@"TableListController" bundle:nil];
+	
+	newController.navigationItem.title = @"Blob Storage";
+	[self.navigationController pushViewController:newController animated:YES];
+	[newController release];
+}
+
+- (IBAction)showQueueStorage:(id)sender
+{	
+	TableListController *newController = [[TableListController alloc] initWithNibName:@"TableListController" bundle:nil];
+	
+	newController.navigationItem.title = @"Queue Storage";
+	[self.navigationController pushViewController:newController animated:YES];
+	[newController release];
+}
+
+#pragma mark - Private Methods
+
 - (void)login:(id)sender
 {
-	WAConfiguration* config = [WAConfiguration sharedConfiguration];	
-	switch(config.connectionType)
-	{
-		case WAConnectDirect:
-		{
-			Azure_Storage_ClientAppDelegate* appDelegate = (Azure_Storage_ClientAppDelegate *)[[UIApplication sharedApplication] delegate];
+	WAConfiguration *config = [WAConfiguration sharedConfiguration];	
+	switch(config.connectionType) {
+		case WAConnectDirect: {
+			Azure_Storage_ClientAppDelegate *appDelegate = (Azure_Storage_ClientAppDelegate *)[[UIApplication sharedApplication] delegate];
 			appDelegate.authenticationCredential = [WAAuthenticationCredential credentialWithAzureServiceAccount:config.accountName 
 																									   accessKey:config.accessKey];
 			break;
 		}
 			
-		case WAConnectProxyMembership:
-		{
+		case WAConnectProxyMembership: {
 			RootViewController *newController = [[RootViewController alloc] initWithNibName:@"RootViewController" bundle:nil];
 			UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:newController];
 			[self presentModalViewController:navController animated:YES];
@@ -108,43 +150,38 @@
 			break;
 		}
 			
-		case WAConnectProxyACS:
-		{
+		case WAConnectProxyACS: {
 			// perform the ACS login procedure
-			WACloudAccessControlClient* client = [WACloudAccessControlClient accessControlClientForNamespace:config.ACSNamespace realm:config.ACSRealm];
+			WACloudAccessControlClient *client = [WACloudAccessControlClient accessControlClientForNamespace:config.ACSNamespace realm:config.ACSRealm];
 
-			[client showInViewController:self allowsClose:NO withCompletionHandler:^(BOOL authenticated) 
-			{
-				if(!authenticated)
-				{
+			[client showInViewController:self allowsClose:NO withCompletionHandler:^(BOOL authenticated) {
+				if (!authenticated) {
 					return;
 				}
 				
-				NSString* entity = [NSString stringWithFormat:@"/RegistrationService/validate?incrementalSeed=%d", arc4random()];
+				NSString *entity = [NSString stringWithFormat:@"/RegistrationService/validate?incrementalSeed=%d", arc4random()];
 
 				self.navigationItem.leftBarButtonItem.enabled = NO;
 				tableStorage.enabled = NO;
 				blobStorage.enabled = NO;
 				queueStorage.enabled = NO;
 				
-				UIActivityIndicatorView* activity = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
-				UIBarButtonItem* item = [[UIBarButtonItem alloc] initWithCustomView:activity];
+				UIActivityIndicatorView *activity = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+				UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithCustomView:activity];
 				self.navigationItem.rightBarButtonItem = item;
 				[activity startAnimating];
 				[activity release];
 				[item release];
 				
-				[ServiceCall getFromURL:[config proxyURL:entity] withStringCompletionHandler:^(NSString* value, NSError *error) 
-				{
+				[ServiceCall getFromURL:[config proxyURL:entity] withStringCompletionHandler:^(NSString* value, NSError *error) {
 					self.navigationItem.leftBarButtonItem.enabled = YES;
 					self.navigationItem.rightBarButtonItem = nil;
 					tableStorage.enabled = YES;
 					blobStorage.enabled = YES;
 					queueStorage.enabled = YES;
 
-					if(error)
-					{
-						UIAlertView* view = [[UIAlertView alloc] initWithTitle:@"Error Validating Account" 
+					if (error) {
+						UIAlertView *view = [[UIAlertView alloc] initWithTitle:@"Error Validating Account" 
 																	   message:[error localizedDescription] 
 																	  delegate:self
 															 cancelButtonTitle:@"OK" 
@@ -156,21 +193,15 @@
 
 					BOOL registered = ([value compare:@"true" options:NSCaseInsensitiveSearch] == NSOrderedSame);
 
-					if(registered)
-					{
+					if (registered) {
 						[Azure_Storage_ClientAppDelegate bindAccessToken];
-					}
-					else
-					{
-						WAConfiguration* config = [WAConfiguration sharedConfiguration];
+					} else {
+						WAConfiguration *config = [WAConfiguration sharedConfiguration];
 						UIViewController *newController;
 						
-						if(config.connectionType == WAConnectProxyACS)
-						{
+						if (config.connectionType == WAConnectProxyACS) {
 							newController = [[AcsRegisterViewController alloc] initWithNibName:@"AcsRegisterViewController" bundle:nil];
-						}
-						else
-						{
+						} else {
 							newController = [[RegisterViewController alloc] initWithNibName:@"RegisterViewController" bundle:nil];
 						}
 						
@@ -186,51 +217,20 @@
 
 - (void)logout:(id)sender
 {
-	WAConfiguration* config = [WAConfiguration sharedConfiguration];	
-	if(config.connectionType == WAConnectProxyACS)
-	{
+	WAConfiguration *config = [WAConfiguration sharedConfiguration];	
+	if(config.connectionType == WAConnectProxyACS) {
 		[WACloudAccessControlClient logOut];
 	}
 	
 	[self login:sender];
 }
 
+
+#pragma mark - UIAlertViewDelegate Methods
+
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
 	[self logout:self];
-}
-
-#pragma mark - View lifecycle
-
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-	
-	WAConfiguration* config = [WAConfiguration sharedConfiguration];	
-	if(config.connectionType != WAConnectDirect)
-	{
-		UIBarButtonItem* item = [[UIBarButtonItem alloc] initWithTitle:@"Logout" style:UIBarButtonItemStyleBordered target:self action:@selector(logout:)];
-		self.navigationItem.leftBarButtonItem = item;
-		[item release];
-	}	
-	
-	UIBarButtonItem* backButton = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStyleBordered target:nil action:nil];
-	[self.navigationItem setBackBarButtonItem:backButton];
-	[backButton release];
-}
-
-- (void)viewDidUnload
-{
-	[self setTableStorage:nil];
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    // Return YES for supported orientations
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
 @end

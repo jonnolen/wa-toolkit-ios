@@ -37,4 +37,10 @@
 #define FTLOGCALL /* */
 #endif
 
+#if DEBUG 
+#define RELEASE(_obj) [_obj release] 
+#else 
+#define RELEASE(_obj) [_obj release], _obj = nil 
+#endif
+
 #endif

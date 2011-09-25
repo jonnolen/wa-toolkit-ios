@@ -23,12 +23,12 @@
 
 @interface TableListController : UITableViewController <WACloudStorageClientDelegate> {
 @private
-	WACloudStorageClient		*storageClient;
-    NSUInteger                  fetchCount;
-	WABlobContainer				*selectedContainer;
-	WAQueue						*selectedQueue;
-    WAResultContinuation        *_resultContinuation;
-    NSMutableArray              *_localStorageList;
+	WACloudStorageClient *storageClient;
+    NSUInteger fetchCount;
+	WABlobContainer *selectedContainer;
+	WAQueue *selectedQueue;
+    WAResultContinuation *_resultContinuation;
+    NSMutableArray *_localStorageList;
 }
 
 @property (nonatomic, retain) WABlobContainer *selectedContainer;

@@ -16,9 +16,8 @@
 
 #import <UIKit/UIKit.h>
 
-
-@interface EntityTableViewCell : UITableViewCell 
-{
+@interface EntityTableViewCell : UITableViewCell {
+@private
 	NSMutableArray* _subviews;
 }
 
