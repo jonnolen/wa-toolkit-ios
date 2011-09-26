@@ -15,7 +15,7 @@
  */
 
 #import "WAXMLHelper.h"
-
+#import "WAAtomPubEntry.h"
 
 @implementation WAXMLHelper
 

@@ -22,14 +22,7 @@
 #import "UIViewController+ShowError.h"
 #import "WAConfiguration.h"
 
-#import "WAAuthenticationCredential.h"
-#import "WABlobContainer.h"
-#import "WABlob.h"
-#import "WAQueue.h"
-#import "WAResultContinuation.h"
-#import "WAQueue.h"
-
-#define MAX_ROWS 5
+#define MAX_ROWS 10
 
 #define ENTITY_TYPE_TABLE 1
 #define ENTITY_TYPE_QUEUE 2

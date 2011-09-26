@@ -18,6 +18,7 @@
 #import "WACloudAccessControlHomeRealm.h"
 #import "WALoginWebViewController.h"
 #import "Logging.h"
+#import "WACloudAccessToken.h"
 
 @implementation WALoginRealmPickerTableViewController
 

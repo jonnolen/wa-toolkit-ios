@@ -17,7 +17,6 @@
 
 #import <UIKit/UIKit.h>
 
-
 @interface AcsRegisterViewController : UIViewController
 
 @property (nonatomic, retain) IBOutlet UITextField *usernameField;

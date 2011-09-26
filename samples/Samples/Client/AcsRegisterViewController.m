@@ -19,8 +19,7 @@
 #import "ServiceCall.h"
 #import "Azure_Storage_ClientAppDelegate.h"
 
-#import "WACloudAccessControlClient.h"
-#import "WACloudAccessToken.h"
+#import "WAToolkit.h"
 
 @implementation AcsRegisterViewController
 

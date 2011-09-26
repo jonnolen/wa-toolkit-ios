@@ -15,11 +15,7 @@
  */
 
 #import <UIKit/UIKit.h>
-#import "WACloudStorageClient.h"
-
-@class WAResultContinuation;
-@class WAQueue;
-@class WABlobContainer;
+#import "WAToolkit.h"
 
 @interface TableListController : UITableViewController <WACloudStorageClientDelegate> {
 @private

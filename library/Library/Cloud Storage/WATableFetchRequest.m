@@ -19,6 +19,7 @@
 #import "WACloudURLRequest.h"
 #import "NSString+URLEncode.h"
 #import "WAResultContinuation.h"
+#import "Logging.h"
 
 @implementation WATableFetchRequest
 

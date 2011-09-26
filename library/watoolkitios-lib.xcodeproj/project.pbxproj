@@ -55,6 +55,7 @@
 		DE410E381427077A008D6626 /* WAResultContinuation.h in Headers */ = {isa = PBXBuildFile; fileRef = DE410E361427077A008D6626 /* WAResultContinuation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DE410E391427077A008D6626 /* WAResultContinuation.m in Sources */ = {isa = PBXBuildFile; fileRef = DE410E371427077A008D6626 /* WAResultContinuation.m */; };
 		DE4DD586142A4FE200D03B75 /* TableTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DE4DD585142A4FE200D03B75 /* TableTests.m */; };
+		DE5B03D8142FDA4A0092F6BA /* WAToolkit.h in Headers */ = {isa = PBXBuildFile; fileRef = DE5B03D6142FDA4A0092F6BA /* WAToolkit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DEF6901A140827D4006FF7E5 /* Base64Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = DEF69019140827D4006FF7E5 /* Base64Tests.m */; };
 		F216A688136F88BC00FAEAB4 /* WAQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = F216A684136F88BC00FAEAB4 /* WAQueue.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F216A689136F88BC00FAEAB4 /* WAQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = F216A685136F88BC00FAEAB4 /* WAQueue.m */; };
@@ -141,6 +142,7 @@
 		DE410E371427077A008D6626 /* WAResultContinuation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WAResultContinuation.m; sourceTree = "<group>"; };
 		DE4DD584142A4FE200D03B75 /* TableTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableTests.h; sourceTree = "<group>"; };
 		DE4DD585142A4FE200D03B75 /* TableTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TableTests.m; sourceTree = "<group>"; };
+		DE5B03D6142FDA4A0092F6BA /* WAToolkit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WAToolkit.h; sourceTree = "<group>"; };
 		DEF69018140827D4006FF7E5 /* Base64Tests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Base64Tests.h; sourceTree = "<group>"; };
 		DEF69019140827D4006FF7E5 /* Base64Tests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Base64Tests.m; sourceTree = "<group>"; };
 		F216A684136F88BC00FAEAB4 /* WAQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WAQueue.h; sourceTree = "<group>"; };
@@ -207,6 +209,7 @@
 				27E7D6611345103C00F142F7 /* Authentication */,
 				AA094586134A2BA600AF7EAB /* Cloud Storage */,
 				AA094574134A2ABB00AF7EAB /* Model */,
+				DE5B03D6142FDA4A0092F6BA /* WAToolkit.h */,
 			);
 			path = Library;
 			sourceTree = "<group>";
@@ -438,6 +441,7 @@
 				AA715AAC138F4E8F00AED192 /* WALoginWebViewController.h in Headers */,
 				AA5E1B8E13DE3EA300171D07 /* Logging.h in Headers */,
 				DE410E381427077A008D6626 /* WAResultContinuation.h in Headers */,
+				DE5B03D8142FDA4A0092F6BA /* WAToolkit.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

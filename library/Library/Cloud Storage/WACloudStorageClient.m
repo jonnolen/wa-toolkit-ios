@@ -15,11 +15,11 @@
  */
 
 #import "WACloudStorageClient.h"
+#import <CommonCrypto/CommonHMAC.h>
 #import "WACloudURLRequest.h"
 #import "WAContainerParser.h"
 #import "WABlobParser.h"
 #import "WABlob.h"
-#import "CommonCrypto/CommonHMAC.h"
 #import "WAAuthenticationCredential+Private.h"
 #import "NSString+URLEncode.h"
 #import "WAXMLHelper.h"
@@ -28,6 +28,14 @@
 #import "WAQueueMessageParser.h"
 #import "WASimpleBase64.h"
 #import "WAResultContinuation.h"
+#import "WAAuthenticationCredential.h"
+#import "WABlob.h"
+#import "WABlobContainer.h"
+#import "WATableEntity.h"
+#import "WATableFetchRequest.h"
+#import "WAQueueMessage.h"
+#import "Logging.h"
+#import "WAAtomPubEntry.h"
 
 void ignoreSSLErrorFor(NSString* host);
 
@@ -124,7 +132,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
                  return;
              }
              
-             NSArray* queues = [WAQueueParser loadQueuesForProxy:doc];
+             NSArray* queues = [WAQueueParser loadQueues:doc];
              
              if(block)
              {
@@ -307,7 +315,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
 {
     queueName = [queueName lowercaseString];
     NSString* endpoint = [NSString stringWithFormat:@"/%@", [queueName URLEncode]];
-    WACloudURLRequest* request = [_credential authenticatedRequestWithEndpoint:endpoint forStorageType:@"queue" httpMethod:@"DELETE", nil];
+    WACloudURLRequest* request = [_credential authenticatedRequestWithEndpoint:endpoint forStorageType:@"queue" httpMethod:@"DELETE" contentData:[NSData data] contentType:nil, nil];
     
 	[request fetchXMLWithCompletionHandler:^(WACloudURLRequest* request, xmlDocPtr doc, NSError* error)
      {

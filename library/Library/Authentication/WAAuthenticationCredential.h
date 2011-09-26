@@ -27,8 +27,9 @@
 /*! The AuthenticationCredential class is used to create an authentication object that can be passed to the CloudStorageClient.  This class can be initialized using a Windows Azure account name and key, or with a proxy server URL, username, and password. */
 @interface WAAuthenticationCredential : NSObject <NSXMLParserDelegate>
 {
+@private
 	BOOL					_usesProxy;
-	BOOL					_loggedIn;
+	//BOOL					_loggedIn;
 	NSError					*_authError;
 	NSURL					*_proxyURL;
 	NSString				*_token;

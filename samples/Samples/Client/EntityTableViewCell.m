@@ -17,9 +17,7 @@
 #import "EntityTableViewCell.h"
 #import <stdarg.h>
 
-#import "WATableEntity.h"
-#import "WAQueueMessage.h"
-
+#import "WAToolkit.h"
 
 @interface KeyPair : NSObject {
 @private

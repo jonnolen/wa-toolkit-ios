@@ -18,10 +18,6 @@
 #import "Azure_Storage_ClientAppDelegate.h"
 #import "UIViewController+ShowError.h"
 
-#import "WABlobContainer.h"
-#import "WAQueue.h"
-
-
 @implementation CreateTableController
 
 @synthesize newItemName;

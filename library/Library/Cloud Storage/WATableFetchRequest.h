@@ -20,6 +20,7 @@
 
 @interface WATableFetchRequest : NSObject 
 {
+@private
     NSString *_tableName;
     NSString *_partitionKey;
     NSString *_rowKey;

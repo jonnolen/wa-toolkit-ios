@@ -14,15 +14,16 @@
  limitations under the License.
  */
 
-#import <stdarg.h>
 #import "WAAuthenticationCredential.h"
-#import "WAAuthenticationCredential+Private.h"
-#import "WACloudAccessToken.h"
+#import <stdarg.h>
 #import <CommonCrypto/CommonDigest.h>
 #import <CommonCrypto/CommonHMAC.h>	
+#import "WAAuthenticationCredential+Private.h"
+#import "WACloudAccessToken.h"
 #import "WASimpleBase64.h"
 #import "WACloudURLRequest.h"
 #import "WAXMLHelper.h"
+#import "Logging.h"
 
 static NSString* PROXY_LOGIN_REQUEST_STRING = @"<Login xmlns:i=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns=\"http://schemas.datacontract.org/2004/07/Microsoft.Samples.WindowsPhoneCloud.StorageClient.Credentials\"><Password>{password}</Password><UserName>{username}</UserName></Login>";
 

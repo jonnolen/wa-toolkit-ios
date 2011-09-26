@@ -15,11 +15,12 @@
  */
 
 #import <UIKit/UIKit.h>
-#import "WACloudAccessToken.h"
 
 @class WACloudAccessControlHomeRealm;
+@class WACloudAccessToken;
 
 @interface WALoginWebViewController : UIViewController <UIWebViewDelegate> {
+@private   
     UIWebView* _webView;
     NSMutableData* _data;
     NSURL* _url;

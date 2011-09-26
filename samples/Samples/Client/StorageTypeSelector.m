@@ -23,9 +23,7 @@
 #import "AcsRegisterViewController.h"
 #import "Azure_Storage_ClientAppDelegate.h"
 
-#import "WACloudAccessControlClient.h"
-#import "WACloudAccessToken.h"
-#import "WAAuthenticationCredential.h"
+#import "WAToolkit.h"
 
 @interface StorageTypeSelector()
 

@@ -15,10 +15,7 @@
  */
 
 #import <UIKit/UIKit.h>
-#import "WACloudStorageClient.h"
-
-@class WABlobContainer;
-@class WAQueue;
+#import "WAToolkit.h"
 
 @interface CreateTableController : UIViewController <WACloudStorageClientDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIActionSheetDelegate>
 {
