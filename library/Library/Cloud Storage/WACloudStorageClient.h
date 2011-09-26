@@ -44,9 +44,9 @@
 /*! Returns a list of blob containers. */
 - (void)fetchBlobContainersWithCompletionHandler:(void (^)(NSArray*, NSError *))block;
 /*! Returns a list of blob containers. */
-- (void)fetchBlobContainersSegmented:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult;
+- (void)fetchBlobContainersWithContinuation:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult;
 /*! Returns a list of blob containers. */
-- (void)fetchBlobContainersSegmented:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult withCompletionHandler:(void (^)(NSArray*, WAResultContinuation *, NSError*))block;
+- (void)fetchBlobContainersWithContinuation:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult usingCompletionHandler:(void (^)(NSArray*, WAResultContinuation *, NSError*))block;
 /*! Returnva a blob container. */
 - (void)fetchBlobContainerNamed:(NSString *)containerName;
 /*! Returnva a blob container. */
@@ -68,9 +68,9 @@
 /*! Returns an array of blobs from the specified blob container. */
 - (void)fetchBlobs:(WABlobContainer *)container withCompletionHandler:(void (^)(NSArray *, NSError *))block;
 /*! Returns an array of blobs from the specified blob container. */
-- (void)fetchBlobsSegmented:(WABlobContainer *)container resultContinuation:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult;
+- (void)fetchBlobsWithContinuation:(WABlobContainer *)container resultContinuation:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult;
 /*! Returns an array of blobs from the specified blob container. */
-- (void)fetchBlobsSegmented:(WABlobContainer *)container resultContinuation:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult withCompletionHandler:(void (^)(NSArray *, WAResultContinuation *, NSError *))block;
+- (void)fetchBlobsWithContinuation:(WABlobContainer *)container resultContinuation:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult usingCompletionHandler:(void (^)(NSArray *, WAResultContinuation *, NSError *))block;
 /*! Returns the binary data (NSData) object for the specified blob. */
 - (void)fetchBlobData:(WABlob *)blob;
 /*! Returns the binary data (NSData) object for the specified blob. */
@@ -89,9 +89,9 @@
 /*! Returns a list of queues. */
 - (void)fetchQueuesWithCompletionHandler:(void (^)(NSArray*, NSError *))block;
 /*! Returns a list of queues. */
-- (void)fetchQueuesSegmented:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult;
+- (void)fetchQueuesWithContinuation:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult;
 /*! Returns a list of queues. */
-- (void)fetchQueuesSegmented:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult withCompletionHandler:(void (^)(NSArray*, WAResultContinuation *, NSError *))block;
+- (void)fetchQueuesWithContinuation:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult usingCompletionHandler:(void (^)(NSArray*, WAResultContinuation *, NSError *))block;
 /*! Adds a queue, given a specified queue name. */
 - (void)addQueueNamed:(NSString *)queueName;
 /*! Adds a queue, given a specified queue name.  Returns error if the queue already exists, or where the name is an invalid format.*/
@@ -134,9 +134,9 @@
 /*! Returns a list of tables. */
 - (void)fetchTablesWithCompletionHandler:(void (^)(NSArray *, NSError *))block;
 /*! Returns a list of tables using a continuation. */
-- (void)fetchTablesSegmented:(WAResultContinuation *)resultContinuation;
+- (void)fetchTablesWithContinuation:(WAResultContinuation *)resultContinuation;
 /*! Returns a list of tables using a continuation. */
-- (void)fetchTablesSegmented:(WAResultContinuation *)resultContinuation withCompletionHandler:(void (^)(NSArray *, WAResultContinuation *, NSError *))block;
+- (void)fetchTablesWithContinuation:(WAResultContinuation *)resultContinuation usingCompletionHandler:(void (^)(NSArray *, WAResultContinuation *, NSError *))block;
 /*! Creates a new table with a specified name. */
 - (void)createTableNamed:(NSString *)newTableName;
 /*! Creates a new table with a specified name. */
@@ -150,9 +150,9 @@
 /*! Returns the entities for a given table. */
 - (void)fetchEntities:(WATableFetchRequest*)fetchRequest withCompletionHandler:(void (^)(NSArray *, NSError *))block;
 /*! Returns the entities for a given table with a continuation result to fetch the next set of entities. */
-- (void)fetchEntitiesSegmented:(WATableFetchRequest*)fetchRequest;
+- (void)fetchEntitiesWithContinuation:(WATableFetchRequest*)fetchRequest;
 /*! Returns the entities for a given table with a continuation result to fetch the next set of entities. */
-- (void)fetchEntitiesSegmented:(WATableFetchRequest*)fetchRequest withCompletionHandler:(void (^)(NSArray *, WAResultContinuation *, NSError *))block;
+- (void)fetchEntitiesWithContinuation:(WATableFetchRequest*)fetchRequest usingCompletionHandler:(void (^)(NSArray *, WAResultContinuation *, NSError *))block;
 /*! Inserts a new entity into an existing table. */
 - (BOOL)insertEntity:(WATableEntity *)newEntity;
 /*! Inserts a new entity into an existing table. */

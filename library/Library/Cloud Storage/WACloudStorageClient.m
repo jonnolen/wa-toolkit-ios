@@ -151,12 +151,12 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
     
 }
 
-- (void)fetchQueuesSegmented:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult
+- (void)fetchQueuesWithContinuation:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult
 {
-    [self fetchQueuesSegmented:resultContinuation maxResult:maxResult withCompletionHandler:nil];
+    [self fetchQueuesWithContinuation:resultContinuation maxResult:maxResult usingCompletionHandler:nil];
 }
 
-- (void)fetchQueuesSegmented:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult withCompletionHandler:(void (^)(NSArray *, WAResultContinuation *, NSError *))block
+- (void)fetchQueuesWithContinuation:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult usingCompletionHandler:(void (^)(NSArray *, WAResultContinuation *, NSError *))block
 {
     WACloudURLRequest* request;
     if(_credential.usesProxy)
@@ -677,12 +677,12 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
      }];
 }
 
-- (void)fetchBlobContainersSegmented:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult
+- (void)fetchBlobContainersWithContinuation:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult
 {
-    [self fetchBlobContainersSegmented:resultContinuation maxResult:maxResult withCompletionHandler:nil];
+    [self fetchBlobContainersWithContinuation:resultContinuation maxResult:maxResult usingCompletionHandler:nil];
 }
 
-- (void)fetchBlobContainersSegmented:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult withCompletionHandler:(void (^)(NSArray*, WAResultContinuation *, NSError*))block
+- (void)fetchBlobContainersWithContinuation:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult usingCompletionHandler:(void (^)(NSArray*, WAResultContinuation *, NSError*))block
 {
     WACloudURLRequest *request = nil;
     NSArray*(^containerBlock)(xmlDocPtr) = nil;
@@ -996,12 +996,12 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
 }
 
 
-- (void)fetchBlobsSegmented:(WABlobContainer *)container resultContinuation:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult
+- (void)fetchBlobsWithContinuation:(WABlobContainer *)container resultContinuation:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult
 {
-    [self fetchBlobsSegmented:container resultContinuation:resultContinuation maxResult:maxResult withCompletionHandler:nil];
+    [self fetchBlobsWithContinuation:container resultContinuation:resultContinuation maxResult:maxResult usingCompletionHandler:nil];
 }
 
-- (void)fetchBlobsSegmented:(WABlobContainer *)container resultContinuation:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult withCompletionHandler:(void (^)(NSArray *, WAResultContinuation *, NSError *))block
+- (void)fetchBlobsWithContinuation:(WABlobContainer *)container resultContinuation:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult usingCompletionHandler:(void (^)(NSArray *, WAResultContinuation *, NSError *))block
 {
     WACloudURLRequest* request = nil;
     NSArray*(^blobBlock)(xmlDocPtr, WABlobContainer *) = nil;
@@ -1386,12 +1386,12 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
      }];
 }
 
-- (void)fetchTablesSegmented:(WAResultContinuation *)resultContinuation
+- (void)fetchTablesWithContinuation:(WAResultContinuation *)resultContinuation
 {
-    [self fetchTablesSegmented:resultContinuation withCompletionHandler:nil];
+    [self fetchTablesWithContinuation:resultContinuation usingCompletionHandler:nil];
 }
 
-- (void)fetchTablesSegmented:(WAResultContinuation *)resultContinuation withCompletionHandler:(void (^)(NSArray *, WAResultContinuation *, NSError *))block
+- (void)fetchTablesWithContinuation:(WAResultContinuation *)resultContinuation usingCompletionHandler:(void (^)(NSArray *, WAResultContinuation *, NSError *))block
 {
     NSMutableString *endpoint = [NSMutableString stringWithString:@"Tables"];
     if (resultContinuation.nextTableKey != nil) {
@@ -1586,12 +1586,12 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
      }];
 }
 
-- (void)fetchEntitiesSegmented:(WATableFetchRequest*)fetchRequest
+- (void)fetchEntitiesWithContinuation:(WATableFetchRequest*)fetchRequest
 {
-    [self fetchEntitiesSegmented:fetchRequest withCompletionHandler:nil];
+    [self fetchEntitiesWithContinuation:fetchRequest usingCompletionHandler:nil];
 }
 
-- (void)fetchEntitiesSegmented:(WATableFetchRequest*)fetchRequest withCompletionHandler:(void (^)(NSArray *, WAResultContinuation *, NSError *))block
+- (void)fetchEntitiesWithContinuation:(WATableFetchRequest*)fetchRequest usingCompletionHandler:(void (^)(NSArray *, WAResultContinuation *, NSError *))block
 {
     NSString* endpoint = [fetchRequest endpoint];
     WACloudURLRequest* request = [_credential authenticatedRequestWithEndpoint:endpoint forStorageType:@"table" httpMethod:@"GET", nil];

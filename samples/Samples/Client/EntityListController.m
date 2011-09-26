@@ -143,7 +143,7 @@
     WATableFetchRequest *fetchRequest = [WATableFetchRequest fetchRequestForTable:self.navigationItem.title];
     fetchRequest.resultContinuation = self.resultContinuation;
     fetchRequest.topRows = TOP_ROWS;
-    [storageClient fetchEntitiesSegmented:fetchRequest];
+    [storageClient fetchEntitiesWithContinuation:fetchRequest];
 }
 
 - (void)editEntity:(NSUInteger)index

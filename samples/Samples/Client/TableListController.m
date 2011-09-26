@@ -210,20 +210,20 @@ typedef enum {
 {
     switch([self storageType]) {
 		case TableStorage: {
-            [storageClient fetchTablesSegmented:self.resultContinuation];
+            [storageClient fetchTablesWithContinuation:self.resultContinuation];
             break;
         }
         case QueueStorage: {
-            [storageClient fetchQueuesSegmented:self.resultContinuation maxResult:MAX_ROWS];
+            [storageClient fetchQueuesWithContinuation:self.resultContinuation maxResult:MAX_ROWS];
             break;
         }
         case BlobStorage: {
-            [storageClient fetchBlobContainersSegmented:self.resultContinuation maxResult:MAX_ROWS];
+            [storageClient fetchBlobContainersWithContinuation:self.resultContinuation maxResult:MAX_ROWS];
             break;
         }
         default: {
             WABlobContainer *container = [[WABlobContainer alloc] initContainerWithName:self.navigationItem.title];
-            [storageClient fetchBlobsSegmented:container resultContinuation:self.resultContinuation maxResult:MAX_ROWS];
+            [storageClient fetchBlobsWithContinuation:container resultContinuation:self.resultContinuation maxResult:MAX_ROWS];
             [container release];
             break;
         }
