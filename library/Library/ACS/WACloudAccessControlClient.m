@@ -17,6 +17,7 @@
 #import "WACloudAccessControlClient.h"
 #import "WALoginProgressViewController.h"
 #import "NSString+URLEncode.h"
+#import "WACloudAccessToken.h"
 
 static WACloudAccessToken* _token = nil;
 

@@ -14,18 +14,16 @@
  limitations under the License.
  */
 
-#import <UIKit/UIKit.h>
+#import "WAQueue.h"
+#import "WAQueueMessage.h"
+#import "WABlob.h"
+#import "WABlobContainer.h"
+#import "WATableEntity.h"
+#import "WAResultContinuation.h"
 
-@class WABlob;
-@class WACloudStorageClient;
+#import "WACloudStorageClient.h"
+#import "WATableFetchRequest.h"
 
-@interface BlobViewerController : UIViewController
-{
-@private
-	UIImageView *blobImageView;
-	WACloudStorageClient *storageClient;
-	WABlob *blob;
-}
-@property (nonatomic, retain) IBOutlet UIImageView *blobImageView;
-@property (nonatomic, retain) WABlob *blob;
-@end
+#import "WAAuthenticationCredential.h"
+#import "WACloudAccessControlClient.h"
+#import "WACloudAccessToken.h"

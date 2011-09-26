@@ -16,7 +16,6 @@
 
 #import <Foundation/Foundation.h>
 #import <libxml/tree.h>
-#import "Logging.h"
 
 #define USE_QUEUE	 1  // set to 1 to perform requests in order rather than all at once
 
@@ -31,6 +30,7 @@ typedef void (^WAFetchDataHandler)(WACloudURLRequest* request, NSData* data, NSE
 typedef void (^WANoResponseHandler)(WACloudURLRequest* request, NSError* err);
 
 @interface WACloudURLRequest : NSMutableURLRequest {
+@private
     WANoResponseHandler _noResponseBlock;
     WAFetchXMLHandler _xmlBlock;
     WAFetchDataHandler _dataBlock;

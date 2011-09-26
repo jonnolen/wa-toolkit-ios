@@ -15,10 +15,7 @@
  */
 
 #import <UIKit/UIKit.h>
-#import "WACloudStorageClient.h"
-
-@class WAQueueMessage;
-@class WATableEntity;
+#import "WAToolkit.h"
 
 @interface ModifyEntityController : UIViewController <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate, WACloudStorageClientDelegate>{
 @private

@@ -18,9 +18,7 @@
 #import "WAConfiguration.h"
 #import "StorageTypeSelector.h"
 
-#import "WACloudAccessControlClient.h"
-#import "WACloudStorageClient.h"
-#import "WAAuthenticationCredential.h"
+#import "WAToolkit.h"
 
 @implementation Azure_Storage_ClientAppDelegate
 

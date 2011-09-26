@@ -17,7 +17,7 @@
 #import "BlobViewerController.h"
 #import "Azure_Storage_ClientAppDelegate.h"
 
-#import "WABlob.h"
+#import "WAToolkit.h"
 
 @implementation BlobViewerController
 

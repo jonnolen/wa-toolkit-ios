@@ -18,7 +18,7 @@
 #import <libxml/xmlwriter.h>
 #import "WAConfiguration.h"
 
-#import "WACloudAccessControlClient.h"
+#import "WAToolkit.h"
 
 @interface ServiceRequest : NSObject {
 @private

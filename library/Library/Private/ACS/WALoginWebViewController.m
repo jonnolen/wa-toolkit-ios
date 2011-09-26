@@ -19,6 +19,7 @@
 #import "WACloudAccessControlClient.h"
 #import "NSString+URLEncode.h"
 #import "Logging.h"
+#import "WACloudAccessToken.h"
 
 const NSString* ScriptNotify = @"<script type=\"text/javascript\">window.external = { 'Notify': function(s) { document.location = 'acs://settoken?token=' + s; }, 'notify': function(s) { document.location = 'acs://settoken?token=' + s; } };</script>";
 

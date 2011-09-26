@@ -18,9 +18,6 @@
 #import "Azure_Storage_ClientAppDelegate.h"
 #import "UIViewController+ShowError.h"
 
-#import "WATableEntity.h"
-#import "WAQueueMessage.h"
-
 #define MODE_ADD						1
 #define MODE_UPDATE						2
 #define MODE_DELETE						3

@@ -16,11 +16,13 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-#import "WACloudAccessToken.h"
+
+@class WACloudAccessToken;
 
 /*! The cloud access client is used to authenticate against the Windows Azure Access Control Service (ACS). */
 @interface WACloudAccessControlClient : NSObject 
 {
+@private
     NSURL* _serviceURL;
     NSString* _realm;
     NSString* _serviceNamespace;

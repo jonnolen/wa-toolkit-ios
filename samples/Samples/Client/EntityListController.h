@@ -15,9 +15,7 @@
  */
 
 #import <UIKit/UIKit.h>
-#import "WACloudStorageClient.h"
-
-@class WAResultContinuation;
+#import "WAToolkit.h"
 
 @interface EntityListController : UITableViewController <WACloudStorageClientDelegate> {
 @private

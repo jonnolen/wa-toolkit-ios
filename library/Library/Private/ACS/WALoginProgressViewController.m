@@ -20,6 +20,8 @@
 #import "WALoginWebViewController.h"
 #import "WACloudAccessControlHomeRealm.h"
 #import "WACloudURLRequest.h"
+#import "WACloudAccessToken.h"
+#import "Logging.h"
 
 @interface WACloudAccessControlHomeRealm (Private)
 

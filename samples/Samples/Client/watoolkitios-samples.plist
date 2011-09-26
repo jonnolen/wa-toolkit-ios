@@ -53,9 +53,9 @@
 		<key>Direct</key>
 		<dict>
 			<key>AccountName</key>
-			<string></string>
+			<string>iosteststore</string>
 			<key>DirectAccessKey</key>
-			<string></string>
+			<string>1EZqKKhdTtBDZgGMrUrNi77DrpcleBvSz93gPDvC+G7+Tr9xfyWKJhJr/Xt9MX0yp9fYzJ9gnQ+WNNtciTcJYA==</string>
 		</dict>
 	</dict>
 	<key>ToolkitConfig (template)</key>

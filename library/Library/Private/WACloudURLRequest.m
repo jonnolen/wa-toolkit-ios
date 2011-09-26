@@ -16,6 +16,7 @@
 
 #import "WACloudURLRequest.h"
 #import "WAXMLHelper.h"
+#import "Logging.h"
 #import <libxml/parser.h>
 
 NSString * const WANextPartitionKeyHeader = @"X-Ms-Continuation-Nextpartitionkey";

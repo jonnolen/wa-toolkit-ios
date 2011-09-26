@@ -20,9 +20,6 @@
 #import "EntityTableViewCell.h"
 #import "UIViewController+ShowError.h"
 
-#import "WAQueueMessage.h"
-#import "WAResultContinuation.h"
-
 #define ENTITY_TYPE_TABLE				1
 #define ENTITY_TYPE_QUEUE				2
 #define QUEUE_MESSAGE_NUMBER_FIELDS		6

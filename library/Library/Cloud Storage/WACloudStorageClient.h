@@ -15,14 +15,14 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "WAAuthenticationCredential.h"
-#import "WABlob.h"
-#import "WABlobContainer.h"
-#import "WATableEntity.h"
-#import "WATableFetchRequest.h"
-#import "WAQueueMessage.h"
 
-
+@class WAAuthenticationCredential;
+@class WABlob;
+@class WABlobContainer;
+@class WATableEntity;
+@class WATable;
+@class WAQueueMessage;
+@class WATableFetchRequest;
 @class WAResultContinuation;
 
 @protocol WACloudStorageClientDelegate;
@@ -30,6 +30,7 @@
 /*! The cloud storage client is used to invoke operations on, and return data from, Windows Azure storage. */
 @interface WACloudStorageClient : NSObject
 {
+@private
 	WAAuthenticationCredential* _credential;
 	id<WACloudStorageClientDelegate> _delegate;
 }

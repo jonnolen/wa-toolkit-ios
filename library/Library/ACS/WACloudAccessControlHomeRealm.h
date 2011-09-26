@@ -19,6 +19,7 @@
 
 @interface WACloudAccessControlHomeRealm : NSObject 
 {
+@private
     NSDictionary* _pairs;
     NSArray* _emailSuffixes;
 }
