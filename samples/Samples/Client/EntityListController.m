@@ -24,7 +24,7 @@
 #define ENTITY_TYPE_QUEUE				2
 #define QUEUE_MESSAGE_NUMBER_FIELDS		6
 
-#define TOP_ROWS 10
+#define TOP_ROWS 20
 
 @interface EntityListController()
 

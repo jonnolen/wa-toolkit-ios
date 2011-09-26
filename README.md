@@ -48,16 +48,7 @@ Congratulations, you are now done adding Windows Azure iOS toolkit into your Xco
 
 You now only need to add includes for the Windows Azure iOS toolkit libraries at the appropriate places in your application. The relevant includes are:
 
-    #import "WAAuthenticationCredential.h"
-    #import "WABlob.h"
-    #import "WABlobContainer.h"
-    #import "WACloudAccessControlClient.h"
-    #import "WACloudAccessToken.h"
-    #import "WACloudStorageClient.h"
-    #import "WAQueue.h"
-    #import "WAQueueMessage.h"
-    #import "WATableEntity.h"
-    #import "WATableFetchRequest.h"
+    #import "WAToolkit.h"
     
 Please see the samples directory for details on utilizing the library.
 

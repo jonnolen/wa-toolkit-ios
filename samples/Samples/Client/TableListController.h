@@ -25,6 +25,7 @@
 	WAQueue *selectedQueue;
     WAResultContinuation *_resultContinuation;
     NSMutableArray *_localStorageList;
+    BOOL _fetchedResults;
 }
 
 @property (nonatomic, retain) WABlobContainer *selectedContainer;

@@ -22,7 +22,7 @@
 #import "UIViewController+ShowError.h"
 #import "WAConfiguration.h"
 
-#define MAX_ROWS 10
+#define MAX_ROWS 20
 
 #define ENTITY_TYPE_TABLE 1
 #define ENTITY_TYPE_QUEUE 2
@@ -53,7 +53,7 @@ typedef enum {
 {
     self = [super initWithStyle:style];
     if (self) {
-        
+        _fetchedResults = NO;
     }
     return self;
 }
@@ -90,7 +90,7 @@ typedef enum {
 	{
 		self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(modifyStorage:)] autorelease];
 	}
-    _localStorageList = [[NSMutableArray alloc] initWithCapacity:20];
+    _localStorageList = [[NSMutableArray alloc] initWithCapacity:MAX_ROWS];
 }
 
 - (void)viewDidUnload
@@ -215,7 +215,6 @@ typedef enum {
         }
         case QueueStorage: {
             [storageClient fetchQueuesSegmented:self.resultContinuation maxResult:MAX_ROWS];
-            //[storageClient fetchQueues];
             break;
         }
         case BlobStorage: {
@@ -284,7 +283,10 @@ typedef enum {
     }
 
     if (indexPath.row == self.localStorageList.count) {
-        if (fetchCount == MAX_ROWS) {
+        if ((fetchCount == MAX_ROWS && 
+            self.resultContinuation != nil) &&
+            (self.resultContinuation.nextMarker != nil ||
+             self.resultContinuation.nextTableKey != nil)) {
             UITableViewCell *loadMoreCell = [tableView dequeueReusableCellWithIdentifier:@"LoadMore"];
             if (loadMoreCell == nil) {
                 loadMoreCell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"LoadMore"] autorelease];
@@ -432,6 +434,11 @@ typedef enum {
 
 - (void)storageClient:(WACloudStorageClient *)client didFetchTables:(NSArray *)tables withResultContinuation:(WAResultContinuation *)resultContinuation
 {
+    if (resultContinuation.nextTableKey == nil && _fetchedResults == NO) {
+        [self.localStorageList removeAllObjects];
+    } else {
+        _fetchedResults = YES;
+    }
     fetchCount = [tables count];
     self.resultContinuation = resultContinuation;
     [self.localStorageList addObjectsFromArray:tables];
@@ -462,13 +469,5 @@ typedef enum {
 	[self.tableView reloadData];
 }
 
-/*
-- (void)storageClient:(WACloudStorageClient *)client didFetchQueues:(NSArray *)queues 
-{
-    fetchCount = [queues count];
-    //self.resultContinuation = resultContinuation;
-    [self.localStorageList addObjectsFromArray:queues];
-	[self.tableView reloadData];
-}
-*/
+
 @end

@@ -18,14 +18,6 @@
 #import "WABlobContainer.h"
 #import "WAXMLHelper.h"
 
-/*
-@interface WABlobContainer (Private)
-
-- (id)initContainerWithName:(NSString *)name URL:(NSString *)URL metadata:(NSString *)metadata;
-
-@end
-*/
-
 @implementation WAContainerParser
 
 + (NSString *)retrieveMarker:(xmlDocPtr)doc
@@ -42,7 +34,8 @@
          xmlChar *value = xmlNodeGetContent(node);
          NSString *str = [[NSString alloc] initWithUTF8String:(const char*)value];
          xmlFree(value);
-         if (str != nil) {
+         int length = [str length];
+         if (str != nil && length != 0) {
              marker = [NSMutableString stringWithString:str];
          }
          [str release];
