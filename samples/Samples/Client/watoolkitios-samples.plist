@@ -37,25 +37,25 @@
 		<key>CloudReadyACS</key>
 		<dict>
 			<key>ACSNamespace</key>
-			<string>{the namespace of the ACS service you are using}</string>
+			<string></string>
 			<key>ACSRealm</key>
 			<string>uri:wazmobiletoolkit</string>
 			<key>ProxyService</key>
-			<string>{the service name where the ACS Cloud Ready package is deployed}</string>
+			<string></string>
 		</dict>
 		<key>CloudReadySimple</key>
 		<dict>
 			<key>ProxyService</key>
-			<string>{the service name where the Membership Cloud Ready package is deployed}</string>
+			<string></string>
 		</dict>
 		<key>ConnectionType</key>
-		<string>Direct</string>
+		<string>CloudReadySimple</string>
 		<key>Direct</key>
 		<dict>
 			<key>AccountName</key>
-			<string>iosteststore</string>
+			<string></string>
 			<key>DirectAccessKey</key>
-			<string>1EZqKKhdTtBDZgGMrUrNi77DrpcleBvSz93gPDvC+G7+Tr9xfyWKJhJr/Xt9MX0yp9fYzJ9gnQ+WNNtciTcJYA==</string>
+			<string></string>
 		</dict>
 	</dict>
 	<key>ToolkitConfig (template)</key>
