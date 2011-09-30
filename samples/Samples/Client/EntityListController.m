@@ -24,7 +24,7 @@
 #define ENTITY_TYPE_QUEUE				2
 #define QUEUE_MESSAGE_NUMBER_FIELDS		6
 
-#define TOP_ROWS 20
+#define TOP_ROWS 6
 
 @interface EntityListController()
 
@@ -167,7 +167,9 @@
 	NSUInteger count = fetchCount;
     NSUInteger localCount = self.localEntityList.count;
     
-    if (count >= TOP_ROWS) {
+    if (count >= TOP_ROWS &&
+        self.resultContinuation.nextPartitionKey != nil &&
+        self.resultContinuation.nextRowKey != nil) {
         localCount += 1;
     }
     
@@ -198,7 +200,7 @@
         }
     }
 	
-    if (indexPath.row == self.localEntityList.count) {
+    if (indexPath.row == self.localEntityList.count) {   
         if (fetchCount == TOP_ROWS) {
             UITableViewCell *loadMoreCell = [tableView dequeueReusableCellWithIdentifier:@"LoadMore"];
             if (loadMoreCell == nil) {
@@ -310,14 +312,14 @@
 	if ([entities count] == 0) {
 		self.navigationItem.rightBarButtonItem = nil;
 	}
-    [self.localEntityList addObjectsFromArray:/*self.entityList*/entities];    
+    [self.localEntityList addObjectsFromArray:entities];    
 	[self.tableView reloadData];
 }
 
 - (void)storageClient:(WACloudStorageClient *)client didPeekQueueMessages:(NSArray *)queueMessages
 {
     fetchCount = [queueMessages count];
-    [self.localEntityList addObjectsFromArray:/*self.entityList*/queueMessages];
+    [self.localEntityList addObjectsFromArray:queueMessages];
 	[self.tableView reloadData];
 }
 
