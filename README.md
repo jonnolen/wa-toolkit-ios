@@ -1,4 +1,4 @@
-Windows Azure Toolkit for iOS (Library) - v1.2.1
+Windows Azure Toolkit for iOS (Library)
 ===
 
 The Windows Azure Toolkit for iOS is a toolkit for developers to make it easy to access Windows Azure storage services from native iOS applications.  The toolkit can be used for both iPhone and iPad applications, developed using Objective-C and XCode.  
@@ -31,7 +31,7 @@ Xcode 4.x (Git Submodule)
 1. Drag the **watoolkitios-ib.xcodeproj** file from the Finder and drop it on your "(Your Project's Name)".xcodeproj.
 1. Click on your project's name in the sidebar on the left to open the project settings view in the right pane of the window.
 1. In the middle pane you will see **PROJECT** and **TARGETS** headers for your project. Click on your project name, then select **Build Settings** along the top to open the Build Settings editor for your entire project.
-1. Find the **Header Search Paths** setting. Double click and add a new entry. Add a search path to the `$(BUILT_PRODUCTS_DIR)` directory and check the `Recursive` checkbox.
+1. Find the **Header Search Paths** setting. Double click and add a new entry. Add a search path to the `$(BUILT_PRODUCTS_DIR)` directory and check the `Recursive` checkbox. Also add `/usr/include/libxml2` to the search path and check `Recursive`.
 	* **NOTE**: This is only necessary if you are **NOT** using DerivedData. 
 	* Find the **Library Search Paths** setting. Double click and add a new entry. Add a search path to the `"$(BUILT_PRODUCTS_DIR)/Build/$(BUILD_STYLE)-$(PLATFORM_NAME)"` directory you have added to your project.  
 1. Find the **Other Linker Flags** entry and double click it. Use the **+** button to add a new entry and enter `-ObjC -all_load`. Dismiss the editor with the **Done** button.

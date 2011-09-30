@@ -22,7 +22,7 @@
 #import "UIViewController+ShowError.h"
 #import "WAConfiguration.h"
 
-#define MAX_ROWS 20
+#define MAX_ROWS 7
 
 #define ENTITY_TYPE_TABLE 1
 #define ENTITY_TYPE_QUEUE 2
