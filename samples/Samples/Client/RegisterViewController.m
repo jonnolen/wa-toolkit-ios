@@ -18,7 +18,6 @@
 #import "WAConfiguration.h"
 #import "ServiceCall.h"
 #import "Azure_Storage_ClientAppDelegate.h"
-#import "WACloudAccessControlClient.h"
 
 @implementation RegisterViewController
 
@@ -32,8 +31,7 @@
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) 
-	{
+    if (self) {
         // Custom initialization
 		self.title = @"Registration";
     }
@@ -42,12 +40,13 @@
 
 - (void)dealloc
 {
-    [usernameField release];
-    [passwordField release];
-	[emailField release];
-	[confirmPasswordField release];
-	[activity release];
-	[actionButton release];
+    RELEASE(usernameField);
+    RELEASE(passwordField);
+    RELEASE(emailField);
+    RELEASE(confirmPasswordField);
+    RELEASE(activity);
+    RELEASE(actionButton);
+
     [super dealloc];
 }
 
@@ -71,15 +70,14 @@
 
 - (void)viewDidUnload
 {
-    [self setUsernameField:nil];
-    [self setPasswordField:nil];
-	[self setEmailField:nil];
-	[self setConfirmPasswordField:nil];
-	[self setActivity:nil];
-	[self setActionButton:nil];
+    self.usernameField = nil;
+    self.passwordField = nil;
+    self.emailField = nil;
+    self.confirmPasswordField = nil;
+    self.activity = nil;
+    self.actionButton = nil;
+    
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -88,16 +86,17 @@
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
-- (void)registerClicked:(id)sender 
+#pragma - Action Methods
+
+- (IBAction)registerClicked:(id)sender 
 {
 	[usernameField resignFirstResponder];
 	[emailField resignFirstResponder];
 	[passwordField resignFirstResponder];
 	[confirmPasswordField resignFirstResponder];
 	
-	if(!usernameField.text.length || !emailField.text.length || !passwordField.text.length)
-	{
-		UIAlertView* view = [[UIAlertView alloc] initWithTitle:@"Registration" 
+	if(!usernameField.text.length || !emailField.text.length || !passwordField.text.length) {
+		UIAlertView *view = [[UIAlertView alloc] initWithTitle:@"Registration" 
 													   message:@"All fields must be filled in."
 													  delegate:self 
 											 cancelButtonTitle:@"OK" 
@@ -107,9 +106,8 @@
 		return;
 	}
 	
-	if(![passwordField.text isEqualToString:confirmPasswordField.text])
-	{
-		UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Register" 
+	if(![passwordField.text isEqualToString:confirmPasswordField.text]) {
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Register" 
 														message:@"Passwords do not match"
 													   delegate:nil 
 											  cancelButtonTitle:@"OK"
@@ -122,8 +120,8 @@
 	[activity startAnimating];
 	actionButton.enabled = NO;
 	
-	WAConfiguration* config = [WAConfiguration sharedConfiguration];	
-	NSString* payload = [ServiceCall xmlBuilder:@"RegistrationUser" 
+	WAConfiguration *config = [WAConfiguration sharedConfiguration];	
+	NSString *payload = [ServiceCall xmlBuilder:@"RegistrationUser" 
 								objectNamespace:@"Microsoft.Samples.WindowsPhoneCloud.StorageClient.Credentials", 
 						 @"EMail", emailField.text,
 						 @"Name", usernameField.text,
@@ -131,13 +129,11 @@
 						 nil];
 	NSString* url = @"/AuthenticationService/register";
 	
-	[ServiceCall postXmlToURL:[config proxyURL:url] body:payload withDictionaryCompletionHandler:^(NSDictionary *values, NSError *error) 
-	 {
+	[ServiceCall postXmlToURL:[config proxyURL:url] body:payload withDictionaryCompletionHandler:^(NSDictionary *values, NSError *error) {
 		 [activity stopAnimating];
 		 actionButton.enabled = YES;
 		 
-		 if(error)
-		 {
+		 if (error) {
 			 UIAlertView* view = [[UIAlertView alloc] initWithTitle:@"Registration" 
 															message:[NSString stringWithFormat:@"An error occurred (%@)", [error localizedDescription]]
 														   delegate:self 
@@ -148,13 +144,12 @@
 			 return;
 		 }
 		 
-		 NSString* str = [values objectForKey:@"text"];
+		 NSString *str = [values objectForKey:@"text"];
 		 
-		 if([str isEqualToString:@"Success"])
-		 {
+		 if([str isEqualToString:@"Success"]) {
 			 Azure_Storage_ClientAppDelegate* appDelegate = (Azure_Storage_ClientAppDelegate *)[[UIApplication sharedApplication] delegate];
-			 WAConfiguration* config = [WAConfiguration sharedConfiguration];
-			 NSString* proxyURL = [config proxyURL];
+			 WAConfiguration *config = [WAConfiguration sharedConfiguration];
+			 NSString *proxyURL = [config proxyURL];
 			 
 			 [usernameField resignFirstResponder];
 			 [passwordField resignFirstResponder];
@@ -166,30 +161,24 @@
 																											  user:usernameField.text
 																										  password:passwordField.text 
 																										  delegate:self];
-		 }
-		 else if([str isEqualToString:@"DuplicateUserName"])
-		 {
-			 UIAlertView* view = [[UIAlertView alloc] initWithTitle:@"Registration" 
+		 } else if([str isEqualToString:@"DuplicateUserName"]) {
+			 UIAlertView *view = [[UIAlertView alloc] initWithTitle:@"Registration" 
 															message:@"Username is already registered."
 														   delegate:self 
 												  cancelButtonTitle:@"OK" 
 												  otherButtonTitles:nil];
 			 [view show];
 			 [view release];
-		 }
-		 else if([str isEqualToString:@"DuplicateEmail"])
-		 {
-			 UIAlertView* view = [[UIAlertView alloc] initWithTitle:@"Registration" 
+		 } else if([str isEqualToString:@"DuplicateEmail"]) {
+			 UIAlertView *view = [[UIAlertView alloc] initWithTitle:@"Registration" 
 															message:@"Email is already registered."
 														   delegate:self 
 												  cancelButtonTitle:@"OK" 
 												  otherButtonTitles:nil];
 			 [view show];
 			 [view release];
-		 }
-		 else
-		 {
-			 UIAlertView* view = [[UIAlertView alloc] initWithTitle:@"Registration" 
+		 } else {
+			 UIAlertView *view = [[UIAlertView alloc] initWithTitle:@"Registration" 
 															message:@"User could not be registered."
 														   delegate:self 
 												  cancelButtonTitle:@"OK" 
@@ -199,6 +188,8 @@
 		 }
 	 }];
 }
+
+#pragma - WAAuthenticationDelegate Methods
 
 - (void)loginDidSucceed
 {

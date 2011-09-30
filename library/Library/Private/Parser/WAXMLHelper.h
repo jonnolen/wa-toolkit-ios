@@ -19,7 +19,8 @@
 #import <libxml/xmlstring.h>
 #import <libxml/xpath.h>
 #import <libxml/xpathInternals.h>
-#import "WAAtomPubEntry.h"
+
+@class WAAtomPubEntry;
 
 @interface WAXMLHelper : NSObject
 

@@ -18,6 +18,7 @@
 #import "WAPredicateParser.h"
 
 @interface WAAzureFilterBuilder : NSObject <WAPredicateParserDelegate> {
+@private
 	NSMutableString* string;
 	NSError* error;
 }

@@ -15,18 +15,22 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "WAAuthenticationCredential.h"
-#import "WABlob.h"
-#import "WABlobContainer.h"
-#import "WATableEntity.h"
-#import "WATableFetchRequest.h"
-#import "WAQueueMessage.h"
+
+@class WAAuthenticationCredential;
+@class WABlob;
+@class WABlobContainer;
+@class WATableEntity;
+@class WATable;
+@class WAQueueMessage;
+@class WATableFetchRequest;
+@class WAResultContinuation;
 
 @protocol WACloudStorageClientDelegate;
 
 /*! The cloud storage client is used to invoke operations on, and return data from, Windows Azure storage. */
 @interface WACloudStorageClient : NSObject
 {
+@private
 	WAAuthenticationCredential* _credential;
 	id<WACloudStorageClientDelegate> _delegate;
 }
@@ -39,6 +43,10 @@
 - (void)fetchBlobContainers;
 /*! Returns a list of blob containers. */
 - (void)fetchBlobContainersWithCompletionHandler:(void (^)(NSArray*, NSError *))block;
+/*! Returns a list of blob containers. */
+- (void)fetchBlobContainersWithContinuation:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult;
+/*! Returns a list of blob containers. */
+- (void)fetchBlobContainersWithContinuation:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult usingCompletionHandler:(void (^)(NSArray*, WAResultContinuation *, NSError*))block;
 /*! Returnva a blob container. */
 - (void)fetchBlobContainerNamed:(NSString *)containerName;
 /*! Returnva a blob container. */
@@ -59,6 +67,10 @@
 - (void)fetchBlobs:(WABlobContainer *)container;
 /*! Returns an array of blobs from the specified blob container. */
 - (void)fetchBlobs:(WABlobContainer *)container withCompletionHandler:(void (^)(NSArray *, NSError *))block;
+/*! Returns an array of blobs from the specified blob container. */
+- (void)fetchBlobsWithContinuation:(WABlobContainer *)container resultContinuation:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult;
+/*! Returns an array of blobs from the specified blob container. */
+- (void)fetchBlobsWithContinuation:(WABlobContainer *)container resultContinuation:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult usingCompletionHandler:(void (^)(NSArray *, WAResultContinuation *, NSError *))block;
 /*! Returns the binary data (NSData) object for the specified blob. */
 - (void)fetchBlobData:(WABlob *)blob;
 /*! Returns the binary data (NSData) object for the specified blob. */
@@ -76,6 +88,10 @@
 - (void)fetchQueues;
 /*! Returns a list of queues. */
 - (void)fetchQueuesWithCompletionHandler:(void (^)(NSArray*, NSError *))block;
+/*! Returns a list of queues. */
+- (void)fetchQueuesWithContinuation:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult;
+/*! Returns a list of queues. */
+- (void)fetchQueuesWithContinuation:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult usingCompletionHandler:(void (^)(NSArray*, WAResultContinuation *, NSError *))block;
 /*! Adds a queue, given a specified queue name. */
 - (void)addQueueNamed:(NSString *)queueName;
 /*! Adds a queue, given a specified queue name.  Returns error if the queue already exists, or where the name is an invalid format.*/
@@ -117,6 +133,10 @@
 - (void)fetchTables;
 /*! Returns a list of tables. */
 - (void)fetchTablesWithCompletionHandler:(void (^)(NSArray *, NSError *))block;
+/*! Returns a list of tables using a continuation. */
+- (void)fetchTablesWithContinuation:(WAResultContinuation *)resultContinuation;
+/*! Returns a list of tables using a continuation. */
+- (void)fetchTablesWithContinuation:(WAResultContinuation *)resultContinuation usingCompletionHandler:(void (^)(NSArray *, WAResultContinuation *, NSError *))block;
 /*! Creates a new table with a specified name. */
 - (void)createTableNamed:(NSString *)newTableName;
 /*! Creates a new table with a specified name. */
@@ -129,6 +149,10 @@
 - (void)fetchEntities:(WATableFetchRequest*)fetchRequest;
 /*! Returns the entities for a given table. */
 - (void)fetchEntities:(WATableFetchRequest*)fetchRequest withCompletionHandler:(void (^)(NSArray *, NSError *))block;
+/*! Returns the entities for a given table with a continuation result to fetch the next set of entities. */
+- (void)fetchEntitiesWithContinuation:(WATableFetchRequest*)fetchRequest;
+/*! Returns the entities for a given table with a continuation result to fetch the next set of entities. */
+- (void)fetchEntitiesWithContinuation:(WATableFetchRequest*)fetchRequest usingCompletionHandler:(void (^)(NSArray *, WAResultContinuation *, NSError *))block;
 /*! Inserts a new entity into an existing table. */
 - (BOOL)insertEntity:(WATableEntity *)newEntity;
 /*! Inserts a new entity into an existing table. */
@@ -161,6 +185,8 @@
 
 /*! Called when the client successfully returns a list of blob containers */
 - (void)storageClient:(WACloudStorageClient *)client didFetchBlobContainers:(NSArray *)containers;
+/*! Called when the client successfully returns a list of blob containers */
+- (void)storageClient:(WACloudStorageClient *)client didFetchBlobContainers:(NSArray *)containers withResultContinuation:(WAResultContinuation *)resultContinuation;
 /*! Called when the client successfully returns a blob container */
 - (void)storageClient:(WACloudStorageClient *)client didFetchBlobContainer:(WABlobContainer *)container;
 /*! Called when the client successsfully adds a new blob container. */
@@ -171,6 +197,8 @@
 - (void)storageClient:(WACloudStorageClient *)client didDeleteBlobContainerNamed:(NSString *)name;
 /*! Called when the client successfully returns blobs from an existing container. */
 - (void)storageClient:(WACloudStorageClient *)client didFetchBlobs:(NSArray *)blobs inContainer:(WABlobContainer *)container;
+/*! Called when the client successfully returns blobs from an existing container. */
+- (void)storageClient:(WACloudStorageClient *)client didFetchBlobs:(NSArray *)blobs inContainer:(WABlobContainer *)container withResultContinuation:(WAResultContinuation *)resultContinuation;
 /*! Called when the client successfully returns blob data for a given blob. */
 - (void)storageClient:(WACloudStorageClient *)client didFetchBlobData:(NSData *)data blob:(WABlob *)blob;
 /*! Called when the client successfully adds a blob to a specified container. */
@@ -184,6 +212,8 @@
 - (void)storageClient:(WACloudStorageClient *)client didDeleteQueueNamed:(NSString *)queueName;
 /*! Called when the client successfully returns a list of queues */
 - (void)storageClient:(WACloudStorageClient *)client didFetchQueues:(NSArray *)queues;
+/*! Called when the client successfully returns a list of queues */
+- (void)storageClient:(WACloudStorageClient *)client didFetchQueues:(NSArray *)queues withResultContinuation:(WAResultContinuation *)resultContinuation;
 /*! Called when the client successfully got a single message from the specified queue */
 - (void)storageClient:(WACloudStorageClient *)client didFetchQueueMessage:(WAQueueMessage *)queueMessage;
 /*! Called when the client successfully get messages from the specified queue */
@@ -199,13 +229,16 @@
 
 /*! Called when the client successfully returns a list of tables. */
 - (void)storageClient:(WACloudStorageClient *)client didFetchTables:(NSArray *)tables;
+/*! Called when the client successfully returns a list of tables. */
+- (void)storageClient:(WACloudStorageClient *)client didFetchTables:(NSArray *)tables withResultContinuation:(WAResultContinuation *)resultContinuation;
 /*! Called when the client successfully creates a table. */
 - (void)storageClient:(WACloudStorageClient *)client didCreateTableNamed:(NSString *)tableName;
 /*! Called when the client successfully deletes a specified table. */
 - (void)storageClient:(WACloudStorageClient *)client didDeleteTableNamed:(NSString *)tableName;
 /*! Called when the client successfully returns a list of entities from a table. */
 - (void)storageClient:(WACloudStorageClient *)client didFetchEntities:(NSArray *)entities fromTableNamed:(NSString *)tableName;
-
+/*! Called when the client successfully returns a list of entities from a table. */
+- (void)storageClient:(WACloudStorageClient *)client didFetchEntities:(NSArray *)entities fromTableNamed:(NSString *)tableName withResultContinuation:(WAResultContinuation *)resultContinuation;
 /*! Called when the client successfully inserts an entity into a table. */
 - (void)storageClient:(WACloudStorageClient *)client didInsertEntity:(WATableEntity *)entity;
 /*! Called when the client successfully updates an entity within a table. */

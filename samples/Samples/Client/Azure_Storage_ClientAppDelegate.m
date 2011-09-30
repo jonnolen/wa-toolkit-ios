@@ -17,8 +17,8 @@
 #import "Azure_Storage_ClientAppDelegate.h"
 #import "WAConfiguration.h"
 #import "StorageTypeSelector.h"
-#import "WACloudAccessControlClient.h"
-#import "WACloudStorageClient.h"
+
+#import "WAToolkit.h"
 
 @implementation Azure_Storage_ClientAppDelegate
 
@@ -27,15 +27,23 @@
 @synthesize authenticationCredential;
 @synthesize use_proxy;
 
+- (void)dealloc
+{
+    RELEASE(_window);
+    RELEASE(_navigationController);
+    RELEASE(authenticationCredential);
+
+    [super dealloc];
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
 	// Override point for customization after application launch.
 	// Add the navigation controller's view to the window and display.
 	
-	WAConfiguration* config = [WAConfiguration sharedConfiguration];	
-	if(!config)
-	{
-		UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Configuration Error" 
+	WAConfiguration *config = [WAConfiguration sharedConfiguration];	
+	if(!config) {
+		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Configuration Error" 
 															message:@"You must update the ToolkitConfig section in the application's info.plist file before running the first time."
 														   delegate:self 
 												  cancelButtonTitle:@"Close" 
@@ -45,13 +53,12 @@
 		return YES;
 	}
 	
-	if(config.connectionType != WAConnectDirect)
-	{
+	if(config.connectionType != WAConnectDirect) {
 		[WACloudStorageClient ignoreSSLErrorFor:config.proxyNamespace];
 	}
     
     // Register for Apple Push Notifications
-    NSLog(@"Registering for APN");
+    LOG(@"Registering for APN");
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes: (UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound)];
 	
 	StorageTypeSelector *root = [[StorageTypeSelector alloc] initWithNibName:@"StorageTypeSelector" bundle:nil];
@@ -61,7 +68,7 @@
 	self.navigationController = nav;
 	self.window.rootViewController = nav;
 	[self.window makeKeyAndVisible];
-	
+	[nav release];
 	[root release];
 	
 	[root performSelector:@selector(login:) withObject:self afterDelay:0.0];
@@ -73,21 +80,21 @@
 {
 	WAConfiguration* config = [WAConfiguration sharedConfiguration];
 
-	if(config.connectionType != WAConnectProxyACS)
-	{
+	if(config.connectionType != WAConnectProxyACS) {
 		return;
 	}
 	
-	Azure_Storage_ClientAppDelegate* appDelegate = (Azure_Storage_ClientAppDelegate *)[[UIApplication sharedApplication] delegate];
-	NSString* proxyURL = [config proxyURL];
-	WACloudAccessToken* sharedToken = [WACloudAccessControlClient sharedToken];
+	Azure_Storage_ClientAppDelegate *appDelegate = (Azure_Storage_ClientAppDelegate *)[[UIApplication sharedApplication] delegate];
+	NSString *proxyURL = [config proxyURL];
+	WACloudAccessToken *sharedToken = [WACloudAccessControlClient sharedToken];
 	
-/*	NSLog(@"appliesTo: %@", sharedToken.appliesTo);
-	NSLog(@"tokenType: %@", sharedToken.tokenType);
-	NSLog(@"expireDate: %@", sharedToken.expireDate);
-	NSLog(@"createDate: %@", sharedToken.createDate);
-	NSLog(@"securityToken: %@", sharedToken.securityToken);
-	NSLog(@"identityProvider: %@", sharedToken.identityProvider);
+/*	
+    LOG(@"appliesTo: %@", sharedToken.appliesTo);
+	LOG(@"tokenType: %@", sharedToken.tokenType);
+	LOG(@"expireDate: %@", sharedToken.expireDate);
+	LOG(@"createDate: %@", sharedToken.createDate);
+	LOG(@"securityToken: %@", sharedToken.securityToken);
+	LOG(@"identityProvider: %@", sharedToken.identityProvider);
 */	
 	appDelegate.authenticationCredential = [WAAuthenticationCredential authenticateCredentialWithProxyURL:[NSURL URLWithString:proxyURL]
 																							  accessToken:sharedToken];
@@ -101,20 +108,19 @@
 - (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken { 
     
     NSString *str = [NSString stringWithFormat:@"Device Token=%@",deviceToken];
-    NSLog(@"%@",str);
+    LOG(@"%@",str);
 }
 
 - (void)application:(UIApplication *)app didFailToRegisterForRemoteNotificationsWithError:(NSError *)err { 
     
     NSString *str = [NSString stringWithFormat: @"Error: %@", err];
-    NSLog(@"%@",str);    
+    LOG(@"%@",str);    
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
     
-    for (id key in userInfo) 
-    {
-        NSLog(@"key: %@, value: %@", key, [userInfo objectForKey:key]);
+    for (id key in userInfo) {
+        LOG(@"key: %@, value: %@", key, [userInfo objectForKey:key]);
     }    
 }
 
@@ -155,14 +161,6 @@
 	 Save data if appropriate.
 	 See also applicationDidEnterBackground:.
 	 */
-}
-
-- (void)dealloc
-{
-	[_window release];
-	[_navigationController release];
-	[authenticationCredential release];
-    [super dealloc];
 }
 
 @end

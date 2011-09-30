@@ -18,6 +18,7 @@
 #import <libxml/tree.h>
 
 @interface WAAtomPubEntry : NSObject {
+@private
     xmlNodePtr _node;
 }
 

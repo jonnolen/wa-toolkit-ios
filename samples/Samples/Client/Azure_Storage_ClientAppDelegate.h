@@ -15,12 +15,13 @@
  */
 
 #import <UIKit/UIKit.h>
-#import "WAAuthenticationCredential.h"
+
+@class WAAuthenticationCredential;
 
 @interface Azure_Storage_ClientAppDelegate : NSObject <UIApplicationDelegate, UIAlertViewDelegate> {
 @private
-	WAAuthenticationCredential		*authenticationCredential;
-	BOOL							use_proxy;
+	WAAuthenticationCredential *authenticationCredential;
+	BOOL use_proxy;
 }
 
 @property (nonatomic, retain) IBOutlet UIWindow *window;

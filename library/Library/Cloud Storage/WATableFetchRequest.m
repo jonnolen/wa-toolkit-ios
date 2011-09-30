@@ -18,6 +18,8 @@
 #import "WAAzureFilterBuilder.h"
 #import "WACloudURLRequest.h"
 #import "NSString+URLEncode.h"
+#import "WAResultContinuation.h"
+#import "Logging.h"
 
 @implementation WATableFetchRequest
 
@@ -26,6 +28,7 @@
 @synthesize rowKey = _rowKey;
 @synthesize filter = _filter;
 @synthesize topRows = _topRows;
+@synthesize resultContinuation = _resultContinuation;
 
 - (id) initWithTable:(NSString*)tableName
 {
@@ -36,6 +39,18 @@
     
     return self;
 }
+
+- (void)dealloc
+{
+    [_tableName release];
+    [_partitionKey release];
+    [_rowKey release];
+    [_filter release];
+    [_resultContinuation release];
+    
+    [super dealloc];
+}
+
 
 + (WATableFetchRequest*)fetchRequestForTable:(NSString*)tableName
 {
@@ -63,41 +78,40 @@
 
 - (NSString*)endpoint
 {
-    if (_partitionKey && _rowKey)
-    {
-		return [_tableName stringByAppendingFormat:@"(PartitionKey=\'%@\',RowKey=\'%@\')", [_partitionKey URLEncode], [_rowKey URLEncode]];
-    }
-	else if (_partitionKey)
-    {
-		return [_tableName stringByAppendingFormat:@"(PartitionKey=\'%@\')", [_partitionKey URLEncode]];
-    }
-	else if (_rowKey)
-    {
-		return [_tableName stringByAppendingFormat:@"(RowKey=\'%@\')", [_rowKey URLEncode]];
-    }
-	else if (_filter && _topRows > 0)
-    {
-		return [_tableName stringByAppendingFormat:@"()?$filter=%@&$top=%d", [_filter URLEncode], _topRows];
-    }
-	else if (_filter)
-    {
-		return [_tableName stringByAppendingFormat:@"()?$filter=%@", [_filter URLEncode]];
-    }
-	else if (_topRows > 0)
-    {
-		return [_tableName stringByAppendingFormat:@"()?$top=%d", _topRows];
-    }
-
-    return [_tableName stringByAppendingString:@"()"];
-}
-
-- (void)dealloc
-{
-    [_tableName release];
-    [_partitionKey release];
-    [_rowKey release];
-    [_filter release];
+    NSMutableString *ep = [NSMutableString stringWithString:_tableName];
     
-    [super dealloc];
+    if (_partitionKey || _rowKey) {
+        if (_partitionKey && _rowKey) {
+            [ep stringByAppendingFormat:@"(PartitionKey=\'%@\',RowKey=\'%@\')", [_partitionKey URLEncode], [_rowKey URLEncode]];
+        } else if (_partitionKey) {
+            [ep stringByAppendingFormat:@"(PartitionKey=\'%@\')", [_partitionKey URLEncode]];
+        } else if (_rowKey) {
+            return [ep stringByAppendingFormat:@"(RowKey=\'%@\')", [_rowKey URLEncode]];
+        }
+    } else {
+        [ep appendString:@"()"];
+    }
+    
+    if (_filter || _topRows || _resultContinuation) {
+        [ep appendString:@"?"];
+        if (_filter) {
+            [ep appendFormat:@"$filter=%@", [_filter URLEncode]];
+        }
+        if (_topRows) {
+            [ep appendFormat:@"$top=%d", _topRows];
+        }
+        if (_resultContinuation) {
+            [ep appendFormat:@"&NextPartitionKey=%@&NextRowKey=%@", [_resultContinuation.nextPartitionKey URLEncode], [_resultContinuation.nextRowKey URLEncode]];
+        }
+    }
+    
+    WA_BEGIN_LOGGING
+        NSLog(@"endpoint = %@", ep);
+	WA_END_LOGGING
+    
+    return ep;
 }
+
+
 @end
+

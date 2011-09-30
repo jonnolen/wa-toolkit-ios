@@ -22,7 +22,7 @@
 /*! Name of the queue object */
 @property (copy) NSString *queueName;
 /*! URL of the queue object */
-@property (readonly) NSURL* URL;
+@property (readonly) NSURL *URL;
 
 /*! Intialize a new queue with the name, URL */
 - (id)initQueueWithName:(NSString *)queueName URL:(NSString *)URL;

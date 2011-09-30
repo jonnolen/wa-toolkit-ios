@@ -15,7 +15,6 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "WAAuthenticationCredential.h"
 
 typedef enum {
 	WAConnectDirect = 0,
@@ -29,20 +28,16 @@ typedef enum {
     NSDictionary *_values;
 }
 
-+ (WAConfiguration*)sharedConfiguration;
-
 @property (readonly) WAConnectionType connectionType;
-
 @property (readonly) NSString *accountName;
 @property (readonly) NSString *accessKey;
-
 // Proxy general
 @property (readonly) NSString *proxyNamespace;
-
 // Proxy ACS
 @property (readonly) NSString *ACSNamespace;
 @property (readonly) NSString *ACSRealm;
 
++ (WAConfiguration *)sharedConfiguration;
 
 - (NSString *)proxyURL;
 - (NSString *)proxyURL:(NSString *)path;

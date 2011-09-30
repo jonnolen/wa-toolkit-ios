@@ -15,24 +15,23 @@
  */
 
 #import <UIKit/UIKit.h>
-#import "WACloudStorageClient.h"
-#import "WABlobContainer.h"
-#import "WAQueue.h"
-
-#define ENTITY_TYPE_TABLE			1
-#define ENTITY_TYPE_QUEUE			2
+#import "WAToolkit.h"
 
 @interface TableListController : UITableViewController <WACloudStorageClientDelegate> {
 @private
-	WACloudStorageClient		*storageClient;
-	NSMutableArray				*storageList;
-	WABlobContainer				*selectedContainer;
-	WAQueue						*selectedQueue;
+	WACloudStorageClient *storageClient;
+    NSUInteger fetchCount;
+	WABlobContainer *selectedContainer;
+	WAQueue *selectedQueue;
+    WAResultContinuation *_resultContinuation;
+    NSMutableArray *_localStorageList;
+    BOOL _fetchedResults;
 }
 
-@property (nonatomic, retain) NSArray *storageList;
 @property (nonatomic, retain) WABlobContainer *selectedContainer;
 @property (nonatomic, retain) WAQueue *selectedQueue;
+@property (nonatomic, retain) WAResultContinuation *resultContinuation;
+@property (nonatomic, retain) NSMutableArray *localStorageList;
 
 - (IBAction)modifyStorage:(id)sender;
 

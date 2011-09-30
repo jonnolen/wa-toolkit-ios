@@ -51,6 +51,11 @@
 		AABD4A50134D02C400B6E7D1 /* WATableEntity.h in Headers */ = {isa = PBXBuildFile; fileRef = AABD4A4E134D02C400B6E7D1 /* WATableEntity.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AABD4A51134D02C400B6E7D1 /* WATableEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = AABD4A4F134D02C400B6E7D1 /* WATableEntity.m */; };
 		AAD7348C134D2C22000AB68A /* NSString+URLEncode.h in Headers */ = {isa = PBXBuildFile; fileRef = AAD7348A134D2C21000AB68A /* NSString+URLEncode.h */; };
+		DE2A2F0E142A91A2005467BE /* BlobTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DE2A2F0D142A91A2005467BE /* BlobTests.m */; };
+		DE410E381427077A008D6626 /* WAResultContinuation.h in Headers */ = {isa = PBXBuildFile; fileRef = DE410E361427077A008D6626 /* WAResultContinuation.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DE410E391427077A008D6626 /* WAResultContinuation.m in Sources */ = {isa = PBXBuildFile; fileRef = DE410E371427077A008D6626 /* WAResultContinuation.m */; };
+		DE4DD586142A4FE200D03B75 /* TableTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DE4DD585142A4FE200D03B75 /* TableTests.m */; };
+		DE5B03D8142FDA4A0092F6BA /* WAToolkit.h in Headers */ = {isa = PBXBuildFile; fileRef = DE5B03D6142FDA4A0092F6BA /* WAToolkit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DEF6901A140827D4006FF7E5 /* Base64Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = DEF69019140827D4006FF7E5 /* Base64Tests.m */; };
 		F216A688136F88BC00FAEAB4 /* WAQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = F216A684136F88BC00FAEAB4 /* WAQueue.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F216A689136F88BC00FAEAB4 /* WAQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = F216A685136F88BC00FAEAB4 /* WAQueue.m */; };
@@ -131,6 +136,13 @@
 		AABD4A4E134D02C400B6E7D1 /* WATableEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WATableEntity.h; sourceTree = "<group>"; };
 		AABD4A4F134D02C400B6E7D1 /* WATableEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WATableEntity.m; sourceTree = "<group>"; };
 		AAD7348A134D2C21000AB68A /* NSString+URLEncode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+URLEncode.h"; sourceTree = "<group>"; };
+		DE2A2F0C142A91A2005467BE /* BlobTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlobTests.h; sourceTree = "<group>"; };
+		DE2A2F0D142A91A2005467BE /* BlobTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlobTests.m; sourceTree = "<group>"; };
+		DE410E361427077A008D6626 /* WAResultContinuation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WAResultContinuation.h; sourceTree = "<group>"; };
+		DE410E371427077A008D6626 /* WAResultContinuation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WAResultContinuation.m; sourceTree = "<group>"; };
+		DE4DD584142A4FE200D03B75 /* TableTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableTests.h; sourceTree = "<group>"; };
+		DE4DD585142A4FE200D03B75 /* TableTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TableTests.m; sourceTree = "<group>"; };
+		DE5B03D6142FDA4A0092F6BA /* WAToolkit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WAToolkit.h; sourceTree = "<group>"; };
 		DEF69018140827D4006FF7E5 /* Base64Tests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Base64Tests.h; sourceTree = "<group>"; };
 		DEF69019140827D4006FF7E5 /* Base64Tests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Base64Tests.m; sourceTree = "<group>"; };
 		F216A684136F88BC00FAEAB4 /* WAQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WAQueue.h; sourceTree = "<group>"; };
@@ -197,6 +209,7 @@
 				27E7D6611345103C00F142F7 /* Authentication */,
 				AA094586134A2BA600AF7EAB /* Cloud Storage */,
 				AA094574134A2ABB00AF7EAB /* Model */,
+				DE5B03D6142FDA4A0092F6BA /* WAToolkit.h */,
 			);
 			path = Library;
 			sourceTree = "<group>";
@@ -256,6 +269,8 @@
 				AA094578134A2ABB00AF7EAB /* WABlobContainer.m */,
 				AABD4A4E134D02C400B6E7D1 /* WATableEntity.h */,
 				AABD4A4F134D02C400B6E7D1 /* WATableEntity.m */,
+				DE410E361427077A008D6626 /* WAResultContinuation.h */,
+				DE410E371427077A008D6626 /* WAResultContinuation.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -367,6 +382,10 @@
 				F4F99904138DC6C200254B51 /* watoolkitios_lib_test.m */,
 				DEF69018140827D4006FF7E5 /* Base64Tests.h */,
 				DEF69019140827D4006FF7E5 /* Base64Tests.m */,
+				DE4DD584142A4FE200D03B75 /* TableTests.h */,
+				DE4DD585142A4FE200D03B75 /* TableTests.m */,
+				DE2A2F0C142A91A2005467BE /* BlobTests.h */,
+				DE2A2F0D142A91A2005467BE /* BlobTests.m */,
 				F4F99915138DC8FD00254B51 /* WACloudStorageClientDelegate.h */,
 				F4F99916138DC8FD00254B51 /* WACloudStorageClientDelegate.m */,
 				DEF68FE114082266006FF7E5 /* Frameworks */,
@@ -421,6 +440,8 @@
 				AA715AAA138F4E8F00AED192 /* WALoginRealmPickerTableViewController.h in Headers */,
 				AA715AAC138F4E8F00AED192 /* WALoginWebViewController.h in Headers */,
 				AA5E1B8E13DE3EA300171D07 /* Logging.h in Headers */,
+				DE410E381427077A008D6626 /* WAResultContinuation.h in Headers */,
+				DE5B03D8142FDA4A0092F6BA /* WAToolkit.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -547,6 +568,7 @@
 				AA715AAB138F4E8F00AED192 /* WALoginRealmPickerTableViewController.m in Sources */,
 				AA715AAD138F4E8F00AED192 /* WALoginWebViewController.m in Sources */,
 				AA5E1B8F13DE3EA300171D07 /* Logging.m in Sources */,
+				DE410E391427077A008D6626 /* WAResultContinuation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -557,6 +579,8 @@
 				F4F99905138DC6C200254B51 /* watoolkitios_lib_test.m in Sources */,
 				F4F99917138DC8FD00254B51 /* WACloudStorageClientDelegate.m in Sources */,
 				DEF6901A140827D4006FF7E5 /* Base64Tests.m in Sources */,
+				DE4DD586142A4FE200D03B75 /* TableTests.m in Sources */,
+				DE2A2F0E142A91A2005467BE /* BlobTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

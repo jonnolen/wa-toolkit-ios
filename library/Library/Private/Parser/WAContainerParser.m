@@ -18,13 +18,31 @@
 #import "WABlobContainer.h"
 #import "WAXMLHelper.h"
 
-@interface WABlobContainer (Private)
-
-- (id)initContainerWithName:(NSString *)name URL:(NSString *)URL metadata:(NSString *)metadata;
-
-@end
-
 @implementation WAContainerParser
+
++ (NSString *)retrieveMarker:(xmlDocPtr)doc
+{
+    if (doc == nil) { 
+		return nil; 
+	}
+    
+    __block NSMutableString *marker = nil; 
+    [WAXMLHelper performXPath:@"/EnumerationResults/NextMarker" 
+                   onDocument:doc 
+                        block:^(xmlNodePtr node)
+     {
+         xmlChar *value = xmlNodeGetContent(node);
+         NSString *str = [[NSString alloc] initWithUTF8String:(const char*)value];
+         xmlFree(value);
+         int length = [str length];
+         if (str != nil && length != 0) {
+             marker = [NSMutableString stringWithString:str];
+         }
+         [str release];
+     }];
+    
+     return marker;
+}
 
 + (NSArray *)loadContainers:(xmlDocPtr)doc {
     

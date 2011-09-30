@@ -15,10 +15,9 @@
  */
 
 #import <UIKit/UIKit.h>
-#import "WAAuthenticationCredential.h"
+#import "WAToolkit.h"
 
 @interface RootViewController : UIViewController <WAAuthenticationDelegate>
-
 
 @property (nonatomic, retain) IBOutlet UITextField *usernameField;
 @property (nonatomic, retain) IBOutlet UITextField *passwordField;

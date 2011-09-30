@@ -15,33 +15,21 @@
  */
 
 #import <UIKit/UIKit.h>
-#import "WATableEntity.h"
-#import "WACloudStorageClient.h"
-#import "WAQueueMessage.h"
+#import "WAToolkit.h"
 
-#define MODE_ADD						1
-#define MODE_UPDATE						2
-#define MODE_DELETE						3
-#define QUEUE_MESSAGE_NUMBER_FIELDS		6
-
-@interface ModifyEntityController : UIViewController <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate, WACloudStorageClientDelegate>
-{
-    
-	UITableView	*entityTable;
+@interface ModifyEntityController : UIViewController <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate, WACloudStorageClientDelegate>{
+@private
+	UITableView *entityTable;
 	UIButton *addUpdateButton;
 	UIButton *deleteButton;
-
-	WACloudStorageClient		*tableClient;
-	WATableEntity				*entity;
-	WAQueueMessage				*queueMessage;
-	NSString					*queueName;
-	NSMutableArray*				editFields;
-	int							editingRow;
-	//	BOOL						editingData;
-	//	UIView						*editView;
-	//	UITextField					*editField;
-	int							mode;
-	NSString					*messageString;
+	WACloudStorageClient *storageClient;
+	WATableEntity *entity;
+	WAQueueMessage *queueMessage;
+	NSString *queueName;
+	NSMutableArray *editFields;
+	int editingRow;
+	int mode;
+	NSString *messageString;
 }
 @property (nonatomic, retain) IBOutlet UITableView *entityTable;
 @property (nonatomic, retain) IBOutlet UIButton *addUpdateButton;
@@ -50,6 +38,7 @@
 @property (nonatomic, retain) WAQueueMessage *queueMessage;
 @property (nonatomic, retain) NSString *queueName;
 @property (nonatomic, retain) NSString *messageString;
+
 - (IBAction)addUpdate:(id)sender;
 - (IBAction)delete:(id)sender;
 @end

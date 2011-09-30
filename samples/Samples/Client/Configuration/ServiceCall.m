@@ -15,11 +15,10 @@
  */
 
 #import "ServiceCall.h"
-#include <libxml/xmlwriter.h>
-#include "WACloudAccessControlClient.h"
+#import <libxml/xmlwriter.h>
 #import "WAConfiguration.h"
 
-#define LOG 0
+#import "WAToolkit.h"
 
 @interface ServiceRequest : NSObject {
 @private
@@ -71,7 +70,7 @@
 	const char *encoding = NULL;
 	
     NSString *xml = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-	NSLog(@"XML Response: %@", xml);
+	LOG(@"XML Response: %@", xml);
 	[xml release];
 	
 	xmlDocPtr doc = xmlReadMemory([data bytes], (int)[data length], baseURL, encoding, (XML_PARSE_NOCDATA | XML_PARSE_NOBLANKS)); 
@@ -251,7 +250,7 @@
 	
 	buf = xmlBufferCreate();
     if (buf == NULL) {
-        NSLog(@"Error creating the xml buffer");
+        LOG(@"Error creating the xml buffer");
         return nil;
     }
 	
@@ -259,7 +258,7 @@
 	if (buf == NULL) {
 		xmlBufferFree(buf);
 		
-        NSLog(@"Error creating the xml writer");
+        LOG(@"Error creating the xml writer");
         return nil;
     }
 	
@@ -322,13 +321,13 @@
 			[request setValue:contentType forHTTPHeaderField:@"Content-Type"];
 		}
 		
-		WACloudAccessToken* token = [WACloudAccessControlClient sharedToken];
+		WACloudAccessToken *token = [WACloudAccessControlClient sharedToken];
 		if (token) {
 			[token signRequest:request];
 		}
 		
-		NSLog(@"%@ %@", httpMethod, url);
-		NSLog(@"Headers: %@", [request allHTTPHeaderFields]);
+		LOG(@"%@ %@", httpMethod, url);
+		LOG(@"Headers: %@", [request allHTTPHeaderFields]);
 		
 		_connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
 	}
@@ -338,9 +337,10 @@
 
 - (void)dealloc
 {
-	[_connection release];
-	[_block release];
-	[_data release];
+    RELEASE(_connection);
+    RELEASE(_block);
+    RELEASE(_data);
+    
 	[super dealloc];
 }
 
@@ -375,10 +375,10 @@
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
-	NSError* error = nil;
-	
+	NSError *error = nil;
+	    
 	if (_statusCode >= 300) {
-		NSString* msg = [NSString stringWithFormat:@"Invalid HTTP status returned (%d)", _statusCode];
+		NSString *msg = [NSString stringWithFormat:@"Invalid HTTP status returned (%d)", _statusCode];
 		error = [NSError errorWithDomain:@"com.microsoft.WAToolkitConfig" 
 									code:_statusCode 
 								userInfo:[NSDictionary dictionaryWithObject:msg forKey:NSLocalizedDescriptionKey]];
@@ -399,8 +399,8 @@
 {
 	if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
 		// we only trust our own domain
-		NSString* host = challenge.protectionSpace.host;
-		NSString* ours = [NSString stringWithFormat:@"%@.cloudapp.net", [WAConfiguration sharedConfiguration].proxyNamespace];
+		NSString *host = challenge.protectionSpace.host;
+		NSString *ours = [NSString stringWithFormat:@"%@.cloudapp.net", [WAConfiguration sharedConfiguration].proxyNamespace];
 		
 		if ([host compare:ours options:NSCaseInsensitiveSearch] == NSOrderedSame) {
 			NSURLCredential *credential = [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust];

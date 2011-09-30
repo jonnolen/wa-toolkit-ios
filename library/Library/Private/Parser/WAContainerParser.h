@@ -21,5 +21,6 @@
 
 + (NSArray *)loadContainers:(xmlDocPtr)doc;
 + (NSArray *)loadContainersForProxy:(xmlDocPtr)doc;
++ (NSString *)retrieveMarker:(xmlDocPtr)doc;
 
 @end

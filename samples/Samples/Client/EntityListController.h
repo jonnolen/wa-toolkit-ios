@@ -15,22 +15,20 @@
  */
 
 #import <UIKit/UIKit.h>
-#import "WACloudStorageClient.h"
+#import "WAToolkit.h"
 
-#define ENTITY_TYPE_TABLE				1
-#define ENTITY_TYPE_QUEUE				2
-#define QUEUE_MESSAGE_NUMBER_FIELDS		6
-
-@interface EntityListController : UITableViewController <WACloudStorageClientDelegate>
-{
-	
-	WACloudStorageClient*	tableClient;
-	NSMutableArray*			entityList;
-	int						entityType;
+@interface EntityListController : UITableViewController <WACloudStorageClientDelegate> {
+@private
+	WACloudStorageClient *storageClient;
+    NSUInteger fetchCount;
+	int	entityType;
+    WAResultContinuation *_resultContinuation;
+    NSMutableArray *_localEntityList;
 }
 
-@property (nonatomic, retain) NSArray *entityList;
 @property (nonatomic, assign) int entityType;
+@property (nonatomic, retain) WAResultContinuation *resultContinuation;
+@property (nonatomic, retain) NSMutableArray *localEntityList;
 
 - (IBAction)addEntity:(id)sender;
 

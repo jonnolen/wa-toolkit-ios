@@ -35,26 +35,26 @@
 	NSBundle *bundle = [NSBundle mainBundle];
 	NSDictionary *values = [[bundle infoDictionary] objectForKey:@"ToolkitConfig"];
 	if(!values) {
-		NSLog(@"ToolkitConfig not specified");
+		LOG(@"ToolkitConfig not specified");
 		[self autorelease];
 		return nil;
 	}
 	
 	NSString *type = [values objectForKey:@"ConnectionType"];
 	if(!values) {
-		NSLog(@"ConnectionType not specified");
+		LOG(@"ConnectionType not specified");
 		[self autorelease];
 		return nil;
 	}
 
 	values = [values objectForKey:type];
-	if(!values || !values.count) {
-		NSLog(@"Missing values associated with ConnectionType");
+	if (!values || !values.count) {
+		LOG(@"Missing values associated with ConnectionType");
 		[self autorelease];
 		return nil;
 	}
 	
-	if([type isEqualToString:@"Direct"]) {
+	if ([type isEqualToString:@"Direct"]) {
 		_type = WAConnectDirect;
 	} else if([type isEqualToString:@"CloudReadySimple"]) {
 		_type = WAConnectProxyMembership;
@@ -62,10 +62,10 @@
 		_type = WAConnectProxyACS;
 	}
 	
-	for(NSString *key in [values allKeys]) {
+	for (NSString *key in [values allKeys]) {
 		NSString *value = [values objectForKey:key];
 		if(!value || !value.length || [value hasPrefix:@"{"]) {
-			NSLog(@"Missing value for key \"%@\"", key);
+			LOG(@"Missing value for key \"%@\"", key);
 			[self autorelease];
 			return nil;
 		}
@@ -78,7 +78,7 @@
 
 - (void)dealloc
 {
-	[_values release];
+    RELEASE(_values);
 
 	[super dealloc];
 }
@@ -88,41 +88,41 @@
 	return _type;
 }
 
-- (NSString*) accountName
+- (NSString *)accountName
 {
 	return [_values objectForKey:@"AccountName"];
 }
 
-- (NSString*) accessKey
+- (NSString *)accessKey
 {
 	return [_values objectForKey:@"DirectAccessKey"];
 }
 
-- (NSString*) ACSNamespace
+- (NSString *)ACSNamespace
 {
 	return [_values objectForKey:@"ACSNamespace"];
 }
 
-- (NSString*) ACSRealm
+- (NSString *)ACSRealm
 {
 	return [_values objectForKey:@"ACSRealm"];
 }
 
-- (NSString*) proxyNamespace
+- (NSString *)proxyNamespace
 {
 	return [_values objectForKey:@"ProxyService"];
 }
 
-- (NSString*) proxyURL
+- (NSString *)proxyURL
 {
-	NSURL* absURL = [NSURL URLWithString:[NSString stringWithFormat:@"https://%@.cloudapp.net/", self.proxyNamespace]];	
+	NSURL *absURL = [NSURL URLWithString:[NSString stringWithFormat:@"https://%@.cloudapp.net/", self.proxyNamespace]];	
 	return [absURL absoluteString];
 }
 
-- (NSString*) proxyURL:(NSString*)path
+- (NSString *)proxyURL:(NSString*)path
 {
-	NSURL* absURL = [NSURL URLWithString:[NSString stringWithFormat:@"https://%@.cloudapp.net/", self.proxyNamespace]];
-	NSURL* pathURL = [NSURL URLWithString:path relativeToURL:absURL];
+	NSURL *absURL = [NSURL URLWithString:[NSString stringWithFormat:@"https://%@.cloudapp.net/", self.proxyNamespace]];
+	NSURL *pathURL = [NSURL URLWithString:path relativeToURL:absURL];
 	
 	return [pathURL absoluteString];
 }

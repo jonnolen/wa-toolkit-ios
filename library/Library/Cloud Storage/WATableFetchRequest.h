@@ -16,14 +16,17 @@
 
 #import <Foundation/Foundation.h>
 
+@class WAResultContinuation;
 
 @interface WATableFetchRequest : NSObject 
 {
-    NSString* _tableName;
-    NSString* _partitionKey;
-    NSString* _rowKey;
-    NSString* _filter;
+@private
+    NSString *_tableName;
+    NSString *_partitionKey;
+    NSString *_rowKey;
+    NSString *_filter;
     NSInteger _topRows;
+    WAResultContinuation *_resultContinuation;
 }
 
 @property (readonly) NSString* tableName;
@@ -31,6 +34,7 @@
 @property (copy) NSString* rowKey;
 @property (copy) NSString* filter;
 @property (assign) NSInteger topRows;
+@property (nonatomic, retain) WAResultContinuation *resultContinuation;
 
 + (WATableFetchRequest*)fetchRequestForTable:(NSString*)tableName;
 + (WATableFetchRequest*)fetchRequestForTable:(NSString*)tableName predicate:(NSPredicate*)predicate error:(NSError**)error;

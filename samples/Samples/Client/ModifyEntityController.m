@@ -18,6 +18,11 @@
 #import "Azure_Storage_ClientAppDelegate.h"
 #import "UIViewController+ShowError.h"
 
+#define MODE_ADD						1
+#define MODE_UPDATE						2
+#define MODE_DELETE						3
+#define QUEUE_MESSAGE_NUMBER_FIELDS		6
+
 @implementation ModifyEntityController
 
 @synthesize entityTable;
@@ -39,15 +44,17 @@
 
 - (void)dealloc
 {
-	[entityTable release];
-	[addUpdateButton release];
-	[deleteButton release];
-	[tableClient release];
-	[entity release];
-	[queueMessage release];
-	[queueName release];
-	[messageString release];
-	[editFields release];
+    RELEASE(entityTable);
+    RELEASE(addUpdateButton);
+    RELEASE(deleteButton);
+    storageClient.delegate = nil;
+    RELEASE(storageClient);
+    RELEASE(entity);
+    RELEASE(queueMessage);
+    RELEASE(queueName);
+	RELEASE(messageString);
+    RELEASE(editFields);
+
     [super dealloc];
 }
 
@@ -63,32 +70,21 @@
 
 - (void)viewDidLoad
 {
-	
-	Azure_Storage_ClientAppDelegate		*appDelegate = (Azure_Storage_ClientAppDelegate *)[[UIApplication sharedApplication] delegate];
-	
-    [super viewDidLoad];
-	
-	tableClient = [[WACloudStorageClient storageClientWithCredential:appDelegate.authenticationCredential] retain];
-	tableClient.delegate = self;
+	[super viewDidLoad];
+    
+	Azure_Storage_ClientAppDelegate *appDelegate = (Azure_Storage_ClientAppDelegate *)[[UIApplication sharedApplication] delegate];
+    	
+	storageClient = [[WACloudStorageClient storageClientWithCredential:appDelegate.authenticationCredential] retain];
+	storageClient.delegate = self;
 		
-	if ([self.navigationItem.title hasPrefix:@"Add"])
-	{
+	if ([self.navigationItem.title hasPrefix:@"Add"]) {
 		mode = MODE_ADD;
-		//	[self.addUpdateButton setTitle:@"Add" forState:UIControlStateNormal];
-		//	addUpdateButton.enabled = YES;
-	}
-	else if ([self.navigationItem.title hasPrefix:@"Edit"])
-	{
-		//	addUpdateButton.enabled = YES;
+	} else if ([self.navigationItem.title hasPrefix:@"Edit"]) {
 		mode = MODE_UPDATE;
-	}
-	else if ([self.navigationItem.title hasPrefix:@"Delete"])
-	{
+	} else if ([self.navigationItem.title hasPrefix:@"Delete"]) {
 		mode = MODE_DELETE;
-	}
-	//	self.addUpdateButton.titleLabel.textAlignment = UITextAlignmentCenter;
-	
-	UIBarButtonItem* item;
+	}	
+	UIBarButtonItem *item;
 	item = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector(addUpdate:)];
 	self.navigationItem.rightBarButtonItem = item;
 	[item release];
@@ -99,17 +95,18 @@
 
 - (void)viewWillDisappear:(BOOL)animated
 {
-    tableClient.delegate = nil;
+    storageClient.delegate = nil;
+    
+    [super viewWillDisappear:animated];
 }
 
 - (void)viewDidUnload
 {
-	entityTable = nil;
-	addUpdateButton = nil;
-	[self setDeleteButton:nil];
+    self.entityTable = nil;
+    self.addUpdateButton = nil;
+    self.deleteButton = nil;
+
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -118,51 +115,41 @@
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
+#pragma mark - Action Methods
+
 - (IBAction)addUpdate:(id)sender
 {
-	if(editingRow >= 0)
-	{
-		UITextField* editField = [editFields objectAtIndex:editingRow];
+	if (editingRow >= 0) {
+		UITextField *editField = [editFields objectAtIndex:editingRow];
 		[editField resignFirstResponder];
 	}
 	
-	UIActivityIndicatorView* activity = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
-	UIBarButtonItem* item = [[UIBarButtonItem alloc] initWithCustomView:activity];
+	UIActivityIndicatorView *activity = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+	UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithCustomView:activity];
 	self.navigationItem.rightBarButtonItem = item;
 	[activity startAnimating];
 	[activity release];
 	[item release];
 	
-	if (mode == MODE_ADD)
-	{
-		if ([self.navigationItem.title hasSuffix:@"Entity"])
-		{
-			[tableClient insertEntity:entity];
+	if (mode == MODE_ADD) {
+		if ([self.navigationItem.title hasSuffix:@"Entity"]) {
+			[storageClient insertEntity:entity];
+		} else if ([self.navigationItem.title hasSuffix:@"Message"]) {
+			[storageClient addMessageToQueue:messageString queueName:queueName];
 		}
-		else if ([self.navigationItem.title hasSuffix:@"Message"])
-		{
-			[tableClient addMessageToQueue:messageString queueName:queueName];
-		}
-	}
-	else if (mode == MODE_UPDATE)
-	{
-		if ([self.navigationItem.title hasSuffix:@"Entity"])
-		{
-			[tableClient updateEntity:entity];
+	} else if (mode == MODE_UPDATE) {
+		if ([self.navigationItem.title hasSuffix:@"Entity"]) {
+			[storageClient updateEntity:entity];
 		}
 	}
 }
 
 - (IBAction)delete:(id)sender
 {
-	
-	if ([self.navigationItem.title hasSuffix:@"Entity"])
-	{
-		[tableClient deleteEntity:entity];
-	}
-	else if ([self.navigationItem.title hasSuffix:@"Message"])
-	{
-		[tableClient deleteQueueMessage:queueMessage queueName:queueName];
+	if ([self.navigationItem.title hasSuffix:@"Entity"]) {
+		[storageClient deleteEntity:entity];
+	} else if ([self.navigationItem.title hasSuffix:@"Message"]) {
+		[storageClient deleteQueueMessage:queueMessage queueName:queueName];
 	}
 }
 
@@ -175,29 +162,18 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-	
-	if (mode == MODE_ADD)
-	{
-		if ([self.navigationItem.title hasSuffix:@"Entity"])
-		{
+	if (mode == MODE_ADD) {
+		if ([self.navigationItem.title hasSuffix:@"Entity"]) {
 			return ([[self.entity keys] count] + 2);
-		}
-		else if ([self.navigationItem.title hasSuffix:@"Message"])
-		{
+		} else if ([self.navigationItem.title hasSuffix:@"Message"]) {
 			return (1);
 		}
-	}
-	else if (mode == MODE_UPDATE)
-	{
-		if ([self.navigationItem.title hasSuffix:@"Entity"])
-		{
+	} else if (mode == MODE_UPDATE) {
+		if ([self.navigationItem.title hasSuffix:@"Entity"]) {
 			return [[self.entity keys] count];
 		}
-	}
-	else if (mode == MODE_DELETE)
-	{
-		if ([self.navigationItem.title hasSuffix:@"Message"])
-		{
+	} else if (mode == MODE_DELETE) {
+		if ([self.navigationItem.title hasSuffix:@"Message"]) {
 			return (QUEUE_MESSAGE_NUMBER_FIELDS);
 		}
 	}
@@ -209,18 +185,15 @@
     static NSString *CellIdentifier = @"Cell2";
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil)
-	{
+    if (cell == nil) {
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:CellIdentifier] autorelease];
 	}
 	
-	if(!editFields)
-	{
+	if (!editFields) {
 		NSInteger count = [self tableView:tableView numberOfRowsInSection:0];
 		CGRect rc = CGRectMake(0, 0, 200, 30);
 		editFields = [[NSMutableArray alloc] initWithCapacity:count];
-		for(NSInteger n = 0; n < count; n++)
-		{
+		for (NSInteger n = 0; n < count; n++) {
 			UITextField* textField = [[UITextField alloc] initWithFrame:rc];
 			textField.delegate = self;
 			textField.borderStyle = UITextBorderStyleRoundedRect;
@@ -228,72 +201,51 @@
 			[editFields addObject:textField];
 			[textField release];
 			
-			if(!n && mode == MODE_ADD)
-			{
+			if(!n && mode == MODE_ADD) {
 				[textField performSelector:@selector(becomeFirstResponder) withObject:nil afterDelay:0.0];
 			}
 		}
 	}
 	
-	UITextField* textField = [editFields objectAtIndex:indexPath.row];
+	UITextField *textField = [editFields objectAtIndex:indexPath.row];
 	cell.accessoryView = textField;
 	cell.selectionStyle = UITableViewCellEditingStyleNone;
 	cell.backgroundColor = [UIColor colorWithWhite:0.92 alpha:1.0];
 	
-	if (mode == MODE_ADD)
-	{
+	if (mode == MODE_ADD) {
 		cell.detailTextLabel.text = @" ";
-		if ([self.navigationItem.title hasSuffix:@"Entity"])
-		{
-			if (indexPath.row == 0)
-			{
+		if ([self.navigationItem.title hasSuffix:@"Entity"]) {
+			if (indexPath.row == 0) {
 				cell.textLabel.text = @"PartitionKey";
-				if ([entity.partitionKey length] > 0 && [entity.partitionKey isEqualToString:@" "] == NO)
-				{
+				if ([entity.partitionKey length] > 0 && [entity.partitionKey isEqualToString:@" "] == NO) {
 					textField.text = entity.partitionKey;
 				}
-			}
-			else if (indexPath.row == 1)
-			{
+			} else if (indexPath.row == 1) {
 				cell.textLabel.text = @"RowKey";
-				if ([entity.rowKey length] > 0 && [entity.rowKey isEqualToString:@" "] == NO)
-				{
+				if ([entity.rowKey length] > 0 && [entity.rowKey isEqualToString:@" "] == NO) {
 					textField.text = entity.rowKey;
 				}
-			}
-			else
-			{
+			} else {
 				cell.textLabel.text = [[self.entity keys] objectAtIndex:(indexPath.row - 2)];
-				if ([[entity objectForKey:[[self.entity keys] objectAtIndex:(indexPath.row - 2)]] length] > 0 && [[entity objectForKey:[[self.entity keys] objectAtIndex:(indexPath.row - 2)]] isEqualToString:@" "] == NO)
-				{
+				if ([[entity objectForKey:[[self.entity keys] objectAtIndex:(indexPath.row - 2)]] length] > 0 && [[entity objectForKey:[[self.entity keys] objectAtIndex:(indexPath.row - 2)]] isEqualToString:@" "] == NO) {
 					textField.text = [entity objectForKey:[[self.entity keys] objectAtIndex:(indexPath.row - 2)]];
 				}
 			}
-		}
-		else if ([self.navigationItem.title hasSuffix:@"Message"])
-		{
+		} else if ([self.navigationItem.title hasSuffix:@"Message"]) {
 			cell.textLabel.text = @"Message:";
-			if ([messageString length] > 0)
-			{
+			if ([messageString length] > 0) {
 				textField.text = messageString;
 			}
 		}
-	}
-	else if (mode == MODE_UPDATE)
-	{
-		if ([self.navigationItem.title hasSuffix:@"Entity"])
-		{
+	} else if (mode == MODE_UPDATE) {
+		if ([self.navigationItem.title hasSuffix:@"Entity"]) {
 			cell.textLabel.text = [[self.entity keys] objectAtIndex:indexPath.row];
-			if ([[self.entity objectForKey:[[self.entity keys] objectAtIndex:indexPath.row]] length])
-			{
+			if ([[self.entity objectForKey:[[self.entity keys] objectAtIndex:indexPath.row]] length]) {
 				textField.text = [self.entity objectForKey:[[self.entity keys] objectAtIndex:indexPath.row]];
 			}
 		}
-	}
-	else if (mode == MODE_DELETE)
-	{
-		switch (indexPath.row)
-		{
+	} else if (mode == MODE_DELETE) {
+		switch (indexPath.row) {
 			case 0:
 				cell.textLabel.text = @"Message ID";
 				textField.text = [queueMessage messageId];
@@ -330,7 +282,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	UITextField* field = [editFields objectAtIndex:indexPath.row];
+	UITextField *field = [editFields objectAtIndex:indexPath.row];
 	[field becomeFirstResponder];
 }
 
@@ -355,65 +307,45 @@
 	
 	if (mode == MODE_ADD)
 	{
-		if ([self.navigationItem.title hasSuffix:@"Entity"])
-		{
-			if (rowToEdit == 0)
-			{
+		if ([self.navigationItem.title hasSuffix:@"Entity"]) {
+			if (rowToEdit == 0) {
 				self.entity.partitionKey = textField.text;
-			}
-			else if (rowToEdit == 1)
-			{
+			} else if (rowToEdit == 1) {
 				self.entity.rowKey = textField.text;
-			}
-			else
-			{
+			} else {
 				[self.entity setObject:textField.text forKey:[[entity keys] objectAtIndex:(rowToEdit - 2)]];
 			}
 			
 			// Only enable the button if the two required fields are filled
-			if ([self.entity.partitionKey length] > 0 && [self.entity.rowKey length] > 0)
-			{
+			if ([self.entity.partitionKey length] > 0 && [self.entity.rowKey length] > 0) {
+				addUpdateButton.enabled = YES;
+			} else {
 				addUpdateButton.enabled = YES;
 			}
-			else
-			{
-				addUpdateButton.enabled = YES;
-			}
-		}
-		else if ([self.navigationItem.title hasSuffix:@"Message"])
-		{
+		} else if ([self.navigationItem.title hasSuffix:@"Message"]) {
 			self.messageString = textField.text;
 			addUpdateButton.enabled = YES;
 		}
-	}
-	else if (mode == MODE_UPDATE)
-	{
-		if ([self.navigationItem.title hasSuffix:@"Entity"])
-		{
+	} else if (mode == MODE_UPDATE) {
+		if ([self.navigationItem.title hasSuffix:@"Entity"]) {
 			[self.entity setObject:textField.text forKey:[[entity keys] objectAtIndex:rowToEdit]];
 		}
 	}
 	[textField resignFirstResponder];
 	
 	// Gets reset to the default button title; need to fix it again
-	if (mode == MODE_ADD)
-	{
+	if (mode == MODE_ADD) {
 		self.addUpdateButton.titleLabel.text = @"Add";
-	}
-	else
-	{
+	} else {
 		self.addUpdateButton.titleLabel.text = @"Update";
 	}
-	
-	//	editingData = FALSE;
-	//	[entityTable reloadData];
 }
 
 #pragma mark - CloudStorageClientDelegate methods
 
 - (void)storageClient:(WACloudStorageClient *)client didFailRequest:request withError:error
 {
-	UIBarButtonItem* item;
+	UIBarButtonItem *item;
 	item = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector(addUpdate:)];
 	self.navigationItem.rightBarButtonItem = item;
 	[item release];

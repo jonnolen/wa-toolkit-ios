@@ -17,6 +17,8 @@
 #import "BlobViewerController.h"
 #import "Azure_Storage_ClientAppDelegate.h"
 
+#import "WAToolkit.h"
+
 @implementation BlobViewerController
 
 @synthesize blobImageView;
@@ -33,9 +35,11 @@
 
 - (void)dealloc
 {
-    [blobImageView release];
-	[storageClient release];
-	[blob release];
+    RELEASE(blobImageView);
+    storageClient.delegate = nil;
+    RELEASE(storageClient);
+    RELEASE(blob);
+
     [super dealloc];
 }
 
@@ -51,16 +55,13 @@
 
 - (void)viewDidLoad
 {
-
-	Azure_Storage_ClientAppDelegate		*appDelegate = (Azure_Storage_ClientAppDelegate *)[[UIApplication sharedApplication] delegate];
-
     [super viewDidLoad];
 
+	Azure_Storage_ClientAppDelegate	*appDelegate = (Azure_Storage_ClientAppDelegate *)[[UIApplication sharedApplication] delegate];
+
 	storageClient = [[WACloudStorageClient storageClientWithCredential:appDelegate.authenticationCredential] retain];
-	if ([blob.name hasSuffix:@"png"] || [blob.name hasSuffix:@"jpg"] || [blob.name hasSuffix:@"jpeg"])
-	{
-		[storageClient fetchBlobData:self.blob withCompletionHandler:^(NSData *imgData, NSError *error)
-		{
+	if ([blob.name hasSuffix:@"png"] || [blob.name hasSuffix:@"jpg"] || [blob.name hasSuffix:@"jpeg"]) {
+		[storageClient fetchBlobData:self.blob withCompletionHandler:^(NSData *imgData, NSError *error) {
 			UIImage *blobImage = [UIImage imageWithData:imgData];
 			self.blobImageView.image = blobImage;
 		}];
@@ -70,14 +71,15 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
     storageClient.delegate = nil;
+    
+    [super viewWillDisappear:animated];
 }
 
 - (void)viewDidUnload
 {
     self.blobImageView = nil;;
+    
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

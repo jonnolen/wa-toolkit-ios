@@ -1,9 +1,9 @@
-Windows Azure Toolkit for iOS (Library) - v1.2.1
+Windows Azure Toolkit for iOS (Library)
 ===
 
 The Windows Azure Toolkit for iOS is a toolkit for developers to make it easy to access Windows Azure storage services from native iOS applications.  The toolkit can be used for both iPhone and iPad applications, developed using Objective-C and XCode.  
 
-The toolkit works in two ways – the toolkit can be used to access Windows Azure storage directly, or alternatively, can go through a proxy server.  The proxy server code is the same code as used in the WP7 toolkit for Windows Azure (found here) and negates the need for the developer to store the Azure storage credentials locally on the device.  If you are planning to test using the proxy server, you’ll need to download and deploy the services found in the [cloudreadypackages](https://github.com/microsoft-dpe/cloudreadypackages) here on GitHub.  
+The toolkit works in two ways – the toolkit can be used to access Windows Azure storage directly, or alternatively, can go through a proxy server.  The proxy server code is the same code as used in the WP7 toolkit for Windows Azure (found here) and negates the need for the developer to store the Azure storage credentials locally on the device.  If you are planning to test using the proxy server, you’ll need to download and deploy the services found in the [cloudreadypackages](https://github.com/microsoft-dpe/wa-toolkit-cloudreadypackages) here on GitHub.  
 
 The Windows Azure Toolkit for iOS is made available as an open source product under the Apache License, Version 2.0.  
 
@@ -31,7 +31,7 @@ Xcode 4.x (Git Submodule)
 1. Drag the **watoolkitios-ib.xcodeproj** file from the Finder and drop it on your "(Your Project's Name)".xcodeproj.
 1. Click on your project's name in the sidebar on the left to open the project settings view in the right pane of the window.
 1. In the middle pane you will see **PROJECT** and **TARGETS** headers for your project. Click on your project name, then select **Build Settings** along the top to open the Build Settings editor for your entire project.
-1. Find the **Header Search Paths** setting. Double click and add a new entry. Add a search path to the `$(BUILT_PRODUCTS_DIR)` directory and check the `Recursive` checkbox.
+1. Find the **Header Search Paths** setting. Double click and add a new entry. Add a search path to the `$(BUILT_PRODUCTS_DIR)` directory and check the `Recursive` checkbox. Also add `/usr/include/libxml2` to the search path and check `Recursive`.
 	* **NOTE**: This is only necessary if you are **NOT** using DerivedData. 
 	* Find the **Library Search Paths** setting. Double click and add a new entry. Add a search path to the `"$(BUILT_PRODUCTS_DIR)/Build/$(BUILD_STYLE)-$(PLATFORM_NAME)"` directory you have added to your project.  
 1. Find the **Other Linker Flags** entry and double click it. Use the **+** button to add a new entry and enter `-ObjC -all_load`. Dismiss the editor with the **Done** button.
@@ -48,16 +48,7 @@ Congratulations, you are now done adding Windows Azure iOS toolkit into your Xco
 
 You now only need to add includes for the Windows Azure iOS toolkit libraries at the appropriate places in your application. The relevant includes are:
 
-    #import "WAAuthenticationCredential.h"
-    #import "WABlob.h"
-    #import "WABlobContainer.h"
-    #import "WACloudAccessControlClient.h"
-    #import "WACloudAccessToken.h"
-    #import "WACloudStorageClient.h"
-    #import "WAQueue.h"
-    #import "WAQueueMessage.h"
-    #import "WATableEntity.h"
-    #import "WATableFetchRequest.h"
+    #import "WAToolkit.h"
     
 Please see the samples directory for details on utilizing the library.
 

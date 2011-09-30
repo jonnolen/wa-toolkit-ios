@@ -15,12 +15,13 @@
  */
 
 #import <UIKit/UIKit.h>
-#import "WACloudAccessToken.h"
 
+@class WACloudAccessToken;
 @class WACloudAccessControlClient;
 
 @interface WALoginProgressViewController : UIViewController 
 {
+@private
     NSURL* _serviceURL;
 	void (^ _block)(WACloudAccessToken* token);
 	BOOL _allowsClose;

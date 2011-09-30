@@ -1,7 +1,7 @@
 #!/bin/sh
 #
-# Running this script installs the Windows Azure iOS Tookit documentation so that it
-# integrates with Xcode. It requires Doxygen to be installed.
+# Running this script creates the Windows Azure iOS Tookit documentation so that it
+# can be integrated with Xcode. It requires Doxygen to be installed.
 #
 # See also:
 # http://developer.apple.com/tools/creatingdocsetswithdoxygen.html
@@ -11,9 +11,11 @@ set -x
 
 VERSION=$(agvtool mvers -terse1)
 TMPDIR=$(mktemp -d /tmp/$(basename $0).XXXXXX) || exit 1
-DOXYFILE=$TMPDIR/doxygen.config
+DOCDIR=../docs
+DOXYFILE=$DOCDIR/doxygen.config
 DOXYGEN=/Applications/Doxygen.app/Contents/Resources/doxygen
 PROJECT=$(echo *.xcodeproj | cut -d. -f1)
+INSTALL=$1
 
 if ! test -x $DOXYGEN ; then
 	echo "*** Install Doxygen to get documentation generated for you automatically ***"
@@ -28,10 +30,10 @@ cat <<EOF >> $DOXYFILE
 
 PROJECT_NAME           = $PROJECT
 PROJECT_NUMBER         = $VERSION
-OUTPUT_DIRECTORY       = $TMPDIR
-INPUT                  = Classes
+OUTPUT_DIRECTORY       = $DOCDIR
+INPUT                  = ../library/Library
 FILE_PATTERNS          = *.h *.m
-
+RECURSIVE              = YES
 HIDE_UNDOC_MEMBERS     = YES
 HIDE_UNDOC_CLASSES     = YES
 HIDE_UNDOC_RELATIONS   = YES
@@ -45,7 +47,7 @@ SEARCHENGINE           = NO
 GENERATE_HTML          = YES
 GENERATE_DOCSET        = YES
 DOCSET_FEEDNAME        = "$PROJECT API Documentation"
-DOCSET_BUNDLE_ID       = org.brautaset.$PROJECT
+DOCSET_BUNDLE_ID       = com.microsoft.$PROJECT
 
 EOF
 
@@ -53,16 +55,19 @@ EOF
 #  doxygen creates a Makefile that does most of the heavy lifting.
 $DOXYGEN $DOXYFILE
 
+# Install docs only if pass install to script
+if [$INSTALL = "install"]; then
 #  make will invoke docsetutil. Take a look at the Makefile to see how this is done.
-make -C $TMPDIR/html install
+make -C $DOCDIR/html install
 
 #  Construct a temporary applescript file to tell Xcode to load a
 #  docset.
 cat <<EOF > $TMPDIR/loadDocSet.scpt
 tell application "Xcode"
-	load documentation set with path "/Users/$USER/Library/Developer/Shared/Documentation/DocSets/org.brautaset.${PROJECT}.docset/"
+	load documentation set with path "/Users/$USER/Library/Developer/Shared/Documentation/DocSets/com.microsoft.${PROJECT}.docset/"
 end tell
 EOF
 
 # Run the load-docset applescript command.
 osascript $TMPDIR/loadDocSet.scpt
+fi
