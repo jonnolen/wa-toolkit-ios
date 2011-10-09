@@ -16,23 +16,59 @@
 
 #import <Foundation/Foundation.h>
 
-/*! QueueMessage is a class used to represent queueMessage within Windows Azure QueueMessage. */
+/**
+ A class that represents a message in a Windows Azure Queue. 
+ */
 @interface WAQueueMessage : NSObject
 
-/*! Message Id of the QueueMessage object */
+
+/**
+ The identifier for the message in the queue.
+ */
 @property (readonly) NSString *messageId;
-/*! Insertion Time of the QueueMessage object */
+
+/**
+ The time the message was inserted into the queue.
+ */
 @property (readonly) NSString *insertionTime;
-/*! Expiration Time of the QueueMessage object */
+
+/**
+ The expieration time for the message in the queue.
+ */
 @property (readonly) NSString *expirationTime;
-/*! Pop Receipt of the QueueMessage object */
+
+/**
+ The message's pop receipt.
+ The pop receipt is an opaque value that indicates that the message has been retrieved and can be used to delete it.
+ */
 @property (readonly) NSString *popReceipt;
-/*! Time Next Visible of the QueueMessage object */
+
+/**
+ The time that the message will next be visible.
+ The property is updated when a message is retrieved from the queue. It indicates when a message will become visible again to other clients, if it is not first deleted by the client that retrieved it.
+ */
 @property (readonly) NSString *timeNextVisible;
-/*! Message Text of the QueueMessage object */
+
+/**
+ The message text.
+ */
 @property (copy) NSString *messageText;
 
+
 /*! Intialize a new QueueMessage with the messageId, insertionTime etc. */
+/**
+ Initializes a newly created WAQueueMessage with an identifier, insertion time, experiation time, pop receipt, next visible time and message text.
+ 
+ @param messageId The message identifier.
+ @param insertionTime The insertion time for the message.
+ @param expirationTime The expiration time for the message.
+ @param popReceipt the pop receipt for the message.
+ @param timeNextVisible The next visible time for the message.
+ @param messageText The message next.
+ 
+ @returns The newly initialized WAQueueMessage object.
+ */
 - (id)initQueueMessageWithMessageId:(NSString *)messageId insertionTime:(NSString *)insertionTime expirationTime:(NSString *)expirationTime popReceipt:(NSString *)popReceipt timeNextVisible:(NSString *)timeNextVisible messageText:(NSString *)messageText;
+
 
 @end

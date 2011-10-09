@@ -23,9 +23,9 @@
 @interface WACloudAccessControlClient : NSObject 
 {
 @private
-    NSURL* _serviceURL;
-    NSString* _realm;
-    NSString* _serviceNamespace;
+    NSURL *_serviceURL;
+    NSString *_realm;
+    NSString *_serviceNamespace;
 }
 
 /*! Returns the realm the client was initialized with. */
