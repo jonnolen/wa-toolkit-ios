@@ -42,133 +42,133 @@
 /*! Returns a list of blob containers. */
 - (void)fetchBlobContainers;
 /*! Returns a list of blob containers. */
-- (void)fetchBlobContainersWithCompletionHandler:(void (^)(NSArray*, NSError *))block;
+- (void)fetchBlobContainersWithCompletionHandler:(void (^)(NSArray *containers, NSError *error))block;
 /*! Returns a list of blob containers. */
 - (void)fetchBlobContainersWithContinuation:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult;
 /*! Returns a list of blob containers. */
-- (void)fetchBlobContainersWithContinuation:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult usingCompletionHandler:(void (^)(NSArray*, WAResultContinuation *, NSError*))block;
+- (void)fetchBlobContainersWithContinuation:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult usingCompletionHandler:(void (^)(NSArray *containers, WAResultContinuation *resultContinuation, NSError *error))block;
 /*! Returnva a blob container. */
 - (void)fetchBlobContainerNamed:(NSString *)containerName;
 /*! Returnva a blob container. */
-- (void)fetchBlobContainerNamed:(NSString *)containerName withCompletionHandler:(void (^)(WABlobContainer *, NSError *))block;
+- (void)fetchBlobContainerNamed:(NSString *)containerName withCompletionHandler:(void (^)(WABlobContainer *container, NSError *error))block;
 /*! Adds a blob container, given a specified container name.  Returns error if the container already exists, or where the name is an invalid format.*/
 - (BOOL)addBlobContainerNamed:(NSString *)containerName;
 /*! Adds a blob container, given a specified container name.  Returns error if the container already exists, or where the name is an invalid format.*/
-- (BOOL)addBlobContainerNamed:(NSString *)containerName withCompletionHandler:(void (^)(NSError *))block;
+- (BOOL)addBlobContainerNamed:(NSString *)containerName withCompletionHandler:(void (^)(NSError *error))block;
 /*! Deletes a specified blob container. */
 - (BOOL)deleteBlobContainer:(WABlobContainer *)container;
 /*! Deletes a specified blob container. */
-- (BOOL)deleteBlobContainer:(WABlobContainer *)container withCompletionHandler:(void (^)(NSError *))block;
+- (BOOL)deleteBlobContainer:(WABlobContainer *)container withCompletionHandler:(void (^)(NSError *error))block;
 /*! Deletes a specified blob container with a name. */
 - (BOOL)deleteBlobContainerNamed:(NSString *)containerName;
 /*! Deletes a specified blob container with a name. */
-- (BOOL)deleteBlobContainerNamed:(NSString *)containerName withCompletionHandler:(void (^)(NSError *))block;
+- (BOOL)deleteBlobContainerNamed:(NSString *)containerName withCompletionHandler:(void (^)(NSError *error))block;
 /*! Returns an array of blobs from the specified blob container. */
 - (void)fetchBlobs:(WABlobContainer *)container;
 /*! Returns an array of blobs from the specified blob container. */
-- (void)fetchBlobs:(WABlobContainer *)container withCompletionHandler:(void (^)(NSArray *, NSError *))block;
+- (void)fetchBlobs:(WABlobContainer *)container withCompletionHandler:(void (^)(NSArray *blobs, NSError *error))block;
 /*! Returns an array of blobs from the specified blob container. */
 - (void)fetchBlobsWithContinuation:(WABlobContainer *)container resultContinuation:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult;
 /*! Returns an array of blobs from the specified blob container. */
-- (void)fetchBlobsWithContinuation:(WABlobContainer *)container resultContinuation:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult usingCompletionHandler:(void (^)(NSArray *, WAResultContinuation *, NSError *))block;
+- (void)fetchBlobsWithContinuation:(WABlobContainer *)container resultContinuation:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult usingCompletionHandler:(void (^)(NSArray *blobs, WAResultContinuation *resultContinuation, NSError *error))block;
 /*! Returns the binary data (NSData) object for the specified blob. */
 - (void)fetchBlobData:(WABlob *)blob;
 /*! Returns the binary data (NSData) object for the specified blob. */
-- (void)fetchBlobData:(WABlob *)blob withCompletionHandler:(void (^)(NSData *, NSError *))block;
+- (void)fetchBlobData:(WABlob *)blob withCompletionHandler:(void (^)(NSData *data, NSError *error))block;
 /*! Adds a new blob to a container, given the name of the blob, binary data for the blob, and content type. */
 - (void)addBlobToContainer:(WABlobContainer *)container blobName:(NSString *)blobName contentData:(NSData *)contentData contentType:(NSString*)contentType;
 /*! Adds a new blob to a container, given the name of the blob, binary data for the blob, and content type. */
-- (void)addBlobToContainer:(WABlobContainer *)container blobName:(NSString *)blobName contentData:(NSData *)contentData contentType:(NSString*)contentType withCompletionHandler:(void (^)(NSError *))block;
+- (void)addBlobToContainer:(WABlobContainer *)container blobName:(NSString *)blobName contentData:(NSData *)contentData contentType:(NSString*)contentType withCompletionHandler:(void (^)(NSError *error))block;
 /*! Deletes a blob.  Returns error if the blob doesn't exist or could not be deleted. */
 - (void)deleteBlob:(WABlob *)blob;
 /*! Deletes a blob.  Returns error if the blob doesn't exist or could not be deleted. */
-- (void)deleteBlob:(WABlob *)blob withCompletionHandler:(void (^)(NSError *))block;
+- (void)deleteBlob:(WABlob *)blob withCompletionHandler:(void (^)(NSError *error))block;
 
 /*! Returns a list of queues. */
 - (void)fetchQueues;
 /*! Returns a list of queues. */
-- (void)fetchQueuesWithCompletionHandler:(void (^)(NSArray*, NSError *))block;
+- (void)fetchQueuesWithCompletionHandler:(void (^)(NSArray *queues, NSError *error))block;
 /*! Returns a list of queues. */
 - (void)fetchQueuesWithContinuation:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult;
 /*! Returns a list of queues. */
-- (void)fetchQueuesWithContinuation:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult usingCompletionHandler:(void (^)(NSArray*, WAResultContinuation *, NSError *))block;
+- (void)fetchQueuesWithContinuation:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult usingCompletionHandler:(void (^)(NSArray *queues, WAResultContinuation *resultContinuation, NSError *error))block;
 /*! Adds a queue, given a specified queue name. */
 - (void)addQueueNamed:(NSString *)queueName;
 /*! Adds a queue, given a specified queue name.  Returns error if the queue already exists, or where the name is an invalid format.*/
-- (void)addQueueNamed:(NSString *)queueName withCompletionHandler:(void (^)(NSError *))block;
+- (void)addQueueNamed:(NSString *)queueName withCompletionHandler:(void (^)(NSError *error))block;
 /*! Deletes a queue, given a specified queue name. */
 - (void)deleteQueueNamed:(NSString *)queueName;
 /*! Deletes a queue, given a specified queue name. Returns error if failed. */
-- (void)deleteQueueNamed:(NSString *)queueName withCompletionHandler:(void (^)(NSError *))block;
+- (void)deleteQueueNamed:(NSString *)queueName withCompletionHandler:(void (^)(NSError *error))block;
 /*! Gets a message, given a specified queue name. */
 - (void)fetchQueueMessages:(NSString *)queueName;
 /*! Gets a message, given a specified queue name. Returns error if failed. */
-- (void)fetchQueueMessages:(NSString *)queueName withCompletionHandler:(void (^)(NSArray *, NSError *))block;
+- (void)fetchQueueMessages:(NSString *)queueName withCompletionHandler:(void (^)(NSArray *messages, NSError *error))block;
 /*! Gets a single message from the specified queue. */
 - (void)fetchQueueMessage:(NSString *)queueName;
 /*! Gets a single message from the specified queue. Returns error if failed. */
-- (void)fetchQueueMessage:(NSString *)queueName withCompletionHandler:(void (^)(WAQueueMessage *, NSError *))block;
+- (void)fetchQueueMessage:(NSString *)queueName withCompletionHandler:(void (^)(WAQueueMessage *message, NSError *error))block;
 /*! Gets a batch of messages from the specified queue. */
 - (void)fetchQueueMessages:(NSString *)queueName fetchCount:(NSInteger)fetchCount;
 /*! Gets a batch of messages from the specified queue. Returns error if failed. */
-- (void)fetchQueueMessages:(NSString *)queueName fetchCount:(NSInteger)fetchCount withCompletionHandler:(void (^)(NSArray *, NSError *))block;
+- (void)fetchQueueMessages:(NSString *)queueName fetchCount:(NSInteger)fetchCount withCompletionHandler:(void (^)(NSArray *messages, NSError *error))block;
 /*! Peeks a single message from the specified queue. Peek is like Get, but the message is not marked for removal. */
 - (void)peekQueueMessage:(NSString *)queueName;
 /*! Peeks a single message from the specified queue. Peek is like Get, but the message is not marked for removal. Returns error if failed. */
-- (void)peekQueueMessage:(NSString *)queueName withCompletionHandler:(void (^)(WAQueueMessage *, NSError *))block;
+- (void)peekQueueMessage:(NSString *)queueName withCompletionHandler:(void (^)(WAQueueMessage *message, NSError *error))block;
 /*! Peeks a batch of messages from the specified queue. Peek is like Get, but the message is not marked for removal. */
 - (void)peekQueueMessages:(NSString *)queueName fetchCount:(NSInteger)fetchCount;
 /*! Peeks a batch of messages from the specified queue. Peek is like Get, but the message is not marked for removal. Returns error if failed. */
-- (void)peekQueueMessages:(NSString *)queueName fetchCount:(NSInteger)fetchCount withCompletionHandler:(void (^)(NSArray *, NSError *))block;
+- (void)peekQueueMessages:(NSString *)queueName fetchCount:(NSInteger)fetchCount withCompletionHandler:(void (^)(NSArray *messages, NSError *error))block;
 /*! Deletes a message, given a specified queue name and queueMessage. */
 - (void)deleteQueueMessage:(WAQueueMessage *)queueMessage queueName:(NSString *)queueName;
 /*! Deletes a message, given a specified queue name and queueMessage. Returns error if failed. */
-- (void)deleteQueueMessage:(WAQueueMessage *)queueMessage queueName:(NSString *)queueName withCompletionHandler:(void (^)(NSError *))block;
+- (void)deleteQueueMessage:(WAQueueMessage *)queueMessage queueName:(NSString *)queueName withCompletionHandler:(void (^)(NSError *error))block;
 /*! Puts a message into a queue, given a specified queue name and message. */
 - (void)addMessageToQueue:(NSString *)message queueName:(NSString *)queueName;
 /*! Puts a message into a queue, given a specified queue name and message. Returns error if failed. */
-- (void)addMessageToQueue:(NSString *)message queueName:(NSString *)queueName withCompletionHandler:(void (^)(NSError *))block;
+- (void)addMessageToQueue:(NSString *)message queueName:(NSString *)queueName withCompletionHandler:(void (^)(NSError *error))block;
 
 /*! Returns a list of tables. */
 - (void)fetchTables;
 /*! Returns a list of tables. */
-- (void)fetchTablesWithCompletionHandler:(void (^)(NSArray *, NSError *))block;
+- (void)fetchTablesWithCompletionHandler:(void (^)(NSArray *tables, NSError *error))block;
 /*! Returns a list of tables using a continuation. */
 - (void)fetchTablesWithContinuation:(WAResultContinuation *)resultContinuation;
 /*! Returns a list of tables using a continuation. */
-- (void)fetchTablesWithContinuation:(WAResultContinuation *)resultContinuation usingCompletionHandler:(void (^)(NSArray *, WAResultContinuation *, NSError *))block;
+- (void)fetchTablesWithContinuation:(WAResultContinuation *)resultContinuation usingCompletionHandler:(void (^)(NSArray *tables, WAResultContinuation *resultContinuation, NSError *error))block;
 /*! Creates a new table with a specified name. */
 - (void)createTableNamed:(NSString *)newTableName;
 /*! Creates a new table with a specified name. */
-- (void)createTableNamed:(NSString *)newTableName withCompletionHandler:(void (^)(NSError *))block;
+- (void)createTableNamed:(NSString *)newTableName withCompletionHandler:(void (^)(NSError *error))block;
 /*! Deletes a specifed table.  Returns error is the table doesn't exist or could not be deleted. */
 - (void)deleteTableNamed:(NSString *)tableName;
 /*! Deletes a specifed table.  Returns error is the table doesn't exist or could not be deleted. */
-- (void)deleteTableNamed:(NSString *)tableName withCompletionHandler:(void (^)(NSError *))block;
+- (void)deleteTableNamed:(NSString *)tableName withCompletionHandler:(void (^)(NSError *error))block;
 /*! Returns the entities for a given table. */
 - (void)fetchEntities:(WATableFetchRequest*)fetchRequest;
 /*! Returns the entities for a given table. */
-- (void)fetchEntities:(WATableFetchRequest*)fetchRequest withCompletionHandler:(void (^)(NSArray *, NSError *))block;
+- (void)fetchEntities:(WATableFetchRequest*)fetchRequest withCompletionHandler:(void (^)(NSArray *entities, NSError *error))block;
 /*! Returns the entities for a given table with a continuation result to fetch the next set of entities. */
 - (void)fetchEntitiesWithContinuation:(WATableFetchRequest*)fetchRequest;
 /*! Returns the entities for a given table with a continuation result to fetch the next set of entities. */
-- (void)fetchEntitiesWithContinuation:(WATableFetchRequest*)fetchRequest usingCompletionHandler:(void (^)(NSArray *, WAResultContinuation *, NSError *))block;
+- (void)fetchEntitiesWithContinuation:(WATableFetchRequest*)fetchRequest usingCompletionHandler:(void (^)(NSArray *entities, WAResultContinuation *resultContinuation, NSError *error))block;
 /*! Inserts a new entity into an existing table. */
 - (BOOL)insertEntity:(WATableEntity *)newEntity;
 /*! Inserts a new entity into an existing table. */
-- (BOOL)insertEntity:(WATableEntity *)newEntity withCompletionHandler:(void (^)(NSError *))block;
+- (BOOL)insertEntity:(WATableEntity *)newEntity withCompletionHandler:(void (^)(NSError *error))block;
 /*! Updates an existing entity within a table. */
 - (BOOL)updateEntity:(WATableEntity *)existingEntity;
 /*! Updates an existing entity within a table. */
-- (BOOL)updateEntity:(WATableEntity *)existingEntity withCompletionHandler:(void (^)(NSError *))block;
+- (BOOL)updateEntity:(WATableEntity *)existingEntity withCompletionHandler:(void (^)(NSError *error))block;
 /*! Merges an existing entity within a table. */
 - (BOOL)mergeEntity:(WATableEntity *)existingEntity;
 /*! Merges an existing entity within a table. */
-- (BOOL)mergeEntity:(WATableEntity *)existingEntity withCompletionHandler:(void (^)(NSError *))block;
+- (BOOL)mergeEntity:(WATableEntity *)existingEntity withCompletionHandler:(void (^)(NSError *error))block;
 /*! Deletes an existing entity within a table. */
 - (BOOL)deleteEntity:(WATableEntity *)existingEntity;
 /*! Merges an existing entity within a table. */
-- (BOOL)deleteEntity:(WATableEntity *)existingEntity withCompletionHandler:(void (^)(NSError *))block;
+- (BOOL)deleteEntity:(WATableEntity *)existingEntity withCompletionHandler:(void (^)(NSError *error))block;
 
 /*! Initializes a new cloud storage client, based on a passed set of authentication credentials. */
 + (WACloudStorageClient*) storageClientWithCredential:(WAAuthenticationCredential*)credential;

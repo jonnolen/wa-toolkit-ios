@@ -628,7 +628,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
     [self fetchBlobContainersWithCompletionHandler:nil];
 }
 
-- (void)fetchBlobContainersWithCompletionHandler:(void (^)(NSArray*, NSError*))block
+- (void)fetchBlobContainersWithCompletionHandler:(void (^)(NSArray *, NSError *))block
 {
     WACloudURLRequest *request = nil;
     NSArray*(^containerBlock)(xmlDocPtr) = nil;
