@@ -21,7 +21,6 @@
  */
 @interface WAQueueMessage : NSObject
 
-
 /**
  The identifier for the message in the queue.
  */
@@ -54,8 +53,6 @@
  */
 @property (copy) NSString *messageText;
 
-
-/*! Intialize a new QueueMessage with the messageId, insertionTime etc. */
 /**
  Initializes a newly created WAQueueMessage with an identifier, insertion time, experiation time, pop receipt, next visible time and message text.
  
@@ -69,6 +66,5 @@
  @returns The newly initialized WAQueueMessage object.
  */
 - (id)initQueueMessageWithMessageId:(NSString *)messageId insertionTime:(NSString *)insertionTime expirationTime:(NSString *)expirationTime popReceipt:(NSString *)popReceipt timeNextVisible:(NSString *)timeNextVisible messageText:(NSString *)messageText;
-
 
 @end

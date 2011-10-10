@@ -17,7 +17,7 @@
 #import <Foundation/Foundation.h>
 
 /**
- A class that represents a Windows Auzre queue.
+ A class that represents a Windows Azure queue.
  */
 @interface WAQueue : NSObject
 
@@ -27,13 +27,11 @@
 @property (copy) NSString *queueName;
 
 /**
- The URL of the queue.
+ The address of the queue.
  
  @see NSURL
  */
 @property (readonly) NSURL *URL;
-
-
 
 /**
  Initializes a newly created WAQueue with a specified name and URL.
@@ -44,6 +42,5 @@
  @returns The newly initialized WAQueue object.
  */
 - (id)initQueueWithName:(NSString *)queueName URL:(NSString *)URL;
-
 
 @end
