@@ -18,7 +18,14 @@
 
 @class WAResultContinuation;
 
-@interface WATableFetchRequest : NSObject 
+/**
+ A class that represents a Windows Azure Storage fetch request.
+ 
+ The request is used with the WACloudStorageClient when working with tables.
+ 
+ @see WATableFetchRequest
+ */
+@interface WATableFetchRequest : NSObject
 {
 @private
     NSString *_tableName;
@@ -29,14 +36,56 @@
     WAResultContinuation *_resultContinuation;
 }
 
-@property (readonly) NSString* tableName;
-@property (copy) NSString* partitionKey;
-@property (copy) NSString* rowKey;
-@property (copy) NSString* filter;
+/**
+ The table name.
+ */
+@property (readonly) NSString *tableName;
+
+/**
+ The partition key.
+ */
+@property (copy) NSString *partitionKey;
+
+/**
+ The row key.
+ */
+@property (copy) NSString *rowKey;
+
+/**
+ The filter to use in the table fetch request.
+ */
+@property (copy) NSString *filter;
+
+/**
+ The number of rows to limit with the tech.
+ */
 @property (assign) NSInteger topRows;
+
+/**
+ The continuation to use in the fetch request.
+ */
 @property (nonatomic, retain) WAResultContinuation *resultContinuation;
 
-+ (WATableFetchRequest*)fetchRequestForTable:(NSString*)tableName;
-+ (WATableFetchRequest*)fetchRequestForTable:(NSString*)tableName predicate:(NSPredicate*)predicate error:(NSError**)error;
+/**
+ Create a new WATableFetchRequest with a table name.
+ 
+ @param tableName The table name for the fetch request.
+ 
+ @returns The newly initialized WATableFetchRequest object.
+ */
++ (WATableFetchRequest *)fetchRequestForTable:(NSString *)tableName;
+
+/**
+ Create a new WATableFetchRequest with a table name, predicate, and error.
+ 
+ @param tableName The table name for the fetch request.
+ @param predicate The predicate for the fetch request.
+ @param error An NSError object that will be populated if the predicate is not valid.
+ 
+ @returns The newly initialized WATableFetchRequest object.
+ 
+ @see NSPredicate
+ */
++ (WATableFetchRequest *)fetchRequestForTable:(NSString *)tableName predicate:(NSPredicate *)predicate error:(NSError **)error;
 
 @end
