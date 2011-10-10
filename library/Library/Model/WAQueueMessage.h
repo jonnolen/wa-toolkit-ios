@@ -21,7 +21,6 @@
  */
 @interface WAQueueMessage : NSObject
 
-
 /**
  The identifier for the message in the queue.
  */
@@ -54,8 +53,12 @@
  */
 @property (copy) NSString *messageText;
 
+/**
+ The number of times this message has been dequeued.
+ */
+@property (readonly) NSInteger dequeueCount;
 
-/*! Intialize a new QueueMessage with the messageId, insertionTime etc. */
+
 /**
  Initializes a newly created WAQueueMessage with an identifier, insertion time, experiation time, pop receipt, next visible time and message text.
  
@@ -64,11 +67,25 @@
  @param expirationTime The expiration time for the message.
  @param popReceipt the pop receipt for the message.
  @param timeNextVisible The next visible time for the message.
- @param messageText The message next.
+ @param messageText The message text.
  
  @returns The newly initialized WAQueueMessage object.
  */
 - (id)initQueueMessageWithMessageId:(NSString *)messageId insertionTime:(NSString *)insertionTime expirationTime:(NSString *)expirationTime popReceipt:(NSString *)popReceipt timeNextVisible:(NSString *)timeNextVisible messageText:(NSString *)messageText;
 
+/**
+ Initializes a newly created WAQueueMessage with an identifier, insertion time, experiation time, pop receipt, next visible time and message text.
+ 
+ @param messageId The message identifier.
+ @param insertionTime The insertion time for the message.
+ @param expirationTime The expiration time for the message.
+ @param popReceipt the pop receipt for the message.
+ @param timeNextVisible The next visible time for the message.
+ @param messageText The message text.
+ @param dequeueCount The dequeue count.
+ 
+ @returns The newly initialized WAQueueMessage object.
+ */
+- (id)initQueueMessageWithMessageId:(NSString *)messageId insertionTime:(NSString *)insertionTime expirationTime:(NSString *)expirationTime popReceipt:(NSString *)popReceipt timeNextVisible:(NSString *)timeNextVisible messageText:(NSString *)messageText dequeueCount:(NSInteger)dequeueCount;
 
 @end

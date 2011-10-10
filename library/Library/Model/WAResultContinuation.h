@@ -16,7 +16,11 @@
 
 #import <Foundation/Foundation.h>
 
-/*! WAContinuationType represents the type of continuation in a WAResultContinuation.*/
+/**
+ Represents the type of continuation in a WAResultContinuation.
+ 
+ @see WAResultContinuation
+ */
 typedef enum {
     WAContinuationNone = 0,
     WAContinuationBlob = 1,
@@ -26,7 +30,9 @@ typedef enum {
     WAContinuationEntity = 5
 } WAContinuationType;
 
-/*! WAResultContinuation is a class used to represent continuation tokens used with paging Windows Azure data.*/
+/**
+ A class that represents continuation token information used with paging Windows Azure data.
+ */
 @interface WAResultContinuation : NSObject {
 @private
     NSString *_nextParitionKey;
@@ -36,26 +42,69 @@ typedef enum {
     WAContinuationType _continuationType;
 }
 
-/*! The next partition key in a continuation. */
+/** 
+ The next partition key to be returned in a subsequent query against the table. 
+ */
 @property (nonatomic, readonly) NSString *nextPartitionKey;
-/*! The next row key in a continuation. */
+
+/**
+ The next row key to be returned in a subsequent query against the table.
+ */
 @property (nonatomic, readonly) NSString *nextRowKey;
-/*! The next table key in a continuation. */
+
+/**
+ If the list of tables returned is not complete, the name of the next table in the list.
+ */
 @property (nonatomic, readonly) NSString *nextTableKey;
-/*! The next marker key in a continuation. */
+
+/**
+ A value that identifies the portion of the list to be returned with the next list operation if the list returned was not complete. The marker value may then be used in a subsequent call to request the next set of list items.
+ */
 @property (nonatomic, readonly) NSString *nextMarker;
-/*! The continuation type. */
+
+/**
+ The type of continuation token.
+ */
 @property (nonatomic, readonly) WAContinuationType continuationType;
-/*! Determines if there is a continuation. */
+
+/**
+ Determines if there is a continuation. The default is WAContinuationNone.
+ 
+ @see WAContinuationType
+ */
 @property (nonatomic, readonly) BOOL hasContinuation;
 
-/*! Intialize a new continuation with the next partition and row key. */
-- (id)initWithNextParitionKey:(NSString*)nextParitionKey nextRowKey:(NSString*)nextRowKey;
+/**
+ Initializes a newly created WAResultContinuation with a parition key and row key.
+ The continuationType will be WAContinuationEntity.
+ 
+ @param nextParitionKey The next partition key.
+ @param nextRowKey The next row key.
+ 
+ @returns The newly initialized WAResultContinuation object.
+ */
+- (id)initWithNextParitionKey:(NSString *)nextParitionKey nextRowKey:(NSString *)nextRowKey;
 
-/*! Intialize a new continuation with the next table key. */
-- (id)initWithNextTableKey:(NSString*)nextTableKey;
+/**
+ Initializes a newly created WAResultContinuation with a table key.
+ The continuationType will be WAContinuationTable.
+ 
+ @param nextTableKey The next table key.
+ 
+ @returns The newly initialized WAResultContinuation object.
+ */
+- (id)initWithNextTableKey:(NSString *)nextTableKey;
 
-/*! Intialize a new continuation with the container marker. */
-- (id)initWithContainerMarker:(NSString*)marker continuationType:(WAContinuationType)continuationType;
+/**
+ Initializes a newly created WAResultContinuation with a marker and continuation type.
+ 
+ @param marker The marker of the next item in the list operation.
+ @param continuationType The type of list operation.
+ 
+ @returns The newly initialized WAResultContinuation object.
+ 
+ @see WAContinuationType
+ */
+- (id)initWithContainerMarker:(NSString *)marker continuationType:(WAContinuationType)continuationType;
 
 @end

@@ -16,33 +16,71 @@
 
 #import <Foundation/Foundation.h>
 
-/*! TableEntity is a class used to represent entities with Windows Azure table storage.*/
+/**
+ A class that represents an entity ina a Windows Azure table.
+ */
 @interface WATableEntity : NSObject {
 @private
-    NSString* _tableName;
-    NSString* _partitionKey;
-    NSString* _rowKey;
-    NSDate* _timeStamp;
-    NSMutableDictionary* _dictionary;
+    NSString *_tableName;
+    NSString *_partitionKey;
+    NSString *_rowKey;
+    NSDate *_timeStamp;
+    NSMutableDictionary *_dictionary;
 }
 
-/*! The name of the table this entity is located within. */
+/**
+ The name of the table where this entity is located.
+ */
 @property (readonly) NSString* tableName;
-/*! The name of the partition key for this entity. */
+
+/**
+ The partition key of a table entity.
+ The concatenation of the partition key and row key form the primary key for an entity, and so must be unique within the table.
+ */
 @property (copy) NSString* partitionKey;
-/*! The name of the row key for this entity. */
+
+/**
+ The row key of a table entity.
+ The concatenation of the partition key and row key form the primary key for an entity, and so must be unique within the table.
+ */
 @property (copy) NSString* rowKey;
-/*! The timestamp for this entity */
+
+/**
+ The timestamp for this entity.
+ */
 @property (readonly) NSDate* timeStamp;
 
-/*! Returns an array of all keys for this entity. */
+/**
+ Returns a new array containing the entity’s keys.
+ 
+ @returns A new array containing the entity’s keys, or an empty array if the entity has no entries.
+ */
 - (NSArray*)keys;
-/*! Returns the value for a specified key. */
+
+/**
+ Returns the value associated with a given key.
+ 
+ @param key The key for which to return the corresponding value.
+ 
+ @returns The value associated with key, or nil if no value is associated with key.
+ */
 - (id)objectForKey:(NSString *)key;
-/*! Sets a value for a specified key. */
+
+/**
+ Adds a given key-value pair to the entity.
+ 
+ @param value The value for key.
+ @param key The key for value.
+ */
 - (void)setObject:(id)value forKey:(NSString*)key;
 
-/*! Creates a new TableEntity given the name of an existing table. */
-+ (WATableEntity*) createEntityForTable:(NSString*)table;
+/**
+ Creates a new entity given the name of an existing table.
+ 
+ @param table The name of the table for this entity.
+ 
+ @returns A new WATableEntity object.
+ */
++ (WATableEntity *)createEntityForTable:(NSString*)table;
 
 @end

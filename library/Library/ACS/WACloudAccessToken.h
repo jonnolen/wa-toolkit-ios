@@ -16,21 +16,63 @@
 
 #import <Foundation/Foundation.h>
 
-@interface WACloudAccessToken : NSObject 
-{
-        
-}
+/**
+ A class that represents an access token when authenticated from Windows Azure Access Control Service (ACS).
+ */
+@interface WACloudAccessToken : NSObject
 
-@property (readonly) NSString* appliesTo;
-@property (readonly) NSString* tokenType;
+/**
+ The audeince for the token.
+ */
+@property (readonly) NSString *appliesTo;
+
+/**
+ The token type.
+ */
+@property (readonly) NSString *tokenType;
+
+/**
+ The expiration time for the token.
+ */
 @property (readonly) NSInteger expires;
-@property (readonly) NSInteger created;
-@property (readonly) NSDate* expireDate;
-@property (readonly) NSDate* createDate;
-@property (readonly) NSString* securityToken;
-@property (readonly) NSString* identityProvider;
-@property (readonly) NSDictionary* claims;
 
-- (void)signRequest:(NSMutableURLRequest*)request;
+/**
+ The create time for the token.
+ */
+@property (readonly) NSInteger created;
+
+/**
+ The expiration date for the token.
+ */
+@property (readonly) NSDate *expireDate;
+
+/**
+	The creation date for the token.
+ */
+@property (readonly) NSDate *createDate;
+
+/**
+ The security token to sign requests.
+ */
+@property (readonly) NSString *securityToken;
+
+/**
+ The identity provider for the token
+ */
+@property (readonly) NSString *identityProvider;
+
+/**
+ The claims associated with the token.
+ */
+@property (readonly) NSDictionary *claims;
+
+/**
+ Signs the request and adds the OAuth token.
+ 
+ @param request The request to sign.
+ 
+ @see NSMutableRequest
+ */
+- (void)signRequest:(NSMutableURLRequest *)request;
 
 @end

@@ -39,8 +39,9 @@
          NSString *popReceipt = [WAXMLHelper getElementValue:node name:@"PopReceipt"];
          NSString *timeNextVisible = [WAXMLHelper getElementValue:node name:@"TimeNextVisible"];
          NSString *messageText = [WAXMLHelper getElementValue:node name:@"MessageText"];
+         NSString *dequeuCount = [WAXMLHelper getElementValue:node name:@"DequeueCount"];
          
-         WAQueueMessage *queueMessage = [[WAQueueMessage alloc] initQueueMessageWithMessageId:messageId insertionTime:insertionTime expirationTime:expirationTime popReceipt:popReceipt timeNextVisible:timeNextVisible messageText:messageText];
+         WAQueueMessage *queueMessage = [[WAQueueMessage alloc] initQueueMessageWithMessageId:messageId insertionTime:insertionTime expirationTime:expirationTime popReceipt:popReceipt timeNextVisible:timeNextVisible messageText:messageText dequeueCount:[dequeuCount integerValue]];
          [queueMessages addObject:queueMessage];
          [queueMessage release];
      }];

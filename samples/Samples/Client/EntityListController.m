@@ -235,7 +235,7 @@
 		WATableEntity *entity = [self.localEntityList objectAtIndex:indexPath.row];
 		count = entity.keys.count + 2;
 	} else if (self.entityType == ENTITY_TYPE_QUEUE) {
-		count = 6;
+		count = 7;
 	} else {
 		return 44;
 	}

@@ -27,7 +27,9 @@
 
 @protocol WACloudStorageClientDelegate;
 
-/*! The cloud storage client is used to invoke operations on, and return data from, Windows Azure storage. */
+/**
+ The cloud storage client is used to invoke operations on, and return data from, Windows Azure storage. 
+ */
 @interface WACloudStorageClient : NSObject
 {
 @private
