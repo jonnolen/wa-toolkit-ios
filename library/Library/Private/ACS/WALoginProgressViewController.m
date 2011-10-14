@@ -153,12 +153,12 @@
 		 }];
 		 
 		 WA_BEGIN_LOGGING_CUSTOM(WALoggingACS)
-		 NSMutableArray* providerNames = [NSMutableArray arrayWithCapacity:sorted.count];
-		 [sorted enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) 
-		 {
-			 [providerNames addObject:[obj name]];
-		 }];
-		 NSLog(@"Found identity providers: %@", providerNames);
+            NSMutableArray* providerNames = [NSMutableArray arrayWithCapacity:sorted.count];
+            [sorted enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) 
+             {
+                 [providerNames addObject:[obj name]];
+             }];
+            NSLog(@"Found identity providers: %@", providerNames);
 		 WA_END_LOGGING
 		 
 		 block(sorted, nil);
