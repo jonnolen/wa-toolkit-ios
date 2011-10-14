@@ -222,7 +222,8 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
 {
     queueName = [queueName lowercaseString];
     NSString* endpoint = [NSString stringWithFormat:@"/%@", [queueName URLEncode]];
-    WACloudURLRequest* request = [_credential authenticatedRequestWithEndpoint:endpoint forStorageType:@"queue" httpMethod:@"PUT", nil];
+    WACloudURLRequest* request = [_credential authenticatedRequestWithEndpoint:endpoint forStorageType:@"queue" httpMethod:@"PUT" contentData:[NSData data] contentType:nil, nil];
+    
     
 	[request fetchXMLWithCompletionHandler:^(WACloudURLRequest* request, xmlDocPtr doc, NSError* error)
      {

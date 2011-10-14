@@ -274,7 +274,7 @@ const int AUTHENTICATION_DELAY = 2;
     
     NSString* contentLength = contentData ? [NSString stringWithFormat:@"%d", contentData.length] : @"";
     
-	WACloudURLRequest* authenticatedrequest = [WACloudURLRequest requestWithURL:serviceURL];
+	WACloudURLRequest *authenticatedrequest = [WACloudURLRequest requestWithURL:serviceURL];
     [authenticatedrequest setHTTPMethod:httpMethod];
     
     if (_usesProxy)
@@ -346,6 +346,8 @@ const int AUTHENTICATION_DELAY = 2;
 	// Construct the date in the right format
 	NSDate *date = [NSDate date];
 	NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    NSLocale *usLocale = [[[NSLocale alloc] initWithLocaleIdentifier:@"en_US"] autorelease];
+    [dateFormatter setLocale:usLocale]; 
 	[dateFormatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
 	[dateFormatter setDateFormat:@"EEE, dd MMM yyyy HH:mm:ss 'GMT'"];
 	NSString *dateString = [dateFormatter stringFromDate:date];
@@ -427,7 +429,6 @@ const int AUTHENTICATION_DELAY = 2;
 		NSLog(@"Request hash: %@", hash);
 	WA_END_LOGGING
 
-	
 	// Append to the Authorization Header
 	NSString *authHeader = [NSString stringWithFormat:@"SharedKey %@:%@", _accountName, hash];
 	
@@ -448,7 +449,7 @@ const int AUTHENTICATION_DELAY = 2;
 	{
 		[authenticatedrequest setHTTPBody:contentData];
 	}
-
+    
 	return authenticatedrequest;
 }
 
