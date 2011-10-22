@@ -620,7 +620,6 @@
  */
 - (void)addMessageToQueue:(NSString *)message queueName:(NSString *)queueName;
 
-/*! Puts a message into a queue, given a specified queue name and message. Returns error if failed. */
 /**
  Adds a message into a queue asynchronously, given a specified queue name and message.
  
@@ -636,45 +635,260 @@
 /// @name Table Operations
 ///---------------------------------------------------------------------------------------
 
-/*! Returns a list of tables. */
+/**
+ Fetch a list of tables asynchronously.
+ 
+ @discussion The method will run asynchronously and will call back through the delegate for the client.
+ 
+ @see WACloudStorageClient#delegate
+ @see WACloudStorageClientDelegate#storageClient:didFetchTables:
+ */
 - (void)fetchTables;
-/*! Returns a list of tables. */
+
+/**
+ Fetch a list of tables asynchronously using a block.
+ 
+ @param block A block object called with the results of the fetch.
+ 
+ @discussion The method will run asynchronously and will call back through the block. The block will be called with an arrary of NSString objects that are the table names or an error if the request fails, otherwise the error object will be nil.
+ */
 - (void)fetchTablesWithCompletionHandler:(void (^)(NSArray *tables, NSError *error))block;
-/*! Returns a list of tables using a continuation. */
+
+/**
+ Fetch a list of tables asynchronously.
+ 
+ @param resultContinuation The result continuation to use for this fetch request.
+ 
+ @discussion The method will run asynchronously and will call back through the delegate for the client.
+ 
+ @see WACloudStorageClient#delegate
+ @see WACloudStorageClientDelegate#storageClient:didFetchTables:withResultContinuation:
+ @see WAResultContinuation
+ */
 - (void)fetchTablesWithContinuation:(WAResultContinuation *)resultContinuation;
-/*! Returns a list of tables using a continuation. */
+
+/**
+ Fetch a list of tables asynchronously.
+ 
+ @param resultContinuation The result continuation to use for this fetch request.
+ @param block A block object called with the results of the fetch.
+ 
+ @discussion The method will run asynchronously and will call back through the block. The block will be called with an arrary of NSString objects that are the table names or an error if the request fails, otherwise the error object will be nil. The result continuation can be used to make requests for the next set of blobs in the contianer.
+ 
+ @see WAResultContinuation
+ */
 - (void)fetchTablesWithContinuation:(WAResultContinuation *)resultContinuation usingCompletionHandler:(void (^)(NSArray *tables, WAResultContinuation *resultContinuation, NSError *error))block;
-/*! Creates a new table with a specified name. */
+
+/**
+ Creates a new table asynchronously with a specified name.
+	
+ @param newTableName The new table name.
+ 
+ @discussion The method will run asynchronously and will call back through the delegate for the client.
+ 
+ @see WACloudStorageClient#delegate
+ @see WACloudStorageClientDelegate#storageClient:didCreateTableNamed:
+ */
 - (void)createTableNamed:(NSString *)newTableName;
-/*! Creates a new table with a specified name. */
+
+/**
+ Creates a new table asynchronously with a specified name.
+ 
+ @param newTableName The new table name.
+ @param block A block object called with the results of the create.
+ 
+ @discussion The method will run asynchronously and will call back through the block. The block will be called with an error if the request fails, otherwise the error object will be nil.
+ */
 - (void)createTableNamed:(NSString *)newTableName withCompletionHandler:(void (^)(NSError *error))block;
-/*! Deletes a specifed table.  Returns error is the table doesn't exist or could not be deleted. */
+
+/**
+ Deletes a specifed table asynchronously.
+ 
+ @param tableName The name of the table to delete.
+ 
+ @discussion The method will run asynchronously and will call back through the delegate for the client.
+ 
+ @see WACloudStorageClient#delegate
+ @see WACloudStorageClientDelegate#storageClient:didDeleteTableNamed:
+ */
 - (void)deleteTableNamed:(NSString *)tableName;
-/*! Deletes a specifed table.  Returns error is the table doesn't exist or could not be deleted. */
+
+/**
+ Deletes a specifed table asynchronously using a block.
+ 
+ @param tableName The name of the table to delete.
+ @param block A block object called with the results of the delete.
+ 
+ @discussion The method will run asynchronously and will call back through the block. The block will be called with an error if the request fails, otherwise the error object will be nil.
+ */
 - (void)deleteTableNamed:(NSString *)tableName withCompletionHandler:(void (^)(NSError *error))block;
-/*! Returns the entities for a given table. */
+
+/**
+ Fetches the entities for a given table asynchronously.
+	
+ @param fetchRequest The request to use to fetch the entities.
+ 
+ @discussion The method will run asynchronously and will call back through the delegate for the client.
+ 
+ @see WACloudStorageClient#delegate
+ @see WACloudStorageClientDelegate#storageClient:didFetchEntities:fromTableNamed:
+ @see WATableFetchRequest
+ */
 - (void)fetchEntities:(WATableFetchRequest*)fetchRequest;
-/*! Returns the entities for a given table. */
+
+/**
+ Fetches the entities for a given table asynchronously using a block.
+	
+ @param fetchRequest The request to use to fetch the entities.
+ @param block A block object called with the results of the fetch.
+ 
+ @discussion The method will run asynchronously and will call back through the block. The block will be called with an arrary of WATableEntity objects that are the table names or an error if the request fails, otherwise the error object will be nil.
+ 
+ @see WATableEntity
+ @see WATableFetchRequest
+ */
 - (void)fetchEntities:(WATableFetchRequest*)fetchRequest withCompletionHandler:(void (^)(NSArray *entities, NSError *error))block;
-/*! Returns the entities for a given table with a continuation result to fetch the next set of entities. */
+
+/**
+ Fetches the entities for a given table asynchronously using a result continuation.
+ 
+ @param fetchRequest The request to use to fetch the entities. 
+ 
+ @discussion The method will run asynchronously and will call back through the delegate for the client. The fetch request contains the result continuation to use for this fetch request.
+ 
+ @see WACloudStorageClient#delegate
+ @see WACloudStorageClientDelegate#storageClient:didFetchEntities:fromTableNamed:withResultContinuation:
+ @see WATableFetchRequest
+ */
 - (void)fetchEntitiesWithContinuation:(WATableFetchRequest*)fetchRequest;
-/*! Returns the entities for a given table with a continuation result to fetch the next set of entities. */
-- (void)fetchEntitiesWithContinuation:(WATableFetchRequest*)fetchRequest usingCompletionHandler:(void (^)(NSArray *entities, WAResultContinuation *resultContinuation, NSError *error))block;
-/*! Inserts a new entity into an existing table. */
+
+/**
+ Fetches the entities for a given table asynchronously using a result continuation and block.
+ 
+ @param fetchRequest The request to use to fetch the entities. 
+ @param block A block object called with the results of the fetch.
+ 
+ @discussion The method will run asynchronously and will call back through the block. The block will be called with an arrary of WATableEntity objects that are the table names or an error if the request fails, otherwise the error object will be nil. The result continuation can be used to make requests for the next set of blobs in the contianer.
+ 
+ @see WAFetchRequest
+ @see WATableEntity
+ */
+- (void)fetchEntitiesWithContinuation:(WATableFetchRequest *)fetchRequest usingCompletionHandler:(void (^)(NSArray *entities, WAResultContinuation *resultContinuation, NSError *error))block;
+
+/**
+ Inserts a new entity into an existing table asynchronously.
+	
+ @param newEntity The new entity to insert.
+	
+ @returns Returns if the request was sent successfully.
+ 
+ @discussion The method will run asynchronously and will call back through the delegate for the client.
+ 
+ @see WACloudStorageClient#delegate
+ @see WACloudStorageClientDelegate#storageClient:didInsertEntity:
+ @see WATableEntity
+ */
 - (BOOL)insertEntity:(WATableEntity *)newEntity;
+
 /*! Inserts a new entity into an existing table. */
+/**
+ Inserts a new entity into an existing table asynchronously using a block.
+ 
+ @param newEntity The new entity to insert.
+ @param block A block object called with the results of the insert.
+ 
+ @returns Returns if the request was sent successfully.
+ 
+ @discussion The method will run asynchronously and will call back through the block. The block will be called with an error if the request fails, otherwise the error object will be nil.
+ 
+ @see WATableEntity
+ */
 - (BOOL)insertEntity:(WATableEntity *)newEntity withCompletionHandler:(void (^)(NSError *error))block;
-/*! Updates an existing entity within a table. */
+
+/**
+ Updates an existing entity within a table asynchronously.
+	
+ @param existingEntity The entity to update.
+	
+ @returns Returns if the request was sent successfully.
+ 
+ @discussion The method will run asynchronously and will call back through the delegate for the client.
+ 
+ @see WACloudStorageClient#delegate
+ @see WACloudStorageClientDelegate#storageClient:didUpdateEntity:
+ @see WATableEntity
+ */
 - (BOOL)updateEntity:(WATableEntity *)existingEntity;
-/*! Updates an existing entity within a table. */
+
+
+/**
+ Updates an existing entity within a table asynchronously using a block.
+ 
+ @param existingEntity The entity to update.
+ @param block A block object called with the results of the insert.
+ 
+ @returns Returns if the request was sent successfully.
+ 
+ @discussion The method will run asynchronously and will call back through the block. The block will be called with an error if the request fails, otherwise the error object will be nil.
+ 
+ @see WATableEntity
+ */
 - (BOOL)updateEntity:(WATableEntity *)existingEntity withCompletionHandler:(void (^)(NSError *error))block;
-/*! Merges an existing entity within a table. */
+
+/**
+ Merges an existing entity within a table asynchronously.
+ 
+ @param existingEntity The entity to merge.
+ 
+ @returns Returns if the request was sent successfully.
+ 
+ @discussion The method will run asynchronously and will call back through the delegate for the client.
+ 
+ @see WACloudStorageClient#delegate
+ @see WACloudStorageClientDelegate#storageClient:didMergeEntity:
+ @see WATableEntity
+ */
 - (BOOL)mergeEntity:(WATableEntity *)existingEntity;
-/*! Merges an existing entity within a table. */
+
+/**
+ Merges an existing entity within a table asynchronously using a block.
+ 
+ @param existingEntity The entity to merge.
+ 
+ @returns Returns if the request was sent successfully.
+ 
+ @discussion The method will run asynchronously and will call back through the block. The block will be called with an error if the request fails, otherwise the error object will be nil.
+ 
+ @see WATableEntity
+ */
 - (BOOL)mergeEntity:(WATableEntity *)existingEntity withCompletionHandler:(void (^)(NSError *error))block;
-/*! Deletes an existing entity within a table. */
+
+/**
+ Deletes an existing entity within a table asynchronously.
+ 
+ @param existingEntity The entity to delete.
+ 
+ @returns Returns if the request was sent successfully.
+ 
+ @discussion The method will run asynchronously and will call back through the delegate for the client.
+ 
+ @see WACloudStorageClient#delegate
+ @see WACloudStorageClientDelegate#storageClient:didDeleteEntity:
+ @see WATableEntity
+ */
 - (BOOL)deleteEntity:(WATableEntity *)existingEntity;
-/*! Merges an existing entity within a table. */
+
+/**
+ Deletes an existing entity within a table asynchronously using a block.
+ 
+ @param existingEntity The entity to delete.
+ 
+ @returns Returns if the request was sent successfully.
+ 
+ @discussion The method will run asynchronously and will call back through the block. The block will be called with an error if the request fails, otherwise the error object will be nil.
+ 
+ @see WATableEntity
+ */
 - (BOOL)deleteEntity:(WATableEntity *)existingEntity withCompletionHandler:(void (^)(NSError *error))block;
 
 ///---------------------------------------------------------------------------------------
@@ -885,7 +1099,6 @@
  */
 - (void)storageClient:(WACloudStorageClient *)client didFetchQueueMessages:(NSArray *)queueMessages;
 
-/*! Called when the client successfully got a single message from the specified queue */
 /**
  Sent when the client successfully got a single message from the specified queue
 	
@@ -941,26 +1154,101 @@
 /// @name Table Request Completion
 ///---------------------------------------------------------------------------------------
 
-/*! Called when the client successfully returns a list of tables. */
+/**
+ Sent when the client successfully returns a list of tables.
+	
+ @param client The client that sent the request.
+ @param tables An array of NSString objects that are the names of the tables.
+ */
 - (void)storageClient:(WACloudStorageClient *)client didFetchTables:(NSArray *)tables;
-/*! Called when the client successfully returns a list of tables. */
-- (void)storageClient:(WACloudStorageClient *)client didFetchTables:(NSArray *)tables withResultContinuation:(WAResultContinuation *)resultContinuation;
-/*! Called when the client successfully creates a table. */
-- (void)storageClient:(WACloudStorageClient *)client didCreateTableNamed:(NSString *)tableName;
-/*! Called when the client successfully deletes a specified table. */
-- (void)storageClient:(WACloudStorageClient *)client didDeleteTableNamed:(NSString *)tableName;
-/*! Called when the client successfully returns a list of entities from a table. */
-- (void)storageClient:(WACloudStorageClient *)client didFetchEntities:(NSArray *)entities fromTableNamed:(NSString *)tableName;
-/*! Called when the client successfully returns a list of entities from a table. */
-- (void)storageClient:(WACloudStorageClient *)client didFetchEntities:(NSArray *)entities fromTableNamed:(NSString *)tableName withResultContinuation:(WAResultContinuation *)resultContinuation;
-/*! Called when the client successfully inserts an entity into a table. */
-- (void)storageClient:(WACloudStorageClient *)client didInsertEntity:(WATableEntity *)entity;
-/*! Called when the client successfully updates an entity within a table. */
-- (void)storageClient:(WACloudStorageClient *)client didUpdateEntity:(WATableEntity *)entity;
-/*! Called when the client successfully merges an entity within a table. */
-- (void)storageClient:(WACloudStorageClient *)client didMergeEntity:(WATableEntity *)entity;
-/*! Called when the client successfully deletes an entity from a table. */
-- (void)storageClient:(WACloudStorageClient *)client didDeleteEntity:(WATableEntity *)entity;
 
+/**
+ Sent when the client successfully returns a list of tables with a continuation.
+	
+ @param client The client that sent the request.
+ @param tables An array of NSString objects that are the names of the tables.
+ @param resultContinuation The result continuation that contains the marker to use for the next request.
+ */
+- (void)storageClient:(WACloudStorageClient *)client didFetchTables:(NSArray *)tables withResultContinuation:(WAResultContinuation *)resultContinuation;
+
+/**
+ Sent when the client successfully creates a table.
+	
+ @param client The client that sent the request.
+ @param tableName The table name that was created.
+ */
+- (void)storageClient:(WACloudStorageClient *)client didCreateTableNamed:(NSString *)tableName;
+
+/**
+ Sent when the client successfully deletes a specified table.
+	
+ @param client The client that sent the request.
+ @param tableName The table name that was deleted.
+ */
+- (void)storageClient:(WACloudStorageClient *)client didDeleteTableNamed:(NSString *)tableName;
+
+/**
+ Sent when the client successfully returns a list of entities from a table.
+	
+ @param client The client that sent the request.
+ @param entities An array of WATableEntity objects.
+ @param tableName The name of the table that contains the enties.
+ 
+ @see WATableEntity
+ */
+- (void)storageClient:(WACloudStorageClient *)client didFetchEntities:(NSArray *)entities fromTableNamed:(NSString *)tableName;
+
+/**
+ Sent when the client successfully returns a list of entities from a table.
+	
+ @param client The client that sent the request.
+ @param entities An array of WATableEntity objects.
+ @param tableName The table name that contains the entities.
+ @param resultContinuation The result continuation that contains the marker to use for the next request.
+ 
+ @see WAResultContinuation
+ @see WATableEntity
+ */
+- (void)storageClient:(WACloudStorageClient *)client didFetchEntities:(NSArray *)entities fromTableNamed:(NSString *)tableName withResultContinuation:(WAResultContinuation *)resultContinuation;
+
+/**
+ Sent when the client successfully inserts an entity into a table.
+	
+ @param client The client that sent the request.
+ @param entity The entity that was inserted.
+ 
+ @see WATableEntity
+ */
+- (void)storageClient:(WACloudStorageClient *)client didInsertEntity:(WATableEntity *)entity;
+
+/**
+ Sent when the client successfully updates an entity within a table.
+	
+ @param client The client that sent the request.
+ @param entity The entity that was updated.
+ 
+ @see WATableEntity
+ */
+- (void)storageClient:(WACloudStorageClient *)client didUpdateEntity:(WATableEntity *)entity;
+
+/**
+ Sent when the client successfully merges an entity within a table.
+	
+ @param client The client that sent the request.
+ @param entity The entity that was merged.
+ 
+ @see WATableEntity
+ */
+- (void)storageClient:(WACloudStorageClient *)client didMergeEntity:(WATableEntity *)entity;
+
+/**
+ Sent when the client successfully deletes an entity from a table.
+	
+ @param client The client that sent the request.
+ @param entity The entity that was deleted.
+ 
+ @see WATableEntity
+ */
+- (void)storageClient:(WACloudStorageClient *)client didDeleteEntity:(WATableEntity *)entity;
 
 @end
