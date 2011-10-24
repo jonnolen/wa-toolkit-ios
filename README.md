@@ -48,7 +48,7 @@ Congratulations, you are now done adding Windows Azure iOS toolkit into your Xco
 
 You now only need to add includes for the Windows Azure iOS toolkit libraries at the appropriate places in your application. The relevant includes are:
 
-    #import "WAToolkit.h"
+    #import "watoolkitios-lib/WAToolkit.h"
     
 Please see the samples directory for details on utilizing the library.
 

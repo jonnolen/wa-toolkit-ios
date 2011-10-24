@@ -23,8 +23,6 @@
 #import "AcsRegisterViewController.h"
 #import "Azure_Storage_ClientAppDelegate.h"
 
-#import "WAToolkit.h"
-
 @interface StorageTypeSelector()
 
 - (void)login:(id)sender;

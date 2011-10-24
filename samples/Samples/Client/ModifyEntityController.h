@@ -15,7 +15,6 @@
  */
 
 #import <UIKit/UIKit.h>
-#import "WAToolkit.h"
 
 @interface ModifyEntityController : UIViewController <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate, WACloudStorageClientDelegate>{
 @private

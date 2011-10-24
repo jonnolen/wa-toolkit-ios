@@ -15,7 +15,6 @@
  */
 
 #import <UIKit/UIKit.h>
-#import "WAToolkit.h"
 
 @interface TableListController : UITableViewController <WACloudStorageClientDelegate> {
 @private
