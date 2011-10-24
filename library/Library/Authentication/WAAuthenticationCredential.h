@@ -39,7 +39,7 @@
 @end
 
 /** 
- A class represents an authentication object that can be passed to the WACloudStorageClient. The class can be initialized using a Windows Azure account name and key, or with a proxy server URL, username, and password. 
+ A class that represents an authentication object that can be passed to the WACloudStorageClient. The class can be initialized using a Windows Azure account name and key, or with a proxy server URL, username, and password. 
  
  @see WACloudStorageClient
  */
@@ -161,7 +161,7 @@
  @param proxyURL The URL address of the proxy service.
  @param user The user name for the proxy service.
  @param password The password for the proxy service.
- @param blobk A block object that is called with the authentication completes. The block will contain an NSError
+ @param block A block object that is called with the authentication completes. The block will contain an NSError
  
  @returns The newly initialized WAAuthenticationCredential object.
  

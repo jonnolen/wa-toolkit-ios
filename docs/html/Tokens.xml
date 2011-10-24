@@ -58,7 +58,7 @@
       <Scope>WAAuthenticationCredential</Scope>
     </TokenIdentifier>
     <Path>interfaceWAAuthenticationCredential.html</Path>
-    <Anchor>a89aee768aa326069c8eabf43669e078e</Anchor>
+    <Anchor>a93356ec9f4f960cf63f10cc6bc775954</Anchor>
   </Token>
   <Token>
     <TokenIdentifier>
@@ -142,16 +142,6 @@
   </Token>
   <Token>
     <TokenIdentifier>
-      <Name>WAAuthenticationDelegate</Name>
-      <APILanguage>c</APILanguage>
-      <Type>intf</Type>
-      <Scope>WAAuthenticationDelegate</Scope>
-    </TokenIdentifier>
-    <Path>protocolWAAuthenticationDelegate-p.html</Path>
-    <DeclaredIn>WAAuthenticationCredential.h</DeclaredIn>
-  </Token>
-  <Token>
-    <TokenIdentifier>
       <Name>WABlob</Name>
       <APILanguage>c</APILanguage>
       <Type>cl</Type>
@@ -159,6 +149,26 @@
     </TokenIdentifier>
     <Path>interfaceWABlob.html</Path>
     <DeclaredIn>WABlob.h</DeclaredIn>
+  </Token>
+  <Token>
+    <TokenIdentifier>
+      <Name>initBlobWithName:URL:</Name>
+      <APILanguage>occ</APILanguage>
+      <Type>instm</Type>
+      <Scope>WABlob</Scope>
+    </TokenIdentifier>
+    <Path>interfaceWABlob.html</Path>
+    <Anchor>a2c5b8355259f198a3cd667425aa2c43f</Anchor>
+  </Token>
+  <Token>
+    <TokenIdentifier>
+      <Name>initBlobWithName:URL:container:</Name>
+      <APILanguage>occ</APILanguage>
+      <Type>instm</Type>
+      <Scope>WABlob</Scope>
+    </TokenIdentifier>
+    <Path>interfaceWABlob.html</Path>
+    <Anchor>a96d1ad1c4d43e727c6c918ed846b0ff1</Anchor>
   </Token>
   <Token>
     <TokenIdentifier>
@@ -199,6 +209,26 @@
     </TokenIdentifier>
     <Path>interfaceWABlobContainer.html</Path>
     <DeclaredIn>WABlobContainer.h</DeclaredIn>
+  </Token>
+  <Token>
+    <TokenIdentifier>
+      <Name>initContainerWithName:</Name>
+      <APILanguage>occ</APILanguage>
+      <Type>instm</Type>
+      <Scope>WABlobContainer</Scope>
+    </TokenIdentifier>
+    <Path>interfaceWABlobContainer.html</Path>
+    <Anchor>a73010b2debee2f4059d7b2a7430c9d62</Anchor>
+  </Token>
+  <Token>
+    <TokenIdentifier>
+      <Name>initContainerWithName:URL:metadata:</Name>
+      <APILanguage>occ</APILanguage>
+      <Type>instm</Type>
+      <Scope>WABlobContainer</Scope>
+    </TokenIdentifier>
+    <Path>interfaceWABlobContainer.html</Path>
+    <Anchor>ab01452788a9d675a41753bf4adb8612e</Anchor>
   </Token>
   <Token>
     <TokenIdentifier>
@@ -312,6 +342,116 @@
   </Token>
   <Token>
     <TokenIdentifier>
+      <Name>WACloudAccessToken</Name>
+      <APILanguage>c</APILanguage>
+      <Type>cl</Type>
+      <Scope>WACloudAccessToken</Scope>
+    </TokenIdentifier>
+    <Path>interfaceWACloudAccessToken.html</Path>
+    <DeclaredIn>WACloudAccessToken.h</DeclaredIn>
+  </Token>
+  <Token>
+    <TokenIdentifier>
+      <Name>signRequest:</Name>
+      <APILanguage>occ</APILanguage>
+      <Type>instm</Type>
+      <Scope>WACloudAccessToken</Scope>
+    </TokenIdentifier>
+    <Path>interfaceWACloudAccessToken.html</Path>
+    <Anchor>a6fef1dab23588a777c5d3b339f5044f5</Anchor>
+  </Token>
+  <Token>
+    <TokenIdentifier>
+      <Name>appliesTo</Name>
+      <APILanguage>occ</APILanguage>
+      <Type>instp</Type>
+      <Scope>WACloudAccessToken</Scope>
+    </TokenIdentifier>
+    <Path>interfaceWACloudAccessToken.html</Path>
+    <Anchor>ae47c6a1366744df736fce0c9ad3afc9e</Anchor>
+  </Token>
+  <Token>
+    <TokenIdentifier>
+      <Name>tokenType</Name>
+      <APILanguage>occ</APILanguage>
+      <Type>instp</Type>
+      <Scope>WACloudAccessToken</Scope>
+    </TokenIdentifier>
+    <Path>interfaceWACloudAccessToken.html</Path>
+    <Anchor>a72fbae3c9f2671f2a5ee6f8ed7e21690</Anchor>
+  </Token>
+  <Token>
+    <TokenIdentifier>
+      <Name>expires</Name>
+      <APILanguage>occ</APILanguage>
+      <Type>instp</Type>
+      <Scope>WACloudAccessToken</Scope>
+    </TokenIdentifier>
+    <Path>interfaceWACloudAccessToken.html</Path>
+    <Anchor>aea4b0eb53d79228b269de532fa49ab7c</Anchor>
+  </Token>
+  <Token>
+    <TokenIdentifier>
+      <Name>created</Name>
+      <APILanguage>occ</APILanguage>
+      <Type>instp</Type>
+      <Scope>WACloudAccessToken</Scope>
+    </TokenIdentifier>
+    <Path>interfaceWACloudAccessToken.html</Path>
+    <Anchor>acad55efd5b01964b7921a07afad52379</Anchor>
+  </Token>
+  <Token>
+    <TokenIdentifier>
+      <Name>expireDate</Name>
+      <APILanguage>occ</APILanguage>
+      <Type>instp</Type>
+      <Scope>WACloudAccessToken</Scope>
+    </TokenIdentifier>
+    <Path>interfaceWACloudAccessToken.html</Path>
+    <Anchor>aa170c0d3ba01946dd702362c0663397a</Anchor>
+  </Token>
+  <Token>
+    <TokenIdentifier>
+      <Name>createDate</Name>
+      <APILanguage>occ</APILanguage>
+      <Type>instp</Type>
+      <Scope>WACloudAccessToken</Scope>
+    </TokenIdentifier>
+    <Path>interfaceWACloudAccessToken.html</Path>
+    <Anchor>a6c9a689ffca4c45c371bc701a33587cf</Anchor>
+  </Token>
+  <Token>
+    <TokenIdentifier>
+      <Name>securityToken</Name>
+      <APILanguage>occ</APILanguage>
+      <Type>instp</Type>
+      <Scope>WACloudAccessToken</Scope>
+    </TokenIdentifier>
+    <Path>interfaceWACloudAccessToken.html</Path>
+    <Anchor>a7b785f4334e28a6f697cfc45566dde7a</Anchor>
+  </Token>
+  <Token>
+    <TokenIdentifier>
+      <Name>identityProvider</Name>
+      <APILanguage>occ</APILanguage>
+      <Type>instp</Type>
+      <Scope>WACloudAccessToken</Scope>
+    </TokenIdentifier>
+    <Path>interfaceWACloudAccessToken.html</Path>
+    <Anchor>a39bc2cc024018fb42aeb77bf3d05f288</Anchor>
+  </Token>
+  <Token>
+    <TokenIdentifier>
+      <Name>claims</Name>
+      <APILanguage>occ</APILanguage>
+      <Type>instp</Type>
+      <Scope>WACloudAccessToken</Scope>
+    </TokenIdentifier>
+    <Path>interfaceWACloudAccessToken.html</Path>
+    <Anchor>adc7ba09378251686f08fd0d84215cc58</Anchor>
+  </Token>
+  <Token>
+    <TokenIdentifier>
       <Name>WACloudStorageClient</Name>
       <APILanguage>c</APILanguage>
       <Type>cl</Type>
@@ -338,7 +478,27 @@
       <Scope>WACloudStorageClient</Scope>
     </TokenIdentifier>
     <Path>interfaceWACloudStorageClient.html</Path>
-    <Anchor>ae7df326cbae8bfd0e845d7676f6a171b</Anchor>
+    <Anchor>ae582dbb2a79577b3036cb2773d7a55e6</Anchor>
+  </Token>
+  <Token>
+    <TokenIdentifier>
+      <Name>fetchBlobContainersWithContinuation:maxResult:</Name>
+      <APILanguage>occ</APILanguage>
+      <Type>instm</Type>
+      <Scope>WACloudStorageClient</Scope>
+    </TokenIdentifier>
+    <Path>interfaceWACloudStorageClient.html</Path>
+    <Anchor>ab647298acaa3b76568ef932992eac59a</Anchor>
+  </Token>
+  <Token>
+    <TokenIdentifier>
+      <Name>fetchBlobContainersWithContinuation:maxResult:usingCompletionHandler:</Name>
+      <APILanguage>occ</APILanguage>
+      <Type>instm</Type>
+      <Scope>WACloudStorageClient</Scope>
+    </TokenIdentifier>
+    <Path>interfaceWACloudStorageClient.html</Path>
+    <Anchor>a531eaa75372d04b806c3b6240324de08</Anchor>
   </Token>
   <Token>
     <TokenIdentifier>
@@ -358,7 +518,7 @@
       <Scope>WACloudStorageClient</Scope>
     </TokenIdentifier>
     <Path>interfaceWACloudStorageClient.html</Path>
-    <Anchor>a27f25a203dcfd9256d5be1f11c7026cc</Anchor>
+    <Anchor>af3953912c9894b041403c1c4ace589cf</Anchor>
   </Token>
   <Token>
     <TokenIdentifier>
@@ -378,7 +538,7 @@
       <Scope>WACloudStorageClient</Scope>
     </TokenIdentifier>
     <Path>interfaceWACloudStorageClient.html</Path>
-    <Anchor>adba48b1fc809f8730aca8d353b5b7dde</Anchor>
+    <Anchor>a4309e15cc9096b649f87a31a0845d5df</Anchor>
   </Token>
   <Token>
     <TokenIdentifier>
@@ -398,7 +558,7 @@
       <Scope>WACloudStorageClient</Scope>
     </TokenIdentifier>
     <Path>interfaceWACloudStorageClient.html</Path>
-    <Anchor>a58313059fd5cd15c55469f7a27d087af</Anchor>
+    <Anchor>a89da056f680e9b7fc4cf549ae2f0f167</Anchor>
   </Token>
   <Token>
     <TokenIdentifier>
@@ -418,7 +578,7 @@
       <Scope>WACloudStorageClient</Scope>
     </TokenIdentifier>
     <Path>interfaceWACloudStorageClient.html</Path>
-    <Anchor>acf59790c14df5bc155d9530abb41694d</Anchor>
+    <Anchor>a0f34e4b22a53766d29d7054a489d3f51</Anchor>
   </Token>
   <Token>
     <TokenIdentifier>
@@ -438,7 +598,27 @@
       <Scope>WACloudStorageClient</Scope>
     </TokenIdentifier>
     <Path>interfaceWACloudStorageClient.html</Path>
-    <Anchor>a103cd311426f7b1cae4d9e3836436e1c</Anchor>
+    <Anchor>a96c74d036267232d1de88fb840ea22fb</Anchor>
+  </Token>
+  <Token>
+    <TokenIdentifier>
+      <Name>fetchBlobsWithContinuation:resultContinuation:maxResult:</Name>
+      <APILanguage>occ</APILanguage>
+      <Type>instm</Type>
+      <Scope>WACloudStorageClient</Scope>
+    </TokenIdentifier>
+    <Path>interfaceWACloudStorageClient.html</Path>
+    <Anchor>abed41ef68efda65d8b0380d746f2b3e7</Anchor>
+  </Token>
+  <Token>
+    <TokenIdentifier>
+      <Name>fetchBlobsWithContinuation:resultContinuation:maxResult:usingCompletionHandler:</Name>
+      <APILanguage>occ</APILanguage>
+      <Type>instm</Type>
+      <Scope>WACloudStorageClient</Scope>
+    </TokenIdentifier>
+    <Path>interfaceWACloudStorageClient.html</Path>
+    <Anchor>aeb0ac3a5f4e5e71cb871cce11e793e93</Anchor>
   </Token>
   <Token>
     <TokenIdentifier>
@@ -458,7 +638,7 @@
       <Scope>WACloudStorageClient</Scope>
     </TokenIdentifier>
     <Path>interfaceWACloudStorageClient.html</Path>
-    <Anchor>a914100524c9ae417b8b49e4e5c570f55</Anchor>
+    <Anchor>a6e224e5ec78283ca2fd603222a297b7b</Anchor>
   </Token>
   <Token>
     <TokenIdentifier>
@@ -478,7 +658,7 @@
       <Scope>WACloudStorageClient</Scope>
     </TokenIdentifier>
     <Path>interfaceWACloudStorageClient.html</Path>
-    <Anchor>a421c4712afabf1c9a5b2e4273226cf59</Anchor>
+    <Anchor>a3ecc1be205344e9b3c0a12c3b935c777</Anchor>
   </Token>
   <Token>
     <TokenIdentifier>
@@ -498,7 +678,7 @@
       <Scope>WACloudStorageClient</Scope>
     </TokenIdentifier>
     <Path>interfaceWACloudStorageClient.html</Path>
-    <Anchor>ae62c73b8e25fedb7ce1ae75959ee01b5</Anchor>
+    <Anchor>aa40741aa118cd4a65eee682c063b2f7e</Anchor>
   </Token>
   <Token>
     <TokenIdentifier>
@@ -518,7 +698,27 @@
       <Scope>WACloudStorageClient</Scope>
     </TokenIdentifier>
     <Path>interfaceWACloudStorageClient.html</Path>
-    <Anchor>a0505a82f1b2d8fba485dde279e57f6ac</Anchor>
+    <Anchor>a5d40437f86c9d82c39bd7db133fb3adb</Anchor>
+  </Token>
+  <Token>
+    <TokenIdentifier>
+      <Name>fetchQueuesWithContinuation:maxResult:</Name>
+      <APILanguage>occ</APILanguage>
+      <Type>instm</Type>
+      <Scope>WACloudStorageClient</Scope>
+    </TokenIdentifier>
+    <Path>interfaceWACloudStorageClient.html</Path>
+    <Anchor>ad2e2802aa411b66769c171cc0512936d</Anchor>
+  </Token>
+  <Token>
+    <TokenIdentifier>
+      <Name>fetchQueuesWithContinuation:maxResult:usingCompletionHandler:</Name>
+      <APILanguage>occ</APILanguage>
+      <Type>instm</Type>
+      <Scope>WACloudStorageClient</Scope>
+    </TokenIdentifier>
+    <Path>interfaceWACloudStorageClient.html</Path>
+    <Anchor>ac4da3eab3622a998612beb70dae053c1</Anchor>
   </Token>
   <Token>
     <TokenIdentifier>
@@ -538,7 +738,7 @@
       <Scope>WACloudStorageClient</Scope>
     </TokenIdentifier>
     <Path>interfaceWACloudStorageClient.html</Path>
-    <Anchor>a2a5cd8f5edc2dbd24f66e748e045c862</Anchor>
+    <Anchor>ac3b41399c1bc8871ca587a14e26402b4</Anchor>
   </Token>
   <Token>
     <TokenIdentifier>
@@ -558,7 +758,7 @@
       <Scope>WACloudStorageClient</Scope>
     </TokenIdentifier>
     <Path>interfaceWACloudStorageClient.html</Path>
-    <Anchor>ad387f0013f32a2afd09610c942d3b7fe</Anchor>
+    <Anchor>af25e9059d4cab40479882962be95e2a1</Anchor>
   </Token>
   <Token>
     <TokenIdentifier>
@@ -578,7 +778,7 @@
       <Scope>WACloudStorageClient</Scope>
     </TokenIdentifier>
     <Path>interfaceWACloudStorageClient.html</Path>
-    <Anchor>a180974c647722ee46a474e66d022ae0b</Anchor>
+    <Anchor>a703cd016725c8d4aa35dd0e0dedf8a9c</Anchor>
   </Token>
   <Token>
     <TokenIdentifier>
@@ -598,7 +798,7 @@
       <Scope>WACloudStorageClient</Scope>
     </TokenIdentifier>
     <Path>interfaceWACloudStorageClient.html</Path>
-    <Anchor>a532e66f92f8c8c8a06f8693934846920</Anchor>
+    <Anchor>ac0ca20a8a4b61dd6fcd74925595eed2f</Anchor>
   </Token>
   <Token>
     <TokenIdentifier>
@@ -618,7 +818,7 @@
       <Scope>WACloudStorageClient</Scope>
     </TokenIdentifier>
     <Path>interfaceWACloudStorageClient.html</Path>
-    <Anchor>a0a85910671e14999575e6a985634e0b6</Anchor>
+    <Anchor>a4aa678683ebafef27b0c9f0437cb73ee</Anchor>
   </Token>
   <Token>
     <TokenIdentifier>
@@ -638,7 +838,7 @@
       <Scope>WACloudStorageClient</Scope>
     </TokenIdentifier>
     <Path>interfaceWACloudStorageClient.html</Path>
-    <Anchor>a21c13e264700b5d1d53d02d55a971686</Anchor>
+    <Anchor>aae5ad509049d316ea2ea22132c12bdc1</Anchor>
   </Token>
   <Token>
     <TokenIdentifier>
@@ -658,7 +858,7 @@
       <Scope>WACloudStorageClient</Scope>
     </TokenIdentifier>
     <Path>interfaceWACloudStorageClient.html</Path>
-    <Anchor>a3e8ba2cbf5eaa3d652b23a694848a6ee</Anchor>
+    <Anchor>a4109e476561984783b98c202fd5d13b7</Anchor>
   </Token>
   <Token>
     <TokenIdentifier>
@@ -678,7 +878,7 @@
       <Scope>WACloudStorageClient</Scope>
     </TokenIdentifier>
     <Path>interfaceWACloudStorageClient.html</Path>
-    <Anchor>af4db58df009e9347fd47cbf2eda080f1</Anchor>
+    <Anchor>adb45665bf221109d0f87157b8c88a13e</Anchor>
   </Token>
   <Token>
     <TokenIdentifier>
@@ -698,7 +898,7 @@
       <Scope>WACloudStorageClient</Scope>
     </TokenIdentifier>
     <Path>interfaceWACloudStorageClient.html</Path>
-    <Anchor>abe12d0fdc0dc50ea9e395a357977f507</Anchor>
+    <Anchor>a10f9c3384c05f7bacd3e5a12780e894a</Anchor>
   </Token>
   <Token>
     <TokenIdentifier>
@@ -718,7 +918,27 @@
       <Scope>WACloudStorageClient</Scope>
     </TokenIdentifier>
     <Path>interfaceWACloudStorageClient.html</Path>
-    <Anchor>aa4ec6807c733777e22fa6875b029bcc4</Anchor>
+    <Anchor>a90775f58789e868ae407f81580810ee3</Anchor>
+  </Token>
+  <Token>
+    <TokenIdentifier>
+      <Name>fetchTablesWithContinuation:</Name>
+      <APILanguage>occ</APILanguage>
+      <Type>instm</Type>
+      <Scope>WACloudStorageClient</Scope>
+    </TokenIdentifier>
+    <Path>interfaceWACloudStorageClient.html</Path>
+    <Anchor>a078f5400aab87f63653c4d210cebf60c</Anchor>
+  </Token>
+  <Token>
+    <TokenIdentifier>
+      <Name>fetchTablesWithContinuation:usingCompletionHandler:</Name>
+      <APILanguage>occ</APILanguage>
+      <Type>instm</Type>
+      <Scope>WACloudStorageClient</Scope>
+    </TokenIdentifier>
+    <Path>interfaceWACloudStorageClient.html</Path>
+    <Anchor>ae06c98e2aed3a08e2e2de1b392faf877</Anchor>
   </Token>
   <Token>
     <TokenIdentifier>
@@ -738,7 +958,7 @@
       <Scope>WACloudStorageClient</Scope>
     </TokenIdentifier>
     <Path>interfaceWACloudStorageClient.html</Path>
-    <Anchor>ace0dd38409009709fa3dd2dba869c5d3</Anchor>
+    <Anchor>a82f023187a9260bb0397498f8b2f377c</Anchor>
   </Token>
   <Token>
     <TokenIdentifier>
@@ -758,7 +978,7 @@
       <Scope>WACloudStorageClient</Scope>
     </TokenIdentifier>
     <Path>interfaceWACloudStorageClient.html</Path>
-    <Anchor>a5f53301531d1ee3a9a26737bf3936436</Anchor>
+    <Anchor>ac4e553331ab1bb095fd979bf0c18a931</Anchor>
   </Token>
   <Token>
     <TokenIdentifier>
@@ -778,7 +998,27 @@
       <Scope>WACloudStorageClient</Scope>
     </TokenIdentifier>
     <Path>interfaceWACloudStorageClient.html</Path>
-    <Anchor>a15ca021dd206297d8e310a27b11229c5</Anchor>
+    <Anchor>ab75039874b39543400928256ae8a2100</Anchor>
+  </Token>
+  <Token>
+    <TokenIdentifier>
+      <Name>fetchEntitiesWithContinuation:</Name>
+      <APILanguage>occ</APILanguage>
+      <Type>instm</Type>
+      <Scope>WACloudStorageClient</Scope>
+    </TokenIdentifier>
+    <Path>interfaceWACloudStorageClient.html</Path>
+    <Anchor>a453c554a5f21432de7bb82322ff335f2</Anchor>
+  </Token>
+  <Token>
+    <TokenIdentifier>
+      <Name>fetchEntitiesWithContinuation:usingCompletionHandler:</Name>
+      <APILanguage>occ</APILanguage>
+      <Type>instm</Type>
+      <Scope>WACloudStorageClient</Scope>
+    </TokenIdentifier>
+    <Path>interfaceWACloudStorageClient.html</Path>
+    <Anchor>ac1154433f86e871ce30562b42ffc3a2b</Anchor>
   </Token>
   <Token>
     <TokenIdentifier>
@@ -798,7 +1038,7 @@
       <Scope>WACloudStorageClient</Scope>
     </TokenIdentifier>
     <Path>interfaceWACloudStorageClient.html</Path>
-    <Anchor>ac71dfc0568ef3d8d00da78e86bc457c3</Anchor>
+    <Anchor>af2a9efd9eb8747e415989ed9d8fc5466</Anchor>
   </Token>
   <Token>
     <TokenIdentifier>
@@ -818,7 +1058,7 @@
       <Scope>WACloudStorageClient</Scope>
     </TokenIdentifier>
     <Path>interfaceWACloudStorageClient.html</Path>
-    <Anchor>ab4111b11b13001a47cc49e9a1b94ad2b</Anchor>
+    <Anchor>a81a0a705dfd3950f8205cae0002935d0</Anchor>
   </Token>
   <Token>
     <TokenIdentifier>
@@ -838,7 +1078,7 @@
       <Scope>WACloudStorageClient</Scope>
     </TokenIdentifier>
     <Path>interfaceWACloudStorageClient.html</Path>
-    <Anchor>ab79f806f87f539bf548e068c41cacf92</Anchor>
+    <Anchor>a4923b4652f279f5177b49d0ce1090b58</Anchor>
   </Token>
   <Token>
     <TokenIdentifier>
@@ -858,7 +1098,17 @@
       <Scope>WACloudStorageClient</Scope>
     </TokenIdentifier>
     <Path>interfaceWACloudStorageClient.html</Path>
-    <Anchor>a28a108159bffbed7fce9b214374210af</Anchor>
+    <Anchor>a655e7529228a07034b19f387a81ae753</Anchor>
+  </Token>
+  <Token>
+    <TokenIdentifier>
+      <Name>ignoreSSLErrorFor:</Name>
+      <APILanguage>occ</APILanguage>
+      <Type>clm</Type>
+      <Scope>WACloudStorageClient</Scope>
+    </TokenIdentifier>
+    <Path>interfaceWACloudStorageClient.html</Path>
+    <Anchor>a0be154787cbbe8c6e080c65ee37ff489</Anchor>
   </Token>
   <Token>
     <TokenIdentifier>
@@ -868,7 +1118,17 @@
       <Scope>WACloudStorageClient</Scope>
     </TokenIdentifier>
     <Path>interfaceWACloudStorageClient.html</Path>
-    <Anchor>a86ef4e2700df35ee6eb54cdfacb2e1fa</Anchor>
+    <Anchor>a408df2c5af2dbd0103d941fce3df9ab1</Anchor>
+  </Token>
+  <Token>
+    <TokenIdentifier>
+      <Name>delegate</Name>
+      <APILanguage>occ</APILanguage>
+      <Type>instp</Type>
+      <Scope>WACloudStorageClient</Scope>
+    </TokenIdentifier>
+    <Path>interfaceWACloudStorageClient.html</Path>
+    <Anchor>a810503626922e690b8f4789ef63e95cc</Anchor>
   </Token>
   <Token>
     <TokenIdentifier>
@@ -902,6 +1162,16 @@
   </Token>
   <Token>
     <TokenIdentifier>
+      <Name>storageClient:didFetchBlobContainers:withResultContinuation:</Name>
+      <APILanguage>occ</APILanguage>
+      <Type>intfm</Type>
+      <Scope>WACloudStorageClientDelegate-p</Scope>
+    </TokenIdentifier>
+    <Path>protocolWACloudStorageClientDelegate-p.html</Path>
+    <Anchor>a5f4b1a995e0d49e4aca0290ef0edcb4e</Anchor>
+  </Token>
+  <Token>
+    <TokenIdentifier>
       <Name>storageClient:didFetchBlobContainer:</Name>
       <APILanguage>occ</APILanguage>
       <Type>intfm</Type>
@@ -928,7 +1198,7 @@
       <Scope>WACloudStorageClientDelegate-p</Scope>
     </TokenIdentifier>
     <Path>protocolWACloudStorageClientDelegate-p.html</Path>
-    <Anchor>ab1b5ad39a44c533070c4d76a53232b13</Anchor>
+    <Anchor>a555b40492b60820dc23f32459fac63c3</Anchor>
   </Token>
   <Token>
     <TokenIdentifier>
@@ -949,6 +1219,16 @@
     </TokenIdentifier>
     <Path>protocolWACloudStorageClientDelegate-p.html</Path>
     <Anchor>a1299572f941b268c44f2e48ab68d9414</Anchor>
+  </Token>
+  <Token>
+    <TokenIdentifier>
+      <Name>storageClient:didFetchBlobs:inContainer:withResultContinuation:</Name>
+      <APILanguage>occ</APILanguage>
+      <Type>intfm</Type>
+      <Scope>WACloudStorageClientDelegate-p</Scope>
+    </TokenIdentifier>
+    <Path>protocolWACloudStorageClientDelegate-p.html</Path>
+    <Anchor>aff613956466ae044d01a3e0a2b716659</Anchor>
   </Token>
   <Token>
     <TokenIdentifier>
@@ -982,6 +1262,26 @@
   </Token>
   <Token>
     <TokenIdentifier>
+      <Name>storageClient:didFetchQueues:</Name>
+      <APILanguage>occ</APILanguage>
+      <Type>intfm</Type>
+      <Scope>WACloudStorageClientDelegate-p</Scope>
+    </TokenIdentifier>
+    <Path>protocolWACloudStorageClientDelegate-p.html</Path>
+    <Anchor>a84303735e1737df8e0aa1bc8e641ba46</Anchor>
+  </Token>
+  <Token>
+    <TokenIdentifier>
+      <Name>storageClient:didFetchQueues:withResultContinuation:</Name>
+      <APILanguage>occ</APILanguage>
+      <Type>intfm</Type>
+      <Scope>WACloudStorageClientDelegate-p</Scope>
+    </TokenIdentifier>
+    <Path>protocolWACloudStorageClientDelegate-p.html</Path>
+    <Anchor>aafe3ad62a83b55dd9282348bce593fbb</Anchor>
+  </Token>
+  <Token>
+    <TokenIdentifier>
       <Name>storageClient:didAddQueueNamed:</Name>
       <APILanguage>occ</APILanguage>
       <Type>intfm</Type>
@@ -1002,13 +1302,13 @@
   </Token>
   <Token>
     <TokenIdentifier>
-      <Name>storageClient:didFetchQueues:</Name>
+      <Name>storageClient:didFetchQueueMessages:</Name>
       <APILanguage>occ</APILanguage>
       <Type>intfm</Type>
       <Scope>WACloudStorageClientDelegate-p</Scope>
     </TokenIdentifier>
     <Path>protocolWACloudStorageClientDelegate-p.html</Path>
-    <Anchor>a84303735e1737df8e0aa1bc8e641ba46</Anchor>
+    <Anchor>a1ede339d919b41a1e6d7e5f1997f5dc7</Anchor>
   </Token>
   <Token>
     <TokenIdentifier>
@@ -1019,16 +1319,6 @@
     </TokenIdentifier>
     <Path>protocolWACloudStorageClientDelegate-p.html</Path>
     <Anchor>a5ba972693314b368cedf383b8b774841</Anchor>
-  </Token>
-  <Token>
-    <TokenIdentifier>
-      <Name>storageClient:didFetchQueueMessages:</Name>
-      <APILanguage>occ</APILanguage>
-      <Type>intfm</Type>
-      <Scope>WACloudStorageClientDelegate-p</Scope>
-    </TokenIdentifier>
-    <Path>protocolWACloudStorageClientDelegate-p.html</Path>
-    <Anchor>a1ede339d919b41a1e6d7e5f1997f5dc7</Anchor>
   </Token>
   <Token>
     <TokenIdentifier>
@@ -1082,6 +1372,16 @@
   </Token>
   <Token>
     <TokenIdentifier>
+      <Name>storageClient:didFetchTables:withResultContinuation:</Name>
+      <APILanguage>occ</APILanguage>
+      <Type>intfm</Type>
+      <Scope>WACloudStorageClientDelegate-p</Scope>
+    </TokenIdentifier>
+    <Path>protocolWACloudStorageClientDelegate-p.html</Path>
+    <Anchor>a7abf8493566b5d0a528baa162edf2ef7</Anchor>
+  </Token>
+  <Token>
+    <TokenIdentifier>
       <Name>storageClient:didCreateTableNamed:</Name>
       <APILanguage>occ</APILanguage>
       <Type>intfm</Type>
@@ -1109,6 +1409,16 @@
     </TokenIdentifier>
     <Path>protocolWACloudStorageClientDelegate-p.html</Path>
     <Anchor>adf85579a7202e979bf571b1fc12e21c2</Anchor>
+  </Token>
+  <Token>
+    <TokenIdentifier>
+      <Name>storageClient:didFetchEntities:fromTableNamed:withResultContinuation:</Name>
+      <APILanguage>occ</APILanguage>
+      <Type>intfm</Type>
+      <Scope>WACloudStorageClientDelegate-p</Scope>
+    </TokenIdentifier>
+    <Path>protocolWACloudStorageClientDelegate-p.html</Path>
+    <Anchor>a7942424da0d3e0d92f443acc0a26a43f</Anchor>
   </Token>
   <Token>
     <TokenIdentifier>
@@ -1212,6 +1522,16 @@
   </Token>
   <Token>
     <TokenIdentifier>
+      <Name>initQueueMessageWithMessageId:insertionTime:expirationTime:popReceipt:timeNextVisible:messageText:dequeueCount:</Name>
+      <APILanguage>occ</APILanguage>
+      <Type>instm</Type>
+      <Scope>WAQueueMessage</Scope>
+    </TokenIdentifier>
+    <Path>interfaceWAQueueMessage.html</Path>
+    <Anchor>a95891e9ad2280b5597dbdade38abfa95</Anchor>
+  </Token>
+  <Token>
+    <TokenIdentifier>
       <Name>messageId</Name>
       <APILanguage>occ</APILanguage>
       <Type>instp</Type>
@@ -1269,6 +1589,116 @@
     </TokenIdentifier>
     <Path>interfaceWAQueueMessage.html</Path>
     <Anchor>adb18c2299a2bf98c465f1ac9fe254416</Anchor>
+  </Token>
+  <Token>
+    <TokenIdentifier>
+      <Name>dequeueCount</Name>
+      <APILanguage>occ</APILanguage>
+      <Type>instp</Type>
+      <Scope>WAQueueMessage</Scope>
+    </TokenIdentifier>
+    <Path>interfaceWAQueueMessage.html</Path>
+    <Anchor>a3c173b199a7386132fa75073f2f0c903</Anchor>
+  </Token>
+  <Token>
+    <TokenIdentifier>
+      <Name>WAResultContinuation</Name>
+      <APILanguage>c</APILanguage>
+      <Type>cl</Type>
+      <Scope>WAResultContinuation</Scope>
+    </TokenIdentifier>
+    <Path>interfaceWAResultContinuation.html</Path>
+    <DeclaredIn>WAResultContinuation.h</DeclaredIn>
+  </Token>
+  <Token>
+    <TokenIdentifier>
+      <Name>initWithNextParitionKey:nextRowKey:</Name>
+      <APILanguage>occ</APILanguage>
+      <Type>instm</Type>
+      <Scope>WAResultContinuation</Scope>
+    </TokenIdentifier>
+    <Path>interfaceWAResultContinuation.html</Path>
+    <Anchor>a8de59c81c0cd52cc270bd801c04ea8a6</Anchor>
+  </Token>
+  <Token>
+    <TokenIdentifier>
+      <Name>initWithNextTableKey:</Name>
+      <APILanguage>occ</APILanguage>
+      <Type>instm</Type>
+      <Scope>WAResultContinuation</Scope>
+    </TokenIdentifier>
+    <Path>interfaceWAResultContinuation.html</Path>
+    <Anchor>a66501dab790fcbdc2a6e333624b2dee0</Anchor>
+  </Token>
+  <Token>
+    <TokenIdentifier>
+      <Name>initWithContainerMarker:continuationType:</Name>
+      <APILanguage>occ</APILanguage>
+      <Type>instm</Type>
+      <Scope>WAResultContinuation</Scope>
+    </TokenIdentifier>
+    <Path>interfaceWAResultContinuation.html</Path>
+    <Anchor>a5ab8ea629a64723928a62d44c36c54c6</Anchor>
+  </Token>
+  <Token>
+    <TokenIdentifier>
+      <Name>nextPartitionKey</Name>
+      <APILanguage>occ</APILanguage>
+      <Type>instp</Type>
+      <Scope>WAResultContinuation</Scope>
+    </TokenIdentifier>
+    <Path>interfaceWAResultContinuation.html</Path>
+    <Anchor>a7e9f0e4538ca22be13d1eb342ace6e64</Anchor>
+  </Token>
+  <Token>
+    <TokenIdentifier>
+      <Name>nextRowKey</Name>
+      <APILanguage>occ</APILanguage>
+      <Type>instp</Type>
+      <Scope>WAResultContinuation</Scope>
+    </TokenIdentifier>
+    <Path>interfaceWAResultContinuation.html</Path>
+    <Anchor>ac8d9f740f6e24c7a95b7bf40ed3f29c0</Anchor>
+  </Token>
+  <Token>
+    <TokenIdentifier>
+      <Name>nextTableKey</Name>
+      <APILanguage>occ</APILanguage>
+      <Type>instp</Type>
+      <Scope>WAResultContinuation</Scope>
+    </TokenIdentifier>
+    <Path>interfaceWAResultContinuation.html</Path>
+    <Anchor>ae0767f4ba2beca1e443f245bef5355fa</Anchor>
+  </Token>
+  <Token>
+    <TokenIdentifier>
+      <Name>nextMarker</Name>
+      <APILanguage>occ</APILanguage>
+      <Type>instp</Type>
+      <Scope>WAResultContinuation</Scope>
+    </TokenIdentifier>
+    <Path>interfaceWAResultContinuation.html</Path>
+    <Anchor>a72dbadac79102c38846f45c35157aefa</Anchor>
+  </Token>
+  <Token>
+    <TokenIdentifier>
+      <Name>continuationType</Name>
+      <APILanguage>occ</APILanguage>
+      <Type>instp</Type>
+      <Scope>WAResultContinuation</Scope>
+    </TokenIdentifier>
+    <Path>interfaceWAResultContinuation.html</Path>
+    <Anchor>aece96b4c1ba099825f68c250fb4b1e7b</Anchor>
+  </Token>
+  <Token>
+    <TokenIdentifier>
+      <Name>hasContinuation</Name>
+      <APILanguage>occ</APILanguage>
+      <Type>instp</Type>
+      <Scope>WAResultContinuation</Scope>
+    </TokenIdentifier>
+    <Path>interfaceWAResultContinuation.html</Path>
+    <Anchor>aeab26010e45636e562215a2f3f9074f8</Anchor>
   </Token>
   <Token>
     <TokenIdentifier>
@@ -1359,5 +1789,95 @@
     </TokenIdentifier>
     <Path>interfaceWATableEntity.html</Path>
     <Anchor>a6f98a828b76076d48c9e5a32ec3a3ba3</Anchor>
+  </Token>
+  <Token>
+    <TokenIdentifier>
+      <Name>WATableFetchRequest</Name>
+      <APILanguage>c</APILanguage>
+      <Type>cl</Type>
+      <Scope>WATableFetchRequest</Scope>
+    </TokenIdentifier>
+    <Path>interfaceWATableFetchRequest.html</Path>
+    <DeclaredIn>WATableFetchRequest.h</DeclaredIn>
+  </Token>
+  <Token>
+    <TokenIdentifier>
+      <Name>fetchRequestForTable:</Name>
+      <APILanguage>occ</APILanguage>
+      <Type>clm</Type>
+      <Scope>WATableFetchRequest</Scope>
+    </TokenIdentifier>
+    <Path>interfaceWATableFetchRequest.html</Path>
+    <Anchor>af3ababe447c097d805ab326f674ee7c5</Anchor>
+  </Token>
+  <Token>
+    <TokenIdentifier>
+      <Name>fetchRequestForTable:predicate:error:</Name>
+      <APILanguage>occ</APILanguage>
+      <Type>clm</Type>
+      <Scope>WATableFetchRequest</Scope>
+    </TokenIdentifier>
+    <Path>interfaceWATableFetchRequest.html</Path>
+    <Anchor>aa1d4ff788c2af15719c3d67568739561</Anchor>
+  </Token>
+  <Token>
+    <TokenIdentifier>
+      <Name>tableName</Name>
+      <APILanguage>occ</APILanguage>
+      <Type>instp</Type>
+      <Scope>WATableFetchRequest</Scope>
+    </TokenIdentifier>
+    <Path>interfaceWATableFetchRequest.html</Path>
+    <Anchor>aadd2977880ff48f63406005506794ac8</Anchor>
+  </Token>
+  <Token>
+    <TokenIdentifier>
+      <Name>partitionKey</Name>
+      <APILanguage>occ</APILanguage>
+      <Type>instp</Type>
+      <Scope>WATableFetchRequest</Scope>
+    </TokenIdentifier>
+    <Path>interfaceWATableFetchRequest.html</Path>
+    <Anchor>a7db429266b4dc07ea3735562a85b269a</Anchor>
+  </Token>
+  <Token>
+    <TokenIdentifier>
+      <Name>rowKey</Name>
+      <APILanguage>occ</APILanguage>
+      <Type>instp</Type>
+      <Scope>WATableFetchRequest</Scope>
+    </TokenIdentifier>
+    <Path>interfaceWATableFetchRequest.html</Path>
+    <Anchor>a1abf30823ddd5b5f2a1dcca87c0e5cb0</Anchor>
+  </Token>
+  <Token>
+    <TokenIdentifier>
+      <Name>filter</Name>
+      <APILanguage>occ</APILanguage>
+      <Type>instp</Type>
+      <Scope>WATableFetchRequest</Scope>
+    </TokenIdentifier>
+    <Path>interfaceWATableFetchRequest.html</Path>
+    <Anchor>a3f783733c715c08833928c31ed49b3be</Anchor>
+  </Token>
+  <Token>
+    <TokenIdentifier>
+      <Name>topRows</Name>
+      <APILanguage>occ</APILanguage>
+      <Type>instp</Type>
+      <Scope>WATableFetchRequest</Scope>
+    </TokenIdentifier>
+    <Path>interfaceWATableFetchRequest.html</Path>
+    <Anchor>af2965657ff42da2e4e045b5eced9c945</Anchor>
+  </Token>
+  <Token>
+    <TokenIdentifier>
+      <Name>resultContinuation</Name>
+      <APILanguage>occ</APILanguage>
+      <Type>instp</Type>
+      <Scope>WATableFetchRequest</Scope>
+    </TokenIdentifier>
+    <Path>interfaceWATableFetchRequest.html</Path>
+    <Anchor>ac3fa40e397fd031d618e63ec43e9be74</Anchor>
   </Token>
 </Tokens>

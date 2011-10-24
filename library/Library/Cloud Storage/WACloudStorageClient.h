@@ -57,6 +57,7 @@
  */
 + (void)ignoreSSLErrorFor:(NSString*)host;
 
+#pragma mark - Blob Operations
 ///---------------------------------------------------------------------------------------
 /// @name Blob Operations
 ///---------------------------------------------------------------------------------------
@@ -67,7 +68,7 @@
  @discussion The method will run asynchronously and will call back through the delegate for the client. There could be a limit to the number of containers that are returned. If you have many containers you may want to use the continuation version of fetching the containers.
  
  @see WACloudStorageClient#delegate
- @see WACloudStorateClientDelegate#storageClient:didFetchBlobContainers:
+ @see WACloudStorageClientDelegate#storageClient:didFetchBlobContainers:
  */
 - (void)fetchBlobContainers;
 
@@ -101,6 +102,7 @@
  
  @param resultContinuation The result continuation to use for this fetch request.
  @param maxResult The max number of containers to reuturn for this fetch.
+ @param block A block object called with the results of the fetch.
  
  @discussion The method will run asynchronously and will call back through the block. The block will contain the array of WABlobContainer objects or an error if one occurs. The WAResultContinuation returned in the block can be used to call this method again to get the next set of containers.
  
@@ -126,7 +128,7 @@
  @param containerName The name of the container to fetch.
  @param block A block object called with the results of the fetch.
  
- @discussion The method will run asynchronously and will call back through the block. The block will contain the WABlobContainer objects or an error if one occurs.
+ @discussion The method will run asynchronously and will call back through the block. The block will contain the WABlobContainer object or an error if one occurs.
  
  @see WABlobContainer
  */
@@ -351,6 +353,7 @@
  Deletes a blob asynchronously using a block.
  
  @param blob the blob to delete.
+ @param block A block object called with the results of the delete.
  
  @discussion The method will run asynchronously and will call back through the block. The block will be called with an error if the request fails, otherwise the error object will be nil.
  
@@ -559,7 +562,6 @@
 	
  @param queueName The name of the queue.
  @param fetchCount The number of messages to return.
- @param block A block object called with the results of the peek.
  
  @discussion The method will run asynchronously and will call back through the delegate for the client. Peek is like fetch, but the message is not marked for removal.
  
@@ -573,6 +575,7 @@
  
  @param queueName The name of the queue.
  @param fetchCount The number of messages to return.
+ @param block A block object called with the results of the peek.
  
  @discussion The method will run asynchronously and will call back through the block. The block will be called with an array of WAQueueMessage object or an error if the request fails, otherwise the error object will be nil. Peek is like fetch, but the message is not marked for removal.
  
@@ -625,6 +628,7 @@
  
  @param message The message to add.
  @param queueName The name of the queue to add the message.
+ @param block A block object called with the results of the add.
  
  @discussion The method will run asynchronously and will call back through the block. The block will be called with an error if the request fails, otherwise the error object will be nil.
  */
@@ -854,6 +858,7 @@
  Merges an existing entity within a table asynchronously using a block.
  
  @param existingEntity The entity to merge.
+ @param block A block object called with the results of the merge.
  
  @returns Returns if the request was sent successfully.
  
@@ -882,6 +887,7 @@
  Deletes an existing entity within a table asynchronously using a block.
  
  @param existingEntity The entity to delete.
+ @param block A block object called with the results of the delete.
  
  @returns Returns if the request was sent successfully.
  
@@ -975,7 +981,7 @@
  Sent when the client successfully removes an existing blob container.
 	
  @param client The client that sent the request.
- @param name The container that was deleted.
+ @param container The container that was deleted.
  
  @see WABlobContainer
  */
