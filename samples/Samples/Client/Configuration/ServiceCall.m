@@ -18,8 +18,6 @@
 #import <libxml/xmlwriter.h>
 #import "WAConfiguration.h"
 
-#import "WAToolkit.h"
-
 @interface ServiceRequest : NSObject {
 @private
 	NSURLConnection *_connection;

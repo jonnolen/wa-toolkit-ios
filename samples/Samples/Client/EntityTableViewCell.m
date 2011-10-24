@@ -17,8 +17,6 @@
 #import "EntityTableViewCell.h"
 #import <stdarg.h>
 
-#import "WAToolkit.h"
-
 @interface KeyPair : NSObject {
 @private
 	NSString* _key;

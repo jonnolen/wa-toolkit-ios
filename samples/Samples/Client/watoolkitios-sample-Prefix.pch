@@ -23,6 +23,7 @@
 #ifdef __OBJC__
 	#import <UIKit/UIKit.h>
 	#import <Foundation/Foundation.h>
+    #import "watoolkitios-lib/WAToolkit.h"
     #import "Macros.h"
 #endif
 
