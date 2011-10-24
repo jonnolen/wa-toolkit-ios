@@ -14,8 +14,8 @@ TMPDIR=$(mktemp -d /tmp/$(basename $0).XXXXXX) || exit 1
 DOCDIR=../docs
 DOXYFILE=$DOCDIR/doxygen.config
 DOXYGEN=/Applications/Doxygen.app/Contents/Resources/doxygen
-PROJECT=$(echo *.xcodeproj | cut -d. -f1)
-INSTALL=$1
+#PROJECT=$(echo *.xcodeproj | cut -d. -f1)
+PROJECT=WAToolkit
 
 if ! test -x $DOXYGEN ; then
 	echo "*** Install Doxygen to get documentation generated for you automatically ***"
@@ -55,19 +55,16 @@ EOF
 #  doxygen creates a Makefile that does most of the heavy lifting.
 $DOXYGEN $DOXYFILE
 
-# Install docs only if pass install to script
-if [$INSTALL = "install"]; then
 #  make will invoke docsetutil. Take a look at the Makefile to see how this is done.
 make -C $DOCDIR/html install
 
 #  Construct a temporary applescript file to tell Xcode to load a
 #  docset.
 cat <<EOF > $TMPDIR/loadDocSet.scpt
-tell application "Xcode"
-	load documentation set with path "/Users/$USER/Library/Developer/Shared/Documentation/DocSets/com.microsoft.${PROJECT}.docset/"
-end tell
+	tell application "Xcode"
+		load documentation set with path "/Users/$USER/Library/Developer/Shared/Documentation/DocSets/com.microsoft.${PROJECT}.docset/"
+	end tell 
 EOF
 
 # Run the load-docset applescript command.
 osascript $TMPDIR/loadDocSet.scpt
-fi
