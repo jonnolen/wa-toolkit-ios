@@ -88,7 +88,7 @@
 			
 		default:
 		{
-			NSError* err = [NSError errorWithDomain:@"AzureFilterBuilder" 
+			NSError* err = [NSError errorWithDomain:@"com.microsoft.WAToolkit" 
 											   code:-1
 										   userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Unsupported expression type", [expr expressionType]]
 																				forKey:NSLocalizedDescriptionKey]];
@@ -176,7 +176,7 @@
 		case NSCustomSelectorPredicateOperatorType:
 		default:
 		{
-			NSError* err = [NSError errorWithDomain:@"AzureFilterBuilder" 
+			NSError* err = [NSError errorWithDomain:@"com.microsoft.WAToolkit" 
 											   code:-1
 										   userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Unsupported operator type", predicateOperatorType]
 																				forKey:NSLocalizedDescriptionKey]];

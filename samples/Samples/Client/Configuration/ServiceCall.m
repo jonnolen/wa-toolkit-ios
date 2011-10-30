@@ -374,17 +374,25 @@
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
 	NSError *error = nil;
-	    
+    
 	if (_statusCode >= 300) {
 		NSString *msg = [NSString stringWithFormat:@"Invalid HTTP status returned (%d)", _statusCode];
+        NSString *detail = nil;
+        if (_data) {
+            detail = [[NSString alloc] initWithData:_data encoding:NSUTF8StringEncoding];
+            LOG(@"ServiceCall response: %@", detail);
+        }
+        
 		error = [NSError errorWithDomain:@"com.microsoft.WAToolkitConfig" 
 									code:_statusCode 
-								userInfo:[NSDictionary dictionaryWithObject:msg forKey:NSLocalizedDescriptionKey]];
+								userInfo:[NSDictionary dictionaryWithObjectsAndKeys:
+                                          msg, NSLocalizedDescriptionKey, 
+                                          detail, NSLocalizedFailureReasonErrorKey, nil]];
 		_block(_statusCode, nil, error);
-		[self release];
+        [detail release];
 		return;
 	}
-
+    
 	_block(_statusCode, _data, nil);
 }
 

@@ -27,18 +27,14 @@
 + (void)performXPath:(NSString*)xpath onNode:(xmlNodePtr)node block:(void (^)(xmlNodePtr))block
 {
     xmlDocPtr doc;
-    if(node->type == XML_DOCUMENT_NODE)
-    {
+    if(node->type == XML_DOCUMENT_NODE) {
         doc = (xmlDocPtr)node;
-    }
-    else
-    {
+    } else {
         doc = node->doc;
     }
     
     xmlXPathContextPtr xpathCtx = xmlXPathNewContext(doc);
-    if (!xpathCtx) 
-    {
+    if (!xpathCtx) {
         return;
     }
     
@@ -46,45 +42,23 @@
     xpathCtx->node = ((void*)node == (void*)doc) ? root : node;
     
     // anchor at our current node
-    if (root != NULL) 
-    {
-        for (xmlNsPtr nsPtr = root->nsDef; nsPtr != NULL; nsPtr = nsPtr->next) 
-        {
+    if (root != NULL) {
+        for (xmlNsPtr nsPtr = root->nsDef; nsPtr != NULL; nsPtr = nsPtr->next) {
             const xmlChar* prefix = nsPtr->prefix;
-            if (prefix != NULL) 
-            {
+            if (prefix != NULL) {
                 xmlXPathRegisterNs(xpathCtx, prefix, nsPtr->href);
-            }
-            else
-            {
+            } else {
                 xmlXPathRegisterNs(xpathCtx, (xmlChar*)"_default", nsPtr->href);
             }            
         }
-    }   
-    
-/*    int i = 0;
-    xmlNsPtr *nsList = xmlGetNsList(doc, xpathCtx->node);
-    
-    if (nsList != NULL) 
-    {
-        while (nsList[i] != NULL)
-        {
-            i++;
-        }
     }
-    
-    xpathCtx->namespaces = nsList;
-    xpathCtx->nsNr = i; */
     
     xmlXPathObjectPtr xpathObj;
     xpathObj = xmlXPathEval((const xmlChar *)[xpath UTF8String], xpathCtx);
-    if (xpathObj) 
-    {
+    if (xpathObj) {
         xmlNodeSetPtr nodeSet = xpathObj->nodesetval;
-        if (nodeSet) 
-        {
-            for (int index = 0; index < nodeSet->nodeNr; index++) 
-            {
+        if (nodeSet) {
+            for (int index = 0; index < nodeSet->nodeNr; index++) {
                 block(nodeSet->nodeTab[index]);
             }
         }
@@ -93,19 +67,16 @@
     }
     
     xmlXPathFreeContext(xpathCtx);
-//    xmlFree(nsList);
 }
 
-+ (NSString*)getElementValue:(xmlNodePtr)parent name:(NSString*)name
++ (NSString *)getElementValue:(xmlNodePtr)parent name:(NSString*)name
 {
-    xmlChar* nameStr = (xmlChar*)[name UTF8String];
+    xmlChar *nameStr = (xmlChar*)[name UTF8String];
     
-    for(xmlNodePtr child = xmlFirstElementChild(parent); child; child = xmlNextElementSibling(child))
-    {
-        if(xmlStrcmp(child->name, nameStr) == 0)
-        {
-            xmlChar* value = xmlNodeGetContent(child);
-			NSString* str = [[NSString alloc] initWithUTF8String:(const char*)value];
+    for (xmlNodePtr child = xmlFirstElementChild(parent); child; child = xmlNextElementSibling(child)) {
+        if (xmlStrcmp(child->name, nameStr) == 0) {
+            xmlChar *value = xmlNodeGetContent(child);
+			NSString *str = [[NSString alloc] initWithUTF8String:(const char*)value];
             xmlFree(value);
             return [str autorelease];
         }
@@ -114,21 +85,34 @@
     return nil;
 }
 
-+ (NSError*)checkForError:(xmlDocPtr)doc
++ (NSString *)getStringErrorValue:(xmlDocPtr)doc
 {
-    if(!doc)
-    {
+    if (!doc) {
+        return nil;
+    }
+    
+    NSMutableString *value = [NSMutableString string];
+    
+    xmlChar *content = xmlNodeGetContent((xmlNodePtr)doc);
+    [value appendString:[NSString stringWithUTF8String:(const char*)content]];
+    xmlFree(content);
+    
+    return value;
+}
+
++ (NSError *)checkForError:(xmlDocPtr)doc
+{
+    if (!doc) {
         return nil;
     }
     
     xmlNodePtr root = xmlDocGetRootElement(doc);
-    if(xmlStrcmp(root->name, (xmlChar*)"Error") == 0)
-    {
+    if (xmlStrcmp(root->name, (xmlChar*)"Error") == 0) {
         NSString* code = [self getElementValue:root name:@"Code"];
         NSString* message = [self getElementValue:root name:@"Message"];
         NSString* detail = [self getElementValue:root name:@"AuthenticationErrorDetail"];
         
-        return [NSError errorWithDomain:@"com.microsoft.AzureIOSToolkit" 
+        return [NSError errorWithDomain:@"com.microsoft.WAToolkit" 
                                    code:-1 
                                userInfo:[NSDictionary dictionaryWithObjectsAndKeys:
                                          message, NSLocalizedDescriptionKey, 
@@ -136,12 +120,11 @@
                                          code, @"AzureReasonCode", nil]];
     }
 
-    if(xmlStrcmp(root->name, (xmlChar*)"error") == 0)
-    {
+    if (xmlStrcmp(root->name, (xmlChar*)"error") == 0) {
         NSString* code = [self getElementValue:root name:@"code"];
         NSString* message = [self getElementValue:root name:@"message"];
         
-        return [NSError errorWithDomain:@"com.microsoft.AzureIOSToolkit" 
+        return [NSError errorWithDomain:@"com.microsoft.WAToolkit" 
                                    code:-1 
                                userInfo:[NSDictionary dictionaryWithObjectsAndKeys:
                                          message, NSLocalizedDescriptionKey, 
@@ -153,8 +136,7 @@
 
 + (void)parseAtomPub:(xmlDocPtr)doc block:(void (^)(WAAtomPubEntry *))block
 {
-    [WAXMLHelper performXPath:@"/_default:feed/_default:entry" onDocument:doc block:^(xmlNodePtr node)
-     {
+    [WAXMLHelper performXPath:@"/_default:feed/_default:entry" onDocument:doc block:^(xmlNodePtr node) {
          WAAtomPubEntry* entry = [[WAAtomPubEntry alloc] initWithNode:node];
          block(entry);
          [entry release];

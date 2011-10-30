@@ -305,6 +305,36 @@
 - (void)fetchBlobData:(WABlob *)blob withCompletionHandler:(void (^)(NSData *data, NSError *error))block;
 
 /**
+ Fetch the blob data for the specified url asynchronously.
+ 
+ @param blob The blob to fetch the data.
+ 
+ @returns Returns if the request was sent or not.
+ 
+ @discussion The method will run asynchronously and will call back through the delegate for the client. This method will only run when you are using the proxy service. 
+ 
+ @see WACloudStorageClient#delegate
+ @see WACloudStorageClientDelegate#storageClient:didFetchBlobData:URL:
+ @see NSURL
+ @see NSData
+ */
+- (BOOL)fetchBlobDataFromURL:(NSURL *)URL;
+
+/*! Returns the binary data (NSData) object for the specified blob. */
+/**
+ Fetch the blob data for the specified blob asynchronously.
+ 
+ @param blob The blob to fetch the data.
+ @param block A block object called with the results of the fetch. 
+ 
+ @discussion The method will run asynchronously and will call back through the block. The block will be called with the data for the blob if the request succeeds or an error if the request fails. This method will only run when you are using the proxy service.
+ 
+ @see NSURL
+ @see NSData
+ */
+- (BOOL)fetchBlobDataFromURL:(NSURL *)URL withCompletionHandler:(void (^)(NSData *data, NSError *error))block;
+
+/**
  Adds a new blob to a container asynchronously, given the name of the blob, binary data for the blob, and content type.
 	
  @param container The container to use to add the blob.
@@ -361,6 +391,7 @@
  */
 - (void)deleteBlob:(WABlob *)blob withCompletionHandler:(void (^)(NSError *error))block;
 
+#pragma mark - Queue Operations
 ///---------------------------------------------------------------------------------------
 /// @name Queue Operations
 ///---------------------------------------------------------------------------------------
@@ -634,7 +665,7 @@
  */
 - (void)addMessageToQueue:(NSString *)message queueName:(NSString *)queueName withCompletionHandler:(void (^)(NSError *error))block;
 
-
+#pragma mark - Table Operations
 ///---------------------------------------------------------------------------------------
 /// @name Table Operations
 ///---------------------------------------------------------------------------------------
@@ -1032,6 +1063,18 @@
  @see NSData
  */
 - (void)storageClient:(WACloudStorageClient *)client didFetchBlobData:(NSData *)data blob:(WABlob *)blob;
+
+/**
+ Sent when the client successfully returns blob data for a given URL.
+ 
+ @param client The client that sent the request.
+ @param data The data for the blob.
+ @param URL The URL for the the data.
+ 
+ @see NSURL
+ @see NSData
+ */
+- (void)storageClient:(WACloudStorageClient *)client didFetchBlobData:(NSData *)data URL:(NSURL *)URL;
 
 /**
  Sent when the client successfully adds a blob to a specified container.

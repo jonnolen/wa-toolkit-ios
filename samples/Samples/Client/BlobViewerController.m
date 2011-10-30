@@ -17,6 +17,13 @@
 #import "BlobViewerController.h"
 #import "Azure_Storage_ClientAppDelegate.h"
 
+@interface BlobViewerController()
+
+- (void)stopActivity;
+- (void)showActivity;
+
+@end
+
 @implementation BlobViewerController
 
 @synthesize blobImageView;
@@ -55,13 +62,17 @@
 {
     [super viewDidLoad];
 
+    [self showActivity];
+    
 	Azure_Storage_ClientAppDelegate	*appDelegate = (Azure_Storage_ClientAppDelegate *)[[UIApplication sharedApplication] delegate];
 
 	storageClient = [[WACloudStorageClient storageClientWithCredential:appDelegate.authenticationCredential] retain];
-	if ([blob.name hasSuffix:@"png"] || [blob.name hasSuffix:@"jpg"] || [blob.name hasSuffix:@"jpeg"]) {
+    NSString *contentType = [blob.properties objectForKey:WABlobPropertyKeyContentType];
+    if ([contentType hasPrefix:@"image"]) {
 		[storageClient fetchBlobData:self.blob withCompletionHandler:^(NSData *imgData, NSError *error) {
 			UIImage *blobImage = [UIImage imageWithData:imgData];
 			self.blobImageView.image = blobImage;
+            [self stopActivity];
 		}];
 	}
 }
@@ -86,4 +97,17 @@
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
+#pragma mark - Private Methods
+- (void)stopActivity
+{
+    self.navigationItem.rightBarButtonItem = nil;
+}
+
+- (void)showActivity
+{
+    UIActivityIndicatorView *view = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+	self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithCustomView:view] autorelease];
+	[view startAnimating];
+	[view release];
+}
 @end

@@ -634,9 +634,8 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
     WACloudURLRequest *request = nil;
     NSArray*(^containerBlock)(xmlDocPtr) = nil;
     
-    if(_credential.usesProxy)
-    {
-        request = [_credential authenticatedRequestWithEndpoint:@"/SharedAccessSignatureService/container" forStorageType:@"blob", nil];
+    if(_credential.usesProxy) {
+        request = [_credential authenticatedRequestWithEndpoint:@"/SharedAccessSignatureService/containers" forStorageType:@"blob", nil];
         containerBlock = ^(xmlDocPtr doc) {
             return [WAContainerParser loadContainersForProxy:doc];
         };
@@ -690,7 +689,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
     
     if(_credential.usesProxy)
     {
-        request = [_credential authenticatedRequestWithEndpoint:@"/SharedAccessSignatureService/container" forStorageType:@"blob", nil];
+        request = [_credential authenticatedRequestWithEndpoint:@"/SharedAccessSignatureService/containers" forStorageType:@"blob", nil];
         containerBlock = ^(xmlDocPtr doc) {
             return [WAContainerParser loadContainersForProxy:doc];
         };
@@ -756,7 +755,9 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
     
     if(_credential.usesProxy)
     {
-        request = [_credential authenticatedRequestWithEndpoint:@"/SharedAccessSignatureService/container" forStorageType:@"blob", nil];
+        NSString *endpoint = [NSString stringWithFormat:@"/SharedAccessSignatureService/containers?containerPrefix=%@", [containerName URLEncode]];
+        
+        request = [_credential authenticatedRequestWithEndpoint:endpoint forStorageType:@"blob", nil];
         containerBlock = ^(xmlDocPtr doc) {
             return [WAContainerParser loadContainersForProxy:doc];
         };
@@ -812,14 +813,16 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
 
 - (BOOL)addBlobContainerNamed:(NSString *)containerName withCompletionHandler:(void (^)(NSError*))block
 {
-	if(_credential.usesProxy)
-    {
-        return NO;
+    WACloudURLRequest *request = nil;
+    NSString *container = [[containerName lowercaseString] URLEncode];
+    NSMutableString *endpoint = [NSMutableString string];
+	if(_credential.usesProxy) {
+        [endpoint appendFormat:@"/SharedAccessSignatureService/container/%@", container];
+    } else {
+        [endpoint appendFormat:@"/%@?restype=container", container];
     }
     
-    containerName = [containerName lowercaseString];
-    NSString* endpoint = [NSString stringWithFormat:@"/%@?restype=container", [containerName URLEncode]];
-    WACloudURLRequest* request = [_credential authenticatedRequestWithEndpoint:endpoint forStorageType:@"blob" httpMethod:@"PUT" contentData:[NSData data] contentType:nil, nil];
+    request = [_credential authenticatedRequestWithEndpoint:endpoint forStorageType:@"blob" httpMethod:@"PUT" contentData:[NSData data] contentType:nil, nil];
 
 	[request fetchXMLWithCompletionHandler:^(WACloudURLRequest* request, xmlDocPtr doc, NSError* error)
      {
@@ -856,42 +859,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
 
 - (BOOL)deleteBlobContainer:(WABlobContainer *)container withCompletionHandler:(void (^)(NSError*))block
 {
-    if(_credential.usesProxy)
-    {
-        return NO;
-    }
-    //NSString* containerName = [container.name lowercaseString];
-    NSString *containerName = [[NSString stringWithFormat:@"%@", container.name] lowercaseString];
-    NSString* endpoint = [NSString stringWithFormat:@"/%@?restype=container", [containerName URLEncode]];
-    WACloudURLRequest* request = [_credential authenticatedRequestWithEndpoint:endpoint forStorageType:@"blob" httpMethod:@"DELETE" contentData:[NSData data] contentType:nil, nil];
-    	
-	[request fetchXMLWithCompletionHandler:^(WACloudURLRequest* request, xmlDocPtr doc, NSError* error)
-     {
-         if(error)
-         {
-             if(block)
-             {
-                 block(error);
-             }
-             else if([_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
-             {
-                 [_delegate storageClient:self didFailRequest:request withError:error];
-             }
-             return;
-         }
-         
-         if(block)
-         {
-             block(nil);
-         }
-         else if([_delegate respondsToSelector:@selector(storageClient:didDeleteBlobContainer:)])
-         {
-             [_delegate storageClient:self didDeleteBlobContainer:container];
-         }
-     }];
-
-    
-    return YES;
+    return [self deleteBlobContainerNamed:container.name withCompletionHandler:block];
 }
 
 - (BOOL)deleteBlobContainerNamed:(NSString *)containerName
@@ -901,13 +869,17 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
 
 - (BOOL)deleteBlobContainerNamed:(NSString *)containerName withCompletionHandler:(void (^)(NSError *))block
 {
-    if(_credential.usesProxy)
-    {
-        return NO;
+    WACloudURLRequest *request = nil;
+    NSString *container = [[containerName lowercaseString] URLEncode];
+    NSMutableString *endpoint = [NSMutableString string];
+    
+	if(_credential.usesProxy) {
+        [endpoint appendFormat:@"/SharedAccessSignatureService/container/%@", container];
+    } else {
+        [endpoint appendFormat:@"/%@?restype=container", container];
     }
-    containerName = [[NSString stringWithFormat:@"%@", containerName] lowercaseString];
-    NSString* endpoint = [NSString stringWithFormat:@"/%@?restype=container", [containerName URLEncode]];
-    WACloudURLRequest* request = [_credential authenticatedRequestWithEndpoint:endpoint forStorageType:@"blob" httpMethod:@"DELETE" contentData:[NSData data] contentType:nil, nil];
+    
+    request = [_credential authenticatedRequestWithEndpoint:endpoint forStorageType:@"blob" httpMethod:@"DELETE" contentData:[NSData data] contentType:nil, nil];
     
 	[request fetchXMLWithCompletionHandler:^(WACloudURLRequest* request, xmlDocPtr doc, NSError* error)
      {
@@ -1009,7 +981,8 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
     
     if(_credential.usesProxy)
     {
-        request = [_credential authenticatedRequestWithEndpoint:@"/SharedAccessSignatureService/blob" forStorageType:@"blob",
+        NSString *endpoint = [NSString stringWithFormat:@"/SharedAccessSignatureService/blob?containerName=%@", [container.name URLEncode]];
+        request = [_credential authenticatedRequestWithEndpoint:endpoint forStorageType:@"blob",
                                       @"x-ms-blob-type", @"BlockBlob", nil];
         blobBlock = ^(xmlDocPtr doc, WABlobContainer * container) {
             return [WABlobParser loadBlobsForProxy:doc container:container];
@@ -1062,7 +1035,6 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
      }];
 }
 
-
 - (void)fetchBlobData:(WABlob *)blob
 {
     [self fetchBlobData:blob withCompletionHandler:nil];
@@ -1073,7 +1045,8 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
     WACloudURLRequest* request;
 	if(_credential.usesProxy)
     {
-        request = [_credential authenticatedRequestWithEndpoint:@"/SharedAccessSignatureService/blob" forStorageType:@"blob", nil];
+        NSString *endpoint = [NSString stringWithFormat:@"/SharedAccessSignatureService/blob?containerName=%@&blobPrefix=%@", [blob.container.name URLEncode], [blob.name URLEncode]]; 
+        request = [_credential authenticatedRequestWithEndpoint:endpoint forStorageType:@"blob", nil];
 
         [request fetchXMLWithCompletionHandler:^(WACloudURLRequest* request, xmlDocPtr doc, NSError* error)
          {
@@ -1090,7 +1063,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
 				 return;
 			 }
 			 
-             NSArray* items = [WABlobParser loadBlobsForProxy:doc];
+             NSArray* items = [WABlobParser loadBlobsForProxy:doc container:blob.container];
              WABlob* toBeDisplayedBlob = nil;
              for (WABlob *item in items) {
                  if ([item.name isEqualToString:blob.name]) {
@@ -1159,6 +1132,48 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
     }
 }
 
+- (BOOL)fetchBlobDataFromURL:(NSURL *)URL
+{
+    return [self fetchBlobDataFromURL:URL withCompletionHandler:nil];
+}
+
+- (BOOL)fetchBlobDataFromURL:(NSURL *)URL withCompletionHandler:(void (^)(NSData *data, NSError *error))block 
+{   
+    if(!_credential.usesProxy)
+    {
+        return NO;
+    }
+    
+    WACloudURLRequest* blobRequest = [WACloudURLRequest requestWithURL:URL];
+    [blobRequest fetchDataWithCompletionHandler:^(WACloudURLRequest* request, NSData* data, NSError* error)
+     {
+         if(error)
+         {
+             if(block)
+             {
+                 block(nil, error);
+             }
+             else if([_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
+             {
+                 [_delegate storageClient:self didFailRequest:request withError:error];
+             }
+             return;
+         }
+         
+         if(block)
+         {
+             block(data, nil);
+         }
+         else if([_delegate respondsToSelector:@selector(storageClient:didFetchBlobData:URL:)])
+         {
+             [_delegate storageClient:self didFetchBlobData:data URL:URL];
+         }
+     }];
+    
+    return YES;
+}
+
+
 - (void)addBlobToContainer:(WABlobContainer *)container blobName:(NSString *)blobName contentData:(NSData *)contentData contentType:(NSString*)contentType
 {
     [self addBlobToContainer:container blobName:blobName contentData:contentData contentType:contentType withCompletionHandler:nil];
@@ -1169,7 +1184,8 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
     WACloudURLRequest* request;
     if(_credential.usesProxy)
     {
-		request = [_credential authenticatedRequestWithEndpoint:@"/SharedAccessSignatureService/container" forStorageType:@"blob", nil];
+        NSString *endpoint = [NSString stringWithFormat:@"/SharedAccessSignatureService/containers?containerPrefix=%@", [container.name URLEncode]];
+		request = [_credential authenticatedRequestWithEndpoint:endpoint forStorageType:@"blob", nil];
         [request fetchXMLWithCompletionHandler:^(WACloudURLRequest* request, xmlDocPtr doc, NSError* error)
          {
 			 if(error)
@@ -1264,7 +1280,8 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
     WACloudURLRequest* request;
     if (_credential.usesProxy) 
 	{
-        request = [_credential authenticatedRequestWithEndpoint:@"/SharedAccessSignatureService/container" forStorageType:@"blob", nil];
+        NSString *endpoint = [NSString stringWithFormat:@"/SharedAccessSignatureService/containers?containerPrefix=%@", [blob.container.name URLEncode]];
+        request = [_credential authenticatedRequestWithEndpoint:endpoint forStorageType:@"blob", nil];
 
         [request fetchXMLWithCompletionHandler:^(WACloudURLRequest* request, xmlDocPtr doc, NSError* error)
          {
@@ -1272,9 +1289,9 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
              NSArray* containers = [WAContainerParser loadContainersForProxy:doc];
              WABlobContainer* theOnlyContainer = [containers objectAtIndex:0];
              NSString* endpoint = [NSString stringWithFormat:@"%@/%@?%@", theOnlyContainer.URL, [blob.name URLEncode], theOnlyContainer.metadata];
+
              NSURL* serviceURL = [NSURL URLWithString:endpoint]; 
-             // WACloudURLRequest* blobRequest = [_credential authenticatedBlobRequestWithURL:serviceURL forStorageType:@"blob" httpMethod:@"DELETE" contentData:[NSData data] contentType:nil, nil];
-			 
+             
 			 WACloudURLRequest* blobRequest = [WACloudURLRequest requestWithURL:serviceURL];
 			 [blobRequest setHTTPMethod:@"DELETE"];
 			 
@@ -1399,7 +1416,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
         [endpoint appendFormat:@"?NextTableKey=%@", [resultContinuation.nextTableKey URLEncode]];
     }
     
-    WACloudURLRequest* request = [_credential authenticatedRequestWithEndpoint:endpoint forStorageType:@"table" httpMethod:@"GET", nil];
+    WACloudURLRequest *request = [_credential authenticatedRequestWithEndpoint:endpoint forStorageType:@"table" httpMethod:@"GET", nil];
     [self prepareTableRequest:request];
     
     [request fetchXMLWithCompletionHandler:^(WACloudURLRequest* request, xmlDocPtr doc, NSError* error)
@@ -1667,11 +1684,11 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
     {
 		if (block)
 		{
-			block ([NSError errorWithDomain:@"CloudStorageClient" code:-1 userInfo:[NSDictionary dictionaryWithObject:@"Required properties not found in entity" forKey:NSLocalizedDescriptionKey]]);
+			block ([NSError errorWithDomain:@"com.microsoft.WAToolkit" code:-1 userInfo:[NSDictionary dictionaryWithObject:@"Required properties not found in entity" forKey:NSLocalizedDescriptionKey]]);
 		}
 		else if ([(id)_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
 		{
-			[_delegate storageClient:self didFailRequest:nil withError:[NSError errorWithDomain:@"CloudStorageClient" code:-1 userInfo:[NSDictionary dictionaryWithObject:@"Required properties not found in entity" forKey:NSLocalizedDescriptionKey]]];
+			[_delegate storageClient:self didFailRequest:nil withError:[NSError errorWithDomain:@"com.microsoft.WAToolkit" code:-1 userInfo:[NSDictionary dictionaryWithObject:@"Required properties not found in entity" forKey:NSLocalizedDescriptionKey]]];
 		}
         return NO;
     }
@@ -1732,11 +1749,11 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
     {
 		if (block)
 		{
-			block ([NSError errorWithDomain:@"CloudStorageClient" code:-1 userInfo:[NSDictionary dictionaryWithObject:@"Required properties not found in entity" forKey:NSLocalizedDescriptionKey]]);
+			block ([NSError errorWithDomain:@"com.microsoft.WAToolkit" code:-1 userInfo:[NSDictionary dictionaryWithObject:@"Required properties not found in entity" forKey:NSLocalizedDescriptionKey]]);
 		}
 		else if ([(id)_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
 		{
-			[_delegate storageClient:self didFailRequest:nil withError:[NSError errorWithDomain:@"CloudStorageClient" code:-1 userInfo:[NSDictionary dictionaryWithObject:@"Required properties not found in entity" forKey:NSLocalizedDescriptionKey]]];
+			[_delegate storageClient:self didFailRequest:nil withError:[NSError errorWithDomain:@"com.microsoft.WAToolkit" code:-1 userInfo:[NSDictionary dictionaryWithObject:@"Required properties not found in entity" forKey:NSLocalizedDescriptionKey]]];
 		}
 		return NO;
     }
@@ -1803,11 +1820,11 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
     {
 		if (block)
 		{
-			block ([NSError errorWithDomain:@"CloudStorageClient" code:-1 userInfo:[NSDictionary dictionaryWithObject:@"Required properties not found in entity" forKey:NSLocalizedDescriptionKey]]);
+			block ([NSError errorWithDomain:@"com.microsoft.WAToolkit" code:-1 userInfo:[NSDictionary dictionaryWithObject:@"Required properties not found in entity" forKey:NSLocalizedDescriptionKey]]);
 		}
 		else if ([(id)_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
 		{
-			[_delegate storageClient:self didFailRequest:nil withError:[NSError errorWithDomain:@"CloudStorageClient" code:-1 userInfo:[NSDictionary dictionaryWithObject:@"Required properties not found in entity" forKey:NSLocalizedDescriptionKey]]];
+			[_delegate storageClient:self didFailRequest:nil withError:[NSError errorWithDomain:@"com.microsoft.WAToolkit" code:-1 userInfo:[NSDictionary dictionaryWithObject:@"Required properties not found in entity" forKey:NSLocalizedDescriptionKey]]];
 		}
 		return NO;
     }
@@ -1873,11 +1890,11 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
     {
 		if (block)
 		{
-			block ([NSError errorWithDomain:@"CloudStorageClient" code:-1 userInfo:[NSDictionary dictionaryWithObject:@"No endpoint defined" forKey:NSLocalizedDescriptionKey]]);
+			block ([NSError errorWithDomain:@"com.microsoft.WAToolkit" code:-1 userInfo:[NSDictionary dictionaryWithObject:@"No endpoint defined" forKey:NSLocalizedDescriptionKey]]);
 		}
 		else if ([(id)_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)])
 		{
-			[_delegate storageClient:self didFailRequest:nil withError:[NSError errorWithDomain:@"CloudStorageClient" code:-1 userInfo:[NSDictionary dictionaryWithObject:@"No endpoint defined" forKey:NSLocalizedDescriptionKey]]];
+			[_delegate storageClient:self didFailRequest:nil withError:[NSError errorWithDomain:@"com.microsoft.WAToolkit" code:-1 userInfo:[NSDictionary dictionaryWithObject:@"No endpoint defined" forKey:NSLocalizedDescriptionKey]]];
 		}
 		return NO;
     }

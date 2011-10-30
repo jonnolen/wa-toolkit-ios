@@ -16,6 +16,18 @@
 
 #import <Foundation/Foundation.h>
 
+extern NSString * const WABlobPropertyKeyBlobType;
+extern NSString * const WABlobPropertyKeyCacheControl;
+extern NSString * const WABlobPropertyKeyContentEncoding;
+extern NSString * const WABlobPropertyKeyContentLanguage;
+extern NSString * const WABlobPropertyKeyContentLength;
+extern NSString * const WABlobPropertyKeyContentMD5;
+extern NSString * const WABlobPropertyKeyContentType;
+extern NSString * const WABlobPropertyKeyEtag;
+extern NSString * const WABlobPropertyKeyLastModified;
+extern NSString * const WABlobPropertyKeyLeaseStatus;
+extern NSString * const WABlobPropertyKeySequenceNumber;
+
 @class WABlobContainer;
 
 /**
@@ -43,6 +55,11 @@
 @property (readonly) WABlobContainer *container;
 
 /**
+ The properties for the blob.
+ */
+@property (readonly) NSDictionary *properties;
+
+/**
  Initializes a newly created WABlob with an name and address URL.
  
  @param name The name of the blob.
@@ -65,5 +82,20 @@
  @see NSURL
  */
 - (id)initBlobWithName:(NSString *)name URL:(NSString *)URL container:(WABlobContainer *)container;
+
+/**
+ Initializes a newly created WABlob with a name, address URL, the container and properties.
+ 
+ @param name The name of the blob.
+ @param URL The address of the blob.
+ @param container The container for the blob.
+ @param properties The properties for the blob.
+ 
+ @returns The newly initialized WABlob object.
+ 
+ @see WABlobContainer
+ @see NSURL
+ */
+- (id)initBlobWithName:(NSString *)name URL:(NSString *)URL container:(WABlobContainer *)container properties:(NSDictionary *)properties;
 
 @end
