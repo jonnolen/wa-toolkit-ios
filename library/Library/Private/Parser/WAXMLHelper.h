@@ -24,10 +24,11 @@
 
 @interface WAXMLHelper : NSObject
 
-+ (void)performXPath:(NSString*)xpath onDocument:(xmlDocPtr)doc block:(void (^)(xmlNodePtr))block;
-+ (void)performXPath:(NSString*)xpath onNode:(xmlNodePtr)node block:(void (^)(xmlNodePtr))block;
-+ (NSString*)getElementValue:(xmlNodePtr)parent name:(NSString*)name;
-+ (NSError*)checkForError:(xmlDocPtr)doc;
++ (void)performXPath:(NSString *)xpath onDocument:(xmlDocPtr)doc block:(void (^)(xmlNodePtr))block;
++ (void)performXPath:(NSString *)xpath onNode:(xmlNodePtr)node block:(void (^)(xmlNodePtr))block;
++ (NSString *)getElementValue:(xmlNodePtr)parent name:(NSString*)name;
++ (NSString *)getStringErrorValue:(xmlDocPtr)doc;
++ (NSError *)checkForError:(xmlDocPtr)doc;
 + (void)parseAtomPub:(xmlDocPtr)doc block:(void (^)(WAAtomPubEntry *))entry;
 
 @end

@@ -15,19 +15,10 @@
  */
 
 #import <SenTestingKit/SenTestingKit.h>
-#import <UIKit/UIKit.h>
+#import "WABaseTestCase.h"
 
-@class WAAuthenticationCredential;
-@class WACloudStorageClient;
-@class WACloudStorageClientDelegate;
-
-@interface TableTests : SenTestCase {
-@private
-    NSString *account;
-    NSString *accessKey;
-    WAAuthenticationCredential *directCredential;
-    WACloudStorageClient *directClient;
-    WACloudStorageClientDelegate *directDelegate;    
+@interface TableTests : WABaseTestCase {
+    
 }
 
 @end

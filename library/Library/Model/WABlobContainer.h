@@ -16,6 +16,9 @@
 
 #import <Foundation/Foundation.h>
 
+extern NSString * const WAContainerPropertyKeyEtag;
+extern NSString * const WAContainerPropertyKeyLastModified;
+
 /**
  A class that represents a Windows Azure blob container.
  */
@@ -39,6 +42,11 @@
 @property (readonly) NSString *metadata;
 
 /**
+ The properties for the container.
+ */
+@property (readonly) NSDictionary *properties;
+
+/**
  Initializes a newly created WABlobContainer with a name.
  
  @param name The name of the container.
@@ -48,6 +56,16 @@
 - (id)initContainerWithName:(NSString *)name;
 
 /**
+ Initializes a newly created WABlobContainer with a name.
+ 
+ @param name The name of the container.
+ @param URL The address of the container.
+ 
+ @returns The newly initialized WABlobContainer object.
+ */
+- (id)initContainerWithName:(NSString *)name URL:(NSString *)URL;
+
+/**
  Initializes a newly created WABlobContainer with a name, address and metadata for the container.
  
  @param name The name of the container.
@@ -55,9 +73,19 @@
  @param metadata The container's metadata.
  
  @returns The newly initialized WABlobContainer object.
- 
- @see NSURL
  */
 - (id)initContainerWithName:(NSString *)name URL:(NSString *)URL metadata:(NSString *)metadata;
+
+/**
+ Initializes a newly created WABlobContainer with a name, address, metadata for the container.
+ 
+ @param name The name of the container.
+ @param URL The address of the container.
+ @param metadata The container's metadata.
+ @param properties The properties for the container.
+ 
+ @returns The newly initialized WABlobContainer object.
+ */
+- (id)initContainerWithName:(NSString *)name URL:(NSString *)URL metadata:(NSString *)metadata properties:(NSDictionary *)properties;
 
 @end

@@ -30,6 +30,8 @@
 
 - (void)fetchEntities;
 - (void)editEntity:(NSUInteger)index;
+- (void)showAddButton;
+- (void)showActivity;
 
 @end
 
@@ -73,10 +75,8 @@
     [super viewDidLoad];
     
 	Azure_Storage_ClientAppDelegate *appDelegate = (Azure_Storage_ClientAppDelegate *)[[UIApplication sharedApplication] delegate];
-	
-    self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd 
-																							target:self 
-																							action:@selector(addEntity:)] autorelease];
+
+	[self showAddButton];
 	storageClient = [[WACloudStorageClient storageClientWithCredential:appDelegate.authenticationCredential] retain];
 	storageClient.delegate = self;
     
@@ -95,7 +95,7 @@
 	if (self.entityType == ENTITY_TYPE_TABLE && self.localEntityList.count == 0) {
 		[self fetchEntities];
 	} else if (self.entityType == ENTITY_TYPE_QUEUE) {
-		[storageClient peekQueueMessages:self.navigationItem.title fetchCount:1000];
+		[storageClient fetchQueueMessages:self.navigationItem.title fetchCount:1000];
 	}
 }
 
@@ -140,6 +140,7 @@
 
 - (void)fetchEntities
 {
+    [self showActivity];
     WATableFetchRequest *fetchRequest = [WATableFetchRequest fetchRequestForTable:self.navigationItem.title];
     fetchRequest.resultContinuation = self.resultContinuation;
     fetchRequest.topRows = TOP_ROWS;
@@ -153,6 +154,21 @@
     newController.entity = [self.localEntityList objectAtIndex:index];
     [self.navigationController pushViewController:newController animated:YES];
     [newController release];
+}
+
+- (void)showAddButton
+{
+    self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd 
+																							target:self 
+																							action:@selector(addEntity:)] autorelease];
+}
+
+- (void)showActivity
+{
+    UIActivityIndicatorView *view = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+	self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithCustomView:view] autorelease];
+	[view startAnimating];
+	[view release];
 }
 
 #pragma mark - Table view data source
@@ -283,14 +299,16 @@
 		if (entityType == ENTITY_TYPE_TABLE && !_localEntityList.count) {
 			self.navigationItem.rightBarButtonItem = nil;
 		}
+        [self showAddButton];
 	};	
 	
+    [self showActivity];
+    
 	if (entityType == ENTITY_TYPE_TABLE) {
 		WATableEntity *entity = [self.localEntityList objectAtIndex:indexPath.row];
 		[storageClient deleteEntity:entity withCompletionHandler:block];
 	} else if (entityType == ENTITY_TYPE_QUEUE) {
 		WAQueueMessage *queueMessage = [self.localEntityList objectAtIndex:indexPath.row];
-		
 		[storageClient deleteQueueMessage:queueMessage 
 							  queueName:self.navigationItem.title 
 				  withCompletionHandler:block];
@@ -314,13 +332,15 @@
 	}
     [self.localEntityList addObjectsFromArray:entities];    
 	[self.tableView reloadData];
+    [self showAddButton];
 }
 
-- (void)storageClient:(WACloudStorageClient *)client didPeekQueueMessages:(NSArray *)queueMessages
+- (void)storageClient:(WACloudStorageClient *)client didFetchQueueMessages:(NSArray *)queueMessages
 {
     fetchCount = [queueMessages count];
     [self.localEntityList addObjectsFromArray:queueMessages];
 	[self.tableView reloadData];
+    [self showAddButton];
 }
 
 @end

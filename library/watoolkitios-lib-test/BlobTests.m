@@ -15,12 +15,7 @@
  */
 
 #import "BlobTests.h"
-#import "WACloudStorageClient.h"
-#import "WAAuthenticationCredential.h"
-#import "WACloudStorageClientDelegate.h"
-#import "WATableFetchRequest.h"
-#import "WATableEntity.h"
-#import "WAResultContinuation.h"
+#import "WAToolkit.h"
 
 //#define TEST_BLOBS
 
@@ -30,12 +25,6 @@
 - (void)setUp
 {
     [super setUp];
-    account = [NSString stringWithString:@"<your account>"];
-    accessKey = [NSString stringWithString:@"<your account key>"];
-    
-    directCredential = [WAAuthenticationCredential credentialWithAzureServiceAccount:account accessKey:accessKey];
-    directClient = [WACloudStorageClient storageClientWithCredential:directCredential];
-    directDelegate = [WACloudStorageClientDelegate createDelegateForClient:directClient];
 }
 
 - (void)tearDown
@@ -43,10 +32,9 @@
     [super tearDown];
 }
 
-- (void)testShouldBeAbleToFilterAndRetrieveTables
+- (void)testShouldContainersWithContinuationUsingCompletionHandlerDirect
 {
-    //WAResultContinuation *resultContinuation = [[[WAResultContinuation alloc] initWithNextTableKey:nil] autorelease];
-    [directClient fetchBlobContainersSegmented:nil maxResult:100 withCompletionHandler:^(NSArray* containers, WAResultContinuation *resultContinuation, NSError* error) 
+    [directClient fetchBlobContainersWithContinuation:nil maxResult:100 usingCompletionHandler:^(NSArray* containers, WAResultContinuation *resultContinuation, NSError* error) 
      {
          STAssertNil(error, @"Error returned by fetchBlobContainersSegmented: %@", [error localizedDescription]);
          STAssertNotNil(containers, @"fetchBlobContainersSegmented returned nil");
@@ -56,6 +44,151 @@
      }];
 	
 	[directDelegate waitForResponse];	
+}
+
+- (void)testShouldFetchBlobContainersWithCompletionHandlerDirect
+{   
+    [directClient fetchBlobContainersWithCompletionHandler:^(NSArray *containers, NSError *error)
+     {
+         STAssertNil(error, @"Error returned from fetchBlobContainersWithCompletionHandler: %@",[error localizedDescription]);
+         STAssertTrue([containers count] > 0, @"No containers were found under this account");  // assuming that this is an account with at least one container
+         [directDelegate markAsComplete];
+     }];
+    
+    [directDelegate waitForResponse];
+}
+
+-(void)testShouldAddDeleteBlobContainerWithCompletionHandlerDirect
+{    
+    NSLog(@"Executing TEST_ADD_DELETE_BLOB_CONTAINER");
+    [directClient fetchBlobContainersWithCompletionHandler:^(NSArray *containers, NSError *error)
+     {
+         STAssertNil(error, @"Error returned from fetchBlobContainersWithCompletionHandler: %@",[error localizedDescription]);
+         STAssertTrue([containers count] > 0, @"No containers were found under this account");  // assuming that this is an account with at least one container
+         containerCount = [containers count];
+         [directDelegate markAsComplete];
+     }];
+    [directDelegate waitForResponse];
+    
+    [directClient addBlobContainerNamed:randomContainerNameString withCompletionHandler:^(NSError *error)
+     {
+         STAssertNil(error, @"Error returned from addBlobContainer: %@",[error localizedDescription]);
+         [directDelegate markAsComplete];
+     }];
+    [directDelegate waitForResponse];
+    
+    [directClient fetchBlobContainersWithCompletionHandler:^(NSArray *containers, NSError *error)
+     {
+         STAssertNil(error, @"Error returned from fetchBlobContainersWithCompletionHandler: %@",[error localizedDescription]);
+         STAssertTrue([containers count] > 0, @"No containers were found under this account");  // assuming that this is an account with at least one container
+         STAssertTrue((containerCount + 1 == [containers count] ),@"A new container doesn't appear to be added.");
+         [directDelegate markAsComplete];
+     }];
+    [directDelegate waitForResponse];
+    
+    [directClient deleteBlobContainerNamed:randomContainerNameString withCompletionHandler:^(NSError *error)
+     {
+         STAssertNil(error, @"Error returned from deleteBlobContainer: %@",[error localizedDescription]);
+         [directDelegate markAsComplete];
+     }];
+    [directDelegate waitForResponse];
+    
+    [directClient fetchBlobContainersWithCompletionHandler:^(NSArray *containers, NSError *error)
+     {
+         STAssertNil(error, @"Error returned from fetchBlobContainersWithCompletionHandler: %@",[error localizedDescription]);
+         STAssertTrue([containers count] > 0, @"No containers were found under this account");  // assuming that this is an account with at least one container
+         STAssertTrue((containerCount == [containers count] ),@"Unit test container doesn't appear to be deleted.");
+         [directDelegate markAsComplete];
+     }];
+    [directDelegate waitForResponse];
+}
+
+-(void)testShouldAddBlobWithCompletionHandlerDirect
+{
+    NSLog(@"Executing TEST_ADD_BLOB");
+    
+    [directClient addBlobContainerNamed:randomContainerNameString withCompletionHandler:^(NSError *error)
+     {
+         STAssertNil(error, @"Error returned from addBlobContainer: %@",[error localizedDescription]);
+         [directDelegate markAsComplete];
+     }];
+    [directDelegate waitForResponse];
+    NSLog(@"container added: %@", randomContainerNameString);
+    NSBundle *bundle = [NSBundle bundleForClass:[self class]];
+    NSString* path = [bundle pathForResource:@"cloud" ofType:@"jpg"];
+    NSData* data = [NSData dataWithContentsOfFile:path];
+    
+    __block WABlobContainer *mycontainer;
+    [directClient fetchBlobContainerNamed:randomContainerNameString WithCompletionHandler:^(WABlobContainer *container, NSError *error)
+     {
+         [directDelegate markAsComplete];
+         [directClient addBlobToContainer:container blobName:@"cloud.jpg" contentData:data contentType:@"image/jpeg" withCompletionHandler:^(NSError *error)
+          {
+              mycontainer = container;
+              STAssertNil(error, @"Error returned by addBlob: %@", [error localizedDescription]);
+              [directDelegate markAsComplete];
+          }];
+         [directDelegate waitForResponse];
+         
+     }];
+    [directDelegate waitForResponse];
+    
+    [directClient fetchBlobs:mycontainer withCompletionHandler:^(NSArray *blobs, NSError *error)
+     {
+         STAssertNil(error, @"Error returned by getBlobs: %@", [error localizedDescription]);
+         STAssertTrue([blobs count] == 1, @"%i blobs were returned instead of 1",[blobs count]);         
+         [directDelegate markAsComplete];
+     }];
+    [directDelegate waitForResponse];
+    
+    [directClient deleteBlobContainer:mycontainer withCompletionHandler:^(NSError *error)
+     {
+         STAssertNil(error, @"Error returned from deleteBlobContainer: %@",[error localizedDescription]);
+         [directDelegate markAsComplete];
+     }];
+    [directDelegate waitForResponse];
+    
+}
+
+-(void)testShouldFetchBlobContainerBlobsWithCompletionHandlerProxy
+{
+    
+    NSLog(@"Executing TEST_FETCH_BLOBCONTAINERS_PROXY");
+    __block WABlobContainer *mycontainer;
+    [proxyClient fetchBlobContainersWithCompletionHandler:^(NSArray *containers, NSError *error)
+     {
+         STAssertNil(error, @"Error returned from fetchBlobContainersWithCompletionHandler: %@",[error localizedDescription]);
+         STAssertTrue([containers count] > 0, @"No containers were found under this account");  // assuming that this is an account with at least one container
+         mycontainer = [containers objectAtIndex:0];
+         [proxyDelegate markAsComplete];
+         
+         NSLog(@"Executing TEST_FETCH_BLOBS_THROUGH_PROXY");
+         [proxyClient fetchBlobs:mycontainer withCompletionHandler:^(NSArray *blobs, NSError *error)
+          {
+              STAssertNil(error, @"Error returned by getBlobs: %@", [error localizedDescription]);
+              STAssertTrue([blobs count] > 0, @"%i blobs were returned instead of 1",[blobs count]);         
+              [proxyDelegate markAsComplete];
+          }];
+         [proxyDelegate waitForResponse];
+         
+     }];    
+    [proxyDelegate waitForResponse];
+    
+    NSLog(@"Executing TEST_ADD_BLOB_TO_CONTAINER_THROUGH_PROXY");
+    NSBundle *bundle = [NSBundle bundleForClass:[self class]];
+    NSString* path = [bundle pathForResource:@"cloud" ofType:@"jpg"];
+    NSData* data = [NSData dataWithContentsOfFile:path];
+    
+    [proxyClient addBlobToContainer:mycontainer blobName:@"cloud.jpg" contentData:data contentType:@"image/jpeg" withCompletionHandler:^(NSError *error)
+     {
+         STAssertNil(error, @"Error returned by addBlob: %@", [error localizedDescription]);
+         [proxyDelegate markAsComplete];
+     }];
+    [proxyDelegate waitForResponse];
+    
+    NSLog(@"Dealy 5 seconds for adding blob data to be done in Azure Cloud!");
+    NSDate *delay = [NSDate dateWithTimeIntervalSinceNow: 0.05 ];
+    [NSThread sleepUntilDate:delay];
 }
 #endif
 

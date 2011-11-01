@@ -22,7 +22,7 @@
 {
 	if([delegate respondsToSelector:@selector(parserFailedWithError:)])
 	{
-		NSError* error = [NSError errorWithDomain:@"PredicateParser" 
+		NSError* error = [NSError errorWithDomain:@"com.microsoft.WAToolkit" 
 											 code:code 
 										 userInfo:[NSDictionary dictionaryWithObject:errorDesc forKey:NSLocalizedDescriptionKey]];
 		[delegate parserFailedWithError:error];

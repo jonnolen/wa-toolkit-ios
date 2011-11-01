@@ -16,36 +16,46 @@
 #import "WABlob.h"
 #import "WABlobContainer.h"
 
+NSString * const WABlobPropertyKeyBlobType = @"BlobType";
+NSString * const WABlobPropertyKeyCacheControl = @"Cache-Control";
+NSString * const WABlobPropertyKeyContentEncoding = @"Content-Encoding";
+NSString * const WABlobPropertyKeyContentLanguage = @"Content-Language";
+NSString * const WABlobPropertyKeyContentLength = @"Content-Length";
+NSString * const WABlobPropertyKeyContentMD5 = @"Content-MD5";
+NSString * const WABlobPropertyKeyContentType = @"Content-Type";
+NSString * const WABlobPropertyKeyEtag = @"Etag";
+NSString * const WABlobPropertyKeyLastModified = @"Last-Modified";
+NSString * const WABlobPropertyKeyLeaseStatus = @"LeaseStatus";
+NSString * const WABlobPropertyKeySequenceNumber = @"x-ms-blob-sequence-number";
+
 @implementation WABlob
 
 @synthesize name = _name;
 @synthesize URL = _URL;
 @synthesize container = _container;
+@synthesize properties = _properties; 
 
-- (id)initBlobWithName:(NSString *)name URL:(NSString *)URL container:(WABlobContainer*)container 
-{	
+
+- (id)initBlobWithName:(NSString *)name URL:(NSString *)URL container:(WABlobContainer *)container properties:(NSDictionary *)properties
+{
     if ((self = [super init])) {
         _name = [name retain];
         _URL = [[NSURL URLWithString:URL] retain];
         _container = [container retain];
+        _properties = [properties retain];
     }    
- 
-    return self;	
+    
+    return self;
+}
+
+- (id)initBlobWithName:(NSString *)name URL:(NSString *)URL container:(WABlobContainer*)container 
+{	
+     return [self initBlobWithName:name URL:URL container:container properties:nil];	
 }
 
 - (id)initBlobWithName:(NSString *)name URL:(NSString *)URL 
 {	
-    if ((self = [super init])) {
-        _name = [name retain];
-        _URL = [[NSURL URLWithString:URL] retain];
-    }    
-    
-    return self;	
-}
-
-- (NSString*) description
-{
-    return [NSString stringWithFormat:@"Blob { name = %@, url = %@, container = %@ }", _name, _URL, _container];
+    return [self initBlobWithName:name URL:URL container:nil];	
 }
 
 - (void) dealloc 
@@ -53,7 +63,14 @@
     [_name release];
     [_URL release];
     [_container release];
+    [_properties release];
+    
     [super dealloc];
+}
+
+- (NSString *)description
+{
+    return [NSString stringWithFormat:@"Blob { name = %@, url = %@, container = %@, properties = %@ }", _name, _URL, _container, _properties.description];
 }
 
 @end
