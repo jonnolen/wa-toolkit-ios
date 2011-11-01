@@ -56,6 +56,8 @@
 		DE410E391427077A008D6626 /* WAResultContinuation.m in Sources */ = {isa = PBXBuildFile; fileRef = DE410E371427077A008D6626 /* WAResultContinuation.m */; };
 		DE4DD586142A4FE200D03B75 /* TableTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DE4DD585142A4FE200D03B75 /* TableTests.m */; };
 		DE5B03D8142FDA4A0092F6BA /* WAToolkit.h in Headers */ = {isa = PBXBuildFile; fileRef = DE5B03D6142FDA4A0092F6BA /* WAToolkit.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DE9615B9145F3006005BEB1B /* WABaseTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = DE9615B8145F3006005BEB1B /* WABaseTestCase.m */; };
+		DE9615BD145F444A005BEB1B /* QueueTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DE9615BC145F444A005BEB1B /* QueueTests.m */; };
 		DEF6901A140827D4006FF7E5 /* Base64Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = DEF69019140827D4006FF7E5 /* Base64Tests.m */; };
 		F216A688136F88BC00FAEAB4 /* WAQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = F216A684136F88BC00FAEAB4 /* WAQueue.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F216A689136F88BC00FAEAB4 /* WAQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = F216A685136F88BC00FAEAB4 /* WAQueue.m */; };
@@ -72,7 +74,6 @@
 		F4F998F9138DC6C200254B51 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		F4F998FA138DC6C200254B51 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 288765FC0DF74451002DB57D /* CoreGraphics.framework */; };
 		F4F99900138DC6C200254B51 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = F4F998FE138DC6C200254B51 /* InfoPlist.strings */; };
-		F4F99905138DC6C200254B51 /* watoolkitios_lib_test.m in Sources */ = {isa = PBXBuildFile; fileRef = F4F99904138DC6C200254B51 /* watoolkitios_lib_test.m */; };
 		F4F99917138DC8FD00254B51 /* WACloudStorageClientDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F4F99916138DC8FD00254B51 /* WACloudStorageClientDelegate.m */; };
 		F4F9991A138DCBC500254B51 /* libwatoolkitios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F4F5239B1374612A004434B5 /* libwatoolkitios.a */; };
 		F4F9991C138DCBDF00254B51 /* libxml2.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F4F9991B138DCBDF00254B51 /* libxml2.2.dylib */; };
@@ -143,6 +144,10 @@
 		DE4DD584142A4FE200D03B75 /* TableTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableTests.h; sourceTree = "<group>"; };
 		DE4DD585142A4FE200D03B75 /* TableTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TableTests.m; sourceTree = "<group>"; };
 		DE5B03D6142FDA4A0092F6BA /* WAToolkit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WAToolkit.h; sourceTree = "<group>"; };
+		DE9615B7145F3006005BEB1B /* WABaseTestCase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WABaseTestCase.h; sourceTree = "<group>"; };
+		DE9615B8145F3006005BEB1B /* WABaseTestCase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WABaseTestCase.m; sourceTree = "<group>"; };
+		DE9615BB145F4449005BEB1B /* QueueTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QueueTests.h; sourceTree = "<group>"; };
+		DE9615BC145F444A005BEB1B /* QueueTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QueueTests.m; sourceTree = "<group>"; };
 		DEF69018140827D4006FF7E5 /* Base64Tests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Base64Tests.h; sourceTree = "<group>"; };
 		DEF69019140827D4006FF7E5 /* Base64Tests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Base64Tests.m; sourceTree = "<group>"; };
 		F216A684136F88BC00FAEAB4 /* WAQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WAQueue.h; sourceTree = "<group>"; };
@@ -161,8 +166,6 @@
 		F4F998FD138DC6C200254B51 /* watoolkitios-lib-test-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "watoolkitios-lib-test-Info.plist"; sourceTree = "<group>"; };
 		F4F998FF138DC6C200254B51 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		F4F99901138DC6C200254B51 /* watoolkitios-lib-test-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "watoolkitios-lib-test-Prefix.pch"; sourceTree = "<group>"; };
-		F4F99902138DC6C200254B51 /* watoolkitios_lib_test.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = watoolkitios_lib_test.h; sourceTree = "<group>"; };
-		F4F99904138DC6C200254B51 /* watoolkitios_lib_test.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = watoolkitios_lib_test.m; sourceTree = "<group>"; };
 		F4F99915138DC8FD00254B51 /* WACloudStorageClientDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WACloudStorageClientDelegate.h; sourceTree = "<group>"; };
 		F4F99916138DC8FD00254B51 /* WACloudStorageClientDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WACloudStorageClientDelegate.m; sourceTree = "<group>"; };
 		F4F9991B138DCBDF00254B51 /* libxml2.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.2.dylib; path = usr/lib/libxml2.2.dylib; sourceTree = SDKROOT; };
@@ -378,14 +381,16 @@
 		F4F998FB138DC6C200254B51 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
-				F4F99902138DC6C200254B51 /* watoolkitios_lib_test.h */,
-				F4F99904138DC6C200254B51 /* watoolkitios_lib_test.m */,
+				DE9615B7145F3006005BEB1B /* WABaseTestCase.h */,
+				DE9615B8145F3006005BEB1B /* WABaseTestCase.m */,
 				DEF69018140827D4006FF7E5 /* Base64Tests.h */,
 				DEF69019140827D4006FF7E5 /* Base64Tests.m */,
 				DE4DD584142A4FE200D03B75 /* TableTests.h */,
 				DE4DD585142A4FE200D03B75 /* TableTests.m */,
 				DE2A2F0C142A91A2005467BE /* BlobTests.h */,
 				DE2A2F0D142A91A2005467BE /* BlobTests.m */,
+				DE9615BB145F4449005BEB1B /* QueueTests.h */,
+				DE9615BC145F444A005BEB1B /* QueueTests.m */,
 				F4F99915138DC8FD00254B51 /* WACloudStorageClientDelegate.h */,
 				F4F99916138DC8FD00254B51 /* WACloudStorageClientDelegate.m */,
 				DEF68FE114082266006FF7E5 /* Frameworks */,
@@ -593,11 +598,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F4F99905138DC6C200254B51 /* watoolkitios_lib_test.m in Sources */,
 				F4F99917138DC8FD00254B51 /* WACloudStorageClientDelegate.m in Sources */,
 				DEF6901A140827D4006FF7E5 /* Base64Tests.m in Sources */,
 				DE4DD586142A4FE200D03B75 /* TableTests.m in Sources */,
 				DE2A2F0E142A91A2005467BE /* BlobTests.m in Sources */,
+				DE9615B9145F3006005BEB1B /* WABaseTestCase.m in Sources */,
+				DE9615BD145F444A005BEB1B /* QueueTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -17,10 +17,13 @@
 #import <Foundation/Foundation.h>
 #import <libxml/tree.h>
 
+@class WABlobContainer;
+
 @interface WAContainerParser : NSObject
 
 + (NSArray *)loadContainers:(xmlDocPtr)doc;
 + (NSArray *)loadContainersForProxy:(xmlDocPtr)doc;
 + (NSString *)retrieveMarker:(xmlDocPtr)doc;
++ (WABlobContainer *)retrieveContainerWithSharedAccessSigniture:(xmlDocPtr)doc;
 
 @end

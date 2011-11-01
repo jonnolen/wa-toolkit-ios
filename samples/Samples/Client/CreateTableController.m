@@ -242,10 +242,13 @@
 {
     NSString *imageName = newItemName.text;
 
+    // TODO: Delete code
+    /*
 	if ([imageName hasSuffix:@".jpg"] == NO && [imageName hasSuffix:@".jpeg"] == NO) {
 		imageName = [newItemName.text stringByAppendingString:@".jpg"];
 	}
-	
+	*/
+    
     [storageClient addBlobToContainer:self.selectedContainer 
 							 blobName:imageName 
 						  contentData:UIImageJPEGRepresentation(selectedImage, 1.0)

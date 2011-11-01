@@ -119,4 +119,23 @@
     return [[containers copy] autorelease];
 }
 
++ (WABlobContainer *)retrieveContainerWithSharedAccessSigniture:(xmlDocPtr)doc
+{
+    if (doc == nil) { 
+		return nil; 
+	}
+    
+    NSString *containerURI = [WAXMLHelper getElementValue:(xmlNodePtr)doc name:@"anyURI"];
+    NSMutableArray *containerNameUri = [[NSMutableArray alloc] initWithArray:[containerURI componentsSeparatedByString:@"?"]];
+    NSString *tempURL = [containerNameUri objectAtIndex:0];
+    NSString *sharedAccessSigniture = [containerNameUri objectAtIndex:1];
+    NSMutableArray *containerNameUri2 = [[NSMutableArray alloc] initWithArray:[tempURL componentsSeparatedByString:@"/"]];
+    NSString *containerName = [containerNameUri2 objectAtIndex:3];
+    
+    [containerNameUri2 release];
+    [containerNameUri release];
+    
+    return [[[WABlobContainer alloc] initContainerWithName:containerName URL:tempURL metadata:sharedAccessSigniture] autorelease];
+}
+
 @end

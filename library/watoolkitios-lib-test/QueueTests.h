@@ -14,11 +14,12 @@
  limitations under the License.
  */
 
-#import <SenTestingKit/SenTestingKit.h>
 
-@interface watoolkitios_lib_test : SenTestCase {
-@private
-    
+#import <SenTestingKit/SenTestingKit.h>
+#import "WABaseTestCase.h"
+
+@interface QueueTests : WABaseTestCase {
+
 }
 
 @end
