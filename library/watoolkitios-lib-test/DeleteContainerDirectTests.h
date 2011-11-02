@@ -14,12 +14,11 @@
  limitations under the License.
  */
 
-
 #import <SenTestingKit/SenTestingKit.h>
 #import "WABaseTestCase.h"
 
-@interface QueueTests : WABaseTestCase {
-
+@interface DeleteContainerDirectTests : WABaseTestCase {
+    
 }
 
 @end

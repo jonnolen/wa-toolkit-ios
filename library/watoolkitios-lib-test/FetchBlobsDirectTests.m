@@ -1,0 +1,78 @@
+/*
+ Copyright 2010 Microsoft Corp
+ 
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+ 
+ http://www.apache.org/licenses/LICENSE-2.0
+ 
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ */
+
+#import "FetchBlobsDirectTests.h"
+#import "WAToolkit.h"
+
+@implementation FetchBlobsDirectTests
+
+#ifdef INTEGRATION_DIRECT
+
+- (void)setUp
+{
+    [super setUp];
+    
+    [directClient addBlobContainerNamed:randomContainerNameString withCompletionHandler:^(NSError *error) {
+        STAssertNil(error, @"Error returned from addBlobContainer: %@",[error localizedDescription]);
+        [directDelegate markAsComplete];
+    }];
+    [directDelegate waitForResponse];
+    
+    NSBundle *bundle = [NSBundle bundleForClass:[self class]];
+    NSString *path = [bundle pathForResource:@"cloud" ofType:@"jpg"];
+    NSData *data = [NSData dataWithContentsOfFile:path];
+    
+    __block WABlobContainer *mycontainer;
+    [directClient fetchBlobContainerNamed:randomContainerNameString withCompletionHandler:^(WABlobContainer *container, NSError *error) {
+        [directDelegate markAsComplete];
+        [directClient addBlobToContainer:container blobName:@"cloud.jpg" contentData:data contentType:@"image/jpeg" withCompletionHandler:^(NSError *error) {
+            mycontainer = [container retain];
+            STAssertNil(error, @"Error returned by addBlobToContainer: %@", [error localizedDescription]);
+            [directDelegate markAsComplete];
+        }];
+        [directDelegate waitForResponse];
+    }];
+    [directDelegate waitForResponse];
+    _container = [mycontainer retain];
+    [mycontainer release];
+}
+
+- (void)tearDown
+{
+    [directClient deleteBlobContainerNamed:randomContainerNameString withCompletionHandler:^(NSError *error) {
+        STAssertNil(error, @"Error returned from deleteBlobContainerNamed: %@",[error localizedDescription]);
+        [directDelegate markAsComplete];
+    }];
+    [directDelegate waitForResponse];
+    
+    [_container release];
+    
+    [super tearDown];
+}
+
+-(void)testShouldAddBlobWithCompletionHandler
+{   
+    [directClient fetchBlobs:_container withCompletionHandler:^(NSArray *blobs, NSError *error) {
+        STAssertNil(error, @"Error returned by fetchBlobs: %@", [error localizedDescription]);
+        STAssertTrue([blobs count] == 1, @"%i blobs were returned instead of 1",[blobs count]);         
+        [directDelegate markAsComplete];
+    }];
+    [directDelegate waitForResponse];
+}
+
+#endif
+
+@end

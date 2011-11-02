@@ -14,21 +14,12 @@
  limitations under the License.
  */
 
-#import <Foundation/Foundation.h>
-#import "WACloudStorageClient.h"
+#import <SenTestingKit/SenTestingKit.h>
+#import "WABaseTestCase.h"
 
-@interface WACloudStorageClientDelegate : NSObject <WACloudStorageClientDelegate> {
+@interface UpdateEntityDirectTests : WABaseTestCase {
 @private
-	id _result;
-	BOOL _complete;
-	NSError *_error;
-	WACloudStorageClient *_client;
+    WATableEntity *_testEntity;
 }
-
-- (void)waitForResponse;
-- (id)getResponse:(NSError **)error;
-- (void)markAsComplete;
-
-+ (WACloudStorageClientDelegate *)createDelegateForClient:(WACloudStorageClient *)client;
 
 @end

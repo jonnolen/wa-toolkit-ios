@@ -17,7 +17,7 @@
 #import <SenTestingKit/SenTestingKit.h>
 #import "WABaseTestCase.h"
 
-@interface TableTests : WABaseTestCase {
+@interface InsertEntityDirectTests : WABaseTestCase {
     
 }
 

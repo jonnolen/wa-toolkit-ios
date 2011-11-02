@@ -16,17 +16,36 @@
 
 #import "WACloudStorageClientDelegate.h"
 
+@interface WACloudStorageClientDelegate()
+
+- (id)initForClient:(WACloudStorageClient *)client;
+
+@end
+
 @implementation WACloudStorageClientDelegate
 
-- (id)initForClient:(WACloudStorageClient*)client
+- (id)initForClient:(WACloudStorageClient *)client
 {
-	if((self = [super init]))
-	{
+	if ((self = [super init])) {
 		_client = client;
 		_client.delegate = self;
 	}
 	
 	return self;
+}
+
+- (void)dealloc 
+{
+    _client = nil;
+    [_result release];
+    [_error release];
+    
+    [super dealloc];
+}
+
++ (WACloudStorageClientDelegate *)createDelegateForClient:(WACloudStorageClient *)client
+{
+	return [[[self alloc] initForClient:client] autorelease];
 }
 
 - (void)markAsComplete
@@ -39,8 +58,7 @@
 	[_client retain];
 	[self retain];
 	
-	while(!_complete)
-	{
+	while (!_complete) {
 		[[NSRunLoop mainRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:1.0]];
 	}
     
@@ -51,12 +69,11 @@
     _complete = NO;
 }
 
-- (id)getResponse:(NSError**)error
+- (id)getResponse:(NSError **)error
 {
     [self waitForResponse];
     
-	if(_error)
-	{
+	if (_error) {
 		*error = [_error autorelease];
         _error = nil; // reset...
 		return nil;
@@ -65,11 +82,6 @@
 	id r = [_result autorelease];
     _result = nil;
     return r;
-}
-
-+ (WACloudStorageClientDelegate*) createDelegateForClient:(WACloudStorageClient*)client
-{
-	return [[[self alloc] initForClient:client] autorelease];
 }
 
 - (void)storageClient:(WACloudStorageClient*)client didFailRequest:request withError:error

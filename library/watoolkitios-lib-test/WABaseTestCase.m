@@ -20,8 +20,9 @@
 NSString * const WAAccount = @"<your account>";
 NSString * const WAAccessKey = @"<your access key>";
 NSString * const WAProxyURL = @"https://<proxyhost>.cloudapp.net";
-NSString * const WAProxyUsername = @"proxy user name";
-NSString * const WAProxyPassword = @"proxy password";
+NSString * const WAProxyNamespace = @"<your proxy host>";
+NSString * const WAProxyUsername = @"<proxy user name>";
+NSString * const WAProxyPassword = @"<proxy password>";
 
 // Used for container and table cleanup
 NSString * const unitTestContainerName = @"unitestcontainer";
@@ -30,7 +31,7 @@ NSString * const unitTestTableName = @"unittesttable";
 
 @implementation WABaseTestCase
 
-- (void)setUp
+- (void)setUp;
 {
     [super setUp];
 
@@ -42,7 +43,11 @@ NSString * const unitTestTableName = @"unittesttable";
     directDelegate = [WACloudStorageClientDelegate createDelegateForClient:directClient];
     
     // Setup proxy
+    [WACloudStorageClient ignoreSSLErrorFor:WAProxyNamespace];
     NSError *error = nil;
+    proxyURL = [NSString stringWithString:WAProxyURL];
+    proxyUsername = [NSString stringWithString:WAProxyUsername];
+    proxyPassword = [NSString stringWithString:WAProxyPassword];
     proxyCredential = [WAAuthenticationCredential authenticateCredentialSynchronousWithProxyURL:[NSURL URLWithString:proxyURL] user:proxyUsername password:proxyPassword error:&error];
     STAssertNil(error, @"There was an error authenticating against the proxy server: %@",[error localizedDescription]);
     proxyClient = [WACloudStorageClient storageClientWithCredential:proxyCredential];

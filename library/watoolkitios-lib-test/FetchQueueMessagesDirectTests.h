@@ -17,9 +17,8 @@
 #import <SenTestingKit/SenTestingKit.h>
 #import "WABaseTestCase.h"
 
-
-@interface BlobTests : WABaseTestCase {
-   
+@interface FetchQueueMessagesDirectTests : WABaseTestCase {
+    
 }
 
 @end
