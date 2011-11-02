@@ -241,13 +241,6 @@
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingImage:(UIImage *)selectedImage editingInfo:(NSDictionary *)editingInfo
 {
     NSString *imageName = newItemName.text;
-
-    // TODO: Delete code
-    /*
-	if ([imageName hasSuffix:@".jpg"] == NO && [imageName hasSuffix:@".jpeg"] == NO) {
-		imageName = [newItemName.text stringByAppendingString:@".jpg"];
-	}
-	*/
     
     [storageClient addBlobToContainer:self.selectedContainer 
 							 blobName:imageName 

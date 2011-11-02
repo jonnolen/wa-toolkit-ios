@@ -1419,9 +1419,10 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
     WACloudURLRequest *request = [_credential authenticatedRequestWithEndpoint:endpoint forStorageType:@"table" httpMethod:@"GET", nil];
     [self prepareTableRequest:request];
     
-    // TODO: Get rid of this code
-    NSDictionary *headers = [request allHTTPHeaderFields];
-    NSLog(@"headers - %@", headers);
+    WA_BEGIN_LOGGING
+        NSDictionary *headers = [request allHTTPHeaderFields];
+        NSLog(@"headers - %@", headers);
+    WA_END_LOGGING
     
     [request fetchXMLWithCompletionHandler:^(WACloudURLRequest* request, xmlDocPtr doc, NSError* error)
      {
