@@ -291,8 +291,13 @@ void ignoreSSLErrorFor(NSString* host)
         error = [WAXMLHelper checkForError:doc];
     }
     
-    if (_statusCode == 401 && doc) {
-        NSString *message = [WAXMLHelper getStringErrorValue:doc];
+    if (_statusCode == 401) {
+        NSString *message = nil;
+        if (doc) {
+            message = [WAXMLHelper getStringErrorValue:doc];
+        } else {
+            message = [NSHTTPURLResponse localizedStringForStatusCode:_statusCode];
+        }
         NSString *detail = [NSHTTPURLResponse localizedStringForStatusCode:_statusCode];        
         NSError *contentError = [NSError errorWithDomain:@"com.microsoft.WAToolkit" 
                                                     code:_statusCode

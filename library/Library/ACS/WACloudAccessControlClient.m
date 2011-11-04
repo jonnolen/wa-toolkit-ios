@@ -28,12 +28,11 @@ static WACloudAccessToken* _token = nil;
 
 - (id)initForNamespace:(NSString*)serviceNamespace realm:(NSString*)realm
 {
-    if((self = [super init]))
-    {
+    if ((self = [super init])) {
         _serviceNamespace = [serviceNamespace copy];
         _realm = [realm copy];
         
-        NSString* url = [NSString stringWithFormat:@"https://%@.accesscontrol.windows.net/v2/metadata/IdentityProviders.js?protocol=javascriptnotify&realm=%@&version=1.0",
+        NSString *url = [NSString stringWithFormat:@"https://%@.accesscontrol.windows.net/v2/metadata/IdentityProviders.js?protocol=javascriptnotify&realm=%@&version=1.0",
                          _serviceNamespace,
                          [_realm URLEncode]];
         _serviceURL = [[NSURL URLWithString:url] retain];
@@ -51,7 +50,7 @@ static WACloudAccessToken* _token = nil;
     [super dealloc];
 }
 
-+ (WACloudAccessToken*)sharedToken
++ (WACloudAccessToken *)sharedToken
 {
 	return _token;
 }
@@ -62,21 +61,19 @@ static WACloudAccessToken* _token = nil;
 	_token = nil;
 }
 
-+ (WACloudAccessControlClient*)accessControlClientForNamespace:(NSString*)serviceNamespace realm:(NSString*)realm
++ (WACloudAccessControlClient*)accessControlClientForNamespace:(NSString *)serviceNamespace realm:(NSString *)realm
 {
     return [[[WACloudAccessControlClient alloc] initForNamespace:serviceNamespace realm:realm] autorelease];
 }
 
 - (UIViewController*)createViewControllerAllowsClose:(BOOL)allowsClose withCompletionHandler:(void (^)(BOOL authenticated))block
 {
-    UIViewController* progressController;
+    UIViewController *progressController;
     
     progressController = [[WALoginProgressViewController alloc] initWithURL:_serviceURL 
 																allowsClose:allowsClose
-													  withCompletionHandler:^(WACloudAccessToken *token) 
-						  {
-							  if(token)
-							  {
+													  withCompletionHandler:^(WACloudAccessToken *token) {
+							  if (token) {
 								  [_token release];
 								  _token = [token retain];
 							  }
@@ -87,11 +84,11 @@ static WACloudAccessToken* _token = nil;
 	return [progressController autorelease];
 }
 
-- (void)showInViewController:(UIViewController*)controller allowsClose:(BOOL)allowsClose withCompletionHandler:(void (^)(BOOL authenticated))block
+- (void)showInViewController:(UIViewController *)controller allowsClose:(BOOL)allowsClose withCompletionHandler:(void (^)(BOOL authenticated))block
 {
-    UIViewController* progressController = [self createViewControllerAllowsClose:allowsClose withCompletionHandler:block];
+    UIViewController *progressController = [self createViewControllerAllowsClose:allowsClose withCompletionHandler:block];
     
-    UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:progressController];
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:progressController];
     navController.navigationBar.barStyle = UIBarStyleBlack;
     
     [controller presentModalViewController:navController animated:YES];

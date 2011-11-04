@@ -42,8 +42,7 @@ const int AUTHENTICATION_DELAY = 2;
 
 - (id)initWithAzureServiceAccount:(NSString*)name accessKey:(NSString*)key
 {	
-	if ((self = [super init]) != nil)
-	{
+	if ((self = [super init]) != nil) {
 		_usesProxy = NO;
 		_accountName = [name copy];
 		_accessKey = [key copy];
@@ -54,8 +53,7 @@ const int AUTHENTICATION_DELAY = 2;
 
 - (id)initWithProxyURL:(NSURL *)service user:(NSString *)user password:(NSString *)password
 {
-	if ((self = [super init]) != nil)
-	{
+	if ((self = [super init]) != nil) {
 		_usesProxy = YES;
 		_proxyURL = [service retain];
         _username = [user copy];
@@ -67,8 +65,7 @@ const int AUTHENTICATION_DELAY = 2;
 
 - (id)initWithProxyURL:(NSURL *)proxyService tablesService:(NSURL *)tablesService blobsService:(NSURL *)blobsService user:(NSString *)user password:(NSString *)password
 {
-	if ((self = [super init]) != nil)
-	{
+	if ((self = [super init]) != nil) {
 		_usesProxy = YES;
 		_proxyURL = [proxyService retain];
 		_tableServiceURL = [tablesService retain];
@@ -80,16 +77,30 @@ const int AUTHENTICATION_DELAY = 2;
 	return self;
 }
 
-- (id)initWithProxyURL:(NSURL *)proxyService accessToken:(WACloudAccessToken*)accessToken
+- (id)initWithProxyURL:(NSURL *)proxyService accessToken:(WACloudAccessToken *)accessToken
 {
-	if ((self = [super init]) != nil)
-	{
+	if ((self = [super init]) != nil) {
 		_usesProxy = YES;
 		_proxyURL = [proxyService retain];
 		_accessToken = [accessToken retain];						
 	}
 	
 	return self;
+}
+
+- (void)dealloc
+{
+	[_proxyURL release];
+	[_token release];
+	[_accountName release];
+	[_accessKey release];
+	[_username release];
+	[_password release];
+	[_blobServiceURL release];
+	[_tableServiceURL release];
+	[_accessToken release];
+	
+	[super dealloc];
 }
 
 - (BOOL)authenticateWithCompletionHandler:(void (^)(NSError*))block error:(NSError **)returnError
@@ -100,41 +111,32 @@ const int AUTHENTICATION_DELAY = 2;
     [request setHTTPMethod:@"POST"];
     [request setValue:@"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
 	
-	NSData* requestData = [requestString dataUsingEncoding:NSUTF8StringEncoding];
+	NSData *requestData = [requestString dataUsingEncoding:NSUTF8StringEncoding];
     [request setHTTPBody:requestData];
     
-    [request fetchXMLWithCompletionHandler:^(WACloudURLRequest* request, xmlDocPtr doc, NSError* error)
-     {
-         if(error)
-         {
-             if(block)
-             {
-                 block(error);
-             }
-             else
-             {
-                 _authError = [error retain];
-             }
-             return;
-         }
+    [request fetchXMLWithCompletionHandler:^(WACloudURLRequest *request, xmlDocPtr doc, NSError *error) {
+        if (error) {
+            if (block) {
+                block(error);
+            } else {
+                _authError = [error retain];
+            }
+            return;
+        }
          
-         _token = [[WAXMLHelper getElementValue:(xmlNodePtr)doc name:@"string"] retain];
+        _token = [[WAXMLHelper getElementValue:(xmlNodePtr)doc name:@"string"] retain];
          
-         if(block)
-         {
-             block(nil);
-         }
-     }];
+        if (block) {
+            block(nil);
+        }
+    }];
 	
-	if(!block)
-	{
-		while(!_token && !_authError)
-		{
-			[[NSRunLoop mainRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:AUTHENTICATION_DELAY]];
+	if (!block) {
+        while (!_token && !_authError) {
+            [[NSRunLoop mainRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:AUTHENTICATION_DELAY]];
 		}
 
-		if (_authError && returnError)
-		{
+		if (_authError && returnError) {
 			*returnError = [_authError autorelease];
             return NO;
 		}
@@ -166,17 +168,13 @@ const int AUTHENTICATION_DELAY = 2;
 
 + (WAAuthenticationCredential *)authenticateCredentialWithProxyURL:(NSURL *)proxyURL user:(NSString *)user password:(NSString *)password delegate:(id<WAAuthenticationDelegate>)delegate
 {
-    return [self authenticateCredentialWithProxyURL:proxyURL user:user password:password withCompletionHandler:^(NSError* error)
-            {
-                if(error)
-                {
-                    [delegate loginDidFailWithError:error];
-                }
-                else
-                {
-                    [delegate loginDidSucceed];
-                }
-            }];
+    return [self authenticateCredentialWithProxyURL:proxyURL user:user password:password withCompletionHandler:^(NSError* error) {
+        if (error) {
+            [delegate loginDidFailWithError:error];
+        } else {
+            [delegate loginDidSucceed];
+        }
+    }];
 }
 
 + (WAAuthenticationCredential *)authenticateCredentialWithProxyURL:(NSURL *)proxyURL user:(NSString *)user password:(NSString *)password withCompletionHandler:(void (^)(NSError*))block
@@ -196,7 +194,7 @@ const int AUTHENTICATION_DELAY = 2;
 #pragma mark -
 #pragma mark Request authentication methods
 
-- (NSURL*)URLforEndpoint:(NSString *)endpoint forStorageType:(NSString *)storageType
+- (NSURL *)URLforEndpoint:(NSString *)endpoint forStorageType:(NSString *)storageType
 {
 	if (!endpoint || !storageType)
 	{
@@ -205,58 +203,41 @@ const int AUTHENTICATION_DELAY = 2;
 
     BOOL usingTableStorage = [[storageType lowercaseString] isEqualToString:@"table"];
     BOOL usingQueueStorage = [[storageType lowercaseString] isEqualToString:@"queue"];
-    NSURL* serviceURL;
+    NSURL *serviceURL;
     
 #if 1
-    if (_usesProxy)
-    {
-        if (usingTableStorage)
-		{
+    if (_usesProxy) {
+        if (usingTableStorage) {
             endpoint = [NSString stringWithFormat:@"/AzureTablesProxy.axd/%@", endpoint];
             
             serviceURL = [[NSURL URLWithString:endpoint relativeToURL:_proxyURL] absoluteURL];
-        }
-        else if (usingQueueStorage)
-        {
+        } else if (usingQueueStorage) {
             endpoint = [NSString stringWithFormat:@"/AzureQueuesProxy.axd%@", endpoint];
             serviceURL = [[NSURL URLWithString:endpoint relativeToURL:_proxyURL] absoluteURL];
-        }
-        else
-		{
+        } else {
             serviceURL = [[NSURL URLWithString:endpoint relativeToURL:_proxyURL] absoluteURL];
         }
-    }
-    else
-    {
-        NSString* cloudURL = [NSString stringWithFormat:@"http://%@.%@.core.windows.net/", _accountName, [storageType lowercaseString]];
+    } else {
+        NSString *cloudURL = [NSString stringWithFormat:@"http://%@.%@.core.windows.net/", _accountName, [storageType lowercaseString]];
         serviceURL = [[NSURL URLWithString:endpoint relativeToURL:[NSURL URLWithString:cloudURL]] absoluteURL];
     }
 #else
-	NSString				*servicePath = nil;
-	if (_usesProxy)
-	{
-		if ([[storageType lowercaseString] isEqualToString:@"table"])
-		{
+	NSString *servicePath = nil;
+	if (_usesProxy) {
+		if ([[storageType lowercaseString] isEqualToString:@"table"]) {
 			servicePath = [[_proxyURL absoluteString] stringByAppendingFormat:@"/AzureTablesProxy.axd/%@", endpoint];
-		}
-        else if (usingQueueStorage)
-        {
+		} else if (usingQueueStorage) {
             servicePath = [[_proxyURL absoluteString] stringByAppendingFormat:@"/AzureQueuesProxy.axd%@", endpoint];
-        }
-		else
-		{
+        } else {
 			servicePath = [[_proxyURL absoluteString] stringByAppendingFormat:@"/%@", endpoint];
 		}
-	}
-	else
-	{
+	} else {
 		servicePath = [@"http://" stringByAppendingFormat:@"%@.%@.core.windows.net/%@", _accountName, [storageType lowercaseString], endpoint];
 	}
 	serviceURL = [NSURL URLWithString:servicePath];
 #endif
     
-    if(!serviceURL)
-    {
+    if (!serviceURL) {
         WA_BEGIN_LOGGING
             NSLog(@"Service URL could not be created for endpoint: %@", endpoint);
         WA_END_LOGGING
@@ -265,76 +246,61 @@ const int AUTHENTICATION_DELAY = 2;
     return serviceURL;
 }
 
-- (WACloudURLRequest *)authenticatedRequestWithURL:(NSURL *)serviceURL blobSemantics:(BOOL)blobSemantics queueSemantics:(BOOL)queueSemantics httpMethod:(NSString*)httpMethod contentData:(NSData *)contentData contentType:(NSString*)contentType args:(va_list)args
+- (WACloudURLRequest *)authenticatedRequestWithURL:(NSURL *)serviceURL blobSemantics:(BOOL)blobSemantics queueSemantics:(BOOL)queueSemantics httpMethod:(NSString*)httpMethod contentData:(NSData *)contentData contentType:(NSString *)contentType args:(va_list)args
 {
-	if (!serviceURL)
-	{
+	if (!serviceURL){
 		return nil;
 	}
     
-    NSString* contentLength = contentData ? [NSString stringWithFormat:@"%d", contentData.length] : @"";
+    NSString *contentLength = contentData ? [NSString stringWithFormat:@"%d", contentData.length] : @"";
     
 	WACloudURLRequest *authenticatedrequest = [WACloudURLRequest requestWithURL:serviceURL];
     [authenticatedrequest setHTTPMethod:httpMethod];
     
-    if (_usesProxy)
-	{
+    if (_usesProxy) {
 		[authenticatedrequest setValue:@"identity" forHTTPHeaderField:@"Accept-Encoding"];
 
-		if(_accessToken)
-		{
+		if (_accessToken) {
 			[_accessToken signRequest:authenticatedrequest];
-		}
-		else if(_token)
-		{
+		} else if(_token) {
 			[authenticatedrequest setValue:_token forHTTPHeaderField:@"AuthToken"];
 		}
 		
-        if(queueSemantics)
-        {
+        if (queueSemantics) {
 			[authenticatedrequest addValue:@"2009-09-19" forHTTPHeaderField:@"x-ms-version"];
         }
 		
-		if(contentType)
-		{
+		if (contentType) {
 			[authenticatedrequest addValue:contentType forHTTPHeaderField:@"Content-Type"];
 		}
 		
-		if(contentData)
-		{
+		if (contentData) {
 			[authenticatedrequest setHTTPBody:contentData];
 		}
 		
 		return authenticatedrequest;
 	}
 
-	NSString* endpoint = [[[serviceURL path] copy] autorelease];
-	NSString* query = [serviceURL query];
-	if(query && query.length > 0)
-	{
+	NSString *endpoint = [[[serviceURL path] copy] autorelease];
+	NSString *query = [serviceURL query];
+	if (query && query.length > 0) {
 		// for table storage, look for the comp= parameter
-		NSArray* args = [query componentsSeparatedByString:@"&"];
+		NSArray *args = [query componentsSeparatedByString:@"&"];
 		
-		if(blobSemantics || queueSemantics)
-		{
+		if (blobSemantics || queueSemantics) {
 			NSMutableString* q = [NSMutableString stringWithCapacity:100];
 			
-			for(NSString* arg in [args sortedArrayUsingSelector:@selector(compare:)])
-			{
+			for (NSString *arg in [args sortedArrayUsingSelector:@selector(compare:)]) {
 				[q appendString:@"\n"];
 				[q appendString:[arg stringByReplacingOccurrencesOfString:@"=" withString:@":"]];
 			}
 			
 			query = q;
-		}
-		else
-		{
+		} else {
 			query = nil;
 			
-			for(NSString* arg in args)
-			{
-				if([arg hasPrefix:@"comp="])
-				{
+			for (NSString *arg in args) {
+				if ([arg hasPrefix:@"comp="]) {
 					arg = [arg stringByReplacingOccurrencesOfString:@"=" withString:@":"];
 					query = [@"\n" stringByAppendingString:arg];
 					break;
@@ -353,18 +319,14 @@ const int AUTHENTICATION_DELAY = 2;
 	NSString *dateString = [dateFormatter stringFromDate:date];
 	[dateFormatter release];
 	
-	NSMutableArray* headers = [NSMutableArray arrayWithCapacity:20];
-	NSString* name;
-	NSString* header;
+	NSMutableArray *headers = [NSMutableArray arrayWithCapacity:20];
+	NSString *name;
+	NSString *header;
 	BOOL isName = YES;
-	while((header = va_arg(args, NSString*)))
-	{
-		if(isName)
-		{
+	while ((header = va_arg(args, NSString*))) {
+		if (isName) {
 			name = header;
-		}
-		else
-		{
+		} else {
 			[headers addObject:[NSString stringWithFormat:@"%@:%@", name, header]];
 			[authenticatedrequest setValue:header forHTTPHeaderField:name];
 		}
@@ -374,22 +336,18 @@ const int AUTHENTICATION_DELAY = 2;
     [headers addObject:@"x-ms-version:2009-09-19"];
 	[headers sortUsingSelector:@selector(compare:)];
 	
-	NSString* headerString = [headers componentsJoinedByString:@"\n"];        
+	NSString *headerString = [headers componentsJoinedByString:@"\n"];        
 	NSMutableString *requestString;
 	
 	const NSData *cKey  = [_accessKey dataWithBase64DecodedString];
 	
-	if(blobSemantics || queueSemantics)
-	{
+	if (blobSemantics || queueSemantics) {
 		requestString = [NSMutableString stringWithFormat:@"%@\n\n\n%@\n\n%@\n\n\n\n\n\n\n%@\n/%@/", 
 						 httpMethod, contentLength, contentType ? contentType : @"", headerString, _accountName];
-	}
-	else
-	{
+	} else {
 		NSString *contentMD5;
 		
-		if(contentData)
-		{
+		if (contentData) {
 			void* buffer = malloc(CC_SHA256_DIGEST_LENGTH);
 			CCHmac(kCCHmacAlgSHA256, [cKey bytes], [cKey length], [contentData bytes], [contentData length], buffer);
 			NSData *encodedData = [NSData dataWithBytesNoCopy:buffer length:CC_SHA256_DIGEST_LENGTH freeWhenDone:NO];
@@ -397,9 +355,7 @@ const int AUTHENTICATION_DELAY = 2;
 			free(buffer);
 			
 			[authenticatedrequest addValue:contentMD5 forHTTPHeaderField:@"content-md5"];
-		}
-		else
-		{
+		} else {
 			contentMD5 = @"";
 		}
 		
@@ -407,12 +363,10 @@ const int AUTHENTICATION_DELAY = 2;
 						 httpMethod, contentMD5, contentType ? contentType : @"", dateString, _accountName];
 	}
 	
-	if(endpoint.length > 1)
-	{
+	if (endpoint.length > 1) {
 		[requestString appendString:[endpoint substringFromIndex:1]];
 	}             
-	if(query)
-	{
+	if (query) {
 		[requestString appendString:query];
 	}
 	// Create the hash
@@ -434,19 +388,16 @@ const int AUTHENTICATION_DELAY = 2;
 	
 	// Set the request headers
 	[authenticatedrequest addValue:dateString forHTTPHeaderField:@"x-ms-date"];
-	if(blobSemantics || queueSemantics)
-	{
+	if (blobSemantics || queueSemantics) {
 		[authenticatedrequest addValue:@"2009-09-19" forHTTPHeaderField:@"x-ms-version"];
 	}
 	[authenticatedrequest addValue:authHeader forHTTPHeaderField:@"Authorization"];
 	
-	if(contentType)
-	{
+	if (contentType) {
 		[authenticatedrequest addValue:contentType forHTTPHeaderField:@"Content-Type"];
 	}
 	
-	if(contentData && [contentData length] > 0 )
-	{
+	if (contentData && [contentData length] > 0 ) {
 		[authenticatedrequest setHTTPBody:contentData];
 	}
     
@@ -461,7 +412,7 @@ const int AUTHENTICATION_DELAY = 2;
     BOOL blobSemantics = [[storageType lowercaseString] isEqualToString:@"blob"];
     BOOL queueSemantics = [[storageType lowercaseString] isEqualToString:@"queue"];
 
-    WACloudURLRequest* request = [self authenticatedRequestWithURL:serviceURL 
+    WACloudURLRequest *request = [self authenticatedRequestWithURL:serviceURL 
 													 blobSemantics:blobSemantics
 													queueSemantics:queueSemantics
 														httpMethod:@"GET" 
@@ -481,7 +432,7 @@ const int AUTHENTICATION_DELAY = 2;
     BOOL blobSemantics = [[storageType lowercaseString] isEqualToString:@"blob"];
     BOOL queueSemantics = [[storageType lowercaseString] isEqualToString:@"queue"];
 
-    WACloudURLRequest* request = [self authenticatedRequestWithURL:serviceURL 
+    WACloudURLRequest *request = [self authenticatedRequestWithURL:serviceURL 
 													 blobSemantics:blobSemantics
 													queueSemantics:queueSemantics
 														httpMethod:httpMethod 
@@ -501,7 +452,7 @@ const int AUTHENTICATION_DELAY = 2;
     BOOL blobSemantics = [[storageType lowercaseString] isEqualToString:@"blob"];
     BOOL queueSemantics = [[storageType lowercaseString] isEqualToString:@"queue"];
     
-    WACloudURLRequest* request = [self authenticatedRequestWithURL:serviceURL 
+    WACloudURLRequest *request = [self authenticatedRequestWithURL:serviceURL 
 													 blobSemantics:blobSemantics
 													queueSemantics:queueSemantics
 														httpMethod:httpMethod 
@@ -521,9 +472,9 @@ const int AUTHENTICATION_DELAY = 2;
     
     BOOL blobSemantics = [[storageType lowercaseString] isEqualToString:@"blob"];
     BOOL queueSemantics = [[storageType lowercaseString] isEqualToString:@"queue"];
-    NSURL* serviceURL = [self URLforEndpoint:endpoint forStorageType:storageType];
+    NSURL *serviceURL = [self URLforEndpoint:endpoint forStorageType:storageType];
     
-    WACloudURLRequest* request = [self authenticatedRequestWithURL:serviceURL 
+    WACloudURLRequest *request = [self authenticatedRequestWithURL:serviceURL 
                                                    blobSemantics:blobSemantics
                                                   queueSemantics:queueSemantics
                                                       httpMethod:@"GET" 
@@ -543,7 +494,7 @@ const int AUTHENTICATION_DELAY = 2;
     
     BOOL blobSemantics = [[storageType lowercaseString] isEqualToString:@"blob"];
     BOOL queueSemantics = [[storageType lowercaseString] isEqualToString:@"queue"];
-    NSURL* serviceURL = [self URLforEndpoint:endpoint forStorageType:storageType];
+    NSURL *serviceURL = [self URLforEndpoint:endpoint forStorageType:storageType];
 
     WACloudURLRequest* request = [self authenticatedRequestWithURL:serviceURL 
                                                    blobSemantics:blobSemantics
@@ -565,7 +516,7 @@ const int AUTHENTICATION_DELAY = 2;
     
     BOOL blobSemantics = [[storageType lowercaseString] isEqualToString:@"blob"];
     BOOL queueSemantics = [[storageType lowercaseString] isEqualToString:@"queue"];
-    NSURL* serviceURL = [self URLforEndpoint:endpoint forStorageType:storageType];
+    NSURL *serviceURL = [self URLforEndpoint:endpoint forStorageType:storageType];
 
      WACloudURLRequest* request = [self authenticatedRequestWithURL:serviceURL 
                                                     blobSemantics:blobSemantics
@@ -588,7 +539,7 @@ const int AUTHENTICATION_DELAY = 2;
     
     BOOL blobSemantics = [[storageType lowercaseString] isEqualToString:@"blob"];
     
-    WACloudURLRequest* request = [self authenticatedRequestWithURL:serviceURL 
+    WACloudURLRequest *request = [self authenticatedRequestWithURL:serviceURL 
 													 blobSemantics:blobSemantics
 													queueSemantics:NO
 														httpMethod:httpMethod 
@@ -602,19 +553,6 @@ const int AUTHENTICATION_DELAY = 2;
 
 #pragma mark -
 
-- (void)dealloc
-{
-	[_proxyURL release];
-	[_token release];
-	[_accountName release];
-	[_accessKey release];
-	[_username release];
-	[_password release];
-	[_blobServiceURL release];
-	[_tableServiceURL release];
-	[_accessToken release];
-	
-	[super dealloc];
-}
+
 
 @end

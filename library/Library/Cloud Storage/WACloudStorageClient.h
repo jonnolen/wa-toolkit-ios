@@ -55,7 +55,7 @@
  
  @param host The host to ignore errors.
  */
-+ (void)ignoreSSLErrorFor:(NSString*)host;
++ (void)ignoreSSLErrorFor:(NSString *)host;
 
 #pragma mark - Blob Operations
 ///---------------------------------------------------------------------------------------
@@ -364,7 +364,7 @@
  
  @see WABlobContainer
  */
-- (void)addBlobToContainer:(WABlobContainer *)container blobName:(NSString *)blobName contentData:(NSData *)contentData contentType:(NSString*)contentType withCompletionHandler:(void (^)(NSError *error))block;
+- (void)addBlobToContainer:(WABlobContainer *)container blobName:(NSString *)blobName contentData:(NSData *)contentData contentType:(NSString *)contentType withCompletionHandler:(void (^)(NSError *error))block;
 
 /**
  Deletes a given blob asynchronously.
@@ -769,7 +769,7 @@
  @see WACloudStorageClientDelegate#storageClient:didFetchEntities:fromTableNamed:
  @see WATableFetchRequest
  */
-- (void)fetchEntities:(WATableFetchRequest*)fetchRequest;
+- (void)fetchEntities:(WATableFetchRequest *)fetchRequest;
 
 /**
  Fetches the entities for a given table asynchronously using a block.
@@ -782,7 +782,7 @@
  @see WATableEntity
  @see WATableFetchRequest
  */
-- (void)fetchEntities:(WATableFetchRequest*)fetchRequest withCompletionHandler:(void (^)(NSArray *entities, NSError *error))block;
+- (void)fetchEntities:(WATableFetchRequest *)fetchRequest withCompletionHandler:(void (^)(NSArray *entities, NSError *error))block;
 
 /**
  Fetches the entities for a given table asynchronously using a result continuation.
@@ -795,7 +795,7 @@
  @see WACloudStorageClientDelegate#storageClient:didFetchEntities:fromTableNamed:withResultContinuation:
  @see WATableFetchRequest
  */
-- (void)fetchEntitiesWithContinuation:(WATableFetchRequest*)fetchRequest;
+- (void)fetchEntitiesWithContinuation:(WATableFetchRequest *)fetchRequest;
 
 /**
  Fetches the entities for a given table asynchronously using a result continuation and block.

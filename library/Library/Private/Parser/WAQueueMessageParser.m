@@ -31,20 +31,19 @@
     
     [WAXMLHelper performXPath:@"/QueueMessagesList/QueueMessage" 
                  onDocument:doc 
-                      block:^(xmlNodePtr node)
-     {
-         NSString *messageId = [WAXMLHelper getElementValue:node name:@"MessageId"];
-         NSString *insertionTime = [WAXMLHelper getElementValue:node name:@"InsertionTime"];
-         NSString *expirationTime = [WAXMLHelper getElementValue:node name:@"ExpirationTime"];
-         NSString *popReceipt = [WAXMLHelper getElementValue:node name:@"PopReceipt"];
-         NSString *timeNextVisible = [WAXMLHelper getElementValue:node name:@"TimeNextVisible"];
-         NSString *messageText = [WAXMLHelper getElementValue:node name:@"MessageText"];
-         NSString *dequeuCount = [WAXMLHelper getElementValue:node name:@"DequeueCount"];
+                      block:^(xmlNodePtr node) {
+        NSString *messageId = [WAXMLHelper getElementValue:node name:@"MessageId"];
+        NSString *insertionTime = [WAXMLHelper getElementValue:node name:@"InsertionTime"];
+        NSString *expirationTime = [WAXMLHelper getElementValue:node name:@"ExpirationTime"];
+        NSString *popReceipt = [WAXMLHelper getElementValue:node name:@"PopReceipt"];
+        NSString *timeNextVisible = [WAXMLHelper getElementValue:node name:@"TimeNextVisible"];
+        NSString *messageText = [WAXMLHelper getElementValue:node name:@"MessageText"];
+        NSString *dequeuCount = [WAXMLHelper getElementValue:node name:@"DequeueCount"];
          
-         WAQueueMessage *queueMessage = [[WAQueueMessage alloc] initQueueMessageWithMessageId:messageId insertionTime:insertionTime expirationTime:expirationTime popReceipt:popReceipt timeNextVisible:timeNextVisible messageText:messageText dequeueCount:[dequeuCount integerValue]];
-         [queueMessages addObject:queueMessage];
-         [queueMessage release];
-     }];
+        WAQueueMessage *queueMessage = [[WAQueueMessage alloc] initQueueMessageWithMessageId:messageId insertionTime:insertionTime expirationTime:expirationTime popReceipt:popReceipt timeNextVisible:timeNextVisible messageText:messageText dequeueCount:[dequeuCount integerValue]];
+        [queueMessages addObject:queueMessage];
+        [queueMessage release];
+    }];
     
     return [[queueMessages copy] autorelease];
 }

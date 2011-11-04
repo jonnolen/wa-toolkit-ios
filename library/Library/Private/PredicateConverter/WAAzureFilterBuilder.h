@@ -19,12 +19,12 @@
 
 @interface WAAzureFilterBuilder : NSObject <WAPredicateParserDelegate> {
 @private
-	NSMutableString* string;
-	NSError* error;
+	NSMutableString *string;
+	NSError *error;
 }
 
-@property (readonly) NSError* error;
+@property (readonly) NSError *error;
 
-+ (NSString*) filterStringWithPredicate:(NSPredicate*)predicate error:(NSError**)error;
++ (NSString *)filterStringWithPredicate:(NSPredicate *)predicate error:(NSError **)error;
 
 @end

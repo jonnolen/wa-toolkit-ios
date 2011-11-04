@@ -18,10 +18,9 @@
 
 @implementation WAPredicateParser
 
-+ (void) error:(NSString*)errorDesc code:(NSInteger)code delegate:(id<WAPredicateParserDelegate>)delegate
++ (void)error:(NSString*)errorDesc code:(NSInteger)code delegate:(id<WAPredicateParserDelegate>)delegate
 {
-	if([delegate respondsToSelector:@selector(parserFailedWithError:)])
-	{
+	if ([delegate respondsToSelector:@selector(parserFailedWithError:)]) {
 		NSError* error = [NSError errorWithDomain:@"com.microsoft.WAToolkit" 
 											 code:code 
 										 userInfo:[NSDictionary dictionaryWithObject:errorDesc forKey:NSLocalizedDescriptionKey]];
@@ -29,18 +28,15 @@
 	}
 }
 
-+ (void) parse:(NSPredicate*)predicate delegate:(id<WAPredicateParserDelegate>)delegate
++ (void)parse:(NSPredicate *)predicate delegate:(id<WAPredicateParserDelegate>)delegate
 {
-	if([predicate isKindOfClass:[NSComparisonPredicate class]])
-	{
+	if ([predicate isKindOfClass:[NSComparisonPredicate class]]) {
 		NSComparisonPredicate* comparison = (NSComparisonPredicate*)predicate;
 		
 		[delegate writeComparison:[comparison predicateOperatorType] 
 							 left:[comparison leftExpression] 
 							right:[comparison rightExpression]];
-	}
-	else if([predicate isKindOfClass:[NSCompoundPredicate class]])
-	{
+	} else if([predicate isKindOfClass:[NSCompoundPredicate class]]) {
 		NSCompoundPredicate* compound = (NSCompoundPredicate*)predicate;
 		
 		switch([compound compoundPredicateType])
@@ -63,9 +59,7 @@
 				break;
 			}
 		}
-	}
-	else 
-	{
+	} else {
 		[self error:@"Unexpected predicate class" 
 			   code:1 
 		   delegate:delegate];

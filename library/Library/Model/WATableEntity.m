@@ -29,7 +29,7 @@
     if((self = [super init]))
     {
         _dictionary = [dictionary retain];
-        _tableName = [tableName retain];
+        _tableName = [tableName copy];
         _partitionKey = [[_dictionary objectForKey:@"PartitionKey"] retain];
         _rowKey = [[_dictionary objectForKey:@"RowKey"] retain];
         

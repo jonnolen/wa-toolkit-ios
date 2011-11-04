@@ -24,7 +24,7 @@
 
 - (id)initQueueWithName:(NSString *)queueName URL:(NSString *)URL {
 	if ((self = [super init])) {
-        self.queueName = queueName;
+        _queueName = [queueName copy];
         _URL = [[NSURL URLWithString:URL] retain];
     }    
     return self;
