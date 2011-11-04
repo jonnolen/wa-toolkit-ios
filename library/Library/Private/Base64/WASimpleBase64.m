@@ -22,21 +22,19 @@ static uint8_t ByteDecode(char c);
 
 @implementation NSData (WASimpleBase64)
 
-- (NSString*)stringWithBase64EncodedData
+- (NSString *)stringWithBase64EncodedData
 {
     uint8_t* input = (uint8_t*)[self bytes];
 	NSInteger length = [self length];
     
-	if(!length)
-	{
+	if (!length) {
 		return @"";
 	}
 	
 	char* output = malloc(1 + ((length + 2) / 3) * 4);
 	char* ptr = output;
 	
-	for(int i = 0; i < length; i += 3)
-	{
+	for (int i = 0; i < length; i += 3) {
 		uint8_t src1, src2, src3;
 		
 		src1 = input[i];
@@ -58,7 +56,7 @@ static uint8_t ByteDecode(char c);
     
 	*ptr++ = 0;
 	
-	NSString* result = [[NSString alloc] initWithCString:output encoding:NSASCIIStringEncoding];
+	NSString *result = [[NSString alloc] initWithCString:output encoding:NSASCIIStringEncoding];
 	free(output);
 	
 	return [result autorelease];
@@ -68,27 +66,24 @@ static uint8_t ByteDecode(char c);
 
 @implementation NSString (WASimpleBase64)
 
-- (NSData*)dataWithBase64DecodedString
+- (NSData *)dataWithBase64DecodedString
 {
     const char* string = [self cStringUsingEncoding:NSASCIIStringEncoding];
 	NSInteger inputLength = [self length];
     
-	if ((string == NULL) || (inputLength % 4 != 0)) 
-	{
+	if ((string == NULL) || (inputLength % 4 != 0)) {
 		return nil;
 	}
 	
-	while (inputLength > 0 && string[inputLength - 1] == '=') 
-	{
+	while (inputLength > 0 && string[inputLength - 1] == '=') {
 		inputLength--;
 	}
 	
 	NSInteger outputLength = inputLength * 3 / 4;
-	NSMutableData* output = [NSMutableData dataWithLength:outputLength];
+	NSMutableData *output = [NSMutableData dataWithLength:outputLength];
 	uint8_t* outputBytes = output.mutableBytes;
 	
-	for(int i = 0; i < inputLength; i += 4)
-	{
+	for(int i = 0; i < inputLength; i += 4) {
 		char c1, c2, c3, c4;
 		
 		c1 = string[i];
@@ -103,12 +98,10 @@ static uint8_t ByteDecode(char c);
 		
 		*outputBytes++ = (b1 << 2) | (b2 >> 4);
         
-		if(c3 != '=')
-		{
+		if (c3 != '=') {
 			*outputBytes++ = ((b2 & 0xF) << 4) | (b3 >> 2);
             
-			if(c4 != '=')
-			{
+			if(c4 != '=') {
 				*outputBytes++ = ((b3 & 0x3) << 6) | b4;
 			}
 		}
@@ -124,20 +117,16 @@ static uint8_t ByteDecode(char c);
 
 static char ByteEncode(uint8_t byte) 
 {
-	if (byte < 26) 
-	{
+	if (byte < 26) {
 		return 'A' + byte;
 	}
-	if (byte < 52) 
-	{
+	if (byte < 52) {
 		return 'a' + (byte - 26);
 	}
-	if (byte < 62) 
-	{
+	if (byte < 62) {
 		return '0' + (byte - 52);
 	}
-	if (byte == 62) 
-	{
+	if (byte == 62) {
 		return '+';
 	}
 	
@@ -146,23 +135,19 @@ static char ByteEncode(uint8_t byte)
 
 static uint8_t ByteDecode(char c)
 {
-	if (c >= 'A' && c <= 'Z')
-	{
+	if (c >= 'A' && c <= 'Z') {
 		return c - 'A';
 	}
 	
-	if (c >= 'a' && c <= 'z')
-	{
+	if (c >= 'a' && c <= 'z') {
 		return c - 'a' + 26;
 	}
 	
-	if (c >= '0' && c <= '9')
-	{
+	if (c >= '0' && c <= '9') {
 		return  c - '0' + 52;
 	}
 	
-	if(c == '+')
-	{
+	if (c == '+') {
 		return 62;
 	}
 	

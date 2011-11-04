@@ -22,18 +22,18 @@
 
 @required
 
-- (void) writeComparison:(NSPredicateOperatorType)predicateOperatorType left:(NSExpression*)left right:(NSExpression*)right;
-- (void) writeAnd:(NSArray*)predicates;
-- (void) writeOr:(NSArray*)predicates;
-- (void) writeNot:(NSPredicate*)predicate;
+- (void)writeComparison:(NSPredicateOperatorType)predicateOperatorType left:(NSExpression *)left right:(NSExpression *)right;
+- (void)writeAnd:(NSArray *)predicates;
+- (void)writeOr:(NSArray *)predicates;
+- (void)writeNot:(NSPredicate *)predicate;
 
-- (void) parserFailedWithError:(NSError*)error;
+- (void)parserFailedWithError:(NSError *)error;
 
 @end
 
 
 @interface WAPredicateParser : NSObject
 
-+ (void) parse:(NSPredicate*)predicate delegate:(id<WAPredicateParserDelegate>)delegate;
++ (void) parse:(NSPredicate *)predicate delegate:(id<WAPredicateParserDelegate>)delegate;
 
 @end

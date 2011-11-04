@@ -29,19 +29,18 @@
     __block NSMutableString *marker = nil; 
     [WAXMLHelper performXPath:@"/EnumerationResults/NextMarker" 
                    onDocument:doc 
-                        block:^(xmlNodePtr node)
-     {
-         xmlChar *value = xmlNodeGetContent(node);
-         NSString *str = [[NSString alloc] initWithUTF8String:(const char*)value];
-         xmlFree(value);
-         int length = [str length];
-         if (str != nil && length != 0) {
-             marker = [NSMutableString stringWithString:str];
-         }
-         [str release];
-     }];
+                        block:^(xmlNodePtr node) {
+        xmlChar *value = xmlNodeGetContent(node);
+        NSString *str = [[NSString alloc] initWithUTF8String:(const char*)value];
+        xmlFree(value);
+        int length = [str length];
+        if (str != nil && length != 0) {
+            marker = [NSMutableString stringWithString:str];
+        }
+        [str release];
+    }];
     
-     return marker;
+    return marker;
 }
 
 + (NSArray *)loadContainers:(xmlDocPtr)doc 
@@ -54,30 +53,28 @@
     
     [WAXMLHelper performXPath:@"/EnumerationResults/Containers/Container" 
                  onDocument:doc 
-                      block:^(xmlNodePtr node)
-     {
-         NSString *name = [WAXMLHelper getElementValue:node name:@"Name"];
-         NSString *url = [WAXMLHelper getElementValue:node name:@"Url"];
-         NSString *metadata = [WAXMLHelper getElementValue:node name:@"Metadata"];
-         __block NSString *lastModified = nil;
-         __block NSString *eTag = nil;
+                      block:^(xmlNodePtr node) {
+        NSString *name = [WAXMLHelper getElementValue:node name:@"Name"];
+        NSString *url = [WAXMLHelper getElementValue:node name:@"Url"];
+        NSString *metadata = [WAXMLHelper getElementValue:node name:@"Metadata"];
+        __block NSString *lastModified = nil;
+        __block NSString *eTag = nil;
          
-         [WAXMLHelper performXPath:@"Properties" 
+        [WAXMLHelper performXPath:@"Properties" 
                             onNode:node 
-                             block:^(xmlNodePtr node)
-          {
-              eTag = [WAXMLHelper getElementValue:node name:WAContainerPropertyKeyEtag]; 
-              lastModified = [WAXMLHelper getElementValue:node name:WAContainerPropertyKeyLastModified];
-          }];
+                             block:^(xmlNodePtr node) {
+            eTag = [WAXMLHelper getElementValue:node name:WAContainerPropertyKeyEtag]; 
+            lastModified = [WAXMLHelper getElementValue:node name:WAContainerPropertyKeyLastModified];
+        }];
          
-         WABlobContainer *container = [[WABlobContainer alloc] initContainerWithName:name URL:url metadata:metadata 
+        WABlobContainer *container = [[WABlobContainer alloc] initContainerWithName:name URL:url metadata:metadata 
                                                                           properties:[NSDictionary dictionaryWithObjectsAndKeys:
                                                                                       eTag, WAContainerPropertyKeyEtag,
                                                                                       lastModified, WAContainerPropertyKeyLastModified,
                                                                                       nil]];
-         [containers addObject:container];
-         [container release];
-     }];
+        [containers addObject:container];
+        [container release];
+    }];
     
     return [[containers copy] autorelease];
 }
@@ -92,29 +89,27 @@
     
     [WAXMLHelper performXPath:@"/_default:CloudBlobContainerCollection/_default:Containers/_default:Container" 
                    onDocument:doc 
-                        block:^(xmlNodePtr node)
-     {
-         NSString *name = [WAXMLHelper getElementValue:node name:@"Name"];
-         NSString *url = [WAXMLHelper getElementValue:node name:@"Url"];
-         __block NSString *lastModified = nil;
-         __block NSString *eTag = nil;
+                        block:^(xmlNodePtr node) {
+        NSString *name = [WAXMLHelper getElementValue:node name:@"Name"];
+        NSString *url = [WAXMLHelper getElementValue:node name:@"Url"];
+        __block NSString *lastModified = nil;
+        __block NSString *eTag = nil;
          
-         [WAXMLHelper performXPath:@"_default:Properties" 
+        [WAXMLHelper performXPath:@"_default:Properties" 
                             onNode:node 
-                             block:^(xmlNodePtr node)
-          {
-              eTag = [WAXMLHelper getElementValue:node name:WAContainerPropertyKeyEtag]; 
-              lastModified = [WAXMLHelper getElementValue:node name:WAContainerPropertyKeyLastModified];
-          }];
+                             block:^(xmlNodePtr node) {
+            eTag = [WAXMLHelper getElementValue:node name:WAContainerPropertyKeyEtag]; 
+            lastModified = [WAXMLHelper getElementValue:node name:WAContainerPropertyKeyLastModified];
+        }];
          
-         WABlobContainer *container = [[WABlobContainer alloc] initContainerWithName:name URL:url metadata:nil 
+        WABlobContainer *container = [[WABlobContainer alloc] initContainerWithName:name URL:url metadata:nil 
                                                                           properties:[NSDictionary dictionaryWithObjectsAndKeys:
                                                                                       eTag, WAContainerPropertyKeyEtag,
                                                                                       lastModified, WAContainerPropertyKeyLastModified,
                                                                                       nil]];
-         [containers addObject:container];
-         [container release];
-     }];
+        [containers addObject:container];
+        [container release];
+    }];
     
     return [[containers copy] autorelease];
 }

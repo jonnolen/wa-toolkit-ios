@@ -31,7 +31,7 @@
 @synthesize identityProvider = _identityProvider;
 @synthesize claims = _claims;
 
-- (id)initWithDictionary:(NSDictionary*)dictionary fromRealm:(WACloudAccessControlHomeRealm*)realm
+- (id)initWithDictionary:(NSDictionary *)dictionary fromRealm:(WACloudAccessControlHomeRealm *)realm
 {
     if((self = [super init]))
     {
@@ -107,7 +107,7 @@
     return self;
 }
 
-- (NSString*)description
+- (NSString *)description
 {
     return [NSString stringWithFormat:@"CloudAccessToken: { appliesTo = %@, tokenType = %@, expireDate = %@, createDate = %@, securityToken = %@, claims = %@ }",
             _appliesTo, _tokenType, [self expireDate], [self createDate], _securityToken, _claims];
@@ -124,17 +124,17 @@
     [super dealloc];
 }
 
-- (NSDate*)expireDate
+- (NSDate *)expireDate
 {
     return [NSDate dateWithTimeIntervalSince1970:_expires];
 }
 
-- (NSDate*)createDate
+- (NSDate *)createDate
 {
     return [NSDate dateWithTimeIntervalSince1970:_created];
 }
 
-- (void)signRequest:(NSMutableURLRequest*)request
+- (void)signRequest:(NSMutableURLRequest *)request
 {
 	NSString* authHeader = [NSString stringWithFormat:@"OAuth %@", _securityToken];
 	[request setValue:authHeader forHTTPHeaderField:@"Authorization"];

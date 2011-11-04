@@ -18,12 +18,12 @@
 
 @interface NSData (WASimpleBase64)
 
-- (NSString*)stringWithBase64EncodedData;
+- (NSString *)stringWithBase64EncodedData;
 
 @end
 
 @interface NSString (WASimpleBase64)
  
-- (NSData*)dataWithBase64DecodedString;
+- (NSData *)dataWithBase64DecodedString;
 
 @end

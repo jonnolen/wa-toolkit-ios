@@ -37,6 +37,32 @@
 		<key>CloudReadyACS</key>
 		<dict>
 			<key>ACSNamespace</key>
+			<string>scottdeniosacs2</string>
+			<key>ACSRealm</key>
+			<string>uri:wazmobiletoolkit</string>
+			<key>ProxyService</key>
+			<string>scottdeniosacshost2</string>
+		</dict>
+		<key>CloudReadySimple</key>
+		<dict>
+			<key>ProxyService</key>
+			<string>scottdeniossimplehost2</string>
+		</dict>
+		<key>ConnectionType</key>
+		<string>CloudReadyACS</string>
+		<key>Direct</key>
+		<dict>
+			<key>AccountName</key>
+			<string>scottdeniosdirect</string>
+			<key>DirectAccessKey</key>
+			<string>R/QlKCic6edh8yH9PC+eFyKV4uWFMjsygFmY1xQj1SoYwkMwd3DJhoTpndB/uhHzPzFmj5z6E8yHmfbzRjyEvQ==</string>
+		</dict>
+	</dict>
+	<key>ToolkitConfig (template)</key>
+	<dict>
+		<key>CloudReadyACS</key>
+		<dict>
+			<key>ACSNamespace</key>
 			<string>{the namespace of the ACS service you are using}</string>
 			<key>ACSRealm</key>
 			<string>uri:wazmobiletoolkit</string>

@@ -39,7 +39,7 @@ NSString * const WABlobPropertyKeySequenceNumber = @"x-ms-blob-sequence-number";
 - (id)initBlobWithName:(NSString *)name URL:(NSString *)URL container:(WABlobContainer *)container properties:(NSDictionary *)properties
 {
     if ((self = [super init])) {
-        _name = [name retain];
+        _name = [name copy];
         _URL = [[NSURL URLWithString:URL] retain];
         _container = [container retain];
         _properties = [properties retain];

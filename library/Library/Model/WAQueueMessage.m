@@ -33,11 +33,11 @@
 
 - (id)initQueueMessageWithMessageId:(NSString *)messageId insertionTime:(NSString *)insertionTime expirationTime:(NSString *)expirationTime popReceipt:(NSString *)popReceipt timeNextVisible:(NSString *)timeNextVisible messageText:(NSString *)messageText dequeueCount:(NSInteger)dequeueCount{
 	if ((self = [super init])) {
-        _messageId = [messageId retain];
-        _insertionTime = [insertionTime retain];
-        _expirationTime = [expirationTime retain];
-		_popReceipt = [popReceipt retain];
-        _timeNextVisible = [timeNextVisible retain];
+        _messageId = [messageId copy];
+        _insertionTime = [insertionTime copy];
+        _expirationTime = [expirationTime copy];
+		_popReceipt = [popReceipt copy];
+        _timeNextVisible = [timeNextVisible copy];
 		_dequeueCount = dequeueCount;
         
 		NSData* data = [messageText dataWithBase64DecodedString];

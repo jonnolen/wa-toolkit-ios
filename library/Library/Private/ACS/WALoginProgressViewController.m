@@ -57,112 +57,100 @@
     // Release any cached data, images, etc that aren't in use.
 }
 
-- (void)getIdentityProvidersWithBlock:(void (^)(NSArray*, NSError *))block
+- (void)getIdentityProvidersWithBlock:(void (^)(NSArray *, NSError *))block
 {
-    WACloudURLRequest* request = [WACloudURLRequest requestWithURL:_serviceURL];
+    WACloudURLRequest *request = [WACloudURLRequest requestWithURL:_serviceURL];
     
 	WA_BEGIN_LOGGING_CUSTOM(WALoggingACS)
         NSLog(@"Fetching identity providers");
 	WA_END_LOGGING
 
-    [request fetchDataWithCompletionHandler:^(WACloudURLRequest* request, NSData *data, NSError *error) 
-	 {
-		 if(error)
-		 {
-			 block(nil, error);
-			 return;
-		 }
+    [request fetchDataWithCompletionHandler:^(WACloudURLRequest *request, NSData *data, NSError *error)  {
+        if(error) {
+            block(nil, error);
+            return;
+        }
 		 
-		 NSMutableArray* results = [NSMutableArray arrayWithCapacity:10];
+        NSMutableArray *results = [NSMutableArray arrayWithCapacity:10];
 		 
-		 NSString* json = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
-		 json = [json stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"[]"]];
+        NSString *json = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
+        json = [json stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"[]"]];
 		 
-		 NSArray* providers = [json componentsSeparatedByString:@"},{"];
-		 NSCharacterSet* objectMarkers = [NSCharacterSet characterSetWithCharactersInString:@"{}"];
-		 NSTextCheckingResult* result;
-		 NSError* regexError = nil;
-		 NSRegularExpression* nameValuePair = [NSRegularExpression regularExpressionWithPattern:@"\"([^\"]*)\":\"([^\"]*)\""
+        NSArray *providers = [json componentsSeparatedByString:@"},{"];
+        NSCharacterSet *objectMarkers = [NSCharacterSet characterSetWithCharactersInString:@"{}"];
+        NSTextCheckingResult *result;
+        NSError *regexError = nil;
+        NSRegularExpression *nameValuePair = [NSRegularExpression regularExpressionWithPattern:@"\"([^\"]*)\":\"([^\"]*)\""
 																						options:0 
 																						  error:&regexError];
-		 NSRegularExpression* emailSuffixes = [NSRegularExpression regularExpressionWithPattern:@"\"EmailAddressSuffixes\":\\[(\"([^\"]*)\",?)*\\]"
+        NSRegularExpression *emailSuffixes = [NSRegularExpression regularExpressionWithPattern:@"\"EmailAddressSuffixes\":\\[(\"([^\"]*)\",?)*\\]"
 																						options:0 
 																						  error:&regexError];
-		 for(NSString* provider in providers)
-		 {
-			 provider = [provider stringByTrimmingCharactersInSet:objectMarkers];
+        for(NSString *provider in providers) {
+            provider = [provider stringByTrimmingCharactersInSet:objectMarkers];
 			 
-			 NSArray* matches = [nameValuePair matchesInString:provider options:0 range:NSMakeRange(0, provider.length)];
-			 NSMutableDictionary* pairs = [NSMutableDictionary dictionaryWithCapacity:10];
+            NSArray *matches = [nameValuePair matchesInString:provider options:0 range:NSMakeRange(0, provider.length)];
+            NSMutableDictionary *pairs = [NSMutableDictionary dictionaryWithCapacity:10];
 			 
-			 for(result in matches)
-			 {
-				 for(int n = 1; n < [result numberOfRanges]; n += 2)
-				 {
-					 NSRange r = [result rangeAtIndex:n];
-					 if(r.length > 0)
-					 {
-						 NSString* name = [provider substringWithRange:r];
+            for (result in matches) {
+                for(int n = 1; n < [result numberOfRanges]; n += 2) {
+                    NSRange r = [result rangeAtIndex:n];
+                    if (r.length > 0) {
+                        NSString *name = [provider substringWithRange:r];
 						 
-						 r = [result rangeAtIndex:n + 1];
-						 if(r.length > 0)
-						 {
-							 NSString* value = [provider substringWithRange:r];
+                        r = [result rangeAtIndex:n + 1];
+                        if (r.length > 0) {
+                            NSString *value = [provider substringWithRange:r];
 							 
-							 [pairs setObject:value forKey:name];
-						 }
-					 }
-				 }
-			 }
+                            [pairs setObject:value forKey:name];
+                        }
+                    }
+                }
+            }
 			 
-			 result = [emailSuffixes firstMatchInString:provider options:0 range:NSMakeRange(0, provider.length)];
+            result = [emailSuffixes firstMatchInString:provider options:0 range:NSMakeRange(0, provider.length)];
 			 
-			 NSMutableArray* emailAddressSuffixes = [NSMutableArray arrayWithCapacity:10];
-			 for(int n = 1; n < [result numberOfRanges]; n++)
-			 {
-				 NSRange r = [result rangeAtIndex:n];
-				 if(r.length > 0)
-				 {
-					 [emailAddressSuffixes addObject:[provider substringWithRange:r]];
-				 }
-			 }
+            NSMutableArray *emailAddressSuffixes = [NSMutableArray arrayWithCapacity:10];
+            for (int n = 1; n < [result numberOfRanges]; n++) {
+                NSRange r = [result rangeAtIndex:n];
+                if (r.length > 0) {
+                    [emailAddressSuffixes addObject:[provider substringWithRange:r]];
+                }
+            }
 			 
-			 // mobile URL fixup
-			 NSString* name = [pairs objectForKey:@"Name"];
-			 if([name isEqualToString:@"Windows Live™ ID"])
-			 {
-				 NSString* loginURL = [pairs objectForKey:@"LoginUrl"];
-				 BOOL hasQuery = [loginURL rangeOfString:@"?"].length > 0;
+            // mobile URL fixup
+            NSString *name = [pairs objectForKey:@"Name"];
+            if([name isEqualToString:@"Windows Live™ ID"]) {
+                NSString *loginURL = [pairs objectForKey:@"LoginUrl"];
+                BOOL hasQuery = [loginURL rangeOfString:@"?"].length > 0;
 				 
-				 loginURL = [NSString stringWithFormat:hasQuery ? @"%@&pcexp=false" : @"%@?pcexp=false",
+                loginURL = [NSString stringWithFormat:hasQuery ? @"%@&pcexp=false" : @"%@?pcexp=false",
 							 loginURL];
-				 [pairs setObject:loginURL forKey:@"LoginUrl"];
-			 }
+                [pairs setObject:loginURL forKey:@"LoginUrl"];
+            }
 			 
-			 WACloudAccessControlHomeRealm* homeRealm = [[WACloudAccessControlHomeRealm alloc] initWithPairs:pairs emailSuffixes:emailAddressSuffixes];
-			 [results addObject:homeRealm];
-			 [homeRealm release];
-		 }
+            WACloudAccessControlHomeRealm* homeRealm = [[WACloudAccessControlHomeRealm alloc] initWithPairs:pairs emailSuffixes:emailAddressSuffixes];
+            [results addObject:homeRealm];
+            [homeRealm release];
+        }
 		 
-		 NSArray* sorted = [results sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) 
-		 {
-			 WACloudAccessControlHomeRealm* realm1 = obj1;
-			 WACloudAccessControlHomeRealm* realm2 = obj2;
+        NSArray *sorted = [results sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+            WACloudAccessControlHomeRealm *realm1 = obj1;
+            WACloudAccessControlHomeRealm *realm2 = obj2;
 			 
-			 return [realm1.name compare:realm2.name];
-		 }];
+            return [realm1.name compare:realm2.name];
+        }];
 		 
-		 WA_BEGIN_LOGGING_CUSTOM(WALoggingACS)
-            NSMutableArray* providerNames = [NSMutableArray arrayWithCapacity:sorted.count];
-            [sorted enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) 
-             {
+        WA_BEGIN_LOGGING_CUSTOM(WALoggingACS)
+            NSMutableArray *providerNames = [NSMutableArray arrayWithCapacity:sorted.count];
+            [sorted enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
                  [providerNames addObject:[obj name]];
-             }];
+            }];
             NSLog(@"Found identity providers: %@", providerNames);
-		 WA_END_LOGGING
+        WA_END_LOGGING
 		 
-		 block(sorted, nil);
-	 }];
+        block(sorted, nil);
+    }];
 }
 
 #pragma mark - View lifecycle
@@ -170,19 +158,19 @@
 // Implement loadView to create a view hierarchy programmatically, without using a nib.
 - (void)loadView
 {
-    UIView* view = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    UIView *view = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     view.backgroundColor = [UIColor whiteColor];
     self.view = view;
 	[view release];
     
-    UIActivityIndicatorView* activityView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    UIActivityIndicatorView *activityView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     activityView.frame = CGRectMake(100, 140, 25, 25);
     [self.view addSubview:activityView];
     [activityView release];
     
     [activityView startAnimating];
     
-    UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(135, 140, 320-70, 25)];
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(135, 140, 320-70, 25)];
     label.text = @"Loading";
     label.textColor = [UIColor darkGrayColor];
     [self.view addSubview:label];
@@ -193,45 +181,40 @@
 {
     [super viewDidAppear:animated];
     
-    [self getIdentityProvidersWithBlock:^(NSArray* realms, NSError* error)
-     {
-         if(error)
-         {
-			 UIAlertView* alert;
+    [self getIdentityProvidersWithBlock:^(NSArray *realms, NSError *error) {
+        if (error) {
+            UIAlertView *alert;
 			 
-			 alert = [[UIAlertView alloc] initWithTitle:@"Login" 
-												message:[error localizedDescription]
-											   delegate:nil 
-									  cancelButtonTitle:@"OK" 
-									  otherButtonTitles:nil];
-			 [alert show];
-			 [alert release];
-			 return;
-         }
+            alert = [[UIAlertView alloc] initWithTitle:@"Login" 
+                                               message:[error localizedDescription]
+                                              delegate:nil 
+                                     cancelButtonTitle:@"OK" 
+                                     otherButtonTitles:nil];
+            [alert show];
+            [alert release];
+            return;
+        }
          
-         [[self retain] autorelease];
+        [[self retain] autorelease];
          
-         UINavigationController* navController = self.navigationController;
-		 UIViewController* controller;
+        UINavigationController* navController = self.navigationController;
+        UIViewController* controller;
 		 
-		 // don't ask the user to pick from a list of one realm!
-		 if(realms.count == 1)
-		 {
-			 WACloudAccessControlHomeRealm* realm = [realms objectAtIndex:0];
-			 controller = [[WALoginWebViewController alloc] initWithHomeRealm:realm
-																  allowsClose:_allowsClose
-														withCompletionHandler:_block];
-		 }
-		 else
-		 {
-			controller = [[WALoginRealmPickerTableViewController alloc] initWithRealms:realms 
+        // don't ask the user to pick from a list of one realm!
+        if (realms.count == 1) {
+            WACloudAccessControlHomeRealm *realm = [realms objectAtIndex:0];
+            controller = [[WALoginWebViewController alloc] initWithHomeRealm:realm
+                                                                 allowsClose:_allowsClose
+                                                       withCompletionHandler:_block];
+        } else {
+            controller = [[WALoginRealmPickerTableViewController alloc] initWithRealms:realms 
 																		   allowsClose:_allowsClose
 																 withCompletionHandler:_block];
-		 }
+        }
 		 
-		 navController.viewControllers = [NSArray arrayWithObject:controller];
-         [controller release];
-     }];
+        navController.viewControllers = [NSArray arrayWithObject:controller];
+        [controller release];
+    }];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

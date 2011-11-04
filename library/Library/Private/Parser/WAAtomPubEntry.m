@@ -21,15 +21,14 @@
 
 - (id)initWithNode:(xmlNodePtr)node
 {
-    if((self = [super init]))
-    {
+    if ((self = [super init])) {
         _node = node;
     }
     
     return self;
 }
 
-- (NSString*)identity
+- (NSString *)identity
 {
     return [WAXMLHelper getElementValue:_node name:@"id"];
 }
@@ -37,9 +36,9 @@
 - (void)processContentPropertiesWithBlock:(void (^)(NSString*, NSString*))block
 {
     [WAXMLHelper performXPath:@"_default:content/m:properties/*" onNode:_node block:^(xmlNodePtr child) {
-        xmlChar* xmlValue = xmlNodeGetContent(child);
-        NSString* name = [NSString stringWithUTF8String:(const char*)child->name];
-        NSString* value = [NSString stringWithUTF8String:(const char*)xmlValue];
+        xmlChar *xmlValue = xmlNodeGetContent(child);
+        NSString *name = [NSString stringWithUTF8String:(const char*)child->name];
+        NSString *value = [NSString stringWithUTF8String:(const char*)xmlValue];
 		xmlFree(xmlValue);
         block(name, value);
     }];

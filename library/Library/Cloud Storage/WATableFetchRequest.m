@@ -32,8 +32,7 @@
 
 - (id) initWithTable:(NSString *)tableName
 {
-    if((self = [super init]))
-    {
+    if ((self = [super init])) {
         _tableName = [tableName copy];
     }
     
@@ -60,8 +59,7 @@
 + (WATableFetchRequest *)fetchRequestForTable:(NSString *)tableName predicate:(NSPredicate *)predicate error:(NSError **)error
 {
     NSString *filter = [WAAzureFilterBuilder filterStringWithPredicate:predicate error:error];
-    if(!filter)
-    {
+    if (!filter) {
         return nil;
     }
 
@@ -76,7 +74,7 @@
     return request;
 }
 
-- (NSString*)endpoint
+- (NSString *)endpoint
 {
     NSMutableString *ep = [NSMutableString stringWithString:_tableName];
     

@@ -321,6 +321,7 @@
 - (void)storageClient:(WACloudStorageClient *)client didFailRequest:request withError:error
 {
 	[self showError:error];
+    [self showAddButton];
 }
 
 - (void)storageClient:(WACloudStorageClient *)client didFetchEntities:(NSArray *)entities fromTableNamed:(NSString *)tableName withResultContinuation:(WAResultContinuation *)resultContinuation

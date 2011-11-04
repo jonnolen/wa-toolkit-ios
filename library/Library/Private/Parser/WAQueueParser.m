@@ -22,9 +22,7 @@
 
 + (NSArray *)loadQueues:(xmlDocPtr)doc 
 {
-    
-    if (doc == nil) 
-    { 
+    if (doc == nil) { 
 		return nil; 
 	}
 	
@@ -32,15 +30,14 @@
     
     [WAXMLHelper performXPath:@"/EnumerationResults/Queues/Queue" 
                  onDocument:doc 
-                      block:^(xmlNodePtr node)
-     {
-         NSString *name = [WAXMLHelper getElementValue:node name:@"Name"];
-         NSString *url = [WAXMLHelper getElementValue:node name:@"Url"];
+                      block:^(xmlNodePtr node) {
+        NSString *name = [WAXMLHelper getElementValue:node name:@"Name"];
+        NSString *url = [WAXMLHelper getElementValue:node name:@"Url"];
          
-         WAQueue *queue = [[WAQueue alloc] initQueueWithName:name URL:url];
-         [queues addObject:queue];
-         [queue release];
-     }];
+        WAQueue *queue = [[WAQueue alloc] initQueueWithName:name URL:url];
+        [queues addObject:queue];
+        [queue release];
+    }];
     
     return [[queues copy] autorelease];
 }

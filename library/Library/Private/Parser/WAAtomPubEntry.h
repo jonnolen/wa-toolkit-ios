@@ -23,9 +23,9 @@
 }
 
 - (id)initWithNode:(xmlNodePtr)node;
-- (void)processContentPropertiesWithBlock:(void (^)(NSString*, NSString*))block;
+- (void)processContentPropertiesWithBlock:(void (^)(NSString *, NSString *))block;
 
-@property (readonly) NSString* identity;
+@property (readonly) NSString *identity;
 
 
 @end

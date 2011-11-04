@@ -18,10 +18,9 @@
 
 @implementation WACloudAccessControlHomeRealm
 
-- (id)initWithPairs:(NSDictionary*)pairs emailSuffixes:(NSArray*)emailSuffixes
+- (id)initWithPairs:(NSDictionary *)pairs emailSuffixes:(NSArray *)emailSuffixes
 {
-    if((self = [super init]))
-    {
+    if ((self = [super init])) {
         _pairs = [pairs retain];
         _emailSuffixes = emailSuffixes.count > 0 ? [emailSuffixes copy] : nil;
     }

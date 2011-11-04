@@ -45,9 +45,9 @@ NSString * const WAContainerPropertyKeyLastModified = @"Last-Modified";
 - (id)initContainerWithName:(NSString *)name URL:(NSString *)URL metadata:(NSString *)metadata properties:(NSDictionary *)properties
 {
     if ((self = [super init])) {
-        _name = [name retain];
+        _name = [name copy];
         _URL = [[NSURL URLWithString:URL] retain];
-        _metadata = [metadata retain];
+        _metadata = [metadata copy];
         _properties = [properties retain];
     }    
     return self;

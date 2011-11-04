@@ -19,12 +19,12 @@
 
 @implementation WAXMLHelper
 
-+ (void)performXPath:(NSString*)xpath onDocument:(xmlDocPtr)doc block:(void (^)(xmlNodePtr))block
++ (void)performXPath:(NSString *)xpath onDocument:(xmlDocPtr)doc block:(void (^)(xmlNodePtr))block
 {
     [self performXPath:xpath onNode:(xmlNodePtr)doc block:block];
 }
 
-+ (void)performXPath:(NSString*)xpath onNode:(xmlNodePtr)node block:(void (^)(xmlNodePtr))block
++ (void)performXPath:(NSString *)xpath onNode:(xmlNodePtr)node block:(void (^)(xmlNodePtr))block
 {
     xmlDocPtr doc;
     if(node->type == XML_DOCUMENT_NODE) {

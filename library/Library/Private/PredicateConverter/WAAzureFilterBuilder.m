@@ -20,10 +20,9 @@
 
 @synthesize error;
 
-- (id) init
+- (id)init
 {
-	if((self = [super init]))
-	{
+	if((self = [super init])) {
 		string = [[NSMutableString alloc] initWithCapacity:1000];
 	}
 	
@@ -42,38 +41,31 @@
 {
 	[WAPredicateParser parse:predicate delegate:self];
 	
-	if(error)
-	{
+	if (error) {
 		return nil;
 	}
 	
 	return [[string copy] autorelease];
 }
 
-- (void) writeExpression:(NSExpression*)expr
+- (void)writeExpression:(NSExpression*)expr
 {
-	switch([expr expressionType])
-	{
+	switch ([expr expressionType]) {
 		case NSConstantValueExpressionType: // Expression that always returns the same value
-		{
+        {
 			id constant = [expr constantValue];
-			if([constant isKindOfClass:[NSString class]])
-			{
-				NSString* s = [(NSString*)constant stringByReplacingOccurrencesOfString:@"\'" withString:@"\\\'"];
+			if ([constant isKindOfClass:[NSString class]]) {
+				NSString * s = [(NSString*)constant stringByReplacingOccurrencesOfString:@"\'" withString:@"\\\'"];
 				[string appendFormat:@"'%@'", s];
-			}
-			else if([constant isKindOfClass:[NSDate class]])
-			{
+			} else if([constant isKindOfClass:[NSDate class]]) {
 				NSDateFormatter* formatter = [NSDateFormatter new];
 				[formatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSS"];
 				
-				NSString* s = [formatter stringFromDate:(NSDate*)constant];
+				NSString *s = [formatter stringFromDate:(NSDate*)constant];
 				[formatter release];
 
 				[string appendFormat:@"'%@'", s];
-			}
-			else
-			{
+			} else {
 				[string appendString:[constant description]];
 			}
 			break;
@@ -88,7 +80,7 @@
 			
 		default:
 		{
-			NSError* err = [NSError errorWithDomain:@"com.microsoft.WAToolkit" 
+			NSError *err = [NSError errorWithDomain:@"com.microsoft.WAToolkit" 
 											   code:-1
 										   userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Unsupported expression type", [expr expressionType]]
 																				forKey:NSLocalizedDescriptionKey]];
@@ -97,10 +89,9 @@
 	}
 }
 
-- (void) writeComparison:(NSPredicateOperatorType)predicateOperatorType left:(NSExpression*)left right:(NSExpression*)right
+- (void)writeComparison:(NSPredicateOperatorType)predicateOperatorType left:(NSExpression *)left right:(NSExpression *)right
 {
-	switch(predicateOperatorType)
-	{
+	switch (predicateOperatorType) {
 		case NSLessThanPredicateOperatorType: // compare: returns NSOrderedAscending
 		{
 			[self writeExpression:left];
@@ -176,7 +167,7 @@
 		case NSCustomSelectorPredicateOperatorType:
 		default:
 		{
-			NSError* err = [NSError errorWithDomain:@"com.microsoft.WAToolkit" 
+			NSError *err = [NSError errorWithDomain:@"com.microsoft.WAToolkit" 
 											   code:-1
 										   userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Unsupported operator type", predicateOperatorType]
 																				forKey:NSLocalizedDescriptionKey]];
@@ -186,18 +177,14 @@
 	}
 }
 
-- (void) writeAnd:(NSArray*)predicates
+- (void)writeAnd:(NSArray *)predicates
 {
 	BOOL first = YES;
 	
-	for(NSPredicate* predicate in predicates)
-	{
-		if(first)
-		{
+	for (NSPredicate *predicate in predicates) {
+		if (first) {
 			first = NO;
-		}
-		else 
-		{
+		} else {
 			[string appendString:@" and "];
 		}
 
@@ -205,14 +192,13 @@
 		[WAPredicateParser parse:predicate delegate:self];
 		[string appendString:@")"];
 		
-		if(error)
-		{
+		if (error) {
 			break;
 		}
 	}
 }
 
-- (void) writeOr:(NSArray*)predicates
+- (void)writeOr:(NSArray*)predicates
 {
 	BOOL first = YES;
 	
@@ -238,28 +224,27 @@
 	}
 }
 
-- (void) writeNot:(NSPredicate*)predicate
+- (void)writeNot:(NSPredicate*)predicate
 {
 	[string appendString:@"not ("];
 	[WAPredicateParser parse:predicate delegate:self];
 	[string appendString:@")"];
 }
 
-- (void) parserFailedWithError:(NSError*)_error
+- (void)parserFailedWithError:(NSError *)_error
 {
 	[error release];
 	error = [_error retain];
 }
 
 
-+ (NSString*) filterStringWithPredicate:(NSPredicate*)predicate error:(NSError**)error
++ (NSString *)filterStringWithPredicate:(NSPredicate *)predicate error:(NSError **)error
 {
-	WAAzureFilterBuilder* builder = [WAAzureFilterBuilder new];
+	WAAzureFilterBuilder *builder = [WAAzureFilterBuilder new];
 	
-	NSString* result = [builder parse:predicate];
+	NSString *result = [builder parse:predicate];
 	
-	if(error)
-	{
+	if (error) {
 		*error = [[builder.error retain] autorelease];
 	}	
 	

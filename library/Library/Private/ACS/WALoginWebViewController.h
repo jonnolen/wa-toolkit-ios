@@ -21,10 +21,10 @@
 
 @interface WALoginWebViewController : UIViewController <UIWebViewDelegate> {
 @private   
-    UIWebView* _webView;
-    NSMutableData* _data;
-    NSURL* _url;
-    WACloudAccessControlHomeRealm* _realm;
+    UIWebView *_webView;
+    NSMutableData *_data;
+    NSURL *_url;
+    WACloudAccessControlHomeRealm *_realm;
 	void (^ _block)(WACloudAccessToken* token);
 	BOOL _allowsClose;
 }

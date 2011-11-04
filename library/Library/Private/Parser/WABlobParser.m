@@ -20,10 +20,9 @@
 
 @implementation WABlobParser
 
-+ (NSArray *)loadBlobs:(xmlDocPtr)doc container:(WABlobContainer*)container
++ (NSArray *)loadBlobs:(xmlDocPtr)doc container:(WABlobContainer *)container
 {
-    if (doc == nil) 
-    { 
+    if (doc == nil) { 
 		return nil; 
 	}
     
@@ -31,40 +30,38 @@
     
     [WAXMLHelper performXPath:@"/EnumerationResults/Blobs/Blob" 
                  onDocument:doc 
-                      block:^(xmlNodePtr node)
-     {
-         NSString *name = [WAXMLHelper getElementValue:node name:@"Name"];
-         NSString *url = [WAXMLHelper getElementValue:node name:@"Url"];
-         __block NSString *blockType = nil;
-         __block NSString *cacheControl = nil;
-         __block NSString *contentEncoding = nil;
-         __block NSString *contentLanguage = nil;
-         __block NSString *contentLength = nil;
-         __block NSString *contentMD5 = nil;
-         __block NSString *contentType = nil;
-         __block NSString *eTag = nil;
-         __block NSString *lastModified = nil;
-         __block NSString *leaseStatus = nil;
-         __block NSString *sequenceNumber = nil;
+                      block:^(xmlNodePtr node) {
+        NSString *name = [WAXMLHelper getElementValue:node name:@"Name"];
+        NSString *url = [WAXMLHelper getElementValue:node name:@"Url"];
+        __block NSString *blockType = nil;
+        __block NSString *cacheControl = nil;
+        __block NSString *contentEncoding = nil;
+        __block NSString *contentLanguage = nil;
+        __block NSString *contentLength = nil;
+        __block NSString *contentMD5 = nil;
+        __block NSString *contentType = nil;
+        __block NSString *eTag = nil;
+        __block NSString *lastModified = nil;
+        __block NSString *leaseStatus = nil;
+        __block NSString *sequenceNumber = nil;
          
-         [WAXMLHelper performXPath:@"Properties" 
+        [WAXMLHelper performXPath:@"Properties" 
                             onNode:node 
-                             block:^(xmlNodePtr node)
-          {
-              blockType = [WAXMLHelper getElementValue:node name:WABlobPropertyKeyBlobType];
-              cacheControl = [WAXMLHelper getElementValue:node name:WABlobPropertyKeyCacheControl];
-              contentEncoding = [WAXMLHelper getElementValue:node name:WABlobPropertyKeyContentEncoding];
-              contentLanguage = [WAXMLHelper getElementValue:node name:WABlobPropertyKeyContentLanguage];
-              contentLength = [WAXMLHelper getElementValue:node name:WABlobPropertyKeyContentLength];
-              contentMD5 = [WAXMLHelper getElementValue:node name:WABlobPropertyKeyContentMD5];
-              contentType = [WAXMLHelper getElementValue:node name:WABlobPropertyKeyContentType];
-              eTag = [WAXMLHelper getElementValue:node name:WABlobPropertyKeyEtag]; 
-              lastModified = [WAXMLHelper getElementValue:node name:WABlobPropertyKeyLastModified];
-              leaseStatus = [WAXMLHelper getElementValue:node name:WABlobPropertyKeyLeaseStatus];
-              sequenceNumber = [WAXMLHelper getElementValue:node name:WABlobPropertyKeySequenceNumber];
-          }];
+                             block:^(xmlNodePtr node) {
+            blockType = [WAXMLHelper getElementValue:node name:WABlobPropertyKeyBlobType];
+            cacheControl = [WAXMLHelper getElementValue:node name:WABlobPropertyKeyCacheControl];
+            contentEncoding = [WAXMLHelper getElementValue:node name:WABlobPropertyKeyContentEncoding];
+            contentLanguage = [WAXMLHelper getElementValue:node name:WABlobPropertyKeyContentLanguage];
+            contentLength = [WAXMLHelper getElementValue:node name:WABlobPropertyKeyContentLength];
+            contentMD5 = [WAXMLHelper getElementValue:node name:WABlobPropertyKeyContentMD5];
+            contentType = [WAXMLHelper getElementValue:node name:WABlobPropertyKeyContentType];
+            eTag = [WAXMLHelper getElementValue:node name:WABlobPropertyKeyEtag]; 
+            lastModified = [WAXMLHelper getElementValue:node name:WABlobPropertyKeyLastModified];
+            leaseStatus = [WAXMLHelper getElementValue:node name:WABlobPropertyKeyLeaseStatus];
+            sequenceNumber = [WAXMLHelper getElementValue:node name:WABlobPropertyKeySequenceNumber];
+        }];
          
-         WABlob *blob = [[WABlob alloc] initBlobWithName:name URL:url container:container 
+        WABlob *blob = [[WABlob alloc] initBlobWithName:name URL:url container:container 
                                               properties:[NSDictionary dictionaryWithObjectsAndKeys:
                                                           blockType, WABlobPropertyKeyBlobType, 
                                                           cacheControl, WABlobPropertyKeyCacheControl,
@@ -78,9 +75,9 @@
                                                           leaseStatus, WABlobPropertyKeyLeaseStatus,
                                                           sequenceNumber, WABlobPropertyKeySequenceNumber,
                                                           nil]];         
-         [blobs addObject:blob];
-         [blob release];
-     }];
+        [blobs addObject:blob];
+        [blob release];
+    }];
 	
 	return [[blobs copy] autorelease];
 }
@@ -95,8 +92,7 @@
     
     [WAXMLHelper performXPath:@"/*/*/*" 
                  onDocument:doc 
-                      block:^(xmlNodePtr node) 
-    {
+                      block:^(xmlNodePtr node) {
         NSString *name = [WAXMLHelper getElementValue:node name:@"Name"];
         NSString *url = [WAXMLHelper getElementValue:node name:@"Url"];
         __block NSString *blockType = nil;
@@ -113,20 +109,19 @@
         
         [WAXMLHelper performXPath:@"_default:Properties" 
                            onNode:node 
-                            block:^(xmlNodePtr node)
-         {
-             blockType = [WAXMLHelper getElementValue:node name:WABlobPropertyKeyBlobType];
-             cacheControl = [WAXMLHelper getElementValue:node name:WABlobPropertyKeyCacheControl];
-             contentEncoding = [WAXMLHelper getElementValue:node name:WABlobPropertyKeyContentEncoding];
-             contentLanguage = [WAXMLHelper getElementValue:node name:WABlobPropertyKeyContentLanguage];
-             contentLength = [WAXMLHelper getElementValue:node name:WABlobPropertyKeyContentLength];
-             contentMD5 = [WAXMLHelper getElementValue:node name:WABlobPropertyKeyContentMD5];
-             contentType = [WAXMLHelper getElementValue:node name:WABlobPropertyKeyContentType];
-             eTag = [WAXMLHelper getElementValue:node name:WABlobPropertyKeyEtag]; 
-             lastModified = [WAXMLHelper getElementValue:node name:WABlobPropertyKeyLastModified];
-             leaseStatus = [WAXMLHelper getElementValue:node name:WABlobPropertyKeyLeaseStatus];
-             sequenceNumber = [WAXMLHelper getElementValue:node name:WABlobPropertyKeySequenceNumber];
-         }];
+                            block:^(xmlNodePtr node) {
+            blockType = [WAXMLHelper getElementValue:node name:WABlobPropertyKeyBlobType];
+            cacheControl = [WAXMLHelper getElementValue:node name:WABlobPropertyKeyCacheControl];
+            contentEncoding = [WAXMLHelper getElementValue:node name:WABlobPropertyKeyContentEncoding];
+            contentLanguage = [WAXMLHelper getElementValue:node name:WABlobPropertyKeyContentLanguage];
+            contentLength = [WAXMLHelper getElementValue:node name:WABlobPropertyKeyContentLength];
+            contentMD5 = [WAXMLHelper getElementValue:node name:WABlobPropertyKeyContentMD5];
+            contentType = [WAXMLHelper getElementValue:node name:WABlobPropertyKeyContentType];
+            eTag = [WAXMLHelper getElementValue:node name:WABlobPropertyKeyEtag]; 
+            lastModified = [WAXMLHelper getElementValue:node name:WABlobPropertyKeyLastModified];
+            leaseStatus = [WAXMLHelper getElementValue:node name:WABlobPropertyKeyLeaseStatus];
+            sequenceNumber = [WAXMLHelper getElementValue:node name:WABlobPropertyKeySequenceNumber];
+        }];
 
         WABlob *blob = [[WABlob alloc] initBlobWithName:name URL:url container:container 
                                              properties:[NSDictionary dictionaryWithObjectsAndKeys:
@@ -144,7 +139,7 @@
                                                          nil]];
         [blobs addObject:blob];
         [blob release];
-     }];
+    }];
 	
 	return [[blobs copy] autorelease];
 }
