@@ -40,6 +40,8 @@ typedef enum {
 - (void)fetchData;
 - (void)showAddButton;
 - (void)showActivity;
+- (void)showRefreshButton;
+- (IBAction)refreshData:(id)sender;
 
 @end
 
@@ -88,7 +90,8 @@ typedef enum {
 	storageClient = nil;
 
     [self showAddButton];
-
+    [self showRefreshButton];
+    
     _localStorageList = [[NSMutableArray alloc] initWithCapacity:MAX_ROWS];
 }
 
@@ -130,6 +133,16 @@ typedef enum {
 }
 
 #pragma mark - Action Methods
+
+- (IBAction)refreshData:(id)sender
+{
+    [_localStorageList removeAllObjects];
+    if (_resultContinuation) {
+        [_resultContinuation release];
+        _resultContinuation = nil;
+    }
+    [self fetchData];
+}
 
 - (IBAction)modifyStorage:(id)sender
 {
@@ -211,6 +224,16 @@ typedef enum {
 - (void)showAddButton
 {
     self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(modifyStorage:)] autorelease];
+}
+
+- (void)showRefreshButton
+{
+    UIBarButtonItem *refreshButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(refreshData:)];
+    UINavigationController *controller = self.navigationController;
+    [controller setToolbarHidden:NO animated:YES];
+    self.toolbarItems = [NSArray arrayWithObjects:refreshButton, nil];
+    [refreshButton release];
+
 }
 
 - (void)showActivity

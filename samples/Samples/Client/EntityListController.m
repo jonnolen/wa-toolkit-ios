@@ -32,6 +32,8 @@
 - (void)editEntity:(NSUInteger)index;
 - (void)showAddButton;
 - (void)showActivity;
+- (void)showRefreshButton;
+- (IBAction)refreshData:(id)sender;
 
 @end
 
@@ -77,6 +79,7 @@
 	Azure_Storage_ClientAppDelegate *appDelegate = (Azure_Storage_ClientAppDelegate *)[[UIApplication sharedApplication] delegate];
 
 	[self showAddButton];
+    [self showRefreshButton];
 	storageClient = [[WACloudStorageClient storageClientWithCredential:appDelegate.authenticationCredential] retain];
 	storageClient.delegate = self;
     
@@ -113,6 +116,16 @@
 }
 
 #pragma mark - Action methods
+
+- (IBAction)refreshData:(id)sender
+{
+    [_localEntityList removeAllObjects];
+    if (_resultContinuation) {
+        [_resultContinuation release];
+        _resultContinuation = nil;
+    }
+    [self fetchEntities];
+}
 
 - (IBAction)addEntity:(id)sender
 {
@@ -161,6 +174,15 @@
     self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd 
 																							target:self 
 																							action:@selector(addEntity:)] autorelease];
+}
+
+- (void)showRefreshButton
+{
+    UIBarButtonItem *refreshButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(refreshData:)];
+    self.toolbarItems = [NSArray arrayWithObjects:refreshButton, nil];
+    UINavigationController *controller = self.navigationController;
+    [controller setToolbarHidden:NO animated:YES];
+    [refreshButton release];
 }
 
 - (void)showActivity
