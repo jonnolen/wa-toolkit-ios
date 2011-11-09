@@ -15,8 +15,9 @@
  */
 
 #import <UIKit/UIKit.h>
+#import "CreateTableController.h"
 
-@interface TableListController : UITableViewController <WACloudStorageClientDelegate> {
+@interface TableListController : UITableViewController <WACloudStorageClientDelegate, CreateTableControllerDelegate> {
 @private
 	WACloudStorageClient *storageClient;
     NSUInteger fetchCount;

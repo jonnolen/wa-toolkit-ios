@@ -26,6 +26,7 @@
 @synthesize nameLabel;
 @synthesize selectedContainer;
 @synthesize selectedQueue;
+@synthesize delegate;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -38,6 +39,7 @@
 
 - (void)dealloc
 {
+    delegate = nil;
     RELEASE(newItemName);
     RELEASE(createButton);
     RELEASE(uploadDefaultImageButton);
@@ -215,24 +217,36 @@
 - (void)storageClient:(WACloudStorageClient *)client didCreateTableNamed:(NSString *)tableName
 {
 	self.navigationItem.rightBarButtonItem = nil;
+    if ([delegate respondsToSelector:@selector(createTableController:didAddTableNamed:)]) {
+        [delegate createTableController:self didAddTableNamed:tableName];
+    }
 	[self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)storageClient:(WACloudStorageClient *)client didAddBlobContainerNamed:(NSString *)name
 {
 	self.navigationItem.rightBarButtonItem = nil;
+    if ([delegate respondsToSelector:@selector(createTableController:didAddContainerNamed:)]) {
+        [delegate createTableController:self didAddContainerNamed:name];
+    }
 	[self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)storageClient:(WACloudStorageClient *)client didAddBlobToContainer:(WABlobContainer *)container blobName:(NSString *)blobName
 {
 	self.navigationItem.rightBarButtonItem = nil;
+    if ([delegate respondsToSelector:@selector(createTableController:didAddBlobNamed:toContainerNamed:)]) {
+        [delegate createTableController:self didAddBlobNamed:blobName toContainerNamed:container.name];
+    }
 	[self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)storageClient:(WACloudStorageClient *)client didAddQueueNamed:(NSString *)queueName
 {
 	self.navigationItem.rightBarButtonItem = nil;
+    if ([delegate respondsToSelector:@selector(createTableController:didAddQueueNamed:)]) {
+        [delegate createTableController:self didAddQueueNamed:queueName];
+    }
 	[self.navigationController popViewControllerAnimated:YES];
 }
 

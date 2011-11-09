@@ -16,13 +16,12 @@
 
 #import "TableListController.h"
 #import "Azure_Storage_ClientAppDelegate.h"
-#import "CreateTableController.h"
 #import "EntityListController.h"
 #import "BlobViewerController.h"
 #import "UIViewController+ShowError.h"
 #import "WAConfiguration.h"
 
-#define MAX_ROWS 7
+#define MAX_ROWS 3
 
 #define ENTITY_TYPE_TABLE 1
 #define ENTITY_TYPE_QUEUE 2
@@ -40,8 +39,7 @@ typedef enum {
 - (void)fetchData;
 - (void)showAddButton;
 - (void)showActivity;
-- (void)showRefreshButton;
-- (IBAction)refreshData:(id)sender;
+- (NSComparisonResult)compareNameWithLastMarker:(NSString *)name;
 
 @end
 
@@ -90,7 +88,6 @@ typedef enum {
 	storageClient = nil;
 
     [self showAddButton];
-    [self showRefreshButton];
     
     _localStorageList = [[NSMutableArray alloc] initWithCapacity:MAX_ROWS];
 }
@@ -134,20 +131,11 @@ typedef enum {
 
 #pragma mark - Action Methods
 
-- (IBAction)refreshData:(id)sender
-{
-    [_localStorageList removeAllObjects];
-    if (_resultContinuation) {
-        [_resultContinuation release];
-        _resultContinuation = nil;
-    }
-    [self fetchData];
-}
-
 - (IBAction)modifyStorage:(id)sender
 {
 	CreateTableController *newController = [[CreateTableController alloc] initWithNibName:@"CreateTableController" bundle:nil];
-	
+	newController.delegate = self;
+    
 	switch ([self storageType]) {
 		case TableStorage: {
 			newController.navigationItem.title = @"Create Table";
@@ -224,16 +212,6 @@ typedef enum {
 - (void)showAddButton
 {
     self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(modifyStorage:)] autorelease];
-}
-
-- (void)showRefreshButton
-{
-    UIBarButtonItem *refreshButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(refreshData:)];
-    UINavigationController *controller = self.navigationController;
-    [controller setToolbarHidden:NO animated:YES];
-    self.toolbarItems = [NSArray arrayWithObjects:refreshButton, nil];
-    [refreshButton release];
-
 }
 
 - (void)showActivity
@@ -436,7 +414,7 @@ typedef enum {
 	}
 }
 
-#pragma mark - CloudStorageClientDelegate Methods
+#pragma mark - WACloudStorageClientDelegate Methods
 
 - (void)storageClient:(WACloudStorageClient *)client didFailRequest:request withError:error
 {
@@ -485,5 +463,46 @@ typedef enum {
     [self showAddButton];
 }
 
+#pragma mark - CreateTableControllerDelegate Methods
+- (NSComparisonResult)compareNameWithLastMarker:(NSString *)name
+{
+    if (_resultContinuation == nil || _resultContinuation.nextMarker == nil) {
+        return NSOrderedAscending;
+    }
+    
+    NSString *marker = _resultContinuation.nextMarker;
+    NSArray *listItems = [marker componentsSeparatedByString:@"/"];
+    NSString *last = [listItems lastObject];
+    NSComparisonResult result = [name compare:last];
+    return result;
+}
 
+- (void)createTableController:(CreateTableController *)controller didAddTableNamed:(NSString *)name
+{
+    [self.localStorageList addObject:name];
+    [self.tableView reloadData];
+}
+
+- (void)createTableController:(CreateTableController *)controller didAddQueueNamed:(NSString *)name
+{
+    NSComparisonResult result = [self compareNameWithLastMarker:name];
+    if (result == NSOrderedAscending) {
+        WAQueue *queue = [[WAQueue alloc] initQueueWithName:name URL:nil];
+        [self.localStorageList addObject:queue];
+        [queue release];
+        [self.tableView reloadData];
+    }
+}
+
+- (void)createTableController:(CreateTableController *)controller didAddContainerNamed:(NSString *)name
+{
+    NSComparisonResult result = [self compareNameWithLastMarker:name];
+    if (result == NSOrderedAscending) {
+        WABlobContainer *container = [[WABlobContainer alloc] initContainerWithName:name];
+        [self.localStorageList addObject:container];
+        [container release];
+        [self.tableView reloadData];
+    }
+    
+}
 @end
