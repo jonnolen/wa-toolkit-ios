@@ -143,24 +143,56 @@
  
  @discussion The method will run asynchronously and will call back through the delegate set for the client.
  
+ @deprecated Now use WACloudStorageClient#addBlobContainer:
+ 
  @see WACloudStorageClient#delegate
  @see WACloudStorageClientDelegate#storageClient:didAddBlobContainerNamed:
  */
-- (BOOL)addBlobContainerNamed:(NSString *)containerName;
+- (BOOL)addBlobContainerNamed:(NSString *)containerName  DEPRECATED_ATTRIBUTE;
 
 /**
  Adds a named blob container asynchronously using a block.
 	
- @param containerName The container name to add.
+ @param container The container name to add.
  @param block A block object called with the results of the add.
 	
  @returns Returns if the request was sent or not.
  
  @description The method will run asynchronously and will call back through the block. The block wil contain an error if one occurred or nil.
  
+ @deprecated Now use WACloudStorageClient#addBlobContainer:withCompletionHandler:
+ 
  @see NSError
  */
-- (BOOL)addBlobContainerNamed:(NSString *)containerName withCompletionHandler:(void (^)(NSError *error))block;
+- (BOOL)addBlobContainerNamed:(NSString *)containerName withCompletionHandler:(void (^)(NSError *error))block DEPRECATED_ATTRIBUTE;
+
+/**
+ Adds a named blob container asynchronously.
+ 
+ @param container The container to add.
+ 
+ @returns Returns if the request was sent or not.
+ 
+ @discussion The method will run asynchronously and will call back through the delegate set for the client. 
+ 
+ @see WACloudStorageClient#delegate
+ @see WACloudStorageClientDelegate#storageClient:didAddBlobContainerNamed:
+ */
+- (BOOL)addBlobContainer:(WABlobContainer *)container;
+
+/**
+ Adds a named blob container asynchronously using a block.
+ 
+ @param container The container  to add.
+ @param block A block object called with the results of the add.
+ 
+ @returns Returns if the request was sent or not.
+ 
+ @description The method will run asynchronously and will call back through the block. The block wil contain an error if one occurred or nil.
+ 
+ @see NSError
+ */
+- (BOOL)addBlobContainer:(WABlobContainer *)container withCompletionHandler:(void (^)(NSError*))block;
 
 /**
  Deletes a specified blob container asynchronously.

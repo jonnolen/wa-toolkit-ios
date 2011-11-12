@@ -22,7 +22,9 @@ extern NSString * const WAContainerPropertyKeyLastModified;
 /**
  A class that represents a Windows Azure blob container.
  */
-@interface WABlobContainer : NSObject
+@interface WABlobContainer : NSObject {
+    NSMutableDictionary *_metadata;
+}
 
 /**
  The name of the container.
@@ -37,14 +39,43 @@ extern NSString * const WAContainerPropertyKeyLastModified;
 @property (readonly) NSURL *URL;
 
 /**
- The container's metadata.
+ The shared access signiture for the container.
+ 
+ @discussion This value is only valid when using a proxy
  */
-@property (readonly) NSString *metadata;
+@property (readonly) NSString *sharedAccessSigniture;
+
+/**
+ The metadata for the container.
+ */
+@property (readonly) NSDictionary *metadata;
 
 /**
  The properties for the container.
  */
 @property (readonly) NSDictionary *properties;
+
+
+/**
+ Sets a value to the container metadata dictionary.
+ 
+ @param The value for the key.
+ @param The key for the value.
+ 
+ @discussion Raises an NSInvalidArgumentException if aKey or anObject is nil. If you need to represent a nil value in the dictionary, use NSNull. If aKey already exists in the dictionary, the dictionary’s previous value object for that key is sent a release message and anObject takes its place.
+ */
+- (void)setValue:(NSString *)value forMetadataKey:(NSString *)key;
+
+
+/**
+ Removes a given key and its associated value from the dictionary.
+
+ @param key The key to remove.
+ 
+ @discussion Does nothing if key does not exist.
+ */
+- (void)removeMetadataForKey:(NSString *)key;
+
 
 /**
  Initializes a newly created WABlobContainer with a name.
@@ -70,22 +101,26 @@ extern NSString * const WAContainerPropertyKeyLastModified;
  
  @param name The name of the container.
  @param URL The address of the container.
- @param metadata The container's metadata.
+ @param sharedAccessSigniture The container's shared access signiture.
+ 
+ @discussion This sharedAccessSigniture is only valid when using a proxy
  
  @returns The newly initialized WABlobContainer object.
  */
-- (id)initContainerWithName:(NSString *)name URL:(NSString *)URL metadata:(NSString *)metadata;
+- (id)initContainerWithName:(NSString *)name URL:(NSString *)URL sharedAccessSigniture:(NSString *)sharedAccessSigniture;
 
 /**
  Initializes a newly created WABlobContainer with a name, address, metadata for the container.
  
  @param name The name of the container.
  @param URL The address of the container.
- @param metadata The container's metadata.
+ @param sharedAccessSigniture The container's metadata.
  @param properties The properties for the container.
+ 
+ @discussion This sharedAccessSigniture is only valid when using a proxy
  
  @returns The newly initialized WABlobContainer object.
  */
-- (id)initContainerWithName:(NSString *)name URL:(NSString *)URL metadata:(NSString *)metadata properties:(NSDictionary *)properties;
+- (id)initContainerWithName:(NSString *)name URL:(NSString *)URL sharedAccessSigniture:(NSString *)sharedAccessSigniture properties:(NSDictionary *)properties;
 
 @end

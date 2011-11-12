@@ -34,7 +34,7 @@ NSString * const WABlobPropertyKeySequenceNumber = @"x-ms-blob-sequence-number";
 @synthesize URL = _URL;
 @synthesize container = _container;
 @synthesize properties = _properties; 
-
+@synthesize metadata = _metadata;
 
 - (id)initBlobWithName:(NSString *)name URL:(NSString *)URL container:(WABlobContainer *)container properties:(NSDictionary *)properties
 {
@@ -43,6 +43,7 @@ NSString * const WABlobPropertyKeySequenceNumber = @"x-ms-blob-sequence-number";
         _URL = [[NSURL URLWithString:URL] retain];
         _container = [container retain];
         _properties = [properties retain];
+        _metadata = [[NSMutableDictionary alloc] initWithCapacity:5];
     }    
     
     return self;
@@ -64,13 +65,24 @@ NSString * const WABlobPropertyKeySequenceNumber = @"x-ms-blob-sequence-number";
     [_URL release];
     [_container release];
     [_properties release];
+    [_metadata release];
     
     [super dealloc];
 }
 
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"Blob { name = %@, url = %@, container = %@, properties = %@ }", _name, _URL, _container, _properties.description];
+    return [NSString stringWithFormat:@"Blob { name = %@, url = %@, container = %@, properties = %@, metadata = %@ }", _name, _URL, _container, _properties.description, _metadata.description];
+}
+
+- (void)setValue:(NSString *)value forMetadataKey:(NSString *)key
+{
+    [_metadata setValue:value forKey:key];
+}
+
+- (void)removeMetadataForKey:(NSString *)key
+{
+    [_metadata removeObjectForKey:key];
 }
 
 @end

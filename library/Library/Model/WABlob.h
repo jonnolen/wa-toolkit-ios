@@ -33,7 +33,9 @@ extern NSString * const WABlobPropertyKeySequenceNumber;
 /**
  A class that represents a Windows Azure Blob. 
  */
-@interface WABlob : NSObject
+@interface WABlob : NSObject {
+    NSMutableDictionary *_metadata;
+}
 
 /**
  The name of the blob.
@@ -55,9 +57,34 @@ extern NSString * const WABlobPropertyKeySequenceNumber;
 @property (readonly) WABlobContainer *container;
 
 /**
+ The metadata for the container.
+ */
+@property (readonly) NSDictionary *metadata;
+
+/**
  The properties for the blob.
  */
 @property (readonly) NSDictionary *properties;
+
+/**
+ Sets a value to the container metadata dictionary.
+ 
+ @param The value for the key.
+ @param The key for the value.
+ 
+ @discussion Raises an NSInvalidArgumentException if aKey or anObject is nil. If you need to represent a nil value in the dictionary, use NSNull. If aKey already exists in the dictionary, the dictionary’s previous value object for that key is sent a release message and anObject takes its place.
+ */
+- (void)setValue:(NSString *)value forMetadataKey:(NSString *)key;
+
+
+/**
+ Removes a given key and its associated value from the dictionary.
+ 
+ @param key The key to remove.
+ 
+ @discussion Does nothing if key does not exist.
+ */
+- (void)removeMetadataForKey:(NSString *)key;
 
 /**
  Initializes a newly created WABlob with an name and address URL.

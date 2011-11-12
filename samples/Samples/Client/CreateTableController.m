@@ -157,7 +157,10 @@
 	if ([self.navigationItem.title hasSuffix:@"Table"]) {
 		[storageClient createTableNamed:newItemName.text];
 	} else if ([self.navigationItem.title hasSuffix:@"Container"]) {
-		[storageClient addBlobContainerNamed:newItemName.text];
+        WABlobContainer *container = [[WABlobContainer alloc] initContainerWithName:newItemName.text];
+        [container setValue:@"bar" forMetadataKey:@"foo"];
+		[storageClient addBlobContainer:container];
+        [container release];
 	} else if ([self.navigationItem.title hasSuffix:@"Blob"]) {
 		if (![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
 			[self actionSheet:nil didDismissWithButtonIndex:1];

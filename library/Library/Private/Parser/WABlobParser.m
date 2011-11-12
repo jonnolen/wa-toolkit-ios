@@ -30,7 +30,8 @@
     
     [WAXMLHelper performXPath:@"/EnumerationResults/Blobs/Blob" 
                  onDocument:doc 
-                      block:^(xmlNodePtr node) {
+                      block:^(xmlNodePtr node) 
+    {
         NSString *name = [WAXMLHelper getElementValue:node name:@"Name"];
         NSString *url = [WAXMLHelper getElementValue:node name:@"Url"];
         __block NSString *blockType = nil;
@@ -60,6 +61,21 @@
             leaseStatus = [WAXMLHelper getElementValue:node name:WABlobPropertyKeyLeaseStatus];
             sequenceNumber = [WAXMLHelper getElementValue:node name:WABlobPropertyKeySequenceNumber];
         }];
+        
+        NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithCapacity:3];
+        [WAXMLHelper performXPath:@"Metadata" 
+                           onNode:node 
+                            block:^(xmlNodePtr node) {
+            for (xmlNodePtr child = xmlFirstElementChild(node); child; child = xmlNextElementSibling(child)) {
+                NSString *key = [[NSString alloc] initWithUTF8String:(const char*)child->name];
+                xmlChar *value = xmlNodeGetContent(child);
+                NSString *str = [[NSString alloc] initWithUTF8String:(const char*)value];
+                xmlFree(value);
+                [dictionary setObject:str forKey:key];
+                [key release];
+                [str release];
+            }
+        }];
          
         WABlob *blob = [[WABlob alloc] initBlobWithName:name URL:url container:container 
                                               properties:[NSDictionary dictionaryWithObjectsAndKeys:
@@ -74,7 +90,12 @@
                                                           lastModified, WABlobPropertyKeyLastModified,
                                                           leaseStatus, WABlobPropertyKeyLeaseStatus,
                                                           sequenceNumber, WABlobPropertyKeySequenceNumber,
-                                                          nil]];         
+                                                          nil]];    
+        
+        [dictionary enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+             [blob setValue:key forMetadataKey:obj];
+        }];
+        
         [blobs addObject:blob];
         [blob release];
     }];
