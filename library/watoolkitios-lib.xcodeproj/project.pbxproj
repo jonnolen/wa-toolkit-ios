@@ -51,11 +51,30 @@
 		AABD4A50134D02C400B6E7D1 /* WATableEntity.h in Headers */ = {isa = PBXBuildFile; fileRef = AABD4A4E134D02C400B6E7D1 /* WATableEntity.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AABD4A51134D02C400B6E7D1 /* WATableEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = AABD4A4F134D02C400B6E7D1 /* WATableEntity.m */; };
 		AAD7348C134D2C22000AB68A /* NSString+URLEncode.h in Headers */ = {isa = PBXBuildFile; fileRef = AAD7348A134D2C21000AB68A /* NSString+URLEncode.h */; };
-		DE2A2F0E142A91A2005467BE /* BlobTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DE2A2F0D142A91A2005467BE /* BlobTests.m */; };
 		DE410E381427077A008D6626 /* WAResultContinuation.h in Headers */ = {isa = PBXBuildFile; fileRef = DE410E361427077A008D6626 /* WAResultContinuation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DE410E391427077A008D6626 /* WAResultContinuation.m in Sources */ = {isa = PBXBuildFile; fileRef = DE410E371427077A008D6626 /* WAResultContinuation.m */; };
-		DE4DD586142A4FE200D03B75 /* TableTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DE4DD585142A4FE200D03B75 /* TableTests.m */; };
 		DE5B03D8142FDA4A0092F6BA /* WAToolkit.h in Headers */ = {isa = PBXBuildFile; fileRef = DE5B03D6142FDA4A0092F6BA /* WAToolkit.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DE9615B9145F3006005BEB1B /* WABaseTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = DE9615B8145F3006005BEB1B /* WABaseTestCase.m */; };
+		DE9DF647146044E700E3B436 /* FetchQueuesDirectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DE9DF646146044E700E3B436 /* FetchQueuesDirectTests.m */; };
+		DE9DF64A146076FE00E3B436 /* FetchQueueMessagesDirectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DE9DF649146076FE00E3B436 /* FetchQueueMessagesDirectTests.m */; };
+		DE9DF64D14607AE900E3B436 /* AddQueueDirectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DE9DF64C14607AE900E3B436 /* AddQueueDirectTests.m */; };
+		DE9DF6501460877500E3B436 /* DeleteQueueDirectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DE9DF64F1460877400E3B436 /* DeleteQueueDirectTests.m */; };
+		DE9DF6531460896300E3B436 /* FetchQueuesProxyTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DE9DF6521460896200E3B436 /* FetchQueuesProxyTests.m */; };
+		DE9DF65614608CDF00E3B436 /* AddQueueProxyTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DE9DF65514608CDE00E3B436 /* AddQueueProxyTests.m */; };
+		DE9DF65914608E9600E3B436 /* DeleteQueueProxyTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DE9DF65814608E9500E3B436 /* DeleteQueueProxyTests.m */; };
+		DE9DF65E146090DF00E3B436 /* FetchContainersDirectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DE9DF65D146090DF00E3B436 /* FetchContainersDirectTests.m */; };
+		DE9DF6611460982000E3B436 /* AddContainerDirectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DE9DF6601460982000E3B436 /* AddContainerDirectTests.m */; };
+		DE9DF66414609AAC00E3B436 /* DeleteContainerDirectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DE9DF66314609AAC00E3B436 /* DeleteContainerDirectTests.m */; };
+		DE9DF66814609C8F00E3B436 /* AddBlobDirectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DE9DF66714609C8F00E3B436 /* AddBlobDirectTests.m */; };
+		DE9DF66B14609F3900E3B436 /* FetchBlobsDirectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DE9DF66A14609F3900E3B436 /* FetchBlobsDirectTests.m */; };
+		DE9DF66F1460A7D500E3B436 /* FetchTablesDirectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DE9DF66E1460A7D400E3B436 /* FetchTablesDirectTests.m */; };
+		DE9DF6721460E3C400E3B436 /* AddTableDirectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DE9DF6711460E3C300E3B436 /* AddTableDirectTests.m */; };
+		DEC25CDB1460E6490025DDE3 /* DeleteTableDirectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DEC25CD71460E6400025DDE3 /* DeleteTableDirectTests.m */; };
+		DEC25CDF1460E9470025DDE3 /* InsertEntityDirectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DEC25CDE1460E9460025DDE3 /* InsertEntityDirectTests.m */; };
+		DEC25CE21460EBF30025DDE3 /* FetchEntityDirectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DEC25CE11460EBF10025DDE3 /* FetchEntityDirectTests.m */; };
+		DEC25CE51460F0410025DDE3 /* UpdateEntityDirectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DEC25CE41460F0400025DDE3 /* UpdateEntityDirectTests.m */; };
+		DEC25CE81460F5710025DDE3 /* MergeEntityDirectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DEC25CE71460F56F0025DDE3 /* MergeEntityDirectTests.m */; };
+		DEC25CEB1460F73C0025DDE3 /* DeleteEntityDirectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DEC25CEA1460F73A0025DDE3 /* DeleteEntityDirectTests.m */; };
 		DEF6901A140827D4006FF7E5 /* Base64Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = DEF69019140827D4006FF7E5 /* Base64Tests.m */; };
 		F216A688136F88BC00FAEAB4 /* WAQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = F216A684136F88BC00FAEAB4 /* WAQueue.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F216A689136F88BC00FAEAB4 /* WAQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = F216A685136F88BC00FAEAB4 /* WAQueue.m */; };
@@ -72,7 +91,6 @@
 		F4F998F9138DC6C200254B51 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		F4F998FA138DC6C200254B51 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 288765FC0DF74451002DB57D /* CoreGraphics.framework */; };
 		F4F99900138DC6C200254B51 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = F4F998FE138DC6C200254B51 /* InfoPlist.strings */; };
-		F4F99905138DC6C200254B51 /* watoolkitios_lib_test.m in Sources */ = {isa = PBXBuildFile; fileRef = F4F99904138DC6C200254B51 /* watoolkitios_lib_test.m */; };
 		F4F99917138DC8FD00254B51 /* WACloudStorageClientDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F4F99916138DC8FD00254B51 /* WACloudStorageClientDelegate.m */; };
 		F4F9991A138DCBC500254B51 /* libwatoolkitios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F4F5239B1374612A004434B5 /* libwatoolkitios.a */; };
 		F4F9991C138DCBDF00254B51 /* libxml2.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F4F9991B138DCBDF00254B51 /* libxml2.2.dylib */; };
@@ -136,13 +154,51 @@
 		AABD4A4E134D02C400B6E7D1 /* WATableEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WATableEntity.h; sourceTree = "<group>"; };
 		AABD4A4F134D02C400B6E7D1 /* WATableEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WATableEntity.m; sourceTree = "<group>"; };
 		AAD7348A134D2C21000AB68A /* NSString+URLEncode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+URLEncode.h"; sourceTree = "<group>"; };
-		DE2A2F0C142A91A2005467BE /* BlobTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlobTests.h; sourceTree = "<group>"; };
-		DE2A2F0D142A91A2005467BE /* BlobTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlobTests.m; sourceTree = "<group>"; };
 		DE410E361427077A008D6626 /* WAResultContinuation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WAResultContinuation.h; sourceTree = "<group>"; };
 		DE410E371427077A008D6626 /* WAResultContinuation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WAResultContinuation.m; sourceTree = "<group>"; };
-		DE4DD584142A4FE200D03B75 /* TableTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableTests.h; sourceTree = "<group>"; };
-		DE4DD585142A4FE200D03B75 /* TableTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TableTests.m; sourceTree = "<group>"; };
 		DE5B03D6142FDA4A0092F6BA /* WAToolkit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WAToolkit.h; sourceTree = "<group>"; };
+		DE9615B7145F3006005BEB1B /* WABaseTestCase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WABaseTestCase.h; sourceTree = "<group>"; };
+		DE9615B8145F3006005BEB1B /* WABaseTestCase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WABaseTestCase.m; sourceTree = "<group>"; };
+		DE9DF645146044E700E3B436 /* FetchQueuesDirectTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FetchQueuesDirectTests.h; sourceTree = "<group>"; };
+		DE9DF646146044E700E3B436 /* FetchQueuesDirectTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FetchQueuesDirectTests.m; sourceTree = "<group>"; };
+		DE9DF648146076FE00E3B436 /* FetchQueueMessagesDirectTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FetchQueueMessagesDirectTests.h; sourceTree = "<group>"; };
+		DE9DF649146076FE00E3B436 /* FetchQueueMessagesDirectTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FetchQueueMessagesDirectTests.m; sourceTree = "<group>"; };
+		DE9DF64B14607AE900E3B436 /* AddQueueDirectTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddQueueDirectTests.h; sourceTree = "<group>"; };
+		DE9DF64C14607AE900E3B436 /* AddQueueDirectTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddQueueDirectTests.m; sourceTree = "<group>"; };
+		DE9DF64E1460877400E3B436 /* DeleteQueueDirectTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeleteQueueDirectTests.h; sourceTree = "<group>"; };
+		DE9DF64F1460877400E3B436 /* DeleteQueueDirectTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeleteQueueDirectTests.m; sourceTree = "<group>"; };
+		DE9DF6511460896200E3B436 /* FetchQueuesProxyTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FetchQueuesProxyTests.h; sourceTree = "<group>"; };
+		DE9DF6521460896200E3B436 /* FetchQueuesProxyTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FetchQueuesProxyTests.m; sourceTree = "<group>"; };
+		DE9DF65414608CDE00E3B436 /* AddQueueProxyTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddQueueProxyTests.h; sourceTree = "<group>"; };
+		DE9DF65514608CDE00E3B436 /* AddQueueProxyTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddQueueProxyTests.m; sourceTree = "<group>"; };
+		DE9DF65714608E9500E3B436 /* DeleteQueueProxyTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeleteQueueProxyTests.h; sourceTree = "<group>"; };
+		DE9DF65814608E9500E3B436 /* DeleteQueueProxyTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeleteQueueProxyTests.m; sourceTree = "<group>"; };
+		DE9DF65C146090DF00E3B436 /* FetchContainersDirectTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FetchContainersDirectTests.h; sourceTree = "<group>"; };
+		DE9DF65D146090DF00E3B436 /* FetchContainersDirectTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FetchContainersDirectTests.m; sourceTree = "<group>"; };
+		DE9DF65F1460981F00E3B436 /* AddContainerDirectTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddContainerDirectTests.h; sourceTree = "<group>"; };
+		DE9DF6601460982000E3B436 /* AddContainerDirectTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddContainerDirectTests.m; sourceTree = "<group>"; };
+		DE9DF66214609AAC00E3B436 /* DeleteContainerDirectTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeleteContainerDirectTests.h; sourceTree = "<group>"; };
+		DE9DF66314609AAC00E3B436 /* DeleteContainerDirectTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeleteContainerDirectTests.m; sourceTree = "<group>"; };
+		DE9DF66614609C8F00E3B436 /* AddBlobDirectTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddBlobDirectTests.h; sourceTree = "<group>"; };
+		DE9DF66714609C8F00E3B436 /* AddBlobDirectTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddBlobDirectTests.m; sourceTree = "<group>"; };
+		DE9DF66914609F3800E3B436 /* FetchBlobsDirectTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FetchBlobsDirectTests.h; sourceTree = "<group>"; };
+		DE9DF66A14609F3900E3B436 /* FetchBlobsDirectTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FetchBlobsDirectTests.m; sourceTree = "<group>"; };
+		DE9DF66D1460A7D400E3B436 /* FetchTablesDirectTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FetchTablesDirectTests.h; sourceTree = "<group>"; };
+		DE9DF66E1460A7D400E3B436 /* FetchTablesDirectTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FetchTablesDirectTests.m; sourceTree = "<group>"; };
+		DE9DF6701460E3C300E3B436 /* AddTableDirectTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddTableDirectTests.h; sourceTree = "<group>"; };
+		DE9DF6711460E3C300E3B436 /* AddTableDirectTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddTableDirectTests.m; sourceTree = "<group>"; };
+		DEC25CD61460E6400025DDE3 /* DeleteTableDirectTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeleteTableDirectTests.h; sourceTree = "<group>"; };
+		DEC25CD71460E6400025DDE3 /* DeleteTableDirectTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeleteTableDirectTests.m; sourceTree = "<group>"; };
+		DEC25CDD1460E9450025DDE3 /* InsertEntityDirectTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InsertEntityDirectTests.h; sourceTree = "<group>"; };
+		DEC25CDE1460E9460025DDE3 /* InsertEntityDirectTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InsertEntityDirectTests.m; sourceTree = "<group>"; };
+		DEC25CE01460EBF10025DDE3 /* FetchEntityDirectTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FetchEntityDirectTests.h; sourceTree = "<group>"; };
+		DEC25CE11460EBF10025DDE3 /* FetchEntityDirectTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FetchEntityDirectTests.m; sourceTree = "<group>"; };
+		DEC25CE31460F03F0025DDE3 /* UpdateEntityDirectTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpdateEntityDirectTests.h; sourceTree = "<group>"; };
+		DEC25CE41460F0400025DDE3 /* UpdateEntityDirectTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpdateEntityDirectTests.m; sourceTree = "<group>"; };
+		DEC25CE61460F56E0025DDE3 /* MergeEntityDirectTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MergeEntityDirectTests.h; sourceTree = "<group>"; };
+		DEC25CE71460F56F0025DDE3 /* MergeEntityDirectTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MergeEntityDirectTests.m; sourceTree = "<group>"; };
+		DEC25CE91460F7390025DDE3 /* DeleteEntityDirectTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeleteEntityDirectTests.h; sourceTree = "<group>"; };
+		DEC25CEA1460F73A0025DDE3 /* DeleteEntityDirectTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeleteEntityDirectTests.m; sourceTree = "<group>"; };
 		DEF69018140827D4006FF7E5 /* Base64Tests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Base64Tests.h; sourceTree = "<group>"; };
 		DEF69019140827D4006FF7E5 /* Base64Tests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Base64Tests.m; sourceTree = "<group>"; };
 		F216A684136F88BC00FAEAB4 /* WAQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WAQueue.h; sourceTree = "<group>"; };
@@ -161,8 +217,6 @@
 		F4F998FD138DC6C200254B51 /* watoolkitios-lib-test-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "watoolkitios-lib-test-Info.plist"; sourceTree = "<group>"; };
 		F4F998FF138DC6C200254B51 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		F4F99901138DC6C200254B51 /* watoolkitios-lib-test-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "watoolkitios-lib-test-Prefix.pch"; sourceTree = "<group>"; };
-		F4F99902138DC6C200254B51 /* watoolkitios_lib_test.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = watoolkitios_lib_test.h; sourceTree = "<group>"; };
-		F4F99904138DC6C200254B51 /* watoolkitios_lib_test.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = watoolkitios_lib_test.m; sourceTree = "<group>"; };
 		F4F99915138DC8FD00254B51 /* WACloudStorageClientDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WACloudStorageClientDelegate.h; sourceTree = "<group>"; };
 		F4F99916138DC8FD00254B51 /* WACloudStorageClientDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WACloudStorageClientDelegate.m; sourceTree = "<group>"; };
 		F4F9991B138DCBDF00254B51 /* libxml2.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.2.dylib; path = usr/lib/libxml2.2.dylib; sourceTree = SDKROOT; };
@@ -359,6 +413,105 @@
 			path = Private;
 			sourceTree = "<group>";
 		};
+		DE9DF643146044B100E3B436 /* Integration */ = {
+			isa = PBXGroup;
+			children = (
+				DE9615B7145F3006005BEB1B /* WABaseTestCase.h */,
+				DE9615B8145F3006005BEB1B /* WABaseTestCase.m */,
+				F4F99915138DC8FD00254B51 /* WACloudStorageClientDelegate.h */,
+				F4F99916138DC8FD00254B51 /* WACloudStorageClientDelegate.m */,
+				DE9DF65A14608F2C00E3B436 /* Queue */,
+				DE9DF65B14608F3C00E3B436 /* Queue Message */,
+				DE9DF66514609C3500E3B436 /* Container */,
+				DE9DF66C1460A39F00E3B436 /* Blob */,
+				DEC25CDC1460E8CD0025DDE3 /* Table */,
+				DEC25CEC1460F8C40025DDE3 /* Entity */,
+			);
+			name = Integration;
+			sourceTree = "<group>";
+		};
+		DE9DF65A14608F2C00E3B436 /* Queue */ = {
+			isa = PBXGroup;
+			children = (
+				DE9DF645146044E700E3B436 /* FetchQueuesDirectTests.h */,
+				DE9DF646146044E700E3B436 /* FetchQueuesDirectTests.m */,
+				DE9DF6511460896200E3B436 /* FetchQueuesProxyTests.h */,
+				DE9DF6521460896200E3B436 /* FetchQueuesProxyTests.m */,
+				DE9DF64B14607AE900E3B436 /* AddQueueDirectTests.h */,
+				DE9DF64C14607AE900E3B436 /* AddQueueDirectTests.m */,
+				DE9DF65414608CDE00E3B436 /* AddQueueProxyTests.h */,
+				DE9DF65514608CDE00E3B436 /* AddQueueProxyTests.m */,
+				DE9DF64E1460877400E3B436 /* DeleteQueueDirectTests.h */,
+				DE9DF64F1460877400E3B436 /* DeleteQueueDirectTests.m */,
+				DE9DF65714608E9500E3B436 /* DeleteQueueProxyTests.h */,
+				DE9DF65814608E9500E3B436 /* DeleteQueueProxyTests.m */,
+			);
+			name = Queue;
+			sourceTree = "<group>";
+		};
+		DE9DF65B14608F3C00E3B436 /* Queue Message */ = {
+			isa = PBXGroup;
+			children = (
+				DE9DF648146076FE00E3B436 /* FetchQueueMessagesDirectTests.h */,
+				DE9DF649146076FE00E3B436 /* FetchQueueMessagesDirectTests.m */,
+			);
+			name = "Queue Message";
+			sourceTree = "<group>";
+		};
+		DE9DF66514609C3500E3B436 /* Container */ = {
+			isa = PBXGroup;
+			children = (
+				DE9DF65C146090DF00E3B436 /* FetchContainersDirectTests.h */,
+				DE9DF65D146090DF00E3B436 /* FetchContainersDirectTests.m */,
+				DE9DF65F1460981F00E3B436 /* AddContainerDirectTests.h */,
+				DE9DF6601460982000E3B436 /* AddContainerDirectTests.m */,
+				DE9DF66214609AAC00E3B436 /* DeleteContainerDirectTests.h */,
+				DE9DF66314609AAC00E3B436 /* DeleteContainerDirectTests.m */,
+			);
+			name = Container;
+			sourceTree = "<group>";
+		};
+		DE9DF66C1460A39F00E3B436 /* Blob */ = {
+			isa = PBXGroup;
+			children = (
+				DE9DF66614609C8F00E3B436 /* AddBlobDirectTests.h */,
+				DE9DF66714609C8F00E3B436 /* AddBlobDirectTests.m */,
+				DE9DF66914609F3800E3B436 /* FetchBlobsDirectTests.h */,
+				DE9DF66A14609F3900E3B436 /* FetchBlobsDirectTests.m */,
+			);
+			name = Blob;
+			sourceTree = "<group>";
+		};
+		DEC25CDC1460E8CD0025DDE3 /* Table */ = {
+			isa = PBXGroup;
+			children = (
+				DE9DF66D1460A7D400E3B436 /* FetchTablesDirectTests.h */,
+				DE9DF66E1460A7D400E3B436 /* FetchTablesDirectTests.m */,
+				DE9DF6701460E3C300E3B436 /* AddTableDirectTests.h */,
+				DE9DF6711460E3C300E3B436 /* AddTableDirectTests.m */,
+				DEC25CD61460E6400025DDE3 /* DeleteTableDirectTests.h */,
+				DEC25CD71460E6400025DDE3 /* DeleteTableDirectTests.m */,
+			);
+			name = Table;
+			sourceTree = "<group>";
+		};
+		DEC25CEC1460F8C40025DDE3 /* Entity */ = {
+			isa = PBXGroup;
+			children = (
+				DEC25CE01460EBF10025DDE3 /* FetchEntityDirectTests.h */,
+				DEC25CE11460EBF10025DDE3 /* FetchEntityDirectTests.m */,
+				DEC25CDD1460E9450025DDE3 /* InsertEntityDirectTests.h */,
+				DEC25CDE1460E9460025DDE3 /* InsertEntityDirectTests.m */,
+				DEC25CE31460F03F0025DDE3 /* UpdateEntityDirectTests.h */,
+				DEC25CE41460F0400025DDE3 /* UpdateEntityDirectTests.m */,
+				DEC25CE61460F56E0025DDE3 /* MergeEntityDirectTests.h */,
+				DEC25CE71460F56F0025DDE3 /* MergeEntityDirectTests.m */,
+				DEC25CE91460F7390025DDE3 /* DeleteEntityDirectTests.h */,
+				DEC25CEA1460F73A0025DDE3 /* DeleteEntityDirectTests.m */,
+			);
+			name = Entity;
+			sourceTree = "<group>";
+		};
 		DEF68FE114082266006FF7E5 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -378,16 +531,9 @@
 		F4F998FB138DC6C200254B51 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
-				F4F99902138DC6C200254B51 /* watoolkitios_lib_test.h */,
-				F4F99904138DC6C200254B51 /* watoolkitios_lib_test.m */,
+				DE9DF643146044B100E3B436 /* Integration */,
 				DEF69018140827D4006FF7E5 /* Base64Tests.h */,
 				DEF69019140827D4006FF7E5 /* Base64Tests.m */,
-				DE4DD584142A4FE200D03B75 /* TableTests.h */,
-				DE4DD585142A4FE200D03B75 /* TableTests.m */,
-				DE2A2F0C142A91A2005467BE /* BlobTests.h */,
-				DE2A2F0D142A91A2005467BE /* BlobTests.m */,
-				F4F99915138DC8FD00254B51 /* WACloudStorageClientDelegate.h */,
-				F4F99916138DC8FD00254B51 /* WACloudStorageClientDelegate.m */,
 				DEF68FE114082266006FF7E5 /* Frameworks */,
 				F4F998FC138DC6C200254B51 /* Supporting Files */,
 				F41F8F4513980285005986CF /* Resources */,
@@ -455,6 +601,7 @@
 				27E7D6891345118600F142F7 /* Headers */,
 				27E7D68A1345118600F142F7 /* Sources */,
 				27E7D68B1345118600F142F7 /* Frameworks */,
+				DEF0D451145880B3005B920B /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -489,6 +636,9 @@
 /* Begin PBXProject section */
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0410;
+			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "watoolkitios-lib" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
@@ -523,6 +673,19 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		DEF0D451145880B3005B920B /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "KEYWORDS=\"TODO:|FIXME:|\\?\\?\\?:|\\!\\!\\!:\"\nfind \"${SRCROOT}\" \\( -name \"*.h\" -or -name \"*.m\" \\) -print0 | xargs -0 egrep --with-filename --line-number --only-matching \"($KEYWORDS).*\\$\" | perl -p -e \"s/($KEYWORDS)/ warning: \\$1/\"";
+		};
 		F4F998F5138DC6C100254B51 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -576,11 +739,29 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F4F99905138DC6C200254B51 /* watoolkitios_lib_test.m in Sources */,
 				F4F99917138DC8FD00254B51 /* WACloudStorageClientDelegate.m in Sources */,
 				DEF6901A140827D4006FF7E5 /* Base64Tests.m in Sources */,
-				DE4DD586142A4FE200D03B75 /* TableTests.m in Sources */,
-				DE2A2F0E142A91A2005467BE /* BlobTests.m in Sources */,
+				DE9615B9145F3006005BEB1B /* WABaseTestCase.m in Sources */,
+				DE9DF647146044E700E3B436 /* FetchQueuesDirectTests.m in Sources */,
+				DE9DF64A146076FE00E3B436 /* FetchQueueMessagesDirectTests.m in Sources */,
+				DE9DF64D14607AE900E3B436 /* AddQueueDirectTests.m in Sources */,
+				DE9DF6501460877500E3B436 /* DeleteQueueDirectTests.m in Sources */,
+				DE9DF6531460896300E3B436 /* FetchQueuesProxyTests.m in Sources */,
+				DE9DF65614608CDF00E3B436 /* AddQueueProxyTests.m in Sources */,
+				DE9DF65914608E9600E3B436 /* DeleteQueueProxyTests.m in Sources */,
+				DE9DF65E146090DF00E3B436 /* FetchContainersDirectTests.m in Sources */,
+				DE9DF6611460982000E3B436 /* AddContainerDirectTests.m in Sources */,
+				DE9DF66414609AAC00E3B436 /* DeleteContainerDirectTests.m in Sources */,
+				DE9DF66814609C8F00E3B436 /* AddBlobDirectTests.m in Sources */,
+				DE9DF66B14609F3900E3B436 /* FetchBlobsDirectTests.m in Sources */,
+				DE9DF66F1460A7D500E3B436 /* FetchTablesDirectTests.m in Sources */,
+				DE9DF6721460E3C400E3B436 /* AddTableDirectTests.m in Sources */,
+				DEC25CDB1460E6490025DDE3 /* DeleteTableDirectTests.m in Sources */,
+				DEC25CDF1460E9470025DDE3 /* InsertEntityDirectTests.m in Sources */,
+				DEC25CE21460EBF30025DDE3 /* FetchEntityDirectTests.m in Sources */,
+				DEC25CE51460F0410025DDE3 /* UpdateEntityDirectTests.m in Sources */,
+				DEC25CE81460F5710025DDE3 /* MergeEntityDirectTests.m in Sources */,
+				DEC25CEB1460F73C0025DDE3 /* DeleteEntityDirectTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -620,7 +801,6 @@
 				INSTALL_PATH = "\"$(BUILT_PRODUCTS_DIR)\"";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				OTHER_LDFLAGS = "";
-				PREBINDING = NO;
 				PRODUCT_NAME = watoolkitios;
 				PUBLIC_HEADERS_FOLDER_PATH = "$(TARGET_NAME)";
 				RUN_CLANG_STATIC_ANALYZER = YES;
@@ -635,13 +815,11 @@
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEPLOYMENT_LOCATION = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				HEADER_SEARCH_PATHS = "/usr/include/libxml2/**";
 				INSTALL_PATH = "\"$(BUILT_PRODUCTS_DIR)\"";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				OTHER_LDFLAGS = "";
-				PREBINDING = NO;
 				PRODUCT_NAME = watoolkitios;
 				PUBLIC_HEADERS_FOLDER_PATH = "$(TARGET_NAME)";
 				RUN_CLANG_STATIC_ANALYZER = YES;
@@ -659,7 +837,6 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
-				PREBINDING = NO;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -675,7 +852,6 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				PREBINDING = NO;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

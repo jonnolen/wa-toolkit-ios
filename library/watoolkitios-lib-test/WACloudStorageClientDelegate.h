@@ -18,16 +18,17 @@
 #import "WACloudStorageClient.h"
 
 @interface WACloudStorageClientDelegate : NSObject <WACloudStorageClientDelegate> {
+@private
 	id _result;
 	BOOL _complete;
-	NSError* _error;
-	WACloudStorageClient* _client;
+	NSError *_error;
+	WACloudStorageClient *_client;
 }
 
 - (void)waitForResponse;
-- (id)getResponse:(NSError**)error;
+- (id)getResponse:(NSError **)error;
 - (void)markAsComplete;
 
-+ (WACloudStorageClientDelegate*) createDelegateForClient:(WACloudStorageClient*)client;
++ (WACloudStorageClientDelegate *)createDelegateForClient:(WACloudStorageClient *)client;
 
 @end

@@ -19,8 +19,6 @@
 #import "ServiceCall.h"
 #import "Azure_Storage_ClientAppDelegate.h"
 
-#import "WAToolkit.h"
-
 @implementation AcsRegisterViewController
 
 @synthesize usernameField;

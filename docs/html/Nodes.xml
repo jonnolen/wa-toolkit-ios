@@ -14,10 +14,6 @@
           <Path>interfaceWAAuthenticationCredential.html</Path>
          </Node>
          <Node>
-          <Name>&lt;WAAuthenticationDelegate&gt;</Name>
-          <Path>protocolWAAuthenticationDelegate-p.html</Path>
-         </Node>
-         <Node>
           <Name>WABlob</Name>
           <Path>interfaceWABlob.html</Path>
          </Node>
@@ -28,6 +24,10 @@
          <Node>
           <Name>WACloudAccessControlClient</Name>
           <Path>interfaceWACloudAccessControlClient.html</Path>
+         </Node>
+         <Node>
+          <Name>WACloudAccessToken</Name>
+          <Path>interfaceWACloudAccessToken.html</Path>
          </Node>
          <Node>
           <Name>WACloudStorageClient</Name>
@@ -46,8 +46,16 @@
           <Path>interfaceWAQueueMessage.html</Path>
          </Node>
          <Node>
+          <Name>WAResultContinuation</Name>
+          <Path>interfaceWAResultContinuation.html</Path>
+         </Node>
+         <Node>
           <Name>WATableEntity</Name>
           <Path>interfaceWATableEntity.html</Path>
+         </Node>
+         <Node>
+          <Name>WATableFetchRequest</Name>
+          <Path>interfaceWATableFetchRequest.html</Path>
          </Node>
         </Subnodes>
        </Node>

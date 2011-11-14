@@ -18,59 +18,169 @@
 
 @class WACloudAccessToken;
 
-/*! When used with the proxy service, the authentication delegate returns indication whether the login was successful. */
+/*
+ When used with the proxy service, the authentication delegate returns indication whether the login was successful. 
+ */
 @protocol WAAuthenticationDelegate <NSObject>
+
+/**
+ Sent to the delegate when the login succeeds for the proxy service.
+ */
 - (void)loginDidSucceed;
+
+/**
+ Sent to the delegate when the login succeeds for the proxy service.
+ 
+ @param error An NSError object describing the error that occurred.
+ */
 - (void)loginDidFailWithError:(NSError *)error;
+
+
 @end
 
-/*! The AuthenticationCredential class is used to create an authentication object that can be passed to the CloudStorageClient.  This class can be initialized using a Windows Azure account name and key, or with a proxy server URL, username, and password. */
+/** 
+ A class that represents an authentication object that can be passed to the WACloudStorageClient. The class can be initialized using a Windows Azure account name and key, or with a proxy server URL, username, and password. 
+ 
+ @see WACloudStorageClient
+ */
 @interface WAAuthenticationCredential : NSObject <NSXMLParserDelegate>
 {
 @private
-	BOOL					_usesProxy;
-	//BOOL					_loggedIn;
-	NSError					*_authError;
-	NSURL					*_proxyURL;
-	NSString				*_token;
-	NSString				*_accountName;
-	NSString				*_accessKey;
-	NSString				*_username;
-	NSString				*_password;
-	NSString				*_tableServiceURL;
-	NSString				*_blobServiceURL;
-	WACloudAccessToken		*_accessToken;
+	BOOL _usesProxy;
+	NSError *_authError;
+	NSURL *_proxyURL;
+	NSString *_token;
+	NSString *_accountName;
+	NSString *_accessKey;
+	NSString *_username;
+	NSString *_password;
+	NSString *_tableServiceURL;
+	NSString *_blobServiceURL;
+	WACloudAccessToken *_accessToken;
 }
 
-/*! Boolean value indicating whether this authentication credential uses the proxy service. */
+/**
+ Determines whether this authentication credential uses a proxy service.
+ The default value is NO.
+ */
 @property (readonly) BOOL usesProxy;
-/*! URL of the proxy service. */
+
+/**
+ The URL of the proxy service.
+ 
+ @see NSURL
+ */
 @property (nonatomic, readonly) NSURL *proxyURL;
-/*! Session token returns from authentication with the proxy service. */
+
+/**
+ The seesion token returned from authentication with the proxy service.
+ */
 @property (nonatomic, readonly) NSString *token;
 
-/*! Account name, if used directly against the Windows Azure blob/table storage.*/
+/**
+ The account name for Windows Azure storage or nil if not authenticating directly.
+ */
 @property (nonatomic, readonly) NSString *accountName;
-/*! Access key, if used directly against the Windows Azure blob/table storage */
+
+/**
+ The account access key for Windows Azure storage or nil if not authenticating directly.
+ */
 @property (nonatomic, readonly) NSString *accessKey;
 
-/*! URL of the table service endpoint, if used with the proxy service */
+/**
+ The URL of the table service endpoint, if authenticating with a proxy service.
+ */
 @property (nonatomic, readonly) NSString *tableServiceURL;
-/*! URL of the blob service endpoint, if used with the proxy service */
+
+/**
+ The URL of the blob service endpoint, if authenticating with a proxy service.
+ */
 @property (nonatomic, readonly) NSString *blobServiceURL;
 
-/*! Initialize a new instance of credentials with a Windows Azure account name and access key, obtained from the portal. */
-+ (WAAuthenticationCredential *)credentialWithAzureServiceAccount:(NSString*)accountName accessKey:(NSString*)accessKey;
+/**
+ Initializes a newly created WAAuthenticationCredential with a specified account name and access key obtained from the Windows Azure portal.
+ 
+ @param accountName The Windows Azure storage account name.
+ @param accessKey The access key for the given account.
+ 
+ @returns The newly initialized WAAuthenticationCredential object.
+ */
++ (WAAuthenticationCredential *)credentialWithAzureServiceAccount:(NSString *)accountName accessKey:(NSString *)accessKey;
 
-/*! Initialize a new instance of credentials using a proxy URL, supplying the username and password.*/
+/**
+ Initializes a newly created WAAuthenticationCredential with a specified proxy URL, the user name and password for the proxy service, and an NSError object that will contain the error information if the authentication fails.
+ 
+ @param proxyURL The URL address of the proxy service.
+ @param user The user name for the proxy service.
+ @param password The password for the proxy service.
+ @param returnError An NSError object that will contain the error if the authentication fails.
+ 
+ @returns The newly initialized WAAuthenticationCredential object.
+ 
+ @see NSURL
+ @see NSError
+ */
 + (WAAuthenticationCredential *)authenticateCredentialSynchronousWithProxyURL:(NSURL *)proxyURL user:(NSString *)user password:(NSString *)password error:(NSError **)returnError;
-/*! Initialize a new instance of credentials using a proxy URL, supplying the username and password, and explictly supplying the URLs for the table and blob storage endpoints.*/
+
+/**
+ Initializes a newly created WAAuthenticationCredential with a specified proxy URL, the table service URL, the blob service URL, the user name and password for the proxy service, and an NSError object that will contain the error information if the authentication fails.
+ 
+ @param proxyURL The URL address of the proxy service.
+ @param tablesURL The URL address of the table service.
+ @param blobsURL The URL address of the blob service.
+ @param user The user name for the proxy service.
+ @param password The password for the proxy service.
+ @param returnError An NSError object that will contain the error if the authentication fails.
+ 
+ @returns The newly initialized WAAuthenticationCredential object.
+ 
+ @see NSURL
+ @see NSError
+ */
 + (WAAuthenticationCredential *)authenticateCredentialSynchronousWithProxyURL:(NSURL *)proxyURL tableServiceURL:(NSURL *)tablesURL blobServiceURL:(NSURL *)blobsURL user:(NSString *)user password:(NSString *)password error:(NSError **)returnError;
-/*! Initialize a new instance of credentials using a proxy URL, supplying the username and password.*/
+
+
+/**
+ Initializes a newly created WAAuthenticationCredential with a specified proxy URL, the user name and password for the proxy service, and a delegate to callback when authentication completes.
+ 
+ @param proxyURL The URL address of the proxy service.
+ @param user The user name for the proxy service.
+ @param password The password for the proxy service.
+ @param delegate The delegate to use.
+ 
+ @returns The newly initialized WAAuthenticationCredential object.
+ 
+ @see NSURL
+ @see WAAuthenticationDelegate
+ */
 + (WAAuthenticationCredential *)authenticateCredentialWithProxyURL:(NSURL *)proxyURL user:(NSString *)user password:(NSString *)password delegate:(id<WAAuthenticationDelegate>)delegate;
-/*! Initialize a new instance of credentials using a proxy URL, supplying the username and password.*/
-+ (WAAuthenticationCredential *)authenticateCredentialWithProxyURL:(NSURL *)proxyURL user:(NSString *)user password:(NSString *)password withCompletionHandler:(void (^)(NSError*))block;
-/*! Initialize a new instance of credentials using a proxy URL, supplying an ACS access token.*/
-+ (WAAuthenticationCredential *)authenticateCredentialWithProxyURL:(NSURL *)proxyURL accessToken:(WACloudAccessToken*)accessToken;
+
+/**
+ Initializes a newly created WAAuthenticationCredential with a specified proxy URL, the user name and password for the proxy service.
+ 
+ @param proxyURL The URL address of the proxy service.
+ @param user The user name for the proxy service.
+ @param password The password for the proxy service.
+ @param block A block object that is called with the authentication completes. The block will contain an NSError
+ 
+ @returns The newly initialized WAAuthenticationCredential object.
+ 
+ @see NSURL
+ @see NSError
+ */
++ (WAAuthenticationCredential *)authenticateCredentialWithProxyURL:(NSURL *)proxyURL user:(NSString *)user password:(NSString *)password withCompletionHandler:(void (^)(NSError *error))block;
+
+/**
+ Initializes a newly created WAAuthenticationCredential with a specified proxy URL and access token. The access token is the result of using Windows Azure Access Control Service.
+ 
+ @param proxyURL The URL address of the proxy service.
+ @param accessToken The WACloudAccessToken used to authenticate.
+ 
+ @returns The newly initialized WAAuthenticationCredential object.
+ 
+ @see NSURL
+ @see WACloudAccessToken
+ */
++ (WAAuthenticationCredential *)authenticateCredentialWithProxyURL:(NSURL *)proxyURL accessToken:(WACloudAccessToken *)accessToken;
 
 @end

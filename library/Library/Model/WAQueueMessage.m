@@ -25,15 +25,21 @@
 @synthesize popReceipt = _popReceipt;
 @synthesize timeNextVisible = _timeNextVisible;
 @synthesize messageText = _messageText;
+@synthesize dequeueCount = _dequeueCount;
 
 - (id)initQueueMessageWithMessageId:(NSString *)messageId insertionTime:(NSString *)insertionTime expirationTime:(NSString *)expirationTime popReceipt:(NSString *)popReceipt timeNextVisible:(NSString *)timeNextVisible messageText:(NSString *)messageText {
+    return [self initQueueMessageWithMessageId:messageId insertionTime:insertionTime expirationTime:expirationTime popReceipt:popReceipt timeNextVisible:timeNextVisible messageText:messageText dequeueCount:0];
+}
+
+- (id)initQueueMessageWithMessageId:(NSString *)messageId insertionTime:(NSString *)insertionTime expirationTime:(NSString *)expirationTime popReceipt:(NSString *)popReceipt timeNextVisible:(NSString *)timeNextVisible messageText:(NSString *)messageText dequeueCount:(NSInteger)dequeueCount{
 	if ((self = [super init])) {
-        _messageId = [messageId retain];
-        _insertionTime = [insertionTime retain];
-        _expirationTime = [expirationTime retain];
-		_popReceipt = [popReceipt retain];
-        _timeNextVisible = [timeNextVisible retain];
-		
+        _messageId = [messageId copy];
+        _insertionTime = [insertionTime copy];
+        _expirationTime = [expirationTime copy];
+		_popReceipt = [popReceipt copy];
+        _timeNextVisible = [timeNextVisible copy];
+		_dequeueCount = dequeueCount;
+        
 		NSData* data = [messageText dataWithBase64DecodedString];
         self.messageText = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
     }    
@@ -42,7 +48,7 @@
 
 
 - (NSString*) description {
-    return [NSString stringWithFormat:@"QueueMessage { messageId = %@, insertionTime = %@, expirationTime = %@, popReceipt = %@, timeNextVisible = %@, messageText = %@ }", _messageId, _insertionTime, _expirationTime, _popReceipt, _timeNextVisible, _messageText];
+    return [NSString stringWithFormat:@"QueueMessage { messageId = %@, insertionTime = %@, expirationTime = %@, popReceipt = %@, timeNextVisible = %@, messageText = %@ dequeueCount = %d }", _messageId, _insertionTime, _expirationTime, _popReceipt, _timeNextVisible, _messageText, _dequeueCount];
 }
 
 - (void) dealloc {
@@ -53,6 +59,7 @@
 	[_expirationTime release];
 	[_popReceipt release];
 	[_timeNextVisible release];
+    
     [super dealloc];
 }
 

@@ -16,15 +16,31 @@
 
 #import <Foundation/Foundation.h>
 
-/*! Queue is a class used to represent queues within Windows Azure Queue. */
-@interface WAQueue : NSObject 
+/**
+ A class that represents a Windows Azure queue.
+ */
+@interface WAQueue : NSObject
 
-/*! Name of the queue object */
+/**
+ The name of the queue.
+ */
 @property (copy) NSString *queueName;
-/*! URL of the queue object */
+
+/**
+ The address of the queue.
+ 
+ @see NSURL
+ */
 @property (readonly) NSURL *URL;
 
-/*! Intialize a new queue with the name, URL */
+/**
+ Initializes a newly created WAQueue with a specified name and URL.
+ 
+ @param queueName The name of the queue.
+ @param URL The URL for the queue.
+ 
+ @returns The newly initialized WAQueue object.
+ */
 - (id)initQueueWithName:(NSString *)queueName URL:(NSString *)URL;
 
 @end

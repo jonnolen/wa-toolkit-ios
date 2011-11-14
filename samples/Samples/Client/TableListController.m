@@ -16,13 +16,12 @@
 
 #import "TableListController.h"
 #import "Azure_Storage_ClientAppDelegate.h"
-#import "CreateTableController.h"
 #import "EntityListController.h"
 #import "BlobViewerController.h"
 #import "UIViewController+ShowError.h"
 #import "WAConfiguration.h"
 
-#define MAX_ROWS 7
+#define MAX_ROWS 20
 
 #define ENTITY_TYPE_TABLE 1
 #define ENTITY_TYPE_QUEUE 2
@@ -36,9 +35,11 @@ typedef enum {
 
 @interface TableListController()
 
-- (BOOL)canModify;
 - (StorageType)storageType;
 - (void)fetchData;
+- (void)showAddButton;
+- (void)showActivity;
+- (NSComparisonResult)compareNameWithLastMarker:(NSString *)name;
 
 @end
 
@@ -86,10 +87,8 @@ typedef enum {
 
 	storageClient = nil;
 
-	if([self canModify])
-	{
-		self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(modifyStorage:)] autorelease];
-	}
+    [self showAddButton];
+    
     _localStorageList = [[NSMutableArray alloc] initWithCapacity:MAX_ROWS];
 }
 
@@ -135,7 +134,8 @@ typedef enum {
 - (IBAction)modifyStorage:(id)sender
 {
 	CreateTableController *newController = [[CreateTableController alloc] initWithNibName:@"CreateTableController" bundle:nil];
-	
+	newController.delegate = self;
+    
 	switch ([self storageType]) {
 		case TableStorage: {
 			newController.navigationItem.title = @"Create Table";
@@ -183,31 +183,10 @@ typedef enum {
 	}
 }
 
-- (BOOL)canModify
-{
-	WAConfiguration *config = [WAConfiguration sharedConfiguration];
-	
-	switch([self storageType]) {
-		case TableStorage: {
-			return YES;
-		}
-			
-		case QueueStorage: {
-			return YES;
-		}
-			
-		case BlobStorage: {
-			return (config.connectionType == WAConnectDirect);
-		}
-			
-		default: {
-			return (self.selectedContainer != nil);
-		}
-	}
-}
-
 - (void)fetchData
 {
+    [self showActivity];
+    
     switch([self storageType]) {
 		case TableStorage: {
             [storageClient fetchTablesWithContinuation:self.resultContinuation];
@@ -228,6 +207,19 @@ typedef enum {
             break;
         }
     }
+}
+
+- (void)showAddButton
+{
+    self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(modifyStorage:)] autorelease];
+}
+
+- (void)showActivity
+{
+    UIActivityIndicatorView *view = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+	self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithCustomView:view] autorelease];
+	[view startAnimating];
+	[view release];
 }
 
 #pragma mark - Table view data source
@@ -363,7 +355,7 @@ typedef enum {
         return NO;
     }
 
-	return [self canModify];
+	return YES;
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
@@ -388,10 +380,7 @@ typedef enum {
 	self.tableView.allowsSelection = NO;
 	self.navigationItem.backBarButtonItem.enabled = NO;
 	
-	UIActivityIndicatorView *view = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
-	self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithCustomView:view] autorelease];
-	[view startAnimating];
-	[view release];
+	[self showActivity];
     
 	switch([self storageType]) {
 		case TableStorage: {
@@ -425,11 +414,12 @@ typedef enum {
 	}
 }
 
-#pragma mark - CloudStorageClientDelegate Methods
+#pragma mark - WACloudStorageClientDelegate Methods
 
 - (void)storageClient:(WACloudStorageClient *)client didFailRequest:request withError:error
 {
 	[self showError:error];
+    [self showAddButton];
 }
 
 - (void)storageClient:(WACloudStorageClient *)client didFetchTables:(NSArray *)tables withResultContinuation:(WAResultContinuation *)resultContinuation
@@ -443,6 +433,7 @@ typedef enum {
     self.resultContinuation = resultContinuation;
     [self.localStorageList addObjectsFromArray:tables];
 	[self.tableView reloadData];
+    [self showAddButton];
 }
 
 - (void)storageClient:(WACloudStorageClient *)client didFetchBlobContainers:(NSArray *)containers withResultContinuation:(WAResultContinuation *)resultContinuation
@@ -451,6 +442,7 @@ typedef enum {
     self.resultContinuation = resultContinuation;
     [self.localStorageList addObjectsFromArray:containers];
 	[self.tableView reloadData];
+    [self showAddButton];
 }
 
 - (void)storageClient:(WACloudStorageClient *)client didFetchBlobs:(NSArray *)blobs inContainer:(WABlobContainer *)container withResultContinuation:(WAResultContinuation *)resultContinuation
@@ -459,6 +451,7 @@ typedef enum {
     self.resultContinuation = resultContinuation;
     [self.localStorageList addObjectsFromArray:blobs];
 	[self.tableView reloadData];
+    [self showAddButton];
 }
 
 - (void)storageClient:(WACloudStorageClient *)client didFetchQueues:(NSArray *)queues withResultContinuation:(WAResultContinuation *)resultContinuation
@@ -467,7 +460,49 @@ typedef enum {
     self.resultContinuation = resultContinuation;
     [self.localStorageList addObjectsFromArray:queues];
 	[self.tableView reloadData];
+    [self showAddButton];
 }
 
+#pragma mark - CreateTableControllerDelegate Methods
+- (NSComparisonResult)compareNameWithLastMarker:(NSString *)name
+{
+    if (_resultContinuation == nil || _resultContinuation.nextMarker == nil) {
+        return NSOrderedAscending;
+    }
+    
+    NSString *marker = _resultContinuation.nextMarker;
+    NSArray *listItems = [marker componentsSeparatedByString:@"/"];
+    NSString *last = [listItems lastObject];
+    NSComparisonResult result = [name compare:last];
+    return result;
+}
 
+- (void)createTableController:(CreateTableController *)controller didAddTableNamed:(NSString *)name
+{
+    [self.localStorageList addObject:name];
+    [self.tableView reloadData];
+}
+
+- (void)createTableController:(CreateTableController *)controller didAddQueueNamed:(NSString *)name
+{
+    NSComparisonResult result = [self compareNameWithLastMarker:name];
+    if (result == NSOrderedAscending) {
+        WAQueue *queue = [[WAQueue alloc] initQueueWithName:name URL:nil];
+        [self.localStorageList addObject:queue];
+        [queue release];
+        [self.tableView reloadData];
+    }
+}
+
+- (void)createTableController:(CreateTableController *)controller didAddContainerNamed:(NSString *)name
+{
+    NSComparisonResult result = [self compareNameWithLastMarker:name];
+    if (result == NSOrderedAscending) {
+        WABlobContainer *container = [[WABlobContainer alloc] initContainerWithName:name];
+        [self.localStorageList addObject:container];
+        [container release];
+        [self.tableView reloadData];
+    }
+    
+}
 @end

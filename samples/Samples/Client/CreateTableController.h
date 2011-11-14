@@ -15,7 +15,8 @@
  */
 
 #import <UIKit/UIKit.h>
-#import "WAToolkit.h"
+
+@protocol CreateTableControllerDelegate;
 
 @interface CreateTableController : UIViewController <WACloudStorageClientDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIActionSheetDelegate>
 {
@@ -27,6 +28,7 @@
 	WACloudStorageClient *storageClient;
 	WABlobContainer *selectedContainer;
 	WAQueue *selectedQueue;
+    id<CreateTableControllerDelegate> delegate;
 }
 
 @property (nonatomic, retain) IBOutlet UITextField *newItemName;
@@ -35,7 +37,21 @@
 @property (nonatomic, retain) IBOutlet UILabel *nameLabel;
 @property (nonatomic, retain) WABlobContainer *selectedContainer;
 @property (nonatomic, retain) WAQueue *selectedQueue;
+@property (nonatomic, assign) id<CreateTableControllerDelegate> delegate;
 
 - (IBAction)createItem:(id)sender;
 - (IBAction)uploadDefaultImage:(id)sender;
+@end
+
+
+@protocol CreateTableControllerDelegate <NSObject>
+
+@optional
+
+- (void)createTableController:(CreateTableController *)controller didAddQueueNamed:(NSString *)name;
+- (void)createTableController:(CreateTableController *)controller didAddContainerNamed:(NSString *)name;
+- (void)createTableController:(CreateTableController *)controller didAddBlobNamed:(NSString *)name toContainerNamed:(NSString *)container;
+- (void)createTableController:(CreateTableController *)controller didAddTableNamed:(NSString *)name;
+
+
 @end

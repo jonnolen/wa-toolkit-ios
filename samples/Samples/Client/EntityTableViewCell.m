@@ -17,8 +17,6 @@
 #import "EntityTableViewCell.h"
 #import <stdarg.h>
 
-#import "WAToolkit.h"
-
 @interface KeyPair : NSObject {
 @private
 	NSString* _key;
@@ -83,6 +81,7 @@
 			[a addObject:[KeyPair keyPairWithKey:@"Expiration Time" value:[queueMessage expirationTime]]];
 			[a addObject:[KeyPair keyPairWithKey:@"Pop Receipt" value:[queueMessage popReceipt]]];
 			[a addObject:[KeyPair keyPairWithKey:@"Time Next Visible" value:[queueMessage timeNextVisible]]];
+            [a addObject:[KeyPair keyPairWithKey:@"Dequeue Count" value:[NSString stringWithFormat:@"%d", [queueMessage dequeueCount]]]];
 			[a addObject:[KeyPair keyPairWithKey:@"Message Text" value:[queueMessage messageText]]];
 		} else {
 			NSString *value = va_arg(args, NSString*);

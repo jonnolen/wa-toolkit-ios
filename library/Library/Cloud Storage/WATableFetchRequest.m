@@ -30,10 +30,9 @@
 @synthesize topRows = _topRows;
 @synthesize resultContinuation = _resultContinuation;
 
-- (id) initWithTable:(NSString*)tableName
+- (id) initWithTable:(NSString *)tableName
 {
-    if((self = [super init]))
-    {
+    if ((self = [super init])) {
         _tableName = [tableName copy];
     }
     
@@ -52,16 +51,15 @@
 }
 
 
-+ (WATableFetchRequest*)fetchRequestForTable:(NSString*)tableName
++ (WATableFetchRequest *)fetchRequestForTable:(NSString *)tableName
 {
     return [[[WATableFetchRequest alloc] initWithTable:tableName] autorelease];
 }
 
-+ (WATableFetchRequest*)fetchRequestForTable:(NSString*)tableName predicate:(NSPredicate*)predicate error:(NSError**)error
++ (WATableFetchRequest *)fetchRequestForTable:(NSString *)tableName predicate:(NSPredicate *)predicate error:(NSError **)error
 {
-    NSString* filter = [WAAzureFilterBuilder filterStringWithPredicate:predicate error:error];
-    if(!filter)
-    {
+    NSString *filter = [WAAzureFilterBuilder filterStringWithPredicate:predicate error:error];
+    if (!filter) {
         return nil;
     }
 
@@ -69,14 +67,14 @@
 		NSLog(@"Filter=%@", filter);
 	WA_END_LOGGING
     
-    WATableFetchRequest* request = [[[WATableFetchRequest alloc] initWithTable:tableName] autorelease];
+    WATableFetchRequest *request = [[[WATableFetchRequest alloc] initWithTable:tableName] autorelease];
     
     request.filter = filter;
     
     return request;
 }
 
-- (NSString*)endpoint
+- (NSString *)endpoint
 {
     NSMutableString *ep = [NSMutableString stringWithString:_tableName];
     

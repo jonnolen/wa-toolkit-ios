@@ -18,8 +18,6 @@
 #import "WAConfiguration.h"
 #import "StorageTypeSelector.h"
 
-#import "WAToolkit.h"
-
 @implementation Azure_Storage_ClientAppDelegate
 
 @synthesize window = _window;

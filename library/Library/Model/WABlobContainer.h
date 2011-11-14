@@ -16,19 +16,76 @@
 
 #import <Foundation/Foundation.h>
 
-/*! BlobContainer is a class used to represent blob containers within Windows Azure blob storage.*/
+extern NSString * const WAContainerPropertyKeyEtag;
+extern NSString * const WAContainerPropertyKeyLastModified;
+
+/**
+ A class that represents a Windows Azure blob container.
+ */
 @interface WABlobContainer : NSObject
 
-/*! Name of the blob container.*/
+/**
+ The name of the container.
+ */
 @property (copy) NSString *name;
-/*! URL of the blob container. */
+
+/**
+ The address of the container.
+ 
+ @see NSURL
+ */
 @property (readonly) NSURL *URL;
-/*! Metadata associated with the blob container. */
+
+/**
+ The container's metadata.
+ */
 @property (readonly) NSString *metadata;
 
-/*! Returns an WABlobContainer object initialized with a name of the container.*/
+/**
+ The properties for the container.
+ */
+@property (readonly) NSDictionary *properties;
+
+/**
+ Initializes a newly created WABlobContainer with a name.
+ 
+ @param name The name of the container.
+	
+ @returns The newly initialized WABlobContainer object.
+ */
 - (id)initContainerWithName:(NSString *)name;
-/*! Returns an WABlobContainer object initialized with a name, url and metadata of the container.*/
+
+/**
+ Initializes a newly created WABlobContainer with a name.
+ 
+ @param name The name of the container.
+ @param URL The address of the container.
+ 
+ @returns The newly initialized WABlobContainer object.
+ */
+- (id)initContainerWithName:(NSString *)name URL:(NSString *)URL;
+
+/**
+ Initializes a newly created WABlobContainer with a name, address and metadata for the container.
+ 
+ @param name The name of the container.
+ @param URL The address of the container.
+ @param metadata The container's metadata.
+ 
+ @returns The newly initialized WABlobContainer object.
+ */
 - (id)initContainerWithName:(NSString *)name URL:(NSString *)URL metadata:(NSString *)metadata;
-    
+
+/**
+ Initializes a newly created WABlobContainer with a name, address, metadata for the container.
+ 
+ @param name The name of the container.
+ @param URL The address of the container.
+ @param metadata The container's metadata.
+ @param properties The properties for the container.
+ 
+ @returns The newly initialized WABlobContainer object.
+ */
+- (id)initContainerWithName:(NSString *)name URL:(NSString *)URL metadata:(NSString *)metadata properties:(NSDictionary *)properties;
+
 @end

@@ -24,10 +24,10 @@
     NSArray* _emailSuffixes;
 }
 
-@property (readonly) NSString* name;
-@property (readonly) NSString* loginUrl;
-@property (readonly) NSString* logoutUrl;
-@property (readonly) NSString* imageUrl;
-@property (readonly) NSArray* emailSuffixes;
+@property (readonly) NSString *name;
+@property (readonly) NSString *loginUrl;
+@property (readonly) NSString *logoutUrl;
+@property (readonly) NSString *imageUrl;
+@property (readonly) NSArray *emailSuffixes;
 
 @end

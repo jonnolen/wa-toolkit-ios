@@ -23,8 +23,6 @@
 #import "AcsRegisterViewController.h"
 #import "Azure_Storage_ClientAppDelegate.h"
 
-#import "WAToolkit.h"
-
 @interface StorageTypeSelector()
 
 - (void)login:(id)sender;
@@ -157,8 +155,6 @@
 					return;
 				}
 				
-				NSString *entity = [NSString stringWithFormat:@"/RegistrationService/validate?incrementalSeed=%d", arc4random()];
-
 				self.navigationItem.leftBarButtonItem.enabled = NO;
 				tableStorage.enabled = NO;
 				blobStorage.enabled = NO;
@@ -169,9 +165,11 @@
 				self.navigationItem.rightBarButtonItem = item;
 				[activity startAnimating];
 				[activity release];
-				[item release];
+                [item release];
 				
-				[ServiceCall getFromURL:[config proxyURL:entity] withStringCompletionHandler:^(NSString* value, NSError *error) {
+                NSString *endpoint = [NSString stringWithString:@"/RegistrationService/validate"];
+                
+				[ServiceCall getFromURL:[config proxyURL:endpoint] withStringCompletionHandler:^(NSString* value, NSError *error) {
 					self.navigationItem.leftBarButtonItem.enabled = YES;
 					self.navigationItem.rightBarButtonItem = nil;
 					tableStorage.enabled = YES;

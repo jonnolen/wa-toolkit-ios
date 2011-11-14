@@ -202,9 +202,10 @@ void ignoreSSLErrorFor(NSString* host)
     if ([response respondsToSelector:@selector(allHeaderFields)]) {
 		NSDictionary *dictionary = [httpResponse allHeaderFields];
         WA_BEGIN_LOGGING_CUSTOM(WALoggingResponse)
+            NSLog(@"Status Code - %d", [httpResponse statusCode]);
             NSLog(@"Respone Headers: %@", [dictionary description]);
         WA_END_LOGGING
-        
+        _statusCode = [httpResponse statusCode];
         _nextPartitionKey = [[dictionary objectForKey:WANextPartitionKeyHeader] copy];
         _nextRowKey = [[dictionary objectForKey:WANextRowKeyHeader] copy];
         _nextTableKey = [[dictionary objectForKey:WANextTableKeyHeader] copy];
@@ -216,12 +217,9 @@ void ignoreSSLErrorFor(NSString* host)
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
 {
-	if(!_data)
-	{
+	if (!_data) {
 		_data = [data mutableCopy];
-	}
-	else 
-	{
+	} else {
 		[_data appendData:data];
 	}
 }
@@ -235,10 +233,8 @@ void ignoreSSLErrorFor(NSString* host)
 
 - (void)connection:(NSURLConnection *)connection didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
 {
-	if (proxyAddress && [challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust])
-	{
-		if ([challenge.protectionSpace.host isEqualToString:proxyAddress])
-		{
+	if (proxyAddress && [challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
+		if ([challenge.protectionSpace.host isEqualToString:proxyAddress]) {
 			NSURLCredential *credential = [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust];
 			[challenge.sender useCredential:credential forAuthenticationChallenge:challenge];
 		}
@@ -249,114 +245,107 @@ void ignoreSSLErrorFor(NSString* host)
 
 -(void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
-	if(_contentType && [_contentType compare:@"text/html" options:NSCaseInsensitiveSearch] == NSOrderedSame)
-	{
-		NSString* htmlStr = [[[NSString alloc] initWithData:_data encoding:NSUTF8StringEncoding] autorelease];
-		NSError* regexError;
-		NSError* contentError = nil;
-		NSRegularExpression* unauthorized = [NSRegularExpression regularExpressionWithPattern:@"401 - Unauthorized: (.*)</h2>"
-																					   options:0 
+	if (_contentType && [_contentType compare:@"text/html" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
+		NSString *htmlStr = [[[NSString alloc] initWithData:_data encoding:NSUTF8StringEncoding] autorelease];
+		NSError *regexError;
+		NSError *contentError = nil;
+		NSRegularExpression *message = [NSRegularExpression regularExpressionWithPattern:@"<h2>(.*?)<\\/h2>"
+																					   options:NSRegularExpressionDotMatchesLineSeparators 
 																						 error:&regexError];
-		NSTextCheckingResult* result = [unauthorized firstMatchInString:htmlStr options:0 range:NSMakeRange(0, htmlStr.length)];
+		NSTextCheckingResult *result = [message firstMatchInString:htmlStr options:0 range:NSMakeRange(0, htmlStr.length)];
 		int found = [result numberOfRanges];
-		if(found == 2)
-		{
+		if(found == 2) {
 			// need to convert this into an error...
 			NSRange r = [result rangeAtIndex:1];
-			NSString* msg = [htmlStr substringWithRange:r];
-			
-			contentError = [NSError errorWithDomain:@"CloudStorageClient" 
-											   code:401 
-										   userInfo:[NSDictionary dictionaryWithObjectsAndKeys:msg, NSLocalizedDescriptionKey, nil]];
+			NSString *msg = [htmlStr substringWithRange:r];
+			contentError = [NSError errorWithDomain:@"com.microsoft.WAToolkit" 
+											   code:-1 
+										   userInfo:[NSDictionary dictionaryWithObjectsAndKeys:
+                                                     msg, NSLocalizedDescriptionKey, 
+                                                     htmlStr, NSLocalizedFailureReasonErrorKey, nil]];
 		}
-
-		if(contentError)
-		{
+        
+		if (contentError) {
 			[self connection:connection didFailWithError:contentError];
 			return;
 		}
 	}
-	
-    if(_noResponseBlock)
-    {
-		WA_BEGIN_LOGGING_CUSTOM(WALoggingResponse)
-        if(_data)
-        {
-			NSString* xmlStr = [[NSString alloc] initWithData:_data encoding:NSUTF8StringEncoding];
-			NSLog(@"XML response: %@", xmlStr);
-			[xmlStr release];
+    
+    WA_BEGIN_LOGGING_CUSTOM(WALoggingResponse)
+        if (_data) {
+            NSString *xmlStr = [[NSString alloc] initWithData:_data encoding:NSUTF8StringEncoding];
+            NSLog(@"XML response: %@", xmlStr);
+            [xmlStr release];
         }
-		WA_END_LOGGING
-		
-        if(_data)
-        {
-            const char *baseURL = NULL;
-            const char *encoding = NULL;
-            
-            xmlDocPtr doc = xmlReadMemory([_data bytes], (int)[_data length], baseURL, encoding, (XML_PARSE_NOCDATA | XML_PARSE_NOBLANKS)); 
-            NSError* error = [WAXMLHelper checkForError:doc];
-            xmlFreeDoc(doc);
-            
-            if(error)
-            {
-                _noResponseBlock(self, error);
-#if USE_QUEUE
-				[self startNext];
-#endif
-                return;
-            }
-        }
-        
-        _noResponseBlock(self, nil);
+    WA_END_LOGGING
+    
+    BOOL continueToNext = YES;
+    
+    const char *baseURL = NULL;
+    const char *encoding = NULL;
+    
+    xmlDocPtr doc = NULL;
+    NSError *error = nil;
+    if (_data) {
+        doc = xmlReadMemory([_data bytes], (int)[_data length], baseURL, encoding, (XML_PARSE_NOCDATA | XML_PARSE_NOBLANKS)); 
+        error = [WAXMLHelper checkForError:doc];
     }
-	else if(_xmlBlock)
-	{
-        const char *baseURL = NULL;
-        const char *encoding = NULL;
-
-		WA_BEGIN_LOGGING_CUSTOM(WALoggingResponse)
-			NSString* xmlStr = [[NSString alloc] initWithData:_data encoding:NSUTF8StringEncoding];
-			NSLog(@"XML response: %@", xmlStr);
-			[xmlStr release];
-		WA_END_LOGGING
-        
-        xmlDocPtr doc = xmlReadMemory([_data bytes], (int)[_data length], baseURL, encoding, (XML_PARSE_NOCDATA | XML_PARSE_NOBLANKS)); 
-        
-        NSError* error = [WAXMLHelper checkForError:doc];
-
-        if(error)
-        {
-            _xmlBlock(self, nil, error);
+    
+    if (_statusCode == 401) {
+        NSString *message = nil;
+        if (doc) {
+            message = [WAXMLHelper getStringErrorValue:doc];
+        } else {
+            message = [NSHTTPURLResponse localizedStringForStatusCode:_statusCode];
         }
-        else
-        {
+        NSString *detail = [NSHTTPURLResponse localizedStringForStatusCode:_statusCode];        
+        NSError *contentError = [NSError errorWithDomain:@"com.microsoft.WAToolkit" 
+                                                    code:_statusCode
+                                                userInfo:[NSDictionary dictionaryWithObjectsAndKeys:
+                                                          message, NSLocalizedDescriptionKey, 
+                                                          detail, NSLocalizedFailureReasonErrorKey, nil]];
+        
+        if (contentError) {
+			[self connection:connection didFailWithError:contentError];
+		}
+        continueToNext = NO;
+    } else if (_noResponseBlock) {
+        if (error) {
+            _noResponseBlock(self, error);
+        } else {
+            _noResponseBlock(self, nil);
+        }
+    } else if (_xmlBlock) {   
+        if (error) {
+            _xmlBlock(self, nil, error);
+        } else {
             _xmlBlock(self, doc, nil);
         }
-		
-		xmlFreeDoc(doc);
+	} else if (_dataBlock) {
+        if (error) {
+            _dataBlock(self, nil, error);
+        } else {
+            _dataBlock(self, _data, nil);
+        }
 	}
-	else if(_dataBlock)
-	{
-        _dataBlock(self, _data, nil);
-	}
-
+    
+    if (doc) {
+        xmlFreeDoc(doc);
+    }
 #if USE_QUEUE
-    [self startNext];
+    if (continueToNext == YES) {
+        [self startNext];
+    }
 #endif
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
-    if(_noResponseBlock)
-    {
+    if (_noResponseBlock) {
         _noResponseBlock(self, error);
-    }
-	else if(_xmlBlock)
-	{
+    } else if (_xmlBlock) {
         _xmlBlock(self, nil, error);
-    }
-    else if(_dataBlock)
-    {
+    } else if(_dataBlock) {
         _dataBlock(self, nil, error);
     }
 
