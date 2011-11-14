@@ -494,15 +494,22 @@ typedef enum {
     }
 }
 
-- (void)createTableController:(CreateTableController *)controller didAddContainerNamed:(NSString *)name
+- (void)createTableController:(CreateTableController *)controller didAddContainer:(WABlobContainer *)container
 {
-    NSComparisonResult result = [self compareNameWithLastMarker:name];
+    NSComparisonResult result = [self compareNameWithLastMarker:container.name];
     if (result == NSOrderedAscending) {
-        WABlobContainer *container = [[WABlobContainer alloc] initContainerWithName:name];
         [self.localStorageList addObject:container];
-        [container release];
         [self.tableView reloadData];
     }
     
+}
+
+- (void)createTableController:(CreateTableController *)controller didAddBlob:(WABlob *)blob toContainer:(WABlobContainer *)container
+{
+    NSComparisonResult result = [self compareNameWithLastMarker:blob.name];
+    if (result == NSOrderedAscending) {
+        [self.localStorageList addObject:blob];
+        [self.tableView reloadData];
+    } 
 }
 @end

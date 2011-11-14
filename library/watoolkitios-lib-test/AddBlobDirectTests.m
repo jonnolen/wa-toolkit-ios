@@ -25,7 +25,8 @@
 {
     [super setUp];
     
-    [directClient addBlobContainerNamed:randomContainerNameString withCompletionHandler:^(NSError *error) {
+    WABlobContainer *container = [[[WABlobContainer alloc] initContainerWithName:randomContainerNameString] autorelease];
+    [directClient addBlobContainer:container withCompletionHandler:^(NSError *error) {
         STAssertNil(error, @"Error returned from addBlobContainer: %@",[error localizedDescription]);
         [directDelegate markAsComplete];
     }];
@@ -52,7 +53,10 @@
     __block WABlobContainer *mycontainer;
     [directClient fetchBlobContainerNamed:randomContainerNameString withCompletionHandler:^(WABlobContainer *container, NSError *error) {
         [directDelegate markAsComplete];
-        [directClient addBlobToContainer:container blobName:@"cloud.jpg" contentData:data contentType:@"image/jpeg" withCompletionHandler:^(NSError *error) {
+        WABlob *blob = [[[WABlob alloc] initBlobWithName:@"cloud.jpg" URL:nil] autorelease];
+        blob.contentType = @"image/jpeg";
+        blob.contentData = data;
+        [directClient addBlob:blob toContainer:container withCompletionHandler:^(NSError *error) {
             mycontainer = [container retain];
             STAssertNil(error, @"Error returned by addBlobToContainer: %@", [error localizedDescription]);
             [directDelegate markAsComplete];

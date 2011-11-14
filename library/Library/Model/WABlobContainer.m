@@ -23,49 +23,61 @@ NSString * const WAContainerPropertyKeyLastModified = @"Last-Modified";
 
 @synthesize name = _name;
 @synthesize URL = _URL;
-@synthesize metadata = _metadata;
 @synthesize properties = _properties;
+@synthesize sharedAccessSigniture = _sharedAccessSigniture;
+@synthesize metadata = _metadata;
 
 - (id)initContainerWithName:(NSString *)name 
 {
-    return [self initContainerWithName:name URL:nil metadata:nil];
+    return [self initContainerWithName:name URL:nil sharedAccessSigniture:nil];
 }
 
 - (id)initContainerWithName:(NSString *)name URL:(NSString *)URL
 {
-    return [self initContainerWithName:name URL:URL metadata:nil];
+    return [self initContainerWithName:name URL:URL sharedAccessSigniture:nil];
 }
 
-- (id)initContainerWithName:(NSString *)name URL:(NSString *)URL metadata:(NSString *)metadata 
+- (id)initContainerWithName:(NSString *)name URL:(NSString *)URL sharedAccessSigniture:(NSString *)sharedAccessSigniture
 {
-	
-    return [self initContainerWithName:name URL:URL metadata:metadata properties:nil];
+    return [self initContainerWithName:name URL:URL sharedAccessSigniture:sharedAccessSigniture properties:nil];
 }
 
-- (id)initContainerWithName:(NSString *)name URL:(NSString *)URL metadata:(NSString *)metadata properties:(NSDictionary *)properties
+- (id)initContainerWithName:(NSString *)name URL:(NSString *)URL sharedAccessSigniture:(NSString *)sharedAccessSigniture properties:(NSDictionary *)properties
 {
     if ((self = [super init])) {
         _name = [name copy];
         _URL = [[NSURL URLWithString:URL] retain];
-        _metadata = [metadata copy];
+        _sharedAccessSigniture = [sharedAccessSigniture copy];
         _properties = [properties retain];
+        _metadata = [[NSMutableDictionary alloc] initWithCapacity:5];
     }    
     return self;
 }
 
-- (void) dealloc 
+- (void)dealloc 
 {
     [_name release];
     [_URL release];
-    [_metadata release];
+    [_sharedAccessSigniture release];
     [_properties release];
+    [_metadata release];
     
     [super dealloc];
 }
 
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"BlobContainer { name = %@, url = %@, metadata = %@, properties = %@ }", _name, _URL, _metadata, _properties.description];
+    return [NSString stringWithFormat:@"BlobContainer { name = %@, url = %@, sharedAccessSigniture = %@, properties = %@, metadata %@}", _name, _URL, _sharedAccessSigniture, _properties.description, _metadata.description];
+}
+
+- (void)setValue:(NSString *)value forMetadataKey:(NSString *)key
+{
+    [_metadata setValue:value forKey:key];
+}
+
+- (void)removeMetadataForKey:(NSString *)key
+{
+    [_metadata removeObjectForKey:key];
 }
 
 @end

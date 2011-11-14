@@ -21,7 +21,7 @@
 
 @interface WABlobParser : NSObject
 
-+ (NSArray *)loadBlobs:(xmlDocPtr)doc container:(WABlobContainer *)container;
-+ (NSArray *)loadBlobsForProxy:(xmlDocPtr)doc container:(WABlobContainer *)container;
++ (NSArray *)loadBlobs:(xmlDocPtr)doc forContainerName:(NSString *)containerName;
++ (NSArray *)loadBlobsForProxy:(xmlDocPtr)doc forContainerName:(NSString *)containerName;
 
 @end

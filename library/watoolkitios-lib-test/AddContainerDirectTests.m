@@ -39,7 +39,8 @@
 
 -(void)testShouldAddContainerWithCompletionHandlerDirect
 {   
-    [directClient addBlobContainerNamed:randomContainerNameString withCompletionHandler:^(NSError *error) {
+    WABlobContainer *container = [[[WABlobContainer alloc] initContainerWithName:randomContainerNameString] autorelease];
+    [directClient addBlobContainer:container withCompletionHandler:^(NSError *error) {
         STAssertNil(error, @"Error returned from addBlobContainerNamed: %@",[error localizedDescription]);
         [directDelegate markAsComplete];
     }];

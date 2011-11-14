@@ -192,7 +192,7 @@ const int AUTHENTICATION_DELAY = 2;
 }
 
 #pragma mark -
-#pragma mark Request authentication methods
+#pragma mark Request authentication methods (Private)
 
 - (NSURL *)URLforEndpoint:(NSString *)endpoint forStorageType:(NSString *)storageType
 {
@@ -246,7 +246,7 @@ const int AUTHENTICATION_DELAY = 2;
     return serviceURL;
 }
 
-- (WACloudURLRequest *)authenticatedRequestWithURL:(NSURL *)serviceURL blobSemantics:(BOOL)blobSemantics queueSemantics:(BOOL)queueSemantics httpMethod:(NSString*)httpMethod contentData:(NSData *)contentData contentType:(NSString *)contentType args:(va_list)args
+- (WACloudURLRequest *)authenticatedRequestWithURL:(NSURL *)serviceURL blobSemantics:(BOOL)blobSemantics queueSemantics:(BOOL)queueSemantics httpMethod:(NSString*)httpMethod contentData:(NSData *)contentData contentType:(NSString *)contentType metadata:(NSDictionary *)metadata args:(va_list)args
 {
 	if (!serviceURL){
 		return nil;
@@ -256,6 +256,12 @@ const int AUTHENTICATION_DELAY = 2;
     
 	WACloudURLRequest *authenticatedrequest = [WACloudURLRequest requestWithURL:serviceURL];
     [authenticatedrequest setHTTPMethod:httpMethod];
+    if (metadata != nil) {
+    
+        [metadata enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+            [authenticatedrequest setValue:obj forHTTPHeaderField:[NSString stringWithFormat:@"x-ms-meta-%@", key]];
+        }];
+    }
     
     if (_usesProxy) {
 		[authenticatedrequest setValue:@"identity" forHTTPHeaderField:@"Accept-Encoding"];
@@ -273,7 +279,7 @@ const int AUTHENTICATION_DELAY = 2;
 		if (contentType) {
 			[authenticatedrequest addValue:contentType forHTTPHeaderField:@"Content-Type"];
 		}
-		
+        
 		if (contentData) {
 			[authenticatedrequest setHTTPBody:contentData];
 		}
@@ -334,7 +340,12 @@ const int AUTHENTICATION_DELAY = 2;
 	}
 	[headers addObject:[NSString stringWithFormat:@"x-ms-date:%@", dateString]];
     [headers addObject:@"x-ms-version:2009-09-19"];
-	[headers sortUsingSelector:@selector(compare:)];
+    if (metadata != nil) {
+        [metadata enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+            [headers addObject:[NSString stringWithFormat:@"x-ms-meta-%@:%@", key, obj]];
+        }];
+    }
+    [headers sortUsingSelector:@selector(compare:)];
 	
 	NSString *headerString = [headers componentsJoinedByString:@"\n"];        
 	NSMutableString *requestString;
@@ -404,67 +415,6 @@ const int AUTHENTICATION_DELAY = 2;
 	return authenticatedrequest;
 }
 
-- (WACloudURLRequest *)authenticatedRequestWithURL:(NSURL *)serviceURL forStorageType:(NSString *)storageType, ...
-{
-    va_list arg;
-    va_start(arg, storageType);
-    
-    BOOL blobSemantics = [[storageType lowercaseString] isEqualToString:@"blob"];
-    BOOL queueSemantics = [[storageType lowercaseString] isEqualToString:@"queue"];
-
-    WACloudURLRequest *request = [self authenticatedRequestWithURL:serviceURL 
-													 blobSemantics:blobSemantics
-													queueSemantics:queueSemantics
-														httpMethod:@"GET" 
-													   contentData:nil 
-													   contentType:nil
-															  args:arg];
-    va_end(arg);
-    
-    return request;
-}
-
-- (WACloudURLRequest *)authenticatedRequestWithURL:(NSURL *)serviceURL forStorageType:(NSString *)storageType httpMethod:(NSString*)httpMethod, ...
-{
-    va_list arg;
-    va_start(arg, httpMethod);
-    
-    BOOL blobSemantics = [[storageType lowercaseString] isEqualToString:@"blob"];
-    BOOL queueSemantics = [[storageType lowercaseString] isEqualToString:@"queue"];
-
-    WACloudURLRequest *request = [self authenticatedRequestWithURL:serviceURL 
-													 blobSemantics:blobSemantics
-													queueSemantics:queueSemantics
-														httpMethod:httpMethod 
-													   contentData:nil 
-													   contentType:nil
-															  args:arg];
-    va_end(arg);
-    
-    return request;
-}
-
-- (WACloudURLRequest *)authenticatedRequestWithURL:(NSURL *)serviceURL forStorageType:(NSString *)storageType httpMethod:(NSString*)httpMethod contentData:(NSData *)contentData contentType:(NSString*)contentType, ...
-{
-    va_list arg;
-    va_start(arg, contentType);
-
-    BOOL blobSemantics = [[storageType lowercaseString] isEqualToString:@"blob"];
-    BOOL queueSemantics = [[storageType lowercaseString] isEqualToString:@"queue"];
-    
-    WACloudURLRequest *request = [self authenticatedRequestWithURL:serviceURL 
-													 blobSemantics:blobSemantics
-													queueSemantics:queueSemantics
-														httpMethod:httpMethod 
-													   contentData:contentData 
-													   contentType:contentType
-															  args:arg];
-    va_end(arg);
-    
-    return request;
-}
-
-
 - (WACloudURLRequest *)authenticatedRequestWithEndpoint:(NSString *)endpoint forStorageType:(NSString *)storageType, ...
 {
     va_list arg;
@@ -475,12 +425,13 @@ const int AUTHENTICATION_DELAY = 2;
     NSURL *serviceURL = [self URLforEndpoint:endpoint forStorageType:storageType];
     
     WACloudURLRequest *request = [self authenticatedRequestWithURL:serviceURL 
-                                                   blobSemantics:blobSemantics
-                                                  queueSemantics:queueSemantics
-                                                      httpMethod:@"GET" 
-                                                     contentData:nil 
-                                                     contentType:nil
-                                                            args:arg];
+                                                     blobSemantics:blobSemantics
+                                                    queueSemantics:queueSemantics
+                                                        httpMethod:@"GET" 
+                                                       contentData:nil 
+                                                       contentType:nil 
+                                                          metadata:nil
+                                                              args:arg];
     
     va_end(arg);
     
@@ -495,14 +446,15 @@ const int AUTHENTICATION_DELAY = 2;
     BOOL blobSemantics = [[storageType lowercaseString] isEqualToString:@"blob"];
     BOOL queueSemantics = [[storageType lowercaseString] isEqualToString:@"queue"];
     NSURL *serviceURL = [self URLforEndpoint:endpoint forStorageType:storageType];
-
+    
     WACloudURLRequest* request = [self authenticatedRequestWithURL:serviceURL 
-                                                   blobSemantics:blobSemantics
-                                                  queueSemantics:queueSemantics
-                                                      httpMethod:httpMethod 
-                                                     contentData:nil 
-                                                     contentType:nil
-                                                            args:arg];
+                                                     blobSemantics:blobSemantics
+                                                    queueSemantics:queueSemantics
+                                                        httpMethod:httpMethod 
+                                                       contentData:nil 
+                                                       contentType:nil 
+                                                          metadata:nil
+                                                              args:arg];
     
     va_end(arg);
     
@@ -517,42 +469,44 @@ const int AUTHENTICATION_DELAY = 2;
     BOOL blobSemantics = [[storageType lowercaseString] isEqualToString:@"blob"];
     BOOL queueSemantics = [[storageType lowercaseString] isEqualToString:@"queue"];
     NSURL *serviceURL = [self URLforEndpoint:endpoint forStorageType:storageType];
-
-     WACloudURLRequest* request = [self authenticatedRequestWithURL:serviceURL 
-                                                    blobSemantics:blobSemantics
-                                                   queueSemantics:queueSemantics
-                                                       httpMethod:httpMethod 
-                                                      contentData:contentData 
-                                                      contentType:contentType
-                                                             args:arg];
+    
+    WACloudURLRequest* request = [self authenticatedRequestWithURL:serviceURL 
+                                                     blobSemantics:blobSemantics
+                                                    queueSemantics:queueSemantics
+                                                        httpMethod:httpMethod 
+                                                       contentData:contentData 
+                                                       contentType:contentType 
+                                                          metadata:nil
+                                                              args:arg];
     
     va_end(arg);
     
     return request;
 }
 
-- (WACloudURLRequest *)authenticatedBlobRequestWithURL:(NSURL *)serviceURL forStorageType:(NSString *)storageType httpMethod:(NSString*)httpMethod contentData:(NSData *)contentData contentType:(NSString*)contentType, ...
+- (WACloudURLRequest *)authenticatedRequestWithEndpoint:(NSString *)endpoint forStorageType:(NSString *)storageType httpMethod:(NSString*)httpMethod contentData:(NSData *)contentData contentType:(NSString*)contentType metadata:(NSDictionary *)metadata, ...
 {
-    
     va_list arg;
-    va_start(arg, contentType);
+    va_start(arg, metadata);
     
     BOOL blobSemantics = [[storageType lowercaseString] isEqualToString:@"blob"];
+    BOOL queueSemantics = [[storageType lowercaseString] isEqualToString:@"queue"];
+    NSURL *serviceURL = [self URLforEndpoint:endpoint forStorageType:storageType];
     
-    WACloudURLRequest *request = [self authenticatedRequestWithURL:serviceURL 
-													 blobSemantics:blobSemantics
-													queueSemantics:NO
-														httpMethod:httpMethod 
-													   contentData:contentData 
-													   contentType:contentType
-															  args:arg];
+    WACloudURLRequest* request = [self authenticatedRequestWithURL:serviceURL 
+                                                     blobSemantics:blobSemantics
+                                                    queueSemantics:queueSemantics
+                                                        httpMethod:httpMethod 
+                                                       contentData:contentData 
+                                                       contentType:contentType 
+                                                          metadata:metadata
+                                                              args:arg];
+    
     va_end(arg);
     
     return request;
 }
 
 #pragma mark -
-
-
 
 @end

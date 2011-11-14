@@ -67,7 +67,7 @@
 	Azure_Storage_ClientAppDelegate	*appDelegate = (Azure_Storage_ClientAppDelegate *)[[UIApplication sharedApplication] delegate];
 
 	storageClient = [[WACloudStorageClient storageClientWithCredential:appDelegate.authenticationCredential] retain];
-    NSString *contentType = [blob.properties objectForKey:WABlobPropertyKeyContentType];
+    NSString *contentType = blob.contentType;
     if ([contentType hasPrefix:@"image"]) {
 		[storageClient fetchBlobData:self.blob withCompletionHandler:^(NSData *imgData, NSError *error) {
 			UIImage *blobImage = [UIImage imageWithData:imgData];
