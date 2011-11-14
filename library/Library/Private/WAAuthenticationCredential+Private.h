@@ -23,15 +23,8 @@
 - (NSURL*)URLforEndpoint:(NSString *)endpoint forStorageType:(NSString *)storageType;
 
 - (WACloudURLRequest *)authenticatedRequestWithEndpoint:(NSString *)endpoint forStorageType:(NSString *)storageType, ... NS_REQUIRES_NIL_TERMINATION;
-- (WACloudURLRequest *)authenticatedRequestWithEndpoint:(NSString *)endpoint forStorageType:(NSString *)storageType httpMethod:(NSString*)httpMethod, ... NS_REQUIRES_NIL_TERMINATION;
-- (WACloudURLRequest *)authenticatedRequestWithEndpoint:(NSString *)endpoint forStorageType:(NSString *)storageType httpMethod:(NSString*)httpMethod contentData:(NSData *)contentData contentType:(NSString*)contentType, ... NS_REQUIRES_NIL_TERMINATION;
-- (WACloudURLRequest *)authenticatedRequestWithEndpoint:(NSString *)endpoint forStorageType:(NSString *)storageType httpMethod:(NSString*)httpMethod contentData:(NSData *)contentData contentType:(NSString*)contentType metadata:(NSDictionary *)metadata, ... NS_REQUIRES_NIL_TERMINATION;
-
-// TODO: Delet this code
-/*
-- (WACloudURLRequest *)authenticatedBlobRequestWithURL:(NSURL *)serviceURL forStorageType:(NSString *)storageType, ... NS_REQUIRES_NIL_TERMINATION;
-- (WACloudURLRequest *)authenticatedBlobRequestWithURL:(NSURL *)serviceURL forStorageType:(NSString *)storageType httpMethod:(NSString*)httpMethod, ... NS_REQUIRES_NIL_TERMINATION;
-- (WACloudURLRequest *)authenticatedBlobRequestWithURL:(NSURL *)serviceURL forStorageType:(NSString *)storageType httpMethod:(NSString*)httpMethod contentData:(NSData *)contentData contentType:(NSString*)contentType, ... NS_REQUIRES_NIL_TERMINATION;
-*/
+- (WACloudURLRequest *)authenticatedRequestWithEndpoint:(NSString *)endpoint forStorageType:(NSString *)storageType httpMethod:(NSString *)httpMethod, ... NS_REQUIRES_NIL_TERMINATION;
+- (WACloudURLRequest *)authenticatedRequestWithEndpoint:(NSString *)endpoint forStorageType:(NSString *)storageType httpMethod:(NSString *)httpMethod contentData:(NSData *)contentData contentType:(NSString *)contentType, ... NS_REQUIRES_NIL_TERMINATION;
+- (WACloudURLRequest *)authenticatedRequestWithEndpoint:(NSString *)endpoint forStorageType:(NSString *)storageType httpMethod:(NSString *)httpMethod contentData:(NSData *)contentData contentType:(NSString *)contentType metadata:(NSDictionary *)metadata, ... NS_REQUIRES_NIL_TERMINATION;
 
 @end

@@ -176,7 +176,7 @@
  @discussion The method will run asynchronously and will call back through the delegate set for the client. 
  
  @see WACloudStorageClient#delegate
- @see WACloudStorageClientDelegate#storageClient:didAddBlobContainerNamed:
+ @see WACloudStorageClientDelegate#storageClient:didAddBlobContainer:
  */
 - (BOOL)addBlobContainer:(WABlobContainer *)container;
 
@@ -204,7 +204,7 @@
  @discussion The method will run asynchronously and will call back through the delegate set for the client.
  
  @see WABlobContainer
- @see WACloudStorageClientDelegate#storageClient:didFetchBlobContainer:
+ @see WACloudStorageClientDelegate#storageClient:didDeleteBlobContainerNamed:
  */
 - (BOOL)deleteBlobContainer:(WABlobContainer *)container;
 
@@ -376,11 +376,13 @@
  
  @discussion The method will run asynchronously and will call back through the delegate for the client.
  
+ @deprecated Now use WACloudStorageClient#addBlob:toContainer:withCompletionHandler:
+ 
  @see WACloudStorageClient#delegate
  @see WACloudStorageClient#storageClient:didAddBlobToContainer:blobName:
  @see WABlobContainer
  */
-- (void)addBlobToContainer:(WABlobContainer *)container blobName:(NSString *)blobName contentData:(NSData *)contentData contentType:(NSString*)contentType;
+- (void)addBlobToContainer:(WABlobContainer *)container blobName:(NSString *)blobName contentData:(NSData *)contentData contentType:(NSString*)contentType DEPRECATED_ATTRIBUTE;
 
 /*! Adds a new blob to a container, given the name of the blob, binary data for the blob, and content type. */
 /**
@@ -394,9 +396,40 @@
  
  @discussion The method will run asynchronously and will call back through the block. The block will be called an error if the request fails, otherwise the error object will be nil.
  
+ @deprecated Now use WACloudStorageClient#addBlob:toContainer:withCompletionHandler:
+ 
  @see WABlobContainer
  */
-- (void)addBlobToContainer:(WABlobContainer *)container blobName:(NSString *)blobName contentData:(NSData *)contentData contentType:(NSString *)contentType withCompletionHandler:(void (^)(NSError *error))block;
+- (void)addBlobToContainer:(WABlobContainer *)container blobName:(NSString *)blobName contentData:(NSData *)contentData contentType:(NSString *)contentType withCompletionHandler:(void (^)(NSError *error))block DEPRECATED_ATTRIBUTE;
+
+/**
+ Adds a new blob to a container asynchronously, given the name of the blob, binary data for the blob, and content type.
+ 
+ @param container The container to use to add the blob.
+ @param blob The blob to add.
+ @param contentData The data for the blob.
+ @param contentType The content type for the blob.
+ 
+ @discussion The method will run asynchronously and will call back through the delegate for the client.
+ 
+ @see WACloudStorageClient#delegate
+ @see WACloudStorageClient#storageClient:didAddBlob:toContainer:
+ @see WABlobContainer
+ */
+- (void)addBlob:(WABlob *)blob toContainer:(WABlobContainer *)container;
+
+/**
+ Adds a new blob to a container asynchronously, given the blob and container with a block.
+ 
+ @param blob The blob to add.
+ @param container The container to use to add the blob.
+ @param block A block object called with the results of the add. 
+ 
+ @discussion The method will run asynchronously and will call back through the block. The block will be called an error if the request fails, otherwise the error object will be nil.
+ 
+ @see WABlobContainer
+ */
+- (void)addBlob:(WABlob *)blob toContainer:(WABlobContainer *)container withCompletionHandler:(void (^)(NSError *error))block;
 
 /**
  Deletes a given blob asynchronously.
@@ -1038,7 +1071,15 @@
  @param client The client that sent the request.
  @param name The name that was added.
  */
-- (void)storageClient:(WACloudStorageClient *)client didAddBlobContainerNamed:(NSString *)name;
+- (void)storageClient:(WACloudStorageClient *)client didAddBlobContainerNamed:(NSString *)name DEPRECATED_ATTRIBUTE;
+
+/**
+Sent when the client successsfully adds a new blob container.
+
+@param client The client that sent the request.
+@param container The container that was added.
+*/
+- (void)storageClient:(WACloudStorageClient *)client didAddBlobContainer:(WABlobContainer *)container;
 
 /**
  Sent when the client successfully removes an existing blob container.
@@ -1115,9 +1156,23 @@
  @param container The container to add the blob.
  @param blobName The name of the blob
  
+ @deprecated  @deprecated Now use WACloudStorageClientDelegate#storageClient:didAddBlob:toContainer:
+ 
  @see WABlobContainer
  */
-- (void)storageClient:(WACloudStorageClient *)client didAddBlobToContainer:(WABlobContainer *)container blobName:(NSString *)blobName;
+- (void)storageClient:(WACloudStorageClient *)client didAddBlobToContainer:(WABlobContainer *)container blobName:(NSString *)blobName DEPRECATED_ATTRIBUTE;
+
+
+/**
+ Sent when the client successfully adds a blob to a specified container.
+ 
+ @param client The client that sent the request.
+ @param blob The blob added.
+ @param container The container the blob was added.
+ 
+ @see WABlobContainer
+ */
+- (void)storageClient:(WACloudStorageClient *)client didAddBlob:(WABlob *)blob toContainer:(WABlobContainer *)container;
 
 /**
  Sent when the client successfully deletes a blob.

@@ -35,6 +35,9 @@ NSString * const WABlobPropertyKeySequenceNumber = @"x-ms-blob-sequence-number";
 @synthesize container = _container;
 @synthesize properties = _properties; 
 @synthesize metadata = _metadata;
+@synthesize contentData = _contentData;
+@synthesize contentType = _contentType;
+@synthesize containerName = _containerName;
 
 - (id)initBlobWithName:(NSString *)name URL:(NSString *)URL container:(WABlobContainer *)container properties:(NSDictionary *)properties
 {
@@ -44,6 +47,20 @@ NSString * const WABlobPropertyKeySequenceNumber = @"x-ms-blob-sequence-number";
         _container = [container retain];
         _properties = [properties retain];
         _metadata = [[NSMutableDictionary alloc] initWithCapacity:5];
+        _containerName = [container.name copy];
+    }    
+    
+    return self;
+}
+
+- (id)initBlobWithName:(NSString *)name URL:(NSString *)URL containerName:(NSString *)containerName properties:(NSDictionary *)properties
+{
+    if ((self = [super init])) {
+        _name = [name copy];
+        _URL = [[NSURL URLWithString:URL] retain];
+        _properties = [properties retain];
+        _metadata = [[NSMutableDictionary alloc] initWithCapacity:5];
+        _containerName = [containerName copy];
     }    
     
     return self;
@@ -54,9 +71,14 @@ NSString * const WABlobPropertyKeySequenceNumber = @"x-ms-blob-sequence-number";
      return [self initBlobWithName:name URL:URL container:container properties:nil];	
 }
 
+- (id)initBlobWithName:(NSString *)name URL:(NSString *)URL containerName:(NSString *)containerName
+{
+    return [self initBlobWithName:name URL:URL containerName:containerName properties:nil];
+}
+
 - (id)initBlobWithName:(NSString *)name URL:(NSString *)URL 
 {	
-    return [self initBlobWithName:name URL:URL container:nil];	
+    return [self initBlobWithName:name URL:URL containerName:nil];	
 }
 
 - (void) dealloc 
@@ -66,13 +88,16 @@ NSString * const WABlobPropertyKeySequenceNumber = @"x-ms-blob-sequence-number";
     [_container release];
     [_properties release];
     [_metadata release];
+    [_contentType release];
+    [_contentData release];
+    [_containerName release];
     
     [super dealloc];
 }
 
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"Blob { name = %@, url = %@, container = %@, properties = %@, metadata = %@ }", _name, _URL, _container, _properties.description, _metadata.description];
+    return [NSString stringWithFormat:@"Blob { name = %@, url = %@, contentType = %@, containerName = %@, properties = %@, metadata = %@ }", _name, _URL, _contentType, _containerName, _properties.description, _metadata.description];
 }
 
 - (void)setValue:(NSString *)value forMetadataKey:(NSString *)key
@@ -83,6 +108,17 @@ NSString * const WABlobPropertyKeySequenceNumber = @"x-ms-blob-sequence-number";
 - (void)removeMetadataForKey:(NSString *)key
 {
     [_metadata removeObjectForKey:key];
+}
+
+#pragma mark Private Methods
+
+- (void)setContainerName:(NSString *)containerName
+{
+    if (_containerName != containerName) {
+        [containerName retain];
+        [_containerName release];
+        _containerName = containerName;
+    }
 }
 
 @end

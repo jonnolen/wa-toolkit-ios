@@ -46,12 +46,9 @@
 
 @protocol CreateTableControllerDelegate <NSObject>
 
-@optional
-
 - (void)createTableController:(CreateTableController *)controller didAddQueueNamed:(NSString *)name;
-- (void)createTableController:(CreateTableController *)controller didAddContainerNamed:(NSString *)name;
-- (void)createTableController:(CreateTableController *)controller didAddBlobNamed:(NSString *)name toContainerNamed:(NSString *)container;
+- (void)createTableController:(CreateTableController *)controller didAddContainer:(WABlobContainer *)container;
+- (void)createTableController:(CreateTableController *)controller didAddBlob:(WABlob *)blob toContainer:(WABlobContainer *)container;
 - (void)createTableController:(CreateTableController *)controller didAddTableNamed:(NSString *)name;
-
 
 @end

@@ -20,7 +20,7 @@
 
 @implementation WABlobParser
 
-+ (NSArray *)loadBlobs:(xmlDocPtr)doc container:(WABlobContainer *)container
++ (NSArray *)loadBlobs:(xmlDocPtr)doc forContainerName:(NSString *)containerName
 {
     if (doc == nil) { 
 		return nil; 
@@ -77,7 +77,7 @@
             }
         }];
          
-        WABlob *blob = [[WABlob alloc] initBlobWithName:name URL:url container:container 
+        WABlob *blob = [[WABlob alloc] initBlobWithName:name URL:url containerName:containerName 
                                               properties:[NSDictionary dictionaryWithObjectsAndKeys:
                                                           blockType, WABlobPropertyKeyBlobType, 
                                                           cacheControl, WABlobPropertyKeyCacheControl,
@@ -91,7 +91,7 @@
                                                           leaseStatus, WABlobPropertyKeyLeaseStatus,
                                                           sequenceNumber, WABlobPropertyKeySequenceNumber,
                                                           nil]];    
-        
+        blob.contentType = contentType;
         [dictionary enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
              [blob setValue:key forMetadataKey:obj];
         }];
@@ -103,7 +103,7 @@
 	return [[blobs copy] autorelease];
 }
 
-+ (NSArray *)loadBlobsForProxy:(xmlDocPtr)doc container:(WABlobContainer*)container
++ (NSArray *)loadBlobsForProxy:(xmlDocPtr)doc forContainerName:(NSString *)containerName
 {
     if (doc == nil) { 
 		return nil; 
@@ -144,7 +144,7 @@
             sequenceNumber = [WAXMLHelper getElementValue:node name:WABlobPropertyKeySequenceNumber];
         }];
 
-        WABlob *blob = [[WABlob alloc] initBlobWithName:name URL:url container:container 
+        WABlob *blob = [[WABlob alloc] initBlobWithName:name URL:url containerName:containerName 
                                              properties:[NSDictionary dictionaryWithObjectsAndKeys:
                                                          blockType, WABlobPropertyKeyBlobType, 
                                                          cacheControl, WABlobPropertyKeyCacheControl,

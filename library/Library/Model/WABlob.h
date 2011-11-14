@@ -50,11 +50,26 @@ extern NSString * const WABlobPropertyKeySequenceNumber;
 @property (readonly) NSURL *URL;
 
 /**
+ The content data for the blob.
+ */
+@property (nonatomic, retain) NSData *contentData;
+
+/**
+ The content type for the blob.
+ */
+@property (nonatomic, copy) NSString *contentType;
+
+/**
  A WABlobContainer object representing the blob's container.
  
  @see WABlobContainer
  */
-@property (readonly) WABlobContainer *container;
+@property (readonly) WABlobContainer *container DEPRECATED_ATTRIBUTE;
+
+/**
+ The container name of the blob.
+ */
+@property (readonly) NSString *containerName;
 
 /**
  The metadata for the container.
@@ -106,9 +121,19 @@ extern NSString * const WABlobPropertyKeySequenceNumber;
  @returns The newly initialized WABlob object.
  
  @see WABlobContainer
- @see NSURL
  */
-- (id)initBlobWithName:(NSString *)name URL:(NSString *)URL container:(WABlobContainer *)container;
+- (id)initBlobWithName:(NSString *)name URL:(NSString *)URL container:(WABlobContainer *)container DEPRECATED_ATTRIBUTE;
+
+/**
+ Initializes a newly created WABlob with a name, address URL and a container.
+ 
+ @param name The name of the blob.
+ @param URL The address of the blob.
+ @param containerName The container name for the blob.
+ 
+ @returns The newly initialized WABlob object.
+ */
+- (id)initBlobWithName:(NSString *)name URL:(NSString *)URL containerName:(NSString *)containerName;
 
 /**
  Initializes a newly created WABlob with a name, address URL, the container and properties.
@@ -121,8 +146,19 @@ extern NSString * const WABlobPropertyKeySequenceNumber;
  @returns The newly initialized WABlob object.
  
  @see WABlobContainer
- @see NSURL
  */
-- (id)initBlobWithName:(NSString *)name URL:(NSString *)URL container:(WABlobContainer *)container properties:(NSDictionary *)properties;
+- (id)initBlobWithName:(NSString *)name URL:(NSString *)URL container:(WABlobContainer *)container properties:(NSDictionary *)properties DEPRECATED_ATTRIBUTE;
 
+
+/**
+ Initializes a newly created WABlob with a name, address URL, the container and properties.
+ 
+ @param name The name of the blob.
+ @param URL The address of the blob.
+ @param containerName The container name for the blob.
+ @param properties The properties for the blob.
+ 
+ @returns The newly initialized WABlob object.
+ */
+- (id)initBlobWithName:(NSString *)name URL:(NSString *)URL containerName:(NSString *)containerName properties:(NSDictionary *)properties;
 @end

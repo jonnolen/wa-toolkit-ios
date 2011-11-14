@@ -84,35 +84,35 @@
     return r;
 }
 
-- (void)storageClient:(WACloudStorageClient*)client didFailRequest:request withError:error
+- (void)storageClient:(WACloudStorageClient *)client didFailRequest:request withError:error
 {
 	_error = [error retain];
     _complete = YES;
 }
 
-- (void)storageClient:(WACloudStorageClient*)client didFetchBlobContainers:(NSArray*)containers
+- (void)storageClient:(WACloudStorageClient *)client didFetchBlobContainers:(NSArray *)containers
 {
 	_result = [containers retain];
 	_complete = YES;
 }
 
-- (void)storageClient:(WACloudStorageClient*)client didAddBlobContainer:(NSString*)name
+- (void)storageClient:(WACloudStorageClient *)client didAddBlobContainer:(WABlobContainer *)name
 {
 	_complete = YES;
 }
 
-- (void)storageClient:(WACloudStorageClient*)client didDeleteBlobContainer:(WABlobContainer *)container
+- (void)storageClient:(WACloudStorageClient *)client didDeleteBlobContainer:(WABlobContainer *)container
 {
 	_complete = YES;
 }
 
-- (void)storageClient:(WACloudStorageClient*)client didFetchBlobs:(NSArray*)blobs inContainer:(WABlobContainer *)container
+- (void)storageClient:(WACloudStorageClient *)client didFetchBlobs:(NSArray *)blobs inContainer:(WABlobContainer *)container
 {
 	_result = [blobs retain];
 	_complete = YES;
 }
 
-- (void)storageClient:(WACloudStorageClient*)client didFetchBlobData:(NSData*)data blob:(WABlob*)blob
+- (void)storageClient:(WACloudStorageClient *)client didFetchBlobData:(NSData *)data blob:(WABlob *)blob
 {
 	_result = [data retain];
 	_complete = YES;
@@ -123,7 +123,7 @@
     _complete = YES;
 }
 
-- (void)storageClient:(WACloudStorageClient*)client didDeleteBlob:(WABlob*)blob
+- (void)storageClient:(WACloudStorageClient *)client didDeleteBlob:(WABlob *)blob
 {
     _complete = YES;
 }
