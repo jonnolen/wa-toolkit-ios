@@ -51,9 +51,13 @@
 		AABD4A50134D02C400B6E7D1 /* WATableEntity.h in Headers */ = {isa = PBXBuildFile; fileRef = AABD4A4E134D02C400B6E7D1 /* WATableEntity.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AABD4A51134D02C400B6E7D1 /* WATableEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = AABD4A4F134D02C400B6E7D1 /* WATableEntity.m */; };
 		AAD7348C134D2C22000AB68A /* NSString+URLEncode.h in Headers */ = {isa = PBXBuildFile; fileRef = AAD7348A134D2C21000AB68A /* NSString+URLEncode.h */; };
+		DE03022C147208E600350904 /* WABlobFetchRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = DE03022A147208E600350904 /* WABlobFetchRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DE03022D147208E600350904 /* WABlobFetchRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = DE03022B147208E600350904 /* WABlobFetchRequest.m */; };
 		DE410E381427077A008D6626 /* WAResultContinuation.h in Headers */ = {isa = PBXBuildFile; fileRef = DE410E361427077A008D6626 /* WAResultContinuation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DE410E391427077A008D6626 /* WAResultContinuation.m in Sources */ = {isa = PBXBuildFile; fileRef = DE410E371427077A008D6626 /* WAResultContinuation.m */; };
 		DE5B03D8142FDA4A0092F6BA /* WAToolkit.h in Headers */ = {isa = PBXBuildFile; fileRef = DE5B03D6142FDA4A0092F6BA /* WAToolkit.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DE950FBD147DE443001139FB /* FetchQueueMessagesProxyTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DE950FBC147DE443001139FB /* FetchQueueMessagesProxyTests.m */; };
+		DE950FC0147DEDF0001139FB /* PeekQueueMessagesDirectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DE950FBF147DEDF0001139FB /* PeekQueueMessagesDirectTests.m */; };
 		DE9615B9145F3006005BEB1B /* WABaseTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = DE9615B8145F3006005BEB1B /* WABaseTestCase.m */; };
 		DE9DF647146044E700E3B436 /* FetchQueuesDirectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DE9DF646146044E700E3B436 /* FetchQueuesDirectTests.m */; };
 		DE9DF64A146076FE00E3B436 /* FetchQueueMessagesDirectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DE9DF649146076FE00E3B436 /* FetchQueueMessagesDirectTests.m */; };
@@ -75,6 +79,10 @@
 		DEC25CE51460F0410025DDE3 /* UpdateEntityDirectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DEC25CE41460F0400025DDE3 /* UpdateEntityDirectTests.m */; };
 		DEC25CE81460F5710025DDE3 /* MergeEntityDirectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DEC25CE71460F56F0025DDE3 /* MergeEntityDirectTests.m */; };
 		DEC25CEB1460F73C0025DDE3 /* DeleteEntityDirectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DEC25CEA1460F73A0025DDE3 /* DeleteEntityDirectTests.m */; };
+		DECBE2F5147C8948001E37BB /* WABlobContainerFetchRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = DECBE2F3147C8948001E37BB /* WABlobContainerFetchRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DECBE2F6147C8948001E37BB /* WABlobContainerFetchRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = DECBE2F4147C8948001E37BB /* WABlobContainerFetchRequest.m */; };
+		DECBE2FA147D6EFC001E37BB /* WAQueueFetchRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = DECBE2F8147D6EFC001E37BB /* WAQueueFetchRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DECBE2FB147D6EFC001E37BB /* WAQueueFetchRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = DECBE2F9147D6EFC001E37BB /* WAQueueFetchRequest.m */; };
 		DEF6901A140827D4006FF7E5 /* Base64Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = DEF69019140827D4006FF7E5 /* Base64Tests.m */; };
 		F216A688136F88BC00FAEAB4 /* WAQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = F216A684136F88BC00FAEAB4 /* WAQueue.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F216A689136F88BC00FAEAB4 /* WAQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = F216A685136F88BC00FAEAB4 /* WAQueue.m */; };
@@ -154,9 +162,15 @@
 		AABD4A4E134D02C400B6E7D1 /* WATableEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WATableEntity.h; sourceTree = "<group>"; };
 		AABD4A4F134D02C400B6E7D1 /* WATableEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WATableEntity.m; sourceTree = "<group>"; };
 		AAD7348A134D2C21000AB68A /* NSString+URLEncode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+URLEncode.h"; sourceTree = "<group>"; };
+		DE03022A147208E600350904 /* WABlobFetchRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WABlobFetchRequest.h; sourceTree = "<group>"; };
+		DE03022B147208E600350904 /* WABlobFetchRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WABlobFetchRequest.m; sourceTree = "<group>"; };
 		DE410E361427077A008D6626 /* WAResultContinuation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WAResultContinuation.h; sourceTree = "<group>"; };
 		DE410E371427077A008D6626 /* WAResultContinuation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WAResultContinuation.m; sourceTree = "<group>"; };
 		DE5B03D6142FDA4A0092F6BA /* WAToolkit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WAToolkit.h; sourceTree = "<group>"; };
+		DE950FBB147DE443001139FB /* FetchQueueMessagesProxyTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FetchQueueMessagesProxyTests.h; sourceTree = "<group>"; };
+		DE950FBC147DE443001139FB /* FetchQueueMessagesProxyTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FetchQueueMessagesProxyTests.m; sourceTree = "<group>"; };
+		DE950FBE147DEDF0001139FB /* PeekQueueMessagesDirectTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PeekQueueMessagesDirectTests.h; sourceTree = "<group>"; };
+		DE950FBF147DEDF0001139FB /* PeekQueueMessagesDirectTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PeekQueueMessagesDirectTests.m; sourceTree = "<group>"; };
 		DE9615B7145F3006005BEB1B /* WABaseTestCase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WABaseTestCase.h; sourceTree = "<group>"; };
 		DE9615B8145F3006005BEB1B /* WABaseTestCase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WABaseTestCase.m; sourceTree = "<group>"; };
 		DE9DF645146044E700E3B436 /* FetchQueuesDirectTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FetchQueuesDirectTests.h; sourceTree = "<group>"; };
@@ -199,6 +213,10 @@
 		DEC25CE71460F56F0025DDE3 /* MergeEntityDirectTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MergeEntityDirectTests.m; sourceTree = "<group>"; };
 		DEC25CE91460F7390025DDE3 /* DeleteEntityDirectTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeleteEntityDirectTests.h; sourceTree = "<group>"; };
 		DEC25CEA1460F73A0025DDE3 /* DeleteEntityDirectTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeleteEntityDirectTests.m; sourceTree = "<group>"; };
+		DECBE2F3147C8948001E37BB /* WABlobContainerFetchRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WABlobContainerFetchRequest.h; sourceTree = "<group>"; };
+		DECBE2F4147C8948001E37BB /* WABlobContainerFetchRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WABlobContainerFetchRequest.m; sourceTree = "<group>"; };
+		DECBE2F8147D6EFC001E37BB /* WAQueueFetchRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WAQueueFetchRequest.h; sourceTree = "<group>"; };
+		DECBE2F9147D6EFC001E37BB /* WAQueueFetchRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WAQueueFetchRequest.m; sourceTree = "<group>"; };
 		DEF69018140827D4006FF7E5 /* Base64Tests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Base64Tests.h; sourceTree = "<group>"; };
 		DEF69019140827D4006FF7E5 /* Base64Tests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Base64Tests.m; sourceTree = "<group>"; };
 		F216A684136F88BC00FAEAB4 /* WAQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WAQueue.h; sourceTree = "<group>"; };
@@ -355,6 +373,12 @@
 				AA094588134A2BDB00AF7EAB /* WACloudStorageClient.m */,
 				AA6521E2134D1EE800008ADE /* WATableFetchRequest.h */,
 				AA6521E3134D1EE800008ADE /* WATableFetchRequest.m */,
+				DE03022A147208E600350904 /* WABlobFetchRequest.h */,
+				DE03022B147208E600350904 /* WABlobFetchRequest.m */,
+				DECBE2F3147C8948001E37BB /* WABlobContainerFetchRequest.h */,
+				DECBE2F4147C8948001E37BB /* WABlobContainerFetchRequest.m */,
+				DECBE2F8147D6EFC001E37BB /* WAQueueFetchRequest.h */,
+				DECBE2F9147D6EFC001E37BB /* WAQueueFetchRequest.m */,
 			);
 			path = "Cloud Storage";
 			sourceTree = "<group>";
@@ -454,6 +478,10 @@
 			children = (
 				DE9DF648146076FE00E3B436 /* FetchQueueMessagesDirectTests.h */,
 				DE9DF649146076FE00E3B436 /* FetchQueueMessagesDirectTests.m */,
+				DE950FBB147DE443001139FB /* FetchQueueMessagesProxyTests.h */,
+				DE950FBC147DE443001139FB /* FetchQueueMessagesProxyTests.m */,
+				DE950FBE147DEDF0001139FB /* PeekQueueMessagesDirectTests.h */,
+				DE950FBF147DEDF0001139FB /* PeekQueueMessagesDirectTests.m */,
 			);
 			name = "Queue Message";
 			sourceTree = "<group>";
@@ -588,6 +616,9 @@
 				AA5E1B8E13DE3EA300171D07 /* Logging.h in Headers */,
 				DE410E381427077A008D6626 /* WAResultContinuation.h in Headers */,
 				DE5B03D8142FDA4A0092F6BA /* WAToolkit.h in Headers */,
+				DE03022C147208E600350904 /* WABlobFetchRequest.h in Headers */,
+				DECBE2F5147C8948001E37BB /* WABlobContainerFetchRequest.h in Headers */,
+				DECBE2FA147D6EFC001E37BB /* WAQueueFetchRequest.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -732,6 +763,9 @@
 				AA715AAD138F4E8F00AED192 /* WALoginWebViewController.m in Sources */,
 				AA5E1B8F13DE3EA300171D07 /* Logging.m in Sources */,
 				DE410E391427077A008D6626 /* WAResultContinuation.m in Sources */,
+				DE03022D147208E600350904 /* WABlobFetchRequest.m in Sources */,
+				DECBE2F6147C8948001E37BB /* WABlobContainerFetchRequest.m in Sources */,
+				DECBE2FB147D6EFC001E37BB /* WAQueueFetchRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -762,6 +796,8 @@
 				DEC25CE51460F0410025DDE3 /* UpdateEntityDirectTests.m in Sources */,
 				DEC25CE81460F5710025DDE3 /* MergeEntityDirectTests.m in Sources */,
 				DEC25CEB1460F73C0025DDE3 /* DeleteEntityDirectTests.m in Sources */,
+				DE950FBD147DE443001139FB /* FetchQueueMessagesProxyTests.m in Sources */,
+				DE950FC0147DEDF0001139FB /* PeekQueueMessagesDirectTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -58,7 +58,7 @@
     
     
     WATableFetchRequest *fetchRequest = [WATableFetchRequest fetchRequestForTable:randomTableNameString];
-    [directClient fetchEntities:fetchRequest withCompletionHandler:^(NSArray *entities, NSError *error) {
+    [directClient fetchEntitiesWithRequest:fetchRequest usingCompletionHandler:^(NSArray *entities, WAResultContinuation *resultContinuation, NSError *error) {
         STAssertNil(error, @"Error returned by getEntities: %@", [error localizedDescription]);
         __block BOOL foundEntity = NO;
         [entities enumerateObjectsUsingBlock:^(id object, NSUInteger index, BOOL *stop) {

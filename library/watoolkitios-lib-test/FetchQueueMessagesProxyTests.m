@@ -14,51 +14,51 @@
  limitations under the License.
  */
 
-#import "FetchQueueMessagesDirectTests.h"
+#import "FetchQueueMessagesProxyTests.h"
 #import "WAToolkit.h"
 
-@implementation FetchQueueMessagesDirectTests
+@implementation FetchQueueMessagesProxyTests
 
-#ifdef INTEGRATION_DIRECT
+#ifdef INTEGRATION_PROXY
 
 - (void)setUp
 {
     [super setUp];
     
-    [directClient addQueueNamed:randomQueueNameString withCompletionHandler:^(NSError *error) {
+    [proxyClient addQueueNamed:randomQueueNameString withCompletionHandler:^(NSError *error) {
         STAssertNil(error, @"Error returned from addQueueNamed: %@",[error localizedDescription]);
-        [directDelegate markAsComplete];
+        [proxyDelegate markAsComplete];
     }];
-    [directDelegate waitForResponse];
+    [proxyDelegate waitForResponse];
     
-    [directClient addMessageToQueue:@"My Message test" queueName:randomQueueNameString withCompletionHandler:^(NSError *error) {
+    [proxyClient addMessageToQueue:@"My Message test" queueName:randomQueueNameString withCompletionHandler:^(NSError *error) {
         STAssertNil(error, @"Error returned addMessageToQueue: %@",[error localizedDescription]);
-        [directDelegate markAsComplete];
+        [proxyDelegate markAsComplete];
     }];
-	[directDelegate waitForResponse];
+	[proxyDelegate waitForResponse];
 }
 
 - (void)tearDown
 {
-    [directClient deleteQueueNamed:randomQueueNameString withCompletionHandler:^(NSError *error) {
+    [proxyClient deleteQueueNamed:randomQueueNameString withCompletionHandler:^(NSError *error) {
         STAssertNil(error, @"Error returned from deleteQueueNamed: %@",[error localizedDescription]);
-        [directDelegate markAsComplete];
+        [proxyDelegate markAsComplete];
     }];
-    [directDelegate waitForResponse];
+    [proxyDelegate waitForResponse];
     
     [super tearDown];
 }
 
 -(void)testShouldFetchQueueMessagesWithCompletionHandler
 {
-    [directClient fetchQueueMessages:randomQueueNameString withCompletionHandler:^(NSArray* queueMessages, NSError* error) {
+    [proxyClient fetchQueueMessages:randomQueueNameString withCompletionHandler:^(NSArray* queueMessages, NSError* error) {
         STAssertNil(error, @"Error returned from fetchQueueMessages: %@",[error localizedDescription]);
         STAssertEquals([queueMessages count], (NSUInteger)1, @"Should only be on message in queue.");
         WAQueueMessage *message = [queueMessages objectAtIndex:0];
         STAssertEqualObjects(@"My Message test", message.messageText, @"Message text was not saved correctly.");
-        [directDelegate markAsComplete];
+        [proxyDelegate markAsComplete];
     }];
-	[directDelegate waitForResponse];
+	[proxyDelegate waitForResponse];
 }
 #endif
 

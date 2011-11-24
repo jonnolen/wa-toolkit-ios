@@ -193,16 +193,24 @@ typedef enum {
             break;
         }
         case QueueStorage: {
-            [storageClient fetchQueuesWithContinuation:self.resultContinuation maxResult:MAX_ROWS];
+            WAQueueFetchRequest *fetchRequest = [WAQueueFetchRequest fetchRequestWithResultContinuation:self.resultContinuation];
+            fetchRequest.maxResult = MAX_ROWS;
+            [storageClient fetchQueuesWithRequest:fetchRequest];
             break;
         }
         case BlobStorage: {
-            [storageClient fetchBlobContainersWithContinuation:self.resultContinuation maxResult:MAX_ROWS];
+            WABlobContainerFetchRequest *fetchRequest = [WABlobContainerFetchRequest fetchRequestWithResultContinuation:self.resultContinuation];
+            fetchRequest.maxResult = MAX_ROWS;
+            [storageClient fetchBlobContainersWithRequest:fetchRequest];
+
             break;
         }
         default: {
             WABlobContainer *container = [[WABlobContainer alloc] initContainerWithName:self.navigationItem.title];
-            [storageClient fetchBlobsWithContinuation:container resultContinuation:self.resultContinuation maxResult:MAX_ROWS];
+            WABlobFetchRequest *fetchRequest = [WABlobFetchRequest fetchRequestWithContainer:container];
+            fetchRequest.maxResult = MAX_ROWS;
+            fetchRequest.resultContinuation = self.resultContinuation;
+            [storageClient fetchBlobsWithRequest:fetchRequest];
             [container release];
             break;
         }

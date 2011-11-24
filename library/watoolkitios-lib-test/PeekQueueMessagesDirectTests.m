@@ -14,10 +14,10 @@
  limitations under the License.
  */
 
-#import "FetchQueueMessagesDirectTests.h"
+#import "PeekQueueMessagesDirectTests.h"
 #import "WAToolkit.h"
 
-@implementation FetchQueueMessagesDirectTests
+@implementation PeekQueueMessagesDirectTests
 
 #ifdef INTEGRATION_DIRECT
 
@@ -51,8 +51,8 @@
 
 -(void)testShouldFetchQueueMessagesWithCompletionHandler
 {
-    [directClient fetchQueueMessages:randomQueueNameString withCompletionHandler:^(NSArray* queueMessages, NSError* error) {
-        STAssertNil(error, @"Error returned from fetchQueueMessages: %@",[error localizedDescription]);
+    [directClient peekQueueMessages:randomQueueNameString fetchCount:32 withCompletionHandler:^(NSArray* queueMessages, NSError* error) {
+        STAssertNil(error, @"Error returned from peekQueueMessages: %@",[error localizedDescription]);
         STAssertEquals([queueMessages count], (NSUInteger)1, @"Should only be on message in queue.");
         WAQueueMessage *message = [queueMessages objectAtIndex:0];
         STAssertEqualObjects(@"My Message test", message.messageText, @"Message text was not saved correctly.");
