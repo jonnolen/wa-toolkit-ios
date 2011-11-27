@@ -17,7 +17,6 @@
 #import "WABaseTestCase.h"
 #import "WAToolkit.h"
 
-
 NSString * const WAAccount = @"<your account>";
 NSString * const WAAccessKey = @"<your access key>";
 NSString * const WAProxyURL = @"https://<proxyhost>.cloudapp.net";

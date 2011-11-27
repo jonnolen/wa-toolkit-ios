@@ -97,7 +97,9 @@
         [self.localEntityList removeAllObjects];
 		[self fetchEntities];
 	} else if (self.entityType == ENTITY_TYPE_QUEUE) {
-		[storageClient fetchQueueMessages:self.navigationItem.title fetchCount:1000];
+        WAQueueMessageFetchRequest *fetchRequest = [WAQueueMessageFetchRequest fetchRequestWithQueueName:self.navigationItem.title];
+        fetchRequest.fetchCount = 1000;
+		[storageClient fetchQueueMessagesWithRequest:fetchRequest];
 	}
 }
 

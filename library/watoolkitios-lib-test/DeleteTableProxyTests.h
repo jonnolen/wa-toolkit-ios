@@ -14,20 +14,11 @@
  limitations under the License.
  */
 
-#import "WAQueue.h"
-#import "WAQueueMessage.h"
-#import "WABlob.h"
-#import "WABlobContainer.h"
-#import "WATableEntity.h"
-#import "WAResultContinuation.h"
+#import <SenTestingKit/SenTestingKit.h>
+#import "WABaseTestCase.h"
 
-#import "WACloudStorageClient.h"
-#import "WATableFetchRequest.h"
-#import "WABlobFetchRequest.h"
-#import "WABlobContainerFetchRequest.h"
-#import "WAQueueFetchRequest.h"
-#import "WAQueueMessageFetchRequest.h"
+@interface DeleteTableProxyTests : WABaseTestCase {
+    
+}
 
-#import "WAAuthenticationCredential.h"
-#import "WACloudAccessControlClient.h"
-#import "WACloudAccessToken.h"
+@end

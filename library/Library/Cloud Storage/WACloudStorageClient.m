@@ -36,6 +36,7 @@
 #import "WABlobFetchRequest.h"
 #import "WABlobContainerFetchRequest.h"
 #import "WAQueueFetchRequest.h"
+#import "WAQueueMessageFetchRequest.h"
 #import "WAQueueMessage.h"
 #import "Logging.h"
 #import "WAAtomPubEntry.h"
@@ -48,7 +49,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
 
 @interface WACloudStorageClient (Private)
 
-- (void)privateGetQueueMessages:(NSString *)queueName fetchCount:(NSInteger)fetchCount useBlockError:(BOOL)useBlockError peekOnly:(BOOL)peekOnly withBlock:(void (^)(NSArray *, NSError *))block;
+- (void)privateGetQueueMessages:(WAQueueMessageFetchRequest *)fetchRequest useBlockError:(BOOL)useBlockError peekOnly:(BOOL)peekOnly withBlock:(void (^)(NSArray *, NSError *))block;
 - (void)prepareTableRequest:(WACloudURLRequest*)request;
 
 @end
@@ -262,22 +263,14 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
 
 - (void)fetchQueueMessage:(NSString *)queueName
 {
-	[self privateGetQueueMessages:queueName fetchCount:1 useBlockError:NO peekOnly:NO withBlock:^(NSArray *items, NSError *error) {
-        if (![_delegate respondsToSelector:@selector(storageClient:didFetchQueueMessage:)]) {
-            return;
-        }
-		 
-        if(items.count >= 1) {
-            [_delegate storageClient:self didFetchQueueMessage:[items objectAtIndex:0]];
-        } else {
-            [_delegate storageClient:self didFetchQueueMessage:nil];
-        }
-    }];
+    [self fetchQueueMessage:queueName withCompletionHandler:nil];
 }
 
 - (void)fetchQueueMessage:(NSString *)queueName withCompletionHandler:(void (^)(WAQueueMessage *, NSError *))block
 {
-	[self privateGetQueueMessages:queueName fetchCount:1 useBlockError:!!block peekOnly:NO withBlock:^(NSArray *items, NSError *error) {
+    WAQueueMessageFetchRequest *fetchRequest = [WAQueueMessageFetchRequest fetchRequestWithQueueName:queueName];
+    fetchRequest.fetchCount = 1;
+	[self privateGetQueueMessages:fetchRequest useBlockError:!!block peekOnly:NO withBlock:^(NSArray *items, NSError *error) {
         if (error) {
             if (block) {
                 block(nil, error);
@@ -303,20 +296,39 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
     }];
 }
 
+- (void)fetchQueueMessages:(NSString *)queueName
+{
+    [self fetchQueueMessages:queueName withCompletionHandler:nil];
+}
+
+- (void)fetchQueueMessages:(NSString *)queueName withCompletionHandler:(void (^)(NSArray *, NSError *))block
+{
+    
+    WAQueueMessageFetchRequest *fetchRequest = [WAQueueMessageFetchRequest fetchRequestWithQueueName:queueName];
+    [self fetchQueueMessagesWithRequest:fetchRequest usingCompletionHandler:block];
+}
+
 - (void)fetchQueueMessages:(NSString *)queueName fetchCount:(NSInteger)fetchCount
 {
-	[self privateGetQueueMessages:queueName fetchCount:fetchCount useBlockError:NO peekOnly:NO withBlock:^(NSArray *items, NSError *error) {
-        if (![_delegate respondsToSelector:@selector(storageClient:didFetchQueueMessages:)]) {
-            return;
-        }
-		 
-        [_delegate storageClient:self didFetchQueueMessages:items];
-    }];
+    [self fetchQueueMessages:queueName fetchCount:fetchCount withCompletionHandler:nil];
 }
 
 - (void)fetchQueueMessages:(NSString *)queueName fetchCount:(NSInteger)fetchCount withCompletionHandler:(void (^)(NSArray *, NSError *))block
 {
-	[self privateGetQueueMessages:queueName fetchCount:fetchCount useBlockError:!!block peekOnly:NO withBlock:^(NSArray *items, NSError *error) {
+    WAQueueMessageFetchRequest *fetchRequest = [WAQueueMessageFetchRequest fetchRequestWithQueueName:queueName];
+    fetchRequest.fetchCount = fetchCount;
+    [self fetchQueueMessagesWithRequest:fetchRequest usingCompletionHandler:block];
+}
+
+- (void)fetchQueueMessagesWithRequest:(WAQueueMessageFetchRequest *)fetchRequest
+{
+    [self fetchQueueMessagesWithRequest:fetchRequest usingCompletionHandler:nil];
+}
+
+
+- (void)fetchQueueMessagesWithRequest:(WAQueueMessageFetchRequest *)fetchRequest usingCompletionHandler:(void (^)(NSArray *messages, NSError *error))block
+{
+    [self privateGetQueueMessages:fetchRequest useBlockError:!!block peekOnly:NO withBlock:^(NSArray *items, NSError *error) {
         if (error) {
             if (block) {
                 block(nil, error);
@@ -325,10 +337,10 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
             }
             return;
         }
-		 
+        
         if (block) {
             block(items, nil);
-        } else if (![_delegate respondsToSelector:@selector(storageClient:didFetchQueueMessages:)]) {
+        } else if ([_delegate respondsToSelector:@selector(storageClient:didFetchQueueMessages:)]) {
             [_delegate storageClient:self didFetchQueueMessages:items];
         }
     }];
@@ -336,22 +348,14 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
 
 - (void)peekQueueMessage:(NSString *)queueName
 {
-	[self privateGetQueueMessages:queueName fetchCount:1 useBlockError:NO peekOnly:YES withBlock:^(NSArray *items, NSError *error) {
-        if (![_delegate respondsToSelector:@selector(storageClient:didPeekQueueMessage:)]) {
-            return;
-        }
-		 
-        if (items.count >= 1) {
-            [_delegate storageClient:self didPeekQueueMessage:[items objectAtIndex:0]];
-        } else {
-            [_delegate storageClient:self didPeekQueueMessage:nil];
-        }
-    }];
+    [self peekQueueMessage:queueName withCompletionHandler:nil];
 }
 
 - (void)peekQueueMessage:(NSString *)queueName withCompletionHandler:(void (^)(WAQueueMessage *, NSError *))block
 {
-	[self privateGetQueueMessages:queueName fetchCount:1 useBlockError:!!block peekOnly:YES withBlock:^(NSArray  *items, NSError *error) {
+    WAQueueMessageFetchRequest *fetchRequest = [WAQueueMessageFetchRequest fetchRequestWithQueueName:queueName];
+    fetchRequest.fetchCount = 1;
+	[self privateGetQueueMessages:fetchRequest useBlockError:!!block peekOnly:YES withBlock:^(NSArray  *items, NSError *error) {
         if (error) {
             if (block) {
                 block(nil, error);
@@ -379,7 +383,9 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
 
 - (void)peekQueueMessages:(NSString *)queueName fetchCount:(NSInteger)fetchCount
 {
-	[self privateGetQueueMessages:queueName fetchCount:fetchCount useBlockError:NO peekOnly:YES withBlock:^(NSArray *items, NSError *error) {
+    WAQueueMessageFetchRequest *fetchRequest = [WAQueueMessageFetchRequest fetchRequestWithQueueName:queueName];
+    fetchRequest.fetchCount = fetchCount;
+	[self privateGetQueueMessages:fetchRequest useBlockError:NO peekOnly:YES withBlock:^(NSArray *items, NSError *error) {
         if (![_delegate respondsToSelector:@selector(storageClient:didPeekQueueMessages:)]) {
             return;
         }
@@ -390,7 +396,10 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
 
 - (void)peekQueueMessages:(NSString *)queueName fetchCount:(NSInteger)fetchCount withCompletionHandler:(void (^)(NSArray *, NSError *))block
 {
-	[self privateGetQueueMessages:queueName fetchCount:fetchCount useBlockError:!!block peekOnly:YES withBlock:^(NSArray *items, NSError *error) {
+    WAQueueMessageFetchRequest *fetchRequest = [WAQueueMessageFetchRequest fetchRequestWithQueueName:queueName];
+    fetchRequest.fetchCount = fetchCount;
+    
+	[self privateGetQueueMessages:fetchRequest useBlockError:!!block peekOnly:YES withBlock:^(NSArray *items, NSError *error) {
         if (error) {
             if  (block) {
                 block(nil, error);
@@ -408,36 +417,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
     }];
 }
 
-- (void)fetchQueueMessages:(NSString *)queueName
-{
-    [self fetchQueueMessages:queueName withCompletionHandler:nil];
-}
 
-- (void)fetchQueueMessages:(NSString *)queueName withCompletionHandler:(void (^)(NSArray *, NSError *))block
-{
-    queueName = [queueName lowercaseString];
-    NSString* endpoint = [NSString stringWithFormat:@"/%@/messages?numofmessages=32", [queueName URLEncode]];
-    WACloudURLRequest* request = [_credential authenticatedRequestWithEndpoint:endpoint forStorageType:@"queue", nil];
-
-    [request fetchXMLWithCompletionHandler:^(WACloudURLRequest *request, xmlDocPtr doc, NSError *error) {
-        if (error) {
-            if (block) {
-                block(nil, error);
-            } else if ([_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)]) {
-                [_delegate storageClient:self didFailRequest:request withError:error];
-            }
-            return;
-        }
-         
-        NSArray *queueMessages = [WAQueueMessageParser loadQueueMessages:doc];
-         
-        if (block) {
-            block(queueMessages, nil);
-        } else if ([_delegate respondsToSelector:@selector(storageClient:didFetchQueueMessages:)]) {
-            [_delegate storageClient:self didFetchQueueMessages:queueMessages];
-        }
-    }];
-}
 
 - (void)deleteQueueMessage:(WAQueueMessage *)queueMessage queueName:(NSString *)queueName
 {
@@ -448,7 +428,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
 {
     queueName = [queueName lowercaseString];
     NSString *endpoint = [NSString stringWithFormat:@"/%@/messages/%@?popreceipt=%@", [queueName URLEncode], queueMessage.messageId, queueMessage.popReceipt];
-    WACloudURLRequest* request = [_credential authenticatedRequestWithEndpoint:endpoint forStorageType:@"queue" httpMethod:@"DELETE", nil];
+    WACloudURLRequest *request = [_credential authenticatedRequestWithEndpoint:endpoint forStorageType:@"queue" httpMethod:@"DELETE" contentData:[NSData data] contentType:nil, nil];
     
 	[request fetchXMLWithCompletionHandler:^(WACloudURLRequest *request, xmlDocPtr doc, NSError *error) {
         if (error) {
@@ -1663,20 +1643,23 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
 #pragma mark -
 #pragma mark Private methods
 
-- (void)privateGetQueueMessages:(NSString *)queueName fetchCount:(NSInteger)fetchCount useBlockError:(BOOL)useBlockError peekOnly:(BOOL)peekOnly withBlock:(void (^)(NSArray *, NSError *))block
+- (void)privateGetQueueMessages:(WAQueueMessageFetchRequest *)fetchRequest useBlockError:(BOOL)useBlockError peekOnly:(BOOL)peekOnly withBlock:(void (^)(NSArray *, NSError *))block
 {
-	if (fetchCount > 32) {
+	if (fetchRequest.fetchCount > 32) {
 		// apply Azure queue fetch limit...
-		fetchCount = 32;
+		fetchRequest.fetchCount = 32;
 	}
 	
-	queueName = [queueName lowercaseString];
-    NSString *endpoint = [NSString stringWithFormat:@"/%@/messages?numofmessages=%d", [queueName URLEncode], fetchCount];
+	NSString *queueName = [fetchRequest.queueName lowercaseString];
+    NSMutableString *endpoint = [NSMutableString stringWithFormat:@"/%@/messages?numofmessages=%d", [queueName URLEncode], fetchRequest.fetchCount];
 	if (peekOnly) {
-		endpoint = [endpoint stringByAppendingString:@"&peekonly=true"];
+		[endpoint appendString:@"&peekonly=true"];
 	} else {
 		// allow 60 seconds to turn around and delete the message
-		endpoint = [endpoint stringByAppendingString:@"&visibilitytimeout=60"];
+        if (fetchRequest.visibilityTimeout == 0) {
+            fetchRequest.visibilityTimeout = 60;
+        }
+		[endpoint appendFormat:@"&visibilitytimeout=%d", fetchRequest.visibilityTimeout];
 	}
 	
     WACloudURLRequest *request = [_credential authenticatedRequestWithEndpoint:endpoint forStorageType:@"queue", nil];

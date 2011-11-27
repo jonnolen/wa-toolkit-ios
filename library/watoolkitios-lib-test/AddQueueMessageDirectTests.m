@@ -14,10 +14,10 @@
  limitations under the License.
  */
 
-#import "FetchQueueMessagesDirectTests.h"
+#import "AddQueueMessageDirectTests.h"
 #import "WAToolkit.h"
 
-@implementation FetchQueueMessagesDirectTests
+@implementation AddQueueMessageDirectTests
 
 #ifdef INTEGRATION_DIRECT
 
@@ -30,37 +30,53 @@
         [directDelegate markAsComplete];
     }];
     [directDelegate waitForResponse];
-    
-    [directClient addMessageToQueue:@"My Message test" queueName:randomQueueNameString withCompletionHandler:^(NSError *error) {
-        STAssertNil(error, @"Error returned addMessageToQueue: %@",[error localizedDescription]);
-        [directDelegate markAsComplete];
-    }];
-	[directDelegate waitForResponse];
 }
 
 - (void)tearDown
 {
+    [directClient deleteQueueMessage:_queueMessage queueName:randomQueueNameString withCompletionHandler:^(NSError *error) {
+        STAssertNil(error, @"Error returned from deleteQueue: %@",[error localizedDescription]);
+        [directDelegate markAsComplete];
+    }];
+    [directDelegate waitForResponse];
+    
     [directClient deleteQueueNamed:randomQueueNameString withCompletionHandler:^(NSError *error) {
         STAssertNil(error, @"Error returned from deleteQueueNamed: %@",[error localizedDescription]);
         [directDelegate markAsComplete];
     }];
     [directDelegate waitForResponse];
     
+    [_queueMessage release];
+    
     [super tearDown];
 }
 
--(void)testShouldFetchQueueMessagesWithCompletionHandler
-{
-    WAQueueMessageFetchRequest *fetchRequest = [WAQueueMessageFetchRequest fetchRequestWithQueueName:randomQueueNameString];
-    [directClient fetchQueueMessagesWithRequest:fetchRequest usingCompletionHandler:^(NSArray* queueMessages, NSError* error) {
-        STAssertNil(error, @"Error returned from fetchQueueMessages: %@",[error localizedDescription]);
-        STAssertEquals([queueMessages count], (NSUInteger)1, @"Should only be on message in queue.");
-        WAQueueMessage *message = [queueMessages objectAtIndex:0];
-        STAssertEqualObjects(@"My Message test", message.messageText, @"Message text was not saved correctly.");
+-(void)testShouldAddQueueMessageWithCompletionHandlerDirect
+{   
+    [directClient addMessageToQueue:@"Hello" queueName:randomQueueNameString withCompletionHandler:^(NSError *error) {
+        STAssertNil(error, @"Error returned from addQueue: %@",[error localizedDescription]);
         [directDelegate markAsComplete];
     }];
-	[directDelegate waitForResponse];
+    [directDelegate waitForResponse];
+    
+    WAQueueMessageFetchRequest *fetchRequest = [WAQueueMessageFetchRequest fetchRequestWithQueueName:randomQueueNameString];
+    [directClient fetchQueueMessagesWithRequest:fetchRequest usingCompletionHandler:^(NSArray *queueMessages, NSError *error) {
+        __block BOOL foundQueue = NO;
+        [queueMessages enumerateObjectsUsingBlock:^(id object, NSUInteger index, BOOL *stop) {
+            WAQueueMessage *queueMessage = (WAQueueMessage*)object;
+            if ([queueMessage.messageText isEqualToString:@"Hello"]) {
+                _queueMessage = [queueMessage retain];
+                foundQueue = YES;
+                *stop = YES;
+            }
+        }];
+        STAssertTrue(foundQueue, @"Did not find the queue that was just added.");
+        
+        [directDelegate markAsComplete];
+    }];
+    [directDelegate waitForResponse];
 }
+
 #endif
 
 @end

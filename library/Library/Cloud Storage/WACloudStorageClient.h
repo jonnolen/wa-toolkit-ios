@@ -26,6 +26,7 @@
 @class WABlobFetchRequest;
 @class WABlobContainerFetchRequest;
 @class WAQueueFetchRequest;
+@class WAQueueMessageFetchRequest;
 @class WAResultContinuation;
 
 @protocol WACloudStorageClientDelegate;
@@ -662,30 +663,6 @@
 - (void)deleteQueueNamed:(NSString *)queueName withCompletionHandler:(void (^)(NSError *error))block;
 
 /**
- Fetch messages asynchronously for a given queue name.
-	
- @param queueName The name of the queue to get messages.
- 
- @discussion The method will run asynchronously and will call back through the delegate for the client.
- 
- @see WACloudStorageClient#delegate
- @see WACloudStorageClientDelegate#storageClient:didFetchQueueMessages:
- */
-- (void)fetchQueueMessages:(NSString *)queueName;
-
-/**
- Fetch messages asynchronously for a given queue name using a block.
- 
- @param queueName The name of the queue to get messages.
- @param block A block object called with the results of the fetch.
- 
- @discussion The method will run asynchronously and will call back through the block. The block will be called with a list of WAQueueMessage objects or an error if the request fails, otherwise the error object will be nil.
- 
- @see WAQueueMessage
- */
-- (void)fetchQueueMessages:(NSString *)queueName withCompletionHandler:(void (^)(NSArray *messages, NSError *error))block;
-
-/**
  Fetch a single message asynchronously from the specified queue.
 	
  @param queueName The name of the queue.
@@ -710,6 +687,30 @@
 - (void)fetchQueueMessage:(NSString *)queueName withCompletionHandler:(void (^)(WAQueueMessage *message, NSError *error))block;
 
 /**
+ Fetch messages asynchronously for a given queue name.
+ 
+ @param queueName The name of the queue to get messages.
+ 
+ @discussion The method will run asynchronously and will call back through the delegate for the client.
+ 
+ @see WACloudStorageClient#delegate
+ @see WACloudStorageClientDelegate#storageClient:didFetchQueueMessages:
+ */
+- (void)fetchQueueMessages:(NSString *)queueName DEPRECATED_ATTRIBUTE;
+
+/**
+ Fetch messages asynchronously for a given queue name using a block.
+ 
+ @param queueName The name of the queue to get messages.
+ @param block A block object called with the results of the fetch.
+ 
+ @discussion The method will run asynchronously and will call back through the block. The block will be called with a list of WAQueueMessage objects or an error if the request fails, otherwise the error object will be nil.
+ 
+ @see WAQueueMessage
+ */
+- (void)fetchQueueMessages:(NSString *)queueName withCompletionHandler:(void (^)(NSArray *messages, NSError *error))block DEPRECATED_ATTRIBUTE;
+
+/**
  Fetch a batch of messages asynchronously from the specified queue.
 	
  @param queueName The name of the queue.
@@ -720,7 +721,7 @@
  @see WACloudStorageClient#delegate
  @see WACloudStorageClientDelegate#storageClient:didFetchQueueMessages:
  */
-- (void)fetchQueueMessages:(NSString *)queueName fetchCount:(NSInteger)fetchCount;
+- (void)fetchQueueMessages:(NSString *)queueName fetchCount:(NSInteger)fetchCount DEPRECATED_ATTRIBUTE;
 
 /**
  Fetch a batch of messages asynchronously from the specified queue using a block.
@@ -733,7 +734,31 @@
  
  @see WAQueueMessage
  */
-- (void)fetchQueueMessages:(NSString *)queueName fetchCount:(NSInteger)fetchCount withCompletionHandler:(void (^)(NSArray *messages, NSError *error))block;
+- (void)fetchQueueMessages:(NSString *)queueName fetchCount:(NSInteger)fetchCount withCompletionHandler:(void (^)(NSArray *messages, NSError *error))block DEPRECATED_ATTRIBUTE;
+
+/**
+ Fetch a batch of messages asynchronously from the specified queue.
+ 
+ @param fetchRequest The fetch request to fetch the messages.
+ 
+ @discussion The method will run asynchronously and will call back through the delegate for the client. The max number of messages that will be returned is 32.
+ 
+ @see WACloudStorageClient#delegate
+ @see WACloudStorageClientDelegate#storageClient:didFetchQueueMessages:
+ */
+- (void)fetchQueueMessagesWithRequest:(WAQueueMessageFetchRequest *)fetchRequest;
+
+/**
+ Fetch a batch of messages asynchronously from the specified queue using a block.
+ 
+ @param fetchRequest The fetch request to fetch the messages.
+ @param block A block object called with the results of the fetch.
+ 
+ @discussion The method will run asynchronously and will call back through the block. The block will be called with an array of WAQueueMessage object or an error if the request fails, otherwise the error object will be nil.
+ 
+ @see WAQueueMessage
+ */
+- (void)fetchQueueMessagesWithRequest:(WAQueueMessageFetchRequest *)fetchRequest usingCompletionHandler:(void (^)(NSArray *messages, NSError *error))block;
 
 /**
  Peeks a single message from the specified queue asynchronously.
