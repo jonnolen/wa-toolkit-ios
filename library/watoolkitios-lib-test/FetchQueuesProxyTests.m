@@ -46,7 +46,8 @@
 
 -(void)testShouldFetchQueuesWithCompletionHandler
 {
-    [proxyClient fetchQueuesWithCompletionHandler:^(NSArray *queues, NSError *error) {
+    WAQueueFetchRequest *fetchRequest = [WAQueueFetchRequest fetchRequest];
+    [proxyClient fetchQueuesWithRequest:fetchRequest usingCompletionHandler:^(NSArray *queues, WAResultContinuation *resultContinuation, NSError *error) {
         STAssertNil(error, @"Error returned from fetchQueuesWithCompletionHandler: %@",[error localizedDescription]);
         STAssertTrue([queues count] > 0, @"No queues were found under this account");
         [proxyDelegate markAsComplete];

@@ -55,7 +55,8 @@
 
 - (void)tearDown
 {
-    [directClient deleteBlobContainerNamed:randomContainerNameString withCompletionHandler:^(NSError *error) {
+    WABlobContainer *container = [[[WABlobContainer alloc] initContainerWithName:randomContainerNameString] autorelease];
+    [directClient deleteBlobContainer:container withCompletionHandler:^(NSError *error) {
         STAssertNil(error, @"Error returned from deleteBlobContainerNamed: %@",[error localizedDescription]);
         [directDelegate markAsComplete];
     }];
@@ -68,7 +69,8 @@
 
 -(void)testShouldAddBlobWithCompletionHandler
 {   
-    [directClient fetchBlobs:_container withCompletionHandler:^(NSArray *blobs, NSError *error) {
+    WABlobFetchRequest *fetchRequest = [WABlobFetchRequest fetchRequestWithContainer:_container];
+    [directClient fetchBlobsWithRequest:fetchRequest usingCompletionHandler:^(NSArray *blobs, WAResultContinuation *resultContinuation, NSError *error) {
         STAssertNil(error, @"Error returned by fetchBlobs: %@", [error localizedDescription]);
         STAssertTrue([blobs count] == 1, @"%i blobs were returned instead of 1",[blobs count]);         
         [directDelegate markAsComplete];

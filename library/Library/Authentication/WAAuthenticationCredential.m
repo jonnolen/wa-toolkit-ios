@@ -24,6 +24,7 @@
 #import "WACloudURLRequest.h"
 #import "WAXMLHelper.h"
 #import "Logging.h"
+#import "NSString+URLEncode.h"
 
 static NSString* PROXY_LOGIN_REQUEST_STRING = @"<Login xmlns:i=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns=\"http://schemas.datacontract.org/2004/07/Microsoft.Samples.WindowsPhoneCloud.StorageClient.Credentials\"><Password>{password}</Password><UserName>{username}</UserName></Login>";
 
@@ -298,7 +299,8 @@ const int AUTHENTICATION_DELAY = 2;
 			
 			for (NSString *arg in [args sortedArrayUsingSelector:@selector(compare:)]) {
 				[q appendString:@"\n"];
-				[q appendString:[arg stringByReplacingOccurrencesOfString:@"=" withString:@":"]];
+                NSRange range = [arg rangeOfString:@"="];
+                [q appendString:[arg stringByReplacingCharactersInRange:range withString:@":"]];
 			}
 			
 			query = q;

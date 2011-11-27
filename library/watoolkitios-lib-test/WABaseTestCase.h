@@ -17,8 +17,8 @@
 #import <SenTestingKit/SenTestingKit.h>
 #import "WACloudStorageClientDelegate.h"
 
-//#define INTEGRATION_DIRECT
-//#define INTEGRATION_PROXY
+#define INTEGRATION_DIRECT
+#define INTEGRATION_PROXY
 
 @class WAAuthenticationCredential;
 @class WACloudStorageClient;

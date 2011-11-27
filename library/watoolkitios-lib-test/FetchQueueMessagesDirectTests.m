@@ -51,7 +51,8 @@
 
 -(void)testShouldFetchQueueMessagesWithCompletionHandler
 {
-    [directClient fetchQueueMessages:randomQueueNameString withCompletionHandler:^(NSArray* queueMessages, NSError* error) {
+    WAQueueMessageFetchRequest *fetchRequest = [WAQueueMessageFetchRequest fetchRequestWithQueueName:randomQueueNameString];
+    [directClient fetchQueueMessagesWithRequest:fetchRequest usingCompletionHandler:^(NSArray* queueMessages, NSError* error) {
         STAssertNil(error, @"Error returned from fetchQueueMessages: %@",[error localizedDescription]);
         STAssertEquals([queueMessages count], (NSUInteger)1, @"Should only be on message in queue.");
         WAQueueMessage *message = [queueMessages objectAtIndex:0];
@@ -61,4 +62,5 @@
 	[directDelegate waitForResponse];
 }
 #endif
+
 @end

@@ -28,7 +28,8 @@
 
 - (void)tearDown
 {
-    [directClient deleteBlobContainerNamed:randomContainerNameString withCompletionHandler:^(NSError *error) {
+    WABlobContainer *container = [[[WABlobContainer alloc] initContainerWithName:randomContainerNameString] autorelease];
+    [directClient deleteBlobContainer:container withCompletionHandler:^(NSError *error) {
         STAssertNil(error, @"Error returned from deleteBlobContainerNamed: %@",[error localizedDescription]);
         [directDelegate markAsComplete];
     }];
@@ -46,7 +47,8 @@
     }];
     [directDelegate waitForResponse];
     
-    [directClient fetchBlobContainersWithCompletionHandler:^(NSArray *containers, NSError *error) {
+    WABlobContainerFetchRequest *fetchRequest = [WABlobContainerFetchRequest fetchRequest];
+    [directClient fetchBlobContainersWithRequest:fetchRequest usingCompletionHandler:^(NSArray *containers, WAResultContinuation *resultContinuation, NSError *error) {
         __block BOOL foundContainer = NO;
         [containers enumerateObjectsUsingBlock:^(id object, NSUInteger index, BOOL *stop) {
             WABlobContainer *container = (WABlobContainer*)object;

@@ -23,6 +23,10 @@
 @class WATable;
 @class WAQueueMessage;
 @class WATableFetchRequest;
+@class WABlobFetchRequest;
+@class WABlobContainerFetchRequest;
+@class WAQueueFetchRequest;
+@class WAQueueMessageFetchRequest;
 @class WAResultContinuation;
 
 @protocol WACloudStorageClientDelegate;
@@ -67,10 +71,12 @@
  
  @discussion The method will run asynchronously and will call back through the delegate for the client. There could be a limit to the number of containers that are returned. If you have many containers you may want to use the continuation version of fetching the containers.
  
+ @deprecated Now use WACloudStorageClient#fetchBlobContainersWithRequest:
+ 
  @see WACloudStorageClient#delegate
  @see WACloudStorageClientDelegate#storageClient:didFetchBlobContainers:
  */
-- (void)fetchBlobContainers;
+- (void)fetchBlobContainers DEPRECATED_ATTRIBUTE;
 
 /**
  Fetch a list of blob containers asynchronously using a block.
@@ -79,9 +85,11 @@
  
  @discussion The method will run asynchronously and will call back through the block. The block will contain the array of WABlobContainer objects or an error if one occurs. There could be a limit to the number of containers that are returned. If you have many containers you may want to use the continuation version of fetching the containers.
  
+ @deprecated Now use WACloudStorageClient#fetchBlobContainersWithRequest:usingCompletionHandler:
+ 
  @see WABlobContainer
  */
-- (void)fetchBlobContainersWithCompletionHandler:(void (^)(NSArray *containers, NSError *error))block;
+- (void)fetchBlobContainersWithCompletionHandler:(void (^)(NSArray *containers, NSError *error))block DEPRECATED_ATTRIBUTE;
 
 /**
  Fetch a list of blob containers asynchronously using continuation.
@@ -91,11 +99,13 @@
  
  @discussion The method will run asynchronously and will call back through the delegate set for the client.
  
+ @deprecated Now use WACloudStorageClient#fetchBlobContainersWithRequest:
+ 
  @see WAResultContinuation
  @see WACloudStorageClient#delegate
  @see WACloudStorateClientDelegate#storageClient:didFetchBlobContainers:withResultContinuation:
  */
-- (void)fetchBlobContainersWithContinuation:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult;
+- (void)fetchBlobContainersWithContinuation:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult DEPRECATED_ATTRIBUTE;
 
 /**
  Fetch a list of blob containers asynchronously using continuation with a block.
@@ -104,11 +114,39 @@
  @param maxResult The max number of containers to reuturn for this fetch.
  @param block A block object called with the results of the fetch.
  
+ @deprecated Now use WACloudStorageClient#fetchBlobContainersWithRequest:usingCompletionHandler:
+ 
  @discussion The method will run asynchronously and will call back through the block. The block will contain the array of WABlobContainer objects or an error if one occurs. The WAResultContinuation returned in the block can be used to call this method again to get the next set of containers.
  
  @see WAResultContinuation
  */
-- (void)fetchBlobContainersWithContinuation:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult usingCompletionHandler:(void (^)(NSArray *containers, WAResultContinuation *resultContinuation, NSError *error))block;
+- (void)fetchBlobContainersWithContinuation:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult usingCompletionHandler:(void (^)(NSArray *containers, WAResultContinuation *resultContinuation, NSError *error))block DEPRECATED_ATTRIBUTE;
+
+/**
+ Fetch a list of blob containers asynchronously using a fetch request.
+ 
+ @param fetchRequest The fetch request for the containers.
+ 
+ @discussion The method will run asynchronously and will call back through the delegate set for the client.
+ 
+ @see WABlobContainerFetchRequest
+ @see WACloudStorageClient#delegate
+ @see WACloudStorateClientDelegate#storageClient:didFetchBlobContainers:withResultContinuation:
+ */
+- (void)fetchBlobContainersWithRequest:(WABlobContainerFetchRequest *)fetchRequest;
+
+/**
+ Fetch a list of blob containers asynchronously using fetch request with a block.
+ 
+ @param fetchRequest The fetch request for the containers.
+ @param block A block object called with the results of the fetch.
+ 
+ @discussion The method will run asynchronously and will call back through the block. The block will contain the array of WABlobContainer objects or an error if one occurs. The WAResultContinuation returned in the block can be used to call this method again to get the next set of containers.
+ 
+ @see WABlobContainerFetchRequest
+ @see WAResultContinuation
+ */
+- (void)fetchBlobContainersWithRequest:(WABlobContainerFetchRequest *)fetchRequest usingCompletionHandler:(void (^)(NSArray *containers, WAResultContinuation *resultContinuation, NSError *error))block;
 
 /**
  Fetch a blob container by name asynchronously.
@@ -231,16 +269,20 @@
  
  @discussion The method will run asynchronously and will call back through the delegate set for the client.
  
+ @deprecated Now use WACloudStorageClient#deleteBlobContainer:
+ 
  @see WACloudStorageClient#delegate
  @see WACloudStorageClientDelegate#storageClient:didDeleteBlobContainerNamed:
  */
-- (BOOL)deleteBlobContainerNamed:(NSString *)containerName;
+- (BOOL)deleteBlobContainerNamed:(NSString *)containerName DEPRECATED_ATTRIBUTE;
 
 /**
  Deletes a specified named blob container asynchronously with a block.
 	
  @param containerName The name of the container to delete.
  @param block A block object called with the results of the delete.
+ 
+ @deprecated Now use WACloudStorageClient#deleteBlobContainer:withCompletionHandler:
 	
  @returns Returns if the request was sent or not.
  
@@ -248,7 +290,7 @@
  
  @see NSError
  */
-- (BOOL)deleteBlobContainerNamed:(NSString *)containerName withCompletionHandler:(void (^)(NSError *error))block;
+- (BOOL)deleteBlobContainerNamed:(NSString *)containerName withCompletionHandler:(void (^)(NSError *error))block DEPRECATED_ATTRIBUTE;
 
 /**
  Fetch the blobs for the specified blob container asynchronously.
@@ -257,12 +299,14 @@
  
  @discussion The method will run asynchronously and will call back through the delegate for the client. There could be a limit to the number of blobs that are returned. If you have many blobs, you may want to use the continuation version of fetching the blobs.
  
+ @deprecated Now use WACloudStorageClient#fetchBlobsWithRequest:.
+ 
  @see WACloudStorageClient#delegate
  @see WACloudStorageClientDelegate#storageClient:didFetchBlobs:inContainer:
  @see WABlobContainer
  @see fetchBlobsWithContinuation:resultContinuation:maxResult:
  */
-- (void)fetchBlobs:(WABlobContainer *)container;
+- (void)fetchBlobs:(WABlobContainer *)container DEPRECATED_ATTRIBUTE;
 
 /**
  Fetch the blobs for the specified blob container asynchronously with a block.
@@ -272,11 +316,13 @@
  
  @discussion The method will run asynchronously and will call back through the block. The block will be called with an array of WABlob objects or an error if the request failed. There could be a limit to the number of blobs that are returned. If you have many blobs, you may want to use the continuation version of fetching the blobs.
  
+ @deprecated Now use WACloudStorageClient#fetchBlobsWithRequest:usingCompletionHandler:.
+ 
  @see WABlobContainer
  @see WABlob
  @see fetchBlobsWithContinuation:resultContinuation:maxResult:usingCompletionHandler:
  */
-- (void)fetchBlobs:(WABlobContainer *)container withCompletionHandler:(void (^)(NSArray *blobs, NSError *error))block;
+- (void)fetchBlobs:(WABlobContainer *)container withCompletionHandler:(void (^)(NSArray *blobs, NSError *error))block DEPRECATED_ATTRIBUTE;
 
 /**
  Fetch the blobs for the specified blob container asynchronously using continuation.
@@ -287,11 +333,13 @@
  
  @discussion The method will run asynchronously and will call back through the delegate for the client. The continuation token contains the next marker to use or nil if this is the first request.
  
+@deprecated Now use WACloudStorageClient#fetchBlobsWithRequest:.
+ 
  @see WAResultContinuation
  @see WABlobContainer
  @see WACloudStorageClientDelegate#storageClient:didFetchBlobs:inContainer:withResultContinuation:
  */
-- (void)fetchBlobsWithContinuation:(WABlobContainer *)container resultContinuation:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult;
+- (void)fetchBlobsWithContinuation:(WABlobContainer *)container resultContinuation:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult DEPRECATED_ATTRIBUTE;
 
 /**
  Fetch the blobs for the specified blob container asynchronously using continuation with a block.
@@ -303,10 +351,37 @@
  
  @discussion The method will run asynchronously and will call back through the block. The block will return an arry of WABlob objects if the request succeeds or an error if it fails. The result continuation can be used to make requests for the next set of blobs in the contianer.
  
+ @deprecated Now use WACloudStorageClient#fetchBlobsWithRequest:usingCompletionHandler:
+ 
  @see WABlobContainer
  @see WAResultContinuation
  */
-- (void)fetchBlobsWithContinuation:(WABlobContainer *)container resultContinuation:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult usingCompletionHandler:(void (^)(NSArray *blobs, WAResultContinuation *resultContinuation, NSError *error))block;
+- (void)fetchBlobsWithContinuation:(WABlobContainer *)container resultContinuation:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult usingCompletionHandler:(void (^)(NSArray *blobs, WAResultContinuation *resultContinuation, NSError *error))block DEPRECATED_ATTRIBUTE;
+
+/**
+ Fetch the blobs for the specified blob container asynchronously using continuation.
+ 
+ @param fetchRequest A fetch request that specifies the search criteria for the fetch.
+ 
+ @discussion The method will run asynchronously and will call back through the delegate for the client. The continuation token contains the next marker to use or nil if this is the first request.
+ 
+ @see WABlobFetchRequest
+ @see WACloudStorageClientDelegate#storageClient:didFetchBlobs:inContainer:withResultContinuation:
+ */
+- (void)fetchBlobsWithRequest:(WABlobFetchRequest *)fetchRequest;
+
+/**
+ Fetch the blobs for the specified blob container asynchronously using continuation with a block.
+ 
+ @param fetchRequest A fetch request that specifies the search criteria for the fetch.
+ @param block A block object called with the results of the fetch.
+ 
+ @discussion The method will run asynchronously and will call back through the block. The block will return an arry of WABlob objects if the request succeeds or an error if it fails. The result continuation can be used to make requests for the next set of blobs in the contianer.
+ 
+ @see WABlobFetchRequest
+ @see WAResultContinuation
+ */
+- (void)fetchBlobsWithRequest:(WABlobFetchRequest *)fetchRequest usingCompletionHandler:(void (^)(NSArray *blobs, WAResultContinuation *resultContinuation, NSError *error))block;
 
 /**
  Fetch the blob data for the specified blob asynchronously.
@@ -466,10 +541,12 @@
  
  @discussion The method will run asynchronously and will call back through the delegate for the client.
  
+ @deprecated Now use WACloudStorageClient#fetchQueuesWithRequest:
+ 
  @see WACloudStorageClient#delegate
  @see WACloudStorageClientDelegate#storageClient:didFetchQueues:
  */
-- (void)fetchQueues;
+- (void)fetchQueues DEPRECATED_ATTRIBUTE;
 
 /**
  Fetch a list of queues asynchronously using a block.
@@ -478,9 +555,11 @@
  
  @discussion The method will run asynchronously and will call back through the block. The block will be called with a list of WAQueue objects or an error if the request fails, otherwise the error object will be nil.
  
+ @deprecated Now use WACloudStorageClient#fetchQueuesWithRequest:usingCompletionHandler:
+ 
  @see WAQueue
  */
-- (void)fetchQueuesWithCompletionHandler:(void (^)(NSArray *queues, NSError *error))block;
+- (void)fetchQueuesWithCompletionHandler:(void (^)(NSArray *queues, NSError *error))block DEPRECATED_ATTRIBUTE;
 
 /*! Returns a list of queues. */
 /**
@@ -491,11 +570,13 @@
  
  @discussion The method will run asynchronously and will call back through the delegate for the client. The result continuation can be nil or conatin the marker to fetch the next set of queues from a previous request.
  
+ @deprecated Now use WACloudStorageClient#fetchQueuesWithRequest:
+ 
  @see WACloudStorageClient#delegate
  @see WACloudStorageClientDelegate#storageClient:didFetchQueues:withResultContinuation:
  @see WAResultContinuation
  */
-- (void)fetchQueuesWithContinuation:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult;
+- (void)fetchQueuesWithContinuation:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult DEPRECATED_ATTRIBUTE;
 
 /**
  Fetch a list of queues asynchronously with a result continuation using a block.
@@ -506,9 +587,35 @@
  
  @discussion The method will run asynchronously and will call back through the block. The block will return an arry of WAQueue objects if the request succeeds or an error if it fails. The result continuation can be used to make requests for the next set of blobs in the contianer.
  
+ @deprecated Now use WACloudStorageClient#fetchQueuesWithRequest:usingCompletionHandler:
+ 
  @see WAResultContinuation
  */
-- (void)fetchQueuesWithContinuation:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult usingCompletionHandler:(void (^)(NSArray *queues, WAResultContinuation *resultContinuation, NSError *error))block;
+- (void)fetchQueuesWithContinuation:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult usingCompletionHandler:(void (^)(NSArray *queues, WAResultContinuation *resultContinuation, NSError *error))block DEPRECATED_ATTRIBUTE;
+
+/**
+ Fetch a list of queues asynchronously.
+ 
+ @param fetchRequest The fetch request for the queues.
+ 
+ @discussion The method will run asynchronously and will call back through the delegate for the client.
+ 
+ @see WACloudStorageClient#delegate
+ @see WACloudStorageClientDelegate#storageClient:didFetchQueues:
+ */
+- (void)fetchQueuesWithRequest:(WAQueueFetchRequest *)fetchRequest;
+
+/**
+ Fetch a list of queues asynchronously using a block.
+ 
+ @param fetchRequest The fetch request for the queues.
+ @param block A block object called with the results of the fetch. 
+ 
+ @discussion The method will run asynchronously and will call back through the block. The block will be called with a list of WAQueue objects or an error if the request fails, otherwise the error object will be nil.
+ 
+ @see WAQueue
+ */
+- (void)fetchQueuesWithRequest:(WAQueueFetchRequest *)fetchRequest usingCompletionHandler:(void (^)(NSArray *queues, WAResultContinuation *resultContinuation, NSError *error))block;
 
 /**
  Adds a queue asynchronously, given a specified queue name.
@@ -556,30 +663,6 @@
 - (void)deleteQueueNamed:(NSString *)queueName withCompletionHandler:(void (^)(NSError *error))block;
 
 /**
- Fetch messages asynchronously for a given queue name.
-	
- @param queueName The name of the queue to get messages.
- 
- @discussion The method will run asynchronously and will call back through the delegate for the client.
- 
- @see WACloudStorageClient#delegate
- @see WACloudStorageClientDelegate#storageClient:didFetchQueueMessages:
- */
-- (void)fetchQueueMessages:(NSString *)queueName;
-
-/**
- Fetch messages asynchronously for a given queue name using a block.
- 
- @param queueName The name of the queue to get messages.
- @param block A block object called with the results of the fetch.
- 
- @discussion The method will run asynchronously and will call back through the block. The block will be called with a list of WAQueueMessage objects or an error if the request fails, otherwise the error object will be nil.
- 
- @see WAQueueMessage
- */
-- (void)fetchQueueMessages:(NSString *)queueName withCompletionHandler:(void (^)(NSArray *messages, NSError *error))block;
-
-/**
  Fetch a single message asynchronously from the specified queue.
 	
  @param queueName The name of the queue.
@@ -604,6 +687,30 @@
 - (void)fetchQueueMessage:(NSString *)queueName withCompletionHandler:(void (^)(WAQueueMessage *message, NSError *error))block;
 
 /**
+ Fetch messages asynchronously for a given queue name.
+ 
+ @param queueName The name of the queue to get messages.
+ 
+ @discussion The method will run asynchronously and will call back through the delegate for the client.
+ 
+ @see WACloudStorageClient#delegate
+ @see WACloudStorageClientDelegate#storageClient:didFetchQueueMessages:
+ */
+- (void)fetchQueueMessages:(NSString *)queueName DEPRECATED_ATTRIBUTE;
+
+/**
+ Fetch messages asynchronously for a given queue name using a block.
+ 
+ @param queueName The name of the queue to get messages.
+ @param block A block object called with the results of the fetch.
+ 
+ @discussion The method will run asynchronously and will call back through the block. The block will be called with a list of WAQueueMessage objects or an error if the request fails, otherwise the error object will be nil.
+ 
+ @see WAQueueMessage
+ */
+- (void)fetchQueueMessages:(NSString *)queueName withCompletionHandler:(void (^)(NSArray *messages, NSError *error))block DEPRECATED_ATTRIBUTE;
+
+/**
  Fetch a batch of messages asynchronously from the specified queue.
 	
  @param queueName The name of the queue.
@@ -614,7 +721,7 @@
  @see WACloudStorageClient#delegate
  @see WACloudStorageClientDelegate#storageClient:didFetchQueueMessages:
  */
-- (void)fetchQueueMessages:(NSString *)queueName fetchCount:(NSInteger)fetchCount;
+- (void)fetchQueueMessages:(NSString *)queueName fetchCount:(NSInteger)fetchCount DEPRECATED_ATTRIBUTE;
 
 /**
  Fetch a batch of messages asynchronously from the specified queue using a block.
@@ -627,7 +734,31 @@
  
  @see WAQueueMessage
  */
-- (void)fetchQueueMessages:(NSString *)queueName fetchCount:(NSInteger)fetchCount withCompletionHandler:(void (^)(NSArray *messages, NSError *error))block;
+- (void)fetchQueueMessages:(NSString *)queueName fetchCount:(NSInteger)fetchCount withCompletionHandler:(void (^)(NSArray *messages, NSError *error))block DEPRECATED_ATTRIBUTE;
+
+/**
+ Fetch a batch of messages asynchronously from the specified queue.
+ 
+ @param fetchRequest The fetch request to fetch the messages.
+ 
+ @discussion The method will run asynchronously and will call back through the delegate for the client. The max number of messages that will be returned is 32.
+ 
+ @see WACloudStorageClient#delegate
+ @see WACloudStorageClientDelegate#storageClient:didFetchQueueMessages:
+ */
+- (void)fetchQueueMessagesWithRequest:(WAQueueMessageFetchRequest *)fetchRequest;
+
+/**
+ Fetch a batch of messages asynchronously from the specified queue using a block.
+ 
+ @param fetchRequest The fetch request to fetch the messages.
+ @param block A block object called with the results of the fetch.
+ 
+ @discussion The method will run asynchronously and will call back through the block. The block will be called with an array of WAQueueMessage object or an error if the request fails, otherwise the error object will be nil.
+ 
+ @see WAQueueMessage
+ */
+- (void)fetchQueueMessagesWithRequest:(WAQueueMessageFetchRequest *)fetchRequest usingCompletionHandler:(void (^)(NSArray *messages, NSError *error))block;
 
 /**
  Peeks a single message from the specified queue asynchronously.
@@ -830,11 +961,13 @@
  
  @discussion The method will run asynchronously and will call back through the delegate for the client.
  
+ @deprecated Now use WACloudStorageClient#fetchEntitiesWithRequest:
+ 
  @see WACloudStorageClient#delegate
  @see WACloudStorageClientDelegate#storageClient:didFetchEntities:fromTableNamed:
  @see WATableFetchRequest
  */
-- (void)fetchEntities:(WATableFetchRequest *)fetchRequest;
+- (void)fetchEntities:(WATableFetchRequest *)fetchRequest DEPRECATED_ATTRIBUTE;
 
 /**
  Fetches the entities for a given table asynchronously using a block.
@@ -844,10 +977,42 @@
  
  @discussion The method will run asynchronously and will call back through the block. The block will be called with an arrary of WATableEntity objects that are the table names or an error if the request fails, otherwise the error object will be nil.
  
+ @deprecated Now use WACloudStorageClient#fetchEntitiesWithRequest:usingCompletionHandler:
+ 
  @see WATableEntity
  @see WATableFetchRequest
  */
-- (void)fetchEntities:(WATableFetchRequest *)fetchRequest withCompletionHandler:(void (^)(NSArray *entities, NSError *error))block;
+- (void)fetchEntities:(WATableFetchRequest *)fetchRequest withCompletionHandler:(void (^)(NSArray *entities, NSError *error))block DEPRECATED_ATTRIBUTE;
+
+/**
+ Fetches the entities for a given table asynchronously using a result continuation.
+ 
+ @param fetchRequest The request to use to fetch the entities. 
+ 
+ @discussion The method will run asynchronously and will call back through the delegate for the client. The fetch request contains the result continuation to use for this fetch request.
+ 
+ @deprecated Now use WACloudStorageClient#fetchEntitiesWithRequest:
+ 
+ @see WACloudStorageClient#delegate
+ @see WACloudStorageClientDelegate#storageClient:didFetchEntities:fromTableNamed:withResultContinuation:
+ @see WATableFetchRequest
+ */
+- (void)fetchEntitiesWithContinuation:(WATableFetchRequest *)fetchRequest DEPRECATED_ATTRIBUTE;
+
+/**
+ Fetches the entities for a given table asynchronously using a result continuation and block.
+ 
+ @param fetchRequest The request to use to fetch the entities. 
+ @param block A block object called with the results of the fetch.
+ 
+ @discussion The method will run asynchronously and will call back through the block. The block will be called with an arrary of WATableEntity objects that are the table names or an error if the request fails, otherwise the error object will be nil. The result continuation can be used to make requests for the next set of blobs in the contianer.
+ 
+ @deprecated Now use WACloudStorageClient#fetchEntitiesWithRequest:usingCompletionHandler:
+ 
+ @see WAFetchRequest
+ @see WATableEntity
+ */
+- (void)fetchEntitiesWithContinuation:(WATableFetchRequest *)fetchRequest usingCompletionHandler:(void (^)(NSArray *entities, WAResultContinuation *resultContinuation, NSError *error))block DEPRECATED_ATTRIBUTE;
 
 /**
  Fetches the entities for a given table asynchronously using a result continuation.
@@ -860,7 +1025,7 @@
  @see WACloudStorageClientDelegate#storageClient:didFetchEntities:fromTableNamed:withResultContinuation:
  @see WATableFetchRequest
  */
-- (void)fetchEntitiesWithContinuation:(WATableFetchRequest *)fetchRequest;
+- (void)fetchEntitiesWithRequest:(WATableFetchRequest *)fetchRequest;
 
 /**
  Fetches the entities for a given table asynchronously using a result continuation and block.
@@ -873,7 +1038,7 @@
  @see WAFetchRequest
  @see WATableEntity
  */
-- (void)fetchEntitiesWithContinuation:(WATableFetchRequest *)fetchRequest usingCompletionHandler:(void (^)(NSArray *entities, WAResultContinuation *resultContinuation, NSError *error))block;
+- (void)fetchEntitiesWithRequest:(WATableFetchRequest *)fetchRequest usingCompletionHandler:(void (^)(NSArray *entities, WAResultContinuation *resultContinuation, NSError *error))block;
 
 /**
  Inserts a new entity into an existing table asynchronously.
@@ -1041,7 +1206,7 @@
  
  @see WABlobContainer
  */
-- (void)storageClient:(WACloudStorageClient *)client didFetchBlobContainers:(NSArray *)containers;
+- (void)storageClient:(WACloudStorageClient *)client didFetchBlobContainers:(NSArray *)containers DEPRECATED_ATTRIBUTE;
 
 /**
  Sent when the client successfully returns a list of blob containers and the result continuation that you can use when making future requests to get the next set of containers. 
@@ -1106,10 +1271,12 @@ Sent when the client successsfully adds a new blob container.
  @param blobs The array of WABlob objects returned from the request.
  @param container The WABlobContainer object for the blobs.
  
+ @deprecated Now use WACloudStorageClientDelegate#storageClient:didFetchBlobs:inContainer:withResultContinuation:
+ 
  @see WABlob
  @see WABlobContainer
  */
-- (void)storageClient:(WACloudStorageClient *)client didFetchBlobs:(NSArray *)blobs inContainer:(WABlobContainer *)container;
+- (void)storageClient:(WACloudStorageClient *)client didFetchBlobs:(NSArray *)blobs inContainer:(WABlobContainer *)container DEPRECATED_ATTRIBUTE;
 
 /**
  Sent when the client successfully returns blobs from an existing container.
@@ -1194,9 +1361,11 @@ Sent when the client successsfully adds a new blob container.
  @param client The client that sent the request
  @param queues An array of WAQueue objects.
  
+ @deprecated Now use WACloudStorageClientDelegate#storageClient:didFetchQueues:withResultContinuation:
+ 
  @see WAQueue
  */
-- (void)storageClient:(WACloudStorageClient *)client didFetchQueues:(NSArray *)queues;
+- (void)storageClient:(WACloudStorageClient *)client didFetchQueues:(NSArray *)queues DEPRECATED_ATTRIBUTE;
 
 /**
  Sent when the client successfully returns a list of queues with a result continuation.
@@ -1330,9 +1499,11 @@ Sent when the client successsfully adds a new blob container.
  @param entities An array of WATableEntity objects.
  @param tableName The name of the table that contains the enties.
  
+ @deprecated Now use WACloudStorageClientDelegate#storageClient:didFetchEntities:fromTableNamed:withResultContinuation:
+ 
  @see WATableEntity
  */
-- (void)storageClient:(WACloudStorageClient *)client didFetchEntities:(NSArray *)entities fromTableNamed:(NSString *)tableName;
+- (void)storageClient:(WACloudStorageClient *)client didFetchEntities:(NSArray *)entities fromTableNamed:(NSString *)tableName DEPRECATED_ATTRIBUTE;
 
 /**
  Sent when the client successfully returns a list of entities from a table.
