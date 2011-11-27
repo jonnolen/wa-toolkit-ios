@@ -6,6 +6,18 @@
       <Path>index.html</Path>
       <Subnodes>
        <Node>
+        <Name>Related Pages</Name>
+        <Path>pages.html</Path>
+        <Subnodes>
+         <Node>
+          <Name>Deprecated List</Name>
+          <Path>deprecated.html</Path>
+          <Subnodes>
+          </Subnodes>
+         </Node>
+        </Subnodes>
+       </Node>
+       <Node>
         <Name>Class List</Name>
         <Path>annotated.html</Path>
         <Subnodes>

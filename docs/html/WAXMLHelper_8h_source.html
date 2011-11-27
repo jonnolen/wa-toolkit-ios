@@ -38,6 +38,7 @@
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
     </ul>
@@ -78,19 +79,20 @@
 <a name="l00024"></a>00024 
 <a name="l00025"></a>00025 <span class="keyword">@interface </span>WAXMLHelper : NSObject
 <a name="l00026"></a>00026 
-<a name="l00027"></a>00027 + (void)performXPath:(NSString*)xpath onDocument:(xmlDocPtr)doc block:(<span class="keywordtype">void</span> (^)(xmlNodePtr))block;
-<a name="l00028"></a>00028 + (void)performXPath:(NSString*)xpath onNode:(xmlNodePtr)node block:(<span class="keywordtype">void</span> (^)(xmlNodePtr))block;
-<a name="l00029"></a>00029 + (NSString*)getElementValue:(xmlNodePtr)parent name:(NSString*)name;
-<a name="l00030"></a>00030 + (NSError*)checkForError:(xmlDocPtr)doc;
-<a name="l00031"></a>00031 + (void)parseAtomPub:(xmlDocPtr)doc block:(<span class="keywordtype">void</span> (^)(WAAtomPubEntry *))entry;
-<a name="l00032"></a>00032 
-<a name="l00033"></a>00033 <span class="keyword">@end</span>
+<a name="l00027"></a>00027 + (void)performXPath:(NSString *)xpath onDocument:(xmlDocPtr)doc block:(<span class="keywordtype">void</span> (^)(xmlNodePtr))block;
+<a name="l00028"></a>00028 + (void)performXPath:(NSString *)xpath onNode:(xmlNodePtr)node block:(<span class="keywordtype">void</span> (^)(xmlNodePtr))block;
+<a name="l00029"></a>00029 + (NSString *)getElementValue:(xmlNodePtr)parent name:(NSString*)name;
+<a name="l00030"></a>00030 + (NSString *)getStringErrorValue:(xmlDocPtr)doc;
+<a name="l00031"></a>00031 + (NSError *)checkForError:(xmlDocPtr)doc;
+<a name="l00032"></a>00032 + (void)parseAtomPub:(xmlDocPtr)doc block:(<span class="keywordtype">void</span> (^)(WAAtomPubEntry *))entry;
+<a name="l00033"></a>00033 
+<a name="l00034"></a>00034 <span class="keyword">@end</span>
 </pre></div></div>
 </div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Oct 23 2011 17:20:56 for WAToolkit by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Nov 27 2011 11:06:13 for WAToolkit by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.5.1
 </small></address>

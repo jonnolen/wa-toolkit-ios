@@ -38,6 +38,7 @@
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
     </ul>
@@ -63,13 +64,23 @@
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">(void)&#160;</td><td class="memItemRight" valign="bottom">- <a class="el" href="interfaceWABlob.html#a4d951348ddbb4e501a6c690c3f394900">setValue:forMetadataKey:</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">(void)&#160;</td><td class="memItemRight" valign="bottom">- <a class="el" href="interfaceWABlob.html#ab1294342f1f70e6deb8b7260c7f3ea3e">removeMetadataForKey:</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">(id)&#160;</td><td class="memItemRight" valign="bottom">- <a class="el" href="interfaceWABlob.html#a2c5b8355259f198a3cd667425aa2c43f">initBlobWithName:URL:</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">(id)&#160;</td><td class="memItemRight" valign="bottom">- <a class="el" href="interfaceWABlob.html#a96d1ad1c4d43e727c6c918ed846b0ff1">initBlobWithName:URL:container:</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">(id)&#160;</td><td class="memItemRight" valign="bottom">- <a class="el" href="interfaceWABlob.html#ad36651b49dc21d97b04ed1783b5fd0ac">initBlobWithName:URL:container:</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">(id)&#160;</td><td class="memItemRight" valign="bottom">- <a class="el" href="interfaceWABlob.html#a85c75ac5f93d23adcfb4366df04cbfbd">initBlobWithName:URL:containerName:</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">(id)&#160;</td><td class="memItemRight" valign="bottom">- <a class="el" href="interfaceWABlob.html#ad669bbb3cfc9466504f698034222fef8">initBlobWithName:URL:container:properties:</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">(id)&#160;</td><td class="memItemRight" valign="bottom">- <a class="el" href="interfaceWABlob.html#aef8c301c0514d739753e80cc593d5c69">initBlobWithName:URL:containerName:properties:</a></td></tr>
 <tr><td colspan="2"><h2><a name="properties"></a>
 Properties</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">NSString *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interfaceWABlob.html#afe11df2324240508d09bc95ce3ac52e1">name</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">NSURL *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interfaceWABlob.html#af76f5d05fcdd8865e0040b1e72ac3258">URL</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="interfaceWABlobContainer.html">WABlobContainer</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interfaceWABlob.html#a50e1f69e1dd9117711223680ab222790">container</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">NSData *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interfaceWABlob.html#ab7d11ea6d14f3aeb4cbc872156b30632">contentData</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">NSString *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interfaceWABlob.html#a2401aff7168cd37d6bb66c06f692a861">contentType</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="interfaceWABlobContainer.html">WABlobContainer</a> *container&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interfaceWABlob.html#ac499715c1bbac2cf95b9648d86f25254">DEPRECATED_ATTRIBUTE</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">NSString *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interfaceWABlob.html#a4e826970b99bdcb169020c6628883968">containerName</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">NSDictionary *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interfaceWABlob.html#adee2b643e5d53f2f676d72061395304d">metadata</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">NSDictionary *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interfaceWABlob.html#aa6d71d66c45919ce1feb42a53f63dd96">properties</a></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>A class that represents a Windows Azure Blob. </p>
@@ -110,7 +121,7 @@ Properties</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a96d1ad1c4d43e727c6c918ed846b0ff1"></a><!-- doxytag: member="WABlob::initBlobWithName:URL:container:" ref="a96d1ad1c4d43e727c6c918ed846b0ff1" args="(NSString *name,[URL] NSString *URL,[container] WABlobContainer *container)" -->
+<a class="anchor" id="ad36651b49dc21d97b04ed1783b5fd0ac"></a><!-- doxytag: member="WABlob::initBlobWithName:URL:container:" ref="ad36651b49dc21d97b04ed1783b5fd0ac" args="(NSString *name,[URL] NSString *URL,[container] WABlobContainer *DEPRECATED_ATTRIBUTE)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -130,7 +141,7 @@ Properties</h2></td></tr>
           <td class="paramkey">container:</td>
           <td></td>
           <td class="paramtype">(<a class="el" href="interfaceWABlobContainer.html">WABlobContainer</a> *)&#160;</td>
-          <td class="paramname"><em>container</em>&#160;</td>
+          <td class="paramname"><em>DEPRECATED_ATTRIBUTE</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -150,25 +161,285 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>The newly initialized <a class="el" href="interfaceWABlob.html">WABlob</a> object.</dd></dl>
-<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="interfaceWABlobContainer.html">WABlobContainer</a> </dd>
-<dd>
-NSURL </dd></dl>
+<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="interfaceWABlobContainer.html">WABlobContainer</a> </dd></dl>
 
 </div>
 </div>
-<hr/><h2>Property Documentation</h2>
-<a class="anchor" id="a50e1f69e1dd9117711223680ab222790"></a><!-- doxytag: member="WABlob::container" ref="a50e1f69e1dd9117711223680ab222790" args="" -->
+<a class="anchor" id="ad669bbb3cfc9466504f698034222fef8"></a><!-- doxytag: member="WABlob::initBlobWithName:URL:container:properties:" ref="ad669bbb3cfc9466504f698034222fef8" args="(NSString *name,[URL] NSString *URL,[container] WABlobContainer *container,[properties] NSDictionary *DEPRECATED_ATTRIBUTE)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">- (<a class="el" href="interfaceWABlobContainer.html">WABlobContainer</a>*) container<code> [read, assign]</code></td>
+          <td class="memname">- (id) initBlobWithName: </td>
+          <td></td>
+          <td class="paramtype">(NSString *)&#160;</td>
+          <td class="paramname"><em>name</em></td>
+        </tr>
+        <tr>
+          <td class="paramkey">URL:</td>
+          <td></td>
+          <td class="paramtype">(NSString *)&#160;</td>
+          <td class="paramname"><em>URL</em></td>
+        </tr>
+        <tr>
+          <td class="paramkey">container:</td>
+          <td></td>
+          <td class="paramtype">(<a class="el" href="interfaceWABlobContainer.html">WABlobContainer</a> *)&#160;</td>
+          <td class="paramname"><em>container</em></td>
+        </tr>
+        <tr>
+          <td class="paramkey">properties:</td>
+          <td></td>
+          <td class="paramtype">(NSDictionary *)&#160;</td>
+          <td class="paramname"><em>DEPRECATED_ATTRIBUTE</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Initializes a newly created <a class="el" href="interfaceWABlob.html">WABlob</a> with a name, address URL, the container and properties.</p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>The name of the blob. </td></tr>
+    <tr><td class="paramname">URL</td><td>The address of the blob. </td></tr>
+    <tr><td class="paramname">container</td><td>The container for the blob. </td></tr>
+    <tr><td class="paramname">properties</td><td>The properties for the blob.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>The newly initialized <a class="el" href="interfaceWABlob.html">WABlob</a> object.</dd></dl>
+<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="interfaceWABlobContainer.html">WABlobContainer</a> </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a85c75ac5f93d23adcfb4366df04cbfbd"></a><!-- doxytag: member="WABlob::initBlobWithName:URL:containerName:" ref="a85c75ac5f93d23adcfb4366df04cbfbd" args="(NSString *name,[URL] NSString *URL,[containerName] NSString *containerName)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">- (id) initBlobWithName: </td>
+          <td></td>
+          <td class="paramtype">(NSString *)&#160;</td>
+          <td class="paramname"><em>name</em></td>
+        </tr>
+        <tr>
+          <td class="paramkey">URL:</td>
+          <td></td>
+          <td class="paramtype">(NSString *)&#160;</td>
+          <td class="paramname"><em>URL</em></td>
+        </tr>
+        <tr>
+          <td class="paramkey">containerName:</td>
+          <td></td>
+          <td class="paramtype">(NSString *)&#160;</td>
+          <td class="paramname"><em>containerName</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Initializes a newly created <a class="el" href="interfaceWABlob.html">WABlob</a> with a name, address URL and a container.</p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>The name of the blob. </td></tr>
+    <tr><td class="paramname">URL</td><td>The address of the blob. </td></tr>
+    <tr><td class="paramname">containerName</td><td>The container name for the blob.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>The newly initialized <a class="el" href="interfaceWABlob.html">WABlob</a> object. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="aef8c301c0514d739753e80cc593d5c69"></a><!-- doxytag: member="WABlob::initBlobWithName:URL:containerName:properties:" ref="aef8c301c0514d739753e80cc593d5c69" args="(NSString *name,[URL] NSString *URL,[containerName] NSString *containerName,[properties] NSDictionary *properties)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">- (id) initBlobWithName: </td>
+          <td></td>
+          <td class="paramtype">(NSString *)&#160;</td>
+          <td class="paramname"><em>name</em></td>
+        </tr>
+        <tr>
+          <td class="paramkey">URL:</td>
+          <td></td>
+          <td class="paramtype">(NSString *)&#160;</td>
+          <td class="paramname"><em>URL</em></td>
+        </tr>
+        <tr>
+          <td class="paramkey">containerName:</td>
+          <td></td>
+          <td class="paramtype">(NSString *)&#160;</td>
+          <td class="paramname"><em>containerName</em></td>
+        </tr>
+        <tr>
+          <td class="paramkey">properties:</td>
+          <td></td>
+          <td class="paramtype">(NSDictionary *)&#160;</td>
+          <td class="paramname"><em>properties</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Initializes a newly created <a class="el" href="interfaceWABlob.html">WABlob</a> with a name, address URL, the container and properties.</p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>The name of the blob. </td></tr>
+    <tr><td class="paramname">URL</td><td>The address of the blob. </td></tr>
+    <tr><td class="paramname">containerName</td><td>The container name for the blob. </td></tr>
+    <tr><td class="paramname">properties</td><td>The properties for the blob.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>The newly initialized <a class="el" href="interfaceWABlob.html">WABlob</a> object. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ab1294342f1f70e6deb8b7260c7f3ea3e"></a><!-- doxytag: member="WABlob::removeMetadataForKey:" ref="ab1294342f1f70e6deb8b7260c7f3ea3e" args="(NSString *key)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">- (void) removeMetadataForKey: </td>
+          <td></td>
+          <td class="paramtype">(NSString *)&#160;</td>
+          <td class="paramname"><em>key</em></td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Removes a given key and its associated value from the dictionary.</p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">key</td><td>The key to remove.</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>Does nothing if key does not exist. </p>
+
+</div>
+</div>
+<a class="anchor" id="a4d951348ddbb4e501a6c690c3f394900"></a><!-- doxytag: member="WABlob::setValue:forMetadataKey:" ref="a4d951348ddbb4e501a6c690c3f394900" args="(NSString *value,[forMetadataKey] NSString *key)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">- (void) setValue: </td>
+          <td></td>
+          <td class="paramtype">(NSString *)&#160;</td>
+          <td class="paramname"><em>value</em></td>
+        </tr>
+        <tr>
+          <td class="paramkey">forMetadataKey:</td>
+          <td></td>
+          <td class="paramtype">(NSString *)&#160;</td>
+          <td class="paramname"><em>key</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Sets a value to the container metadata dictionary.</p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">The</td><td>value for the key. </td></tr>
+    <tr><td class="paramname">The</td><td>key for the value.</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>Raises an NSInvalidArgumentException if aKey or anObject is nil. If you need to represent a nil value in the dictionary, use NSNull. If aKey already exists in the dictionary, the dictionary’s previous value object for that key is sent a release message and anObject takes its place. </p>
+
+</div>
+</div>
+<hr/><h2>Property Documentation</h2>
+<a class="anchor" id="a4e826970b99bdcb169020c6628883968"></a><!-- doxytag: member="WABlob::containerName" ref="a4e826970b99bdcb169020c6628883968" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">- (NSString*) containerName<code> [read, assign]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>The container name of the blob. </p>
+
+</div>
+</div>
+<a class="anchor" id="ab7d11ea6d14f3aeb4cbc872156b30632"></a><!-- doxytag: member="WABlob::contentData" ref="ab7d11ea6d14f3aeb4cbc872156b30632" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">- (NSData*) contentData<code> [read, write, retain]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>The content data for the blob. </p>
+
+</div>
+</div>
+<a class="anchor" id="a2401aff7168cd37d6bb66c06f692a861"></a><!-- doxytag: member="WABlob::contentType" ref="a2401aff7168cd37d6bb66c06f692a861" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">- (NSString*) contentType<code> [read, write, copy]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>The content type for the blob. </p>
+
+</div>
+</div>
+<a class="anchor" id="ac499715c1bbac2cf95b9648d86f25254"></a><!-- doxytag: member="WABlob::DEPRECATED_ATTRIBUTE" ref="ac499715c1bbac2cf95b9648d86f25254" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">- (<a class="el" href="interfaceWABlobContainer.html">WABlobContainer</a>* container) DEPRECATED_ATTRIBUTE<code> [read, assign]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 <p>A <a class="el" href="interfaceWABlobContainer.html">WABlobContainer</a> object representing the blob's container.</p>
+<dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000027">Deprecated:</a></b></dt><dd>This will be deprecated in the next release.</dd></dl>
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="interfaceWABlobContainer.html">WABlobContainer</a> </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="adee2b643e5d53f2f676d72061395304d"></a><!-- doxytag: member="WABlob::metadata" ref="adee2b643e5d53f2f676d72061395304d" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">- (NSDictionary*) metadata<code> [read, assign]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>The metadata for the container. </p>
 
 </div>
 </div>
@@ -183,6 +454,20 @@ NSURL </dd></dl>
 </div>
 <div class="memdoc">
 <p>The name of the blob. </p>
+
+</div>
+</div>
+<a class="anchor" id="aa6d71d66c45919ce1feb42a53f63dd96"></a><!-- doxytag: member="WABlob::properties" ref="aa6d71d66c45919ce1feb42a53f63dd96" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">- (NSDictionary*) properties<code> [read, assign]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>The properties for the blob. </p>
 
 </div>
 </div>
@@ -209,7 +494,7 @@ NSURL </dd></dl>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Oct 23 2011 17:20:56 for WAToolkit by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Nov 27 2011 11:06:13 for WAToolkit by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.5.1
 </small></address>

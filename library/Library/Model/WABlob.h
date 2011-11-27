@@ -62,6 +62,8 @@ extern NSString * const WABlobPropertyKeySequenceNumber;
 /**
  A WABlobContainer object representing the blob's container.
  
+ @deprecated This will be deprecated in the next release.
+ 
  @see WABlobContainer
  */
 @property (readonly) WABlobContainer *container DEPRECATED_ATTRIBUTE;

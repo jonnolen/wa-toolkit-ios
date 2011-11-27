@@ -38,6 +38,7 @@
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
     </ul>
@@ -70,25 +71,45 @@
 <a name="l00016"></a>00016 
 <a name="l00017"></a>00017 <span class="preprocessor">#import &lt;Foundation/Foundation.h&gt;</span>
 <a name="l00018"></a>00018 
-<a name="l00022"></a><a class="code" href="interfaceWABlobContainer.html">00022</a> <span class="keyword">@interface </span><a class="code" href="interfaceWABlobContainer.html">WABlobContainer</a> : NSObject
-<a name="l00023"></a>00023 
-<a name="l00027"></a><a class="code" href="interfaceWABlobContainer.html#ad255f0d74c106615b16621789bc06ad8">00027</a> @property (copy) NSString *<a class="code" href="interfaceWABlobContainer.html#ad255f0d74c106615b16621789bc06ad8">name</a>;
+<a name="l00019"></a>00019 <span class="keyword">extern</span> NSString * <span class="keyword">const</span> WAContainerPropertyKeyEtag;
+<a name="l00020"></a>00020 <span class="keyword">extern</span> NSString * <span class="keyword">const</span> WAContainerPropertyKeyLastModified;
+<a name="l00021"></a>00021 
+<a name="l00025"></a><a class="code" href="interfaceWABlobContainer.html">00025</a> <span class="keyword">@interface </span><a class="code" href="interfaceWABlobContainer.html">WABlobContainer</a> : NSObject {
+<a name="l00026"></a>00026     NSMutableDictionary *_metadata;
+<a name="l00027"></a>00027 }
 <a name="l00028"></a>00028 
-<a name="l00034"></a><a class="code" href="interfaceWABlobContainer.html#a4feb51fdbb9a1cf8280621b7ff1d0a93">00034</a> @property (readonly) NSURL *<a class="code" href="interfaceWABlobContainer.html#a4feb51fdbb9a1cf8280621b7ff1d0a93">URL</a>;
-<a name="l00035"></a>00035 
-<a name="l00039"></a><a class="code" href="interfaceWABlobContainer.html#aab88444325b93c0453af50f42c81739b">00039</a> @property (readonly) NSString *<a class="code" href="interfaceWABlobContainer.html#aab88444325b93c0453af50f42c81739b">metadata</a>;
+<a name="l00032"></a><a class="code" href="interfaceWABlobContainer.html#ad255f0d74c106615b16621789bc06ad8">00032</a> <span class="keyword">@property</span> (copy) NSString *name;
+<a name="l00033"></a>00033 
+<a name="l00039"></a><a class="code" href="interfaceWABlobContainer.html#a4feb51fdbb9a1cf8280621b7ff1d0a93">00039</a> <span class="keyword">@property</span> (readonly) NSURL *URL;
 <a name="l00040"></a>00040 
-<a name="l00048"></a>00048 - (id)initContainerWithName:(NSString *)name;
-<a name="l00049"></a>00049 
-<a name="l00061"></a>00061 - (id)initContainerWithName:(NSString *)name URL:(NSString *)URL metadata:(NSString *)metadata;
-<a name="l00062"></a>00062 
-<a name="l00063"></a>00063 <span class="keyword">@end</span>
+<a name="l00046"></a><a class="code" href="interfaceWABlobContainer.html#a75ed467f114a65893a29eebeaee40acb">00046</a> <span class="keyword">@property</span> (readonly) NSString *sharedAccessSigniture;
+<a name="l00047"></a>00047 
+<a name="l00051"></a><a class="code" href="interfaceWABlobContainer.html#a49be5801447afc4be391d6db94fdaabe">00051</a> <span class="keyword">@property</span> (readonly) NSDictionary *metadata;
+<a name="l00052"></a>00052 
+<a name="l00056"></a><a class="code" href="interfaceWABlobContainer.html#a80e81c69dafac91f3af8c576db205c57">00056</a> <span class="keyword">@property</span> (readonly) NSDictionary *properties;
+<a name="l00057"></a>00057 
+<a name="l00058"></a>00058 
+<a name="l00067"></a>00067 - (void)setValue:(NSString *)value forMetadataKey:(NSString *)key;
+<a name="l00068"></a>00068 
+<a name="l00069"></a>00069 
+<a name="l00077"></a>00077 - (void)removeMetadataForKey:(NSString *)key;
+<a name="l00078"></a>00078 
+<a name="l00079"></a>00079 
+<a name="l00087"></a>00087 - (id)initContainerWithName:(NSString *)name;
+<a name="l00088"></a>00088 
+<a name="l00097"></a>00097 - (id)initContainerWithName:(NSString *)name URL:(NSString *)URL;
+<a name="l00098"></a>00098 
+<a name="l00110"></a>00110 - (id)initContainerWithName:(NSString *)name URL:(NSString *)URL sharedAccessSigniture:(NSString *)sharedAccessSigniture;
+<a name="l00111"></a>00111 
+<a name="l00124"></a>00124 - (id)initContainerWithName:(NSString *)name URL:(NSString *)URL sharedAccessSigniture:(NSString *)sharedAccessSigniture properties:(NSDictionary *)properties;
+<a name="l00125"></a>00125 
+<a name="l00126"></a>00126 <span class="keyword">@end</span>
 </pre></div></div>
 </div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Oct 23 2011 17:20:56 for WAToolkit by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Nov 27 2011 11:06:13 for WAToolkit by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.5.1
 </small></address>
