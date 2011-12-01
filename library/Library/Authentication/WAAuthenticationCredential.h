@@ -54,8 +54,8 @@
 	NSString *_accessKey;
 	NSString *_username;
 	NSString *_password;
-	NSString *_tableServiceURL;
-	NSString *_blobServiceURL;
+	NSURL *_tableServiceURL;
+	NSURL *_blobServiceURL;
 	WACloudAccessToken *_accessToken;
 }
 
@@ -90,12 +90,12 @@
 /**
  The URL of the table service endpoint, if authenticating with a proxy service.
  */
-@property (nonatomic, readonly) NSString *tableServiceURL;
+@property (nonatomic, readonly) NSURL *tableServiceURL;
 
 /**
  The URL of the blob service endpoint, if authenticating with a proxy service.
  */
-@property (nonatomic, readonly) NSString *blobServiceURL;
+@property (nonatomic, readonly) NSURL *blobServiceURL;
 
 /**
  Initializes a newly created WAAuthenticationCredential with a specified account name and access key obtained from the Windows Azure portal.

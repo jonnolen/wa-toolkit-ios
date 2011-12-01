@@ -6,8 +6,6 @@
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
 	<string>${PRODUCT_NAME}</string>
-	<key>CFBundleDocumentTypes</key>
-	<array/>
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleIconFile</key>
@@ -24,8 +22,6 @@
 	<string>1.0</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
-	<key>CFBundleURLTypes</key>
-	<array/>
 	<key>CFBundleVersion</key>
 	<string>1.0</string>
 	<key>LSRequiresIPhoneOS</key>
@@ -33,6 +29,32 @@
 	<key>NSMainNibFile</key>
 	<string>MainWindow</string>
 	<key>ToolkitConfig</key>
+	<dict>
+		<key>CloudReadyACS</key>
+		<dict>
+			<key>ACSNamespace</key>
+			<string>scottdeniosacs2</string>
+			<key>ACSRealm</key>
+			<string>uri:wazmobiletoolkit</string>
+			<key>ProxyService</key>
+			<string>scottdeniosacshost2</string>
+		</dict>
+		<key>CloudReadySimple</key>
+		<dict>
+			<key>ProxyService</key>
+			<string>scottdeniossimplehost2</string>
+		</dict>
+		<key>ConnectionType</key>
+		<string>CloudReadyACS</string>
+		<key>Direct</key>
+		<dict>
+			<key>AccountName</key>
+			<string>scottdeniosdirect</string>
+			<key>DirectAccessKey</key>
+			<string>R/QlKCic6edh8yH9PC+eFyKV4uWFMjsygFmY1xQj1SoYwkMwd3DJhoTpndB/uhHzPzFmj5z6E8yHmfbzRjyEvQ==</string>
+		</dict>
+	</dict>
+	<key>ToolkitConfig (tempate)</key>
 	<dict>
 		<key>CloudReadyACS</key>
 		<dict>
@@ -62,9 +84,5 @@
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
-	<key>UTExportedTypeDeclarations</key>
-	<array/>
-	<key>UTImportedTypeDeclarations</key>
-	<array/>
 </dict>
 </plist>
