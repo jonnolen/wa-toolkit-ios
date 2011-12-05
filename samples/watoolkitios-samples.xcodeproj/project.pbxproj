@@ -22,7 +22,7 @@
 		AAD6C8F113B29B630098300E /* ServiceCall.m in Sources */ = {isa = PBXBuildFile; fileRef = AAD6C8F013B29B630098300E /* ServiceCall.m */; };
 		AAD6C90613B2ADC10098300E /* RegisterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AAD6C90413B2ADC10098300E /* RegisterViewController.m */; };
 		AAD6C90713B2ADC10098300E /* RegisterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = AAD6C90513B2ADC10098300E /* RegisterViewController.xib */; };
-		DE1C9D09140DDC63007A7C9C /* libwatoolkitios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DE1C9D08140DDC63007A7C9C /* libwatoolkitios.a */; };
+		DEE7DDCC148C783700C6A64A /* libwatoolkitios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DEE7DDCB148C783700C6A64A /* libwatoolkitios.a */; };
 		DEEBA6E61408A92100175EB5 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = DEEBA6E41408A92100175EB5 /* Default.png */; };
 		DEEBA6E71408A92100175EB5 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DEEBA6E51408A92100175EB5 /* Default@2x.png */; };
 		DEEBA6EA1408A9C900175EB5 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = DEEBA6E81408A9C900175EB5 /* Icon.png */; };
@@ -48,30 +48,6 @@
 		F4A5D47D1374691D00F59CA9 /* TableListController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F4A5D4651374691D00F59CA9 /* TableListController.xib */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		DE1C9D02140DDC2C007A7C9C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DE1C9CFA140DDC2B007A7C9C /* watoolkitios-lib.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = F4F5239B1374612A004434B5;
-			remoteInfo = "watoolkitios-lib";
-		};
-		DE1C9D04140DDC2C007A7C9C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DE1C9CFA140DDC2B007A7C9C /* watoolkitios-lib.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = F4F998F7138DC6C100254B51;
-			remoteInfo = "watoolkitios-lib-test";
-		};
-		DE1C9D06140DDC5D007A7C9C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DE1C9CFA140DDC2B007A7C9C /* watoolkitios-lib.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 27E7D68C1345118600F142F7;
-			remoteInfo = "watoolkitios-lib";
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXFileReference section */
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -95,8 +71,7 @@
 		AAD6C90313B2ADC10098300E /* RegisterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegisterViewController.h; sourceTree = "<group>"; };
 		AAD6C90413B2ADC10098300E /* RegisterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegisterViewController.m; sourceTree = "<group>"; };
 		AAD6C90513B2ADC10098300E /* RegisterViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RegisterViewController.xib; sourceTree = "<group>"; };
-		DE1C9CFA140DDC2B007A7C9C /* watoolkitios-lib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "watoolkitios-lib.xcodeproj"; path = "../library/watoolkitios-lib.xcodeproj"; sourceTree = "<group>"; };
-		DE1C9D08140DDC63007A7C9C /* libwatoolkitios.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libwatoolkitios.a; sourceTree = SOURCE_ROOT; };
+		DEE7DDCB148C783700C6A64A /* libwatoolkitios.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libwatoolkitios.a; path = "../library/build/Debug-iphoneos/libwatoolkitios.a"; sourceTree = "<group>"; };
 		DEEB91F914211C4E009EE0A8 /* Macros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Macros.h; sourceTree = "<group>"; };
 		DEEBA6E41408A92100175EB5 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		DEEBA6E51408A92100175EB5 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
@@ -139,7 +114,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DE1C9D09140DDC63007A7C9C /* libwatoolkitios.a in Frameworks */,
+				DEE7DDCC148C783700C6A64A /* libwatoolkitios.a in Frameworks */,
 				27E7D771134512EE00F142F7 /* UIKit.framework in Frameworks */,
 				27E7D772134512EE00F142F7 /* Foundation.framework in Frameworks */,
 				27E7D773134512EE00F142F7 /* CoreGraphics.framework in Frameworks */,
@@ -179,7 +154,6 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
-				DE1C9CFA140DDC2B007A7C9C /* watoolkitios-lib.xcodeproj */,
 				27E7D65D1345101A00F142F7 /* Samples */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
@@ -190,7 +164,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				DE1C9D08140DDC63007A7C9C /* libwatoolkitios.a */,
+				DEE7DDCB148C783700C6A64A /* libwatoolkitios.a */,
 				AA0945501348EE2900AF7EAB /* libxml2.2.dylib */,
 				1DF5F4DF0D08C38300B7A737 /* UIKit.framework */,
 				1D30AB110D05D00D00671497 /* Foundation.framework */,
@@ -208,15 +182,6 @@
 				AAD6C8F013B29B630098300E /* ServiceCall.m */,
 			);
 			path = Configuration;
-			sourceTree = "<group>";
-		};
-		DE1C9CFB140DDC2B007A7C9C /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				DE1C9D03140DDC2C007A7C9C /* libwatoolkitios.a */,
-				DE1C9D05140DDC2C007A7C9C /* watoolkitios-lib-test.octest */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		F4A5D43E1374691D00F59CA9 /* Client */ = {
@@ -296,7 +261,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				DE1C9D07140DDC5D007A7C9C /* PBXTargetDependency */,
 			);
 			name = "watoolkitios-samples";
 			productName = "Azure Storage Client";
@@ -324,35 +288,12 @@
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* CustomTemplate */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = DE1C9CFB140DDC2B007A7C9C /* Products */;
-					ProjectRef = DE1C9CFA140DDC2B007A7C9C /* watoolkitios-lib.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				27E7D69E1345129200F142F7 /* watoolkitios-samples */,
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		DE1C9D03140DDC2C007A7C9C /* libwatoolkitios.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libwatoolkitios.a;
-			remoteRef = DE1C9D02140DDC2C007A7C9C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		DE1C9D05140DDC2C007A7C9C /* watoolkitios-lib-test.octest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "watoolkitios-lib-test.octest";
-			remoteRef = DE1C9D04140DDC2C007A7C9C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		27E7D69B1345129200F142F7 /* Resources */ = {
@@ -423,14 +364,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		DE1C9D07140DDC5D007A7C9C /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "watoolkitios-lib";
-			targetProxy = DE1C9D06140DDC5D007A7C9C /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		F4A5D44C1374691D00F59CA9 /* InfoPlist.strings */ = {

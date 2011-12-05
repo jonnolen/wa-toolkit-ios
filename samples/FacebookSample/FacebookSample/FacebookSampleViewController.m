@@ -8,6 +8,12 @@
 
 #import "FacebookSampleViewController.h"
 
+NSString * const ACSNamespace = @"your ACS namespace";
+NSString * const ACSRealm = @"your relying party realm";
+
+NSString * const NameIdentifierClaim = @"http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier";
+NSString * const AccessTokenClaim = @"http://www.facebook.com/claims/AccessToken";
+
 @implementation FacebookSampleViewController
 
 @synthesize loginButton;
@@ -57,7 +63,7 @@
 - (IBAction)login:(id)sender 
 {
     self.loginButton.hidden = YES;
-    WACloudAccessControlClient *acsClient = [WACloudAccessControlClient accessControlClientForNamespace:@"scottdeniosacs2" realm:@"uri:wazmobiletoolkit"];
+    WACloudAccessControlClient *acsClient = [WACloudAccessControlClient accessControlClientForNamespace:ACSNamespace realm:ACSRealm];
     [acsClient showInViewController:self allowsClose:NO withCompletionHandler:^(BOOL authenticated) { 
         if (!authenticated) { 
             NSLog(@"Error authenticating"); 
@@ -71,35 +77,18 @@
 
 - (IBAction)friends:(id)sender 
 {
-    NSMutableArray *httpEncoding = [NSMutableArray arrayWithObjects:[NSArray arrayWithObjects:@"%3a",@":",nil], 
-                                    [NSArray arrayWithObjects:@"%2f",@"/",nil], 
-                                    nil]; 
-    
-    NSString *localSecuirtyToken = [_token securityToken];
-    while ([httpEncoding count] >= 1) { 
-        localSecuirtyToken = [localSecuirtyToken stringByReplacingOccurrencesOfString:[[httpEncoding objectAtIndex:0] objectAtIndex:0] 
-                                                                   withString:[[httpEncoding objectAtIndex:0] objectAtIndex:1]]; 
-        [httpEncoding removeObjectAtIndex:0]; 
-    }
-    
-    NSError *error = NULL;
-    NSString *fbuserId = [[_token claims] objectForKey:@"nameidentifier"];
-    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"http://www.facebook.com/claims/AccessToken=([A-Za-z0-9]*)" 
-                                                      options:0 
-                                                        error:&error];
-    NSTextCheckingResult *match = [regex firstMatchInString:localSecuirtyToken 
-                                                    options:0 
-                                                      range:NSMakeRange(0, [localSecuirtyToken length])];
-    NSRange firstRange = [match rangeAtIndex:1];
-    NSString *oauthToken = [localSecuirtyToken substringWithRange:firstRange];
-    
+    // Get claims
+    NSString *fbuserId = [[_token claims] objectForKey:NameIdentifierClaim];
+    NSString *oauthToken = [[_token claims] objectForKey:AccessTokenClaim];
+        
     // Get my friends
+    NSError *error = NULL;
     NSString *graphURL = [NSString stringWithFormat:@"https://graph.facebook.com/%@/friends?access_token=%@",fbuserId,oauthToken];
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:graphURL]];
     NSURLResponse *response = NULL;
     NSData *data = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
     NSString *friendsList = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    regex = [NSRegularExpression regularExpressionWithPattern:@"id" options:0 error:&error];
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"id" options:0 error:&error];
     NSUInteger friendCount = [regex numberOfMatchesInString:friendsList options:0 range:NSMakeRange(0, [friendsList length])];
     [friendsList release];
     
