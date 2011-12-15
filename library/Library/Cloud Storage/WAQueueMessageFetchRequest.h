@@ -16,6 +16,11 @@
 
 #import <Foundation/Foundation.h>
 
+/**
+ A class that represents a Windows Azure Queue Message Container Storage fetch request.
+ 
+ The request is used with the WACloudStorageClient when working with blobs.
+ */
 @interface WAQueueMessageFetchRequest : NSObject
 
 /**

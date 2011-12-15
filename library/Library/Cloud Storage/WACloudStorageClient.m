@@ -16,6 +16,7 @@
 
 #import "WACloudStorageClient.h"
 #import <CommonCrypto/CommonHMAC.h>
+#import "WACloudStorageClientDelegate.h"
 #import "WACloudURLRequest.h"
 #import "WAContainerParser.h"
 #import "WABlobParser.h"

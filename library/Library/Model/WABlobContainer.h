@@ -33,8 +33,6 @@ extern NSString * const WAContainerPropertyKeyLastModified;
 
 /**
  The address of the container.
- 
- @see NSURL
  */
 @property (readonly) NSURL *URL;
 
@@ -59,8 +57,8 @@ extern NSString * const WAContainerPropertyKeyLastModified;
 /**
  Sets a value to the container metadata dictionary.
  
- @param The value for the key.
- @param The key for the value.
+ @param value The value for the key.
+ @param key The key for the value.
  
  @discussion Raises an NSInvalidArgumentException if aKey or anObject is nil. If you need to represent a nil value in the dictionary, use NSNull. If aKey already exists in the dictionary, the dictionary’s previous value object for that key is sent a release message and anObject takes its place.
  */

@@ -58,6 +58,7 @@
 		DE10B31A1481AF77009A0EBF /* AddContainerProxyTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DE10B3191481AF77009A0EBF /* AddContainerProxyTests.m */; };
 		DE10B31D1481B5B4009A0EBF /* DeleteContainerProxyTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DE10B31C1481B5B3009A0EBF /* DeleteContainerProxyTests.m */; };
 		DE10B3201481BBB5009A0EBF /* AddQueueMessageProxyTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DE10B31F1481BBB5009A0EBF /* AddQueueMessageProxyTests.m */; };
+		DE2A05A91499AD1000721DA4 /* WACloudStorageClientDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = DE2A05A81499AD1000721DA4 /* WACloudStorageClientDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DE2DB885147DFB6500DE61C3 /* PeekQueueMessagesProxyTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DE2DB884147DFB6500DE61C3 /* PeekQueueMessagesProxyTests.m */; };
 		DE2DB88A147ED68100DE61C3 /* WAQueueMessageFetchRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = DE2DB887147DFD8F00DE61C3 /* WAQueueMessageFetchRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DE2DB88B147ED68A00DE61C3 /* WAQueueMessageFetchRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = DE2DB888147DFD8F00DE61C3 /* WAQueueMessageFetchRequest.m */; };
@@ -194,6 +195,7 @@
 		DE10B31C1481B5B3009A0EBF /* DeleteContainerProxyTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeleteContainerProxyTests.m; sourceTree = "<group>"; };
 		DE10B31E1481BBB5009A0EBF /* AddQueueMessageProxyTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddQueueMessageProxyTests.h; sourceTree = "<group>"; };
 		DE10B31F1481BBB5009A0EBF /* AddQueueMessageProxyTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddQueueMessageProxyTests.m; sourceTree = "<group>"; };
+		DE2A05A81499AD1000721DA4 /* WACloudStorageClientDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WACloudStorageClientDelegate.h; sourceTree = "<group>"; };
 		DE2DB883147DFB6500DE61C3 /* PeekQueueMessagesProxyTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PeekQueueMessagesProxyTests.h; sourceTree = "<group>"; };
 		DE2DB884147DFB6500DE61C3 /* PeekQueueMessagesProxyTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PeekQueueMessagesProxyTests.m; sourceTree = "<group>"; };
 		DE2DB887147DFD8F00DE61C3 /* WAQueueMessageFetchRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WAQueueMessageFetchRequest.h; sourceTree = "<group>"; };
@@ -429,6 +431,7 @@
 			children = (
 				AA094587134A2BDB00AF7EAB /* WACloudStorageClient.h */,
 				AA094588134A2BDB00AF7EAB /* WACloudStorageClient.m */,
+				DE2A05A81499AD1000721DA4 /* WACloudStorageClientDelegate.h */,
 				AA6521E2134D1EE800008ADE /* WATableFetchRequest.h */,
 				AA6521E3134D1EE800008ADE /* WATableFetchRequest.m */,
 				DE03022A147208E600350904 /* WABlobFetchRequest.h */,
@@ -716,6 +719,7 @@
 				DECBE2F5147C8948001E37BB /* WABlobContainerFetchRequest.h in Headers */,
 				DECBE2FA147D6EFC001E37BB /* WAQueueFetchRequest.h in Headers */,
 				DE2DB88A147ED68100DE61C3 /* WAQueueMessageFetchRequest.h in Headers */,
+				DE2A05A91499AD1000721DA4 /* WACloudStorageClientDelegate.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

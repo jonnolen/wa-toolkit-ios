@@ -21,7 +21,7 @@
  
  @see WAResultContinuation
  */
-typedef enum {
+typedef enum WAContinuationType {
     WAContinuationNone = 0,
     WAContinuationBlob = 1,
     WAContinuationQueue = 2,
@@ -69,8 +69,6 @@ typedef enum {
 
 /**
  Determines if there is a continuation. The default is WAContinuationNone.
- 
- @see WAContinuationType
  */
 @property (nonatomic, readonly) BOOL hasContinuation;
 
@@ -102,8 +100,6 @@ typedef enum {
  @param continuationType The type of list operation.
  
  @returns The newly initialized WAResultContinuation object.
- 
- @see WAContinuationType
  */
 - (id)initWithContainerMarker:(NSString *)marker continuationType:(WAContinuationType)continuationType;
 

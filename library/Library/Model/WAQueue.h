@@ -28,8 +28,6 @@
 
 /**
  The address of the queue.
- 
- @see NSURL
  */
 @property (readonly) NSURL *URL;
 

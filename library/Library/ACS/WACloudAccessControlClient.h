@@ -58,8 +58,6 @@
  @param block The completion handler is called when the process is completed and contains if the user is authenticated or not.
  
  @returns A UIViewController to display the authentication view.
- 
- @see UIViewController
  */
 - (UIViewController *)createViewControllerAllowsClose:(BOOL)allowsClose withCompletionHandler:(void (^)(BOOL authenticated))block;
 
@@ -71,8 +69,6 @@
  @param controller The controller to display the view.
  @param allowsClose Determines if the user interface can be closed.
  @param block The completion handler is called when the process is completed and contains if the user is authenticated or not.
- 
- @see UIViewController
  */
 - (void)showInViewController:(UIViewController*)controller allowsClose:(BOOL)allowsClose withCompletionHandler:(void (^)(BOOL authenticated))block
 ;
