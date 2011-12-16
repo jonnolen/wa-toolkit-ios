@@ -21,6 +21,7 @@ Go into your project schema and add the environment variable WALogging and set i
 The watoolkitios-samples project contains a working iPhone project sample located in the samples directory to demonstrate the functionality of the library.  To use this, download the XCode 4 project and compile.  Before running, be sure to enter your Windows Azure storage account name and access key in RootViewController.m.  Your account name and access key can be obtained from the Windows Azure portal.
 
 ## Using the Library in your application
+
 Xcode 4.x (library)
 -------------------
 1. Open the watoolkit-lib Xcode project.
@@ -71,6 +72,7 @@ You now only need to add includes for the Windows Azure iOS toolkit libraries at
 Please see the samples directory for details on utilizing the library.
 
 ## Documentation
+
 Install [appledoc](https://github.com/tomaz/appledoc) from gentlebytes github and run library/MakeDocumenation.  This will create a doc set and install it to Xcode. There are some issues with cross reference links that we are working to fix.
 
 ## Contact
