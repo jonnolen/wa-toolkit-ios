@@ -22,6 +22,7 @@
 #import "WAResultContinuation.h"
 
 #import "WACloudStorageClient.h"
+#import "WACloudStorageClientDelegate.h"
 #import "WATableFetchRequest.h"
 #import "WABlobFetchRequest.h"
 #import "WABlobContainerFetchRequest.h"

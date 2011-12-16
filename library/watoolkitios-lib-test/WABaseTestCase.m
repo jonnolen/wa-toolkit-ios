@@ -40,7 +40,7 @@ NSString * const unitTestTableName = @"unittesttable";
     accessKey = [NSString stringWithString:WAAccessKey];
     directCredential = [WAAuthenticationCredential credentialWithAzureServiceAccount:account accessKey:accessKey];
     directClient = [WACloudStorageClient storageClientWithCredential:directCredential];
-    directDelegate = [WACloudStorageClientDelegate createDelegateForClient:directClient];
+    directDelegate = [WATestCloudStorageClientDelegate createDelegateForClient:directClient];
     
     // Setup proxy
     [WACloudStorageClient ignoreSSLErrorFor:WAProxyNamespace];
@@ -51,7 +51,7 @@ NSString * const unitTestTableName = @"unittesttable";
     proxyCredential = [WAAuthenticationCredential authenticateCredentialSynchronousWithProxyURL:[NSURL URLWithString:proxyURL] user:proxyUsername password:proxyPassword error:&error];
     STAssertNil(error, @"There was an error authenticating against the proxy server: %@",[error localizedDescription]);
     proxyClient = [WACloudStorageClient storageClientWithCredential:proxyCredential];
-    proxyDelegate = [WACloudStorageClientDelegate createDelegateForClient:proxyClient];
+    proxyDelegate = [WATestCloudStorageClientDelegate createDelegateForClient:proxyClient];
     
     // Setup some random strings for unit tests tables, containers, and queues
     randomTableNameString = [NSString stringWithFormat:@"%@%d",unitTestTableName,arc4random() % 1000];

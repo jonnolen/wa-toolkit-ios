@@ -19,6 +19,11 @@
 @class WAResultContinuation;
 @class WABlobContainer;
 
+/**
+ A class that represents a Windows Azure Blob Storage fetch request.
+ 
+ The request is used with the WACloudStorageClient when working with blobs.
+ */
 @interface WABlobFetchRequest : NSObject
 
 /**

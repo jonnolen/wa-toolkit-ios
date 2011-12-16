@@ -58,6 +58,7 @@
 		DE10B31A1481AF77009A0EBF /* AddContainerProxyTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DE10B3191481AF77009A0EBF /* AddContainerProxyTests.m */; };
 		DE10B31D1481B5B4009A0EBF /* DeleteContainerProxyTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DE10B31C1481B5B3009A0EBF /* DeleteContainerProxyTests.m */; };
 		DE10B3201481BBB5009A0EBF /* AddQueueMessageProxyTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DE10B31F1481BBB5009A0EBF /* AddQueueMessageProxyTests.m */; };
+		DE2A05A91499AD1000721DA4 /* WACloudStorageClientDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = DE2A05A81499AD1000721DA4 /* WACloudStorageClientDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DE2DB885147DFB6500DE61C3 /* PeekQueueMessagesProxyTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DE2DB884147DFB6500DE61C3 /* PeekQueueMessagesProxyTests.m */; };
 		DE2DB88A147ED68100DE61C3 /* WAQueueMessageFetchRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = DE2DB887147DFD8F00DE61C3 /* WAQueueMessageFetchRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DE2DB88B147ED68A00DE61C3 /* WAQueueMessageFetchRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = DE2DB888147DFD8F00DE61C3 /* WAQueueMessageFetchRequest.m */; };
@@ -119,7 +120,7 @@
 		F4F998F9138DC6C200254B51 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		F4F998FA138DC6C200254B51 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 288765FC0DF74451002DB57D /* CoreGraphics.framework */; };
 		F4F99900138DC6C200254B51 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = F4F998FE138DC6C200254B51 /* InfoPlist.strings */; };
-		F4F99917138DC8FD00254B51 /* WACloudStorageClientDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F4F99916138DC8FD00254B51 /* WACloudStorageClientDelegate.m */; };
+		F4F99917138DC8FD00254B51 /* WATestCloudStorageClientDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F4F99916138DC8FD00254B51 /* WATestCloudStorageClientDelegate.m */; };
 		F4F9991A138DCBC500254B51 /* libwatoolkitios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F4F5239B1374612A004434B5 /* libwatoolkitios.a */; };
 		F4F9991C138DCBDF00254B51 /* libxml2.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F4F9991B138DCBDF00254B51 /* libxml2.2.dylib */; };
 /* End PBXBuildFile section */
@@ -194,6 +195,7 @@
 		DE10B31C1481B5B3009A0EBF /* DeleteContainerProxyTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeleteContainerProxyTests.m; sourceTree = "<group>"; };
 		DE10B31E1481BBB5009A0EBF /* AddQueueMessageProxyTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddQueueMessageProxyTests.h; sourceTree = "<group>"; };
 		DE10B31F1481BBB5009A0EBF /* AddQueueMessageProxyTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddQueueMessageProxyTests.m; sourceTree = "<group>"; };
+		DE2A05A81499AD1000721DA4 /* WACloudStorageClientDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WACloudStorageClientDelegate.h; sourceTree = "<group>"; };
 		DE2DB883147DFB6500DE61C3 /* PeekQueueMessagesProxyTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PeekQueueMessagesProxyTests.h; sourceTree = "<group>"; };
 		DE2DB884147DFB6500DE61C3 /* PeekQueueMessagesProxyTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PeekQueueMessagesProxyTests.m; sourceTree = "<group>"; };
 		DE2DB887147DFD8F00DE61C3 /* WAQueueMessageFetchRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WAQueueMessageFetchRequest.h; sourceTree = "<group>"; };
@@ -277,6 +279,7 @@
 		DECBE2F9147D6EFC001E37BB /* WAQueueFetchRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WAQueueFetchRequest.m; sourceTree = "<group>"; };
 		DEF69018140827D4006FF7E5 /* Base64Tests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Base64Tests.h; sourceTree = "<group>"; };
 		DEF69019140827D4006FF7E5 /* Base64Tests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Base64Tests.m; sourceTree = "<group>"; };
+		DEFBA506149ACC5900A5849E /* WATestCloudStorageClientDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WATestCloudStorageClientDelegate.h; sourceTree = "<group>"; };
 		F216A684136F88BC00FAEAB4 /* WAQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WAQueue.h; sourceTree = "<group>"; };
 		F216A685136F88BC00FAEAB4 /* WAQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WAQueue.m; sourceTree = "<group>"; };
 		F216A686136F88BC00FAEAB4 /* WAQueueMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WAQueueMessage.h; sourceTree = "<group>"; };
@@ -293,8 +296,7 @@
 		F4F998FD138DC6C200254B51 /* watoolkitios-lib-test-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "watoolkitios-lib-test-Info.plist"; sourceTree = "<group>"; };
 		F4F998FF138DC6C200254B51 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		F4F99901138DC6C200254B51 /* watoolkitios-lib-test-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "watoolkitios-lib-test-Prefix.pch"; sourceTree = "<group>"; };
-		F4F99915138DC8FD00254B51 /* WACloudStorageClientDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WACloudStorageClientDelegate.h; sourceTree = "<group>"; };
-		F4F99916138DC8FD00254B51 /* WACloudStorageClientDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WACloudStorageClientDelegate.m; sourceTree = "<group>"; };
+		F4F99916138DC8FD00254B51 /* WATestCloudStorageClientDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WATestCloudStorageClientDelegate.m; sourceTree = "<group>"; };
 		F4F9991B138DCBDF00254B51 /* libxml2.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.2.dylib; path = usr/lib/libxml2.2.dylib; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -429,6 +431,7 @@
 			children = (
 				AA094587134A2BDB00AF7EAB /* WACloudStorageClient.h */,
 				AA094588134A2BDB00AF7EAB /* WACloudStorageClient.m */,
+				DE2A05A81499AD1000721DA4 /* WACloudStorageClientDelegate.h */,
 				AA6521E2134D1EE800008ADE /* WATableFetchRequest.h */,
 				AA6521E3134D1EE800008ADE /* WATableFetchRequest.m */,
 				DE03022A147208E600350904 /* WABlobFetchRequest.h */,
@@ -502,8 +505,8 @@
 			children = (
 				DE9615B7145F3006005BEB1B /* WABaseTestCase.h */,
 				DE9615B8145F3006005BEB1B /* WABaseTestCase.m */,
-				F4F99915138DC8FD00254B51 /* WACloudStorageClientDelegate.h */,
-				F4F99916138DC8FD00254B51 /* WACloudStorageClientDelegate.m */,
+				DEFBA506149ACC5900A5849E /* WATestCloudStorageClientDelegate.h */,
+				F4F99916138DC8FD00254B51 /* WATestCloudStorageClientDelegate.m */,
 				DE9DF65A14608F2C00E3B436 /* Queue */,
 				DE9DF65B14608F3C00E3B436 /* Queue Message */,
 				DE9DF66514609C3500E3B436 /* Container */,
@@ -716,6 +719,7 @@
 				DECBE2F5147C8948001E37BB /* WABlobContainerFetchRequest.h in Headers */,
 				DECBE2FA147D6EFC001E37BB /* WAQueueFetchRequest.h in Headers */,
 				DE2DB88A147ED68100DE61C3 /* WAQueueMessageFetchRequest.h in Headers */,
+				DE2A05A91499AD1000721DA4 /* WACloudStorageClientDelegate.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -885,7 +889,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F4F99917138DC8FD00254B51 /* WACloudStorageClientDelegate.m in Sources */,
+				F4F99917138DC8FD00254B51 /* WATestCloudStorageClientDelegate.m in Sources */,
 				DEF6901A140827D4006FF7E5 /* Base64Tests.m in Sources */,
 				DE9615B9145F3006005BEB1B /* WABaseTestCase.m in Sources */,
 				DE9DF647146044E700E3B436 /* FetchQueuesDirectTests.m in Sources */,
