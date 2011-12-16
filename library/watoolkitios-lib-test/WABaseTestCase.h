@@ -15,7 +15,7 @@
  */
 
 #import <SenTestingKit/SenTestingKit.h>
-#import "WACloudStorageClientDelegate.h"
+#import "WATestCloudStorageClientDelegate.h"
 
 #define INTEGRATION_DIRECT
 #define INTEGRATION_PROXY
@@ -33,11 +33,11 @@
     
     WAAuthenticationCredential *directCredential;
     WACloudStorageClient *directClient;
-    WACloudStorageClientDelegate *directDelegate;    
+    WATestCloudStorageClientDelegate *directDelegate;    
     
     WAAuthenticationCredential *proxyCredential;
     WACloudStorageClient *proxyClient;
-    WACloudStorageClientDelegate *proxyDelegate;
+    WATestCloudStorageClientDelegate *proxyDelegate;
     
     NSString *randomContainerNameString;
     NSString *randomQueueNameString;

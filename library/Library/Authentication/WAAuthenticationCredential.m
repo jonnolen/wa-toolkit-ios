@@ -26,6 +26,9 @@
 #import "Logging.h"
 #import "NSString+URLEncode.h"
 
+NSString * const WAXMSVersion = @"x-ms-version";
+NSString * const WAXMSVersionDate = @"2011-08-18";
+
 static NSString* PROXY_LOGIN_REQUEST_STRING = @"<Login xmlns:i=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns=\"http://schemas.datacontract.org/2004/07/Microsoft.Samples.WindowsPhoneCloud.StorageClient.Credentials\"><Password>{password}</Password><UserName>{username}</UserName></Login>";
 
 const int AUTHENTICATION_DELAY = 2;
@@ -274,7 +277,7 @@ const int AUTHENTICATION_DELAY = 2;
 		}
 		
         if (queueSemantics) {
-			[authenticatedrequest addValue:@"2009-09-19" forHTTPHeaderField:@"x-ms-version"];
+			[authenticatedrequest addValue:WAXMSVersionDate forHTTPHeaderField:WAXMSVersion];
         }
 		
 		if (contentType) {
@@ -341,7 +344,7 @@ const int AUTHENTICATION_DELAY = 2;
 		isName = !isName;
 	}
 	[headers addObject:[NSString stringWithFormat:@"x-ms-date:%@", dateString]];
-    [headers addObject:@"x-ms-version:2009-09-19"];
+    [headers addObject:[NSString stringWithFormat:@"%@:%@", WAXMSVersion, WAXMSVersionDate]];
     if (metadata != nil) {
         [metadata enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
             [headers addObject:[NSString stringWithFormat:@"x-ms-meta-%@:%@", key, obj]];
@@ -402,7 +405,7 @@ const int AUTHENTICATION_DELAY = 2;
 	// Set the request headers
 	[authenticatedrequest addValue:dateString forHTTPHeaderField:@"x-ms-date"];
 	if (blobSemantics || queueSemantics) {
-		[authenticatedrequest addValue:@"2009-09-19" forHTTPHeaderField:@"x-ms-version"];
+		[authenticatedrequest addValue:WAXMSVersionDate forHTTPHeaderField:WAXMSVersion];
 	}
 	[authenticatedrequest addValue:authHeader forHTTPHeaderField:@"Authorization"];
 	

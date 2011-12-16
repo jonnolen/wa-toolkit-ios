@@ -16,8 +16,9 @@
 
 #import <Foundation/Foundation.h>
 #import "WACloudStorageClient.h"
+#import "WACloudStorageClientDelegate.h"
 
-@interface WACloudStorageClientDelegate : NSObject <WACloudStorageClientDelegate> {
+@interface WATestCloudStorageClientDelegate : NSObject <WACloudStorageClientDelegate> {
 @private
 	id _result;
 	BOOL _complete;
@@ -29,6 +30,6 @@
 - (id)getResponse:(NSError **)error;
 - (void)markAsComplete;
 
-+ (WACloudStorageClientDelegate *)createDelegateForClient:(WACloudStorageClient *)client;
++ (WATestCloudStorageClientDelegate *)createDelegateForClient:(WACloudStorageClient *)client;
 
 @end

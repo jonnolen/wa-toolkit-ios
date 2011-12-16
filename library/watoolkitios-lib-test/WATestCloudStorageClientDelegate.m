@@ -14,15 +14,15 @@
  limitations under the License.
  */
 
-#import "WACloudStorageClientDelegate.h"
+#import "WATestCloudStorageClientDelegate.h"
 
-@interface WACloudStorageClientDelegate()
+@interface WATestCloudStorageClientDelegate()
 
 - (id)initForClient:(WACloudStorageClient *)client;
 
 @end
 
-@implementation WACloudStorageClientDelegate
+@implementation WATestCloudStorageClientDelegate
 
 - (id)initForClient:(WACloudStorageClient *)client
 {
@@ -43,7 +43,7 @@
     [super dealloc];
 }
 
-+ (WACloudStorageClientDelegate *)createDelegateForClient:(WACloudStorageClient *)client
++ (WATestCloudStorageClientDelegate *)createDelegateForClient:(WACloudStorageClient *)client
 {
 	return [[[self alloc] initForClient:client] autorelease];
 }

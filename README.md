@@ -70,6 +70,9 @@ You now only need to add includes for the Windows Azure iOS toolkit libraries at
     
 Please see the samples directory for details on utilizing the library.
 
+## Documentation
+Install [appledoc](https://github.com/tomaz/appledoc) from gentlebytes github and run library/MakeDocumenation.  This will create a doc set and install it to Xcode. There are some issues with cross reference links that we are working to fix.
+
 ## Contact
 
 For additional questions or feedback, please contact the [team](mailto:wwegner@microsoft.com).
