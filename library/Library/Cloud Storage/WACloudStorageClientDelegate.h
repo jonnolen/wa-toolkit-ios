@@ -55,6 +55,7 @@
  
  @see WABlobContainer
  */
+// TODO: Remove this before release
 - (void)storageClient:(WACloudStorageClient *)client didFetchBlobContainers:(NSArray *)containers DEPRECATED_ATTRIBUTE;
 
 /**
@@ -85,6 +86,7 @@
  @param client The client that sent the request.
  @param name The name that was added.
  */
+// TODO: Remove this before release
 - (void)storageClient:(WACloudStorageClient *)client didAddBlobContainerNamed:(NSString *)name DEPRECATED_ATTRIBUTE;
 
 /**
@@ -125,6 +127,7 @@
  @see WABlob
  @see WABlobContainer
  */
+// TODO: Remove this before release
 - (void)storageClient:(WACloudStorageClient *)client didFetchBlobs:(NSArray *)blobs inContainer:(WABlobContainer *)container DEPRECATED_ATTRIBUTE;
 
 /**
@@ -172,6 +175,7 @@
  
  @see WABlobContainer
  */
+// TODO: Remove this before release
 - (void)storageClient:(WACloudStorageClient *)client didAddBlobToContainer:(WABlobContainer *)container blobName:(NSString *)blobName DEPRECATED_ATTRIBUTE;
 
 
@@ -210,6 +214,7 @@
  
  @see WAQueue
  */
+// TODO: Remove this before release
 - (void)storageClient:(WACloudStorageClient *)client didFetchQueues:(NSArray *)queues DEPRECATED_ATTRIBUTE;
 
 /**
@@ -348,6 +353,7 @@
  
  @see WATableEntity
  */
+// TODO: Remove this before release
 - (void)storageClient:(WACloudStorageClient *)client didFetchEntities:(NSArray *)entities fromTableNamed:(NSString *)tableName DEPRECATED_ATTRIBUTE;
 
 /**

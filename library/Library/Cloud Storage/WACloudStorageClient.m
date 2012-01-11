@@ -622,7 +622,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
     NSArray*(^containerBlock)(xmlDocPtr) = nil;
     
     if (_credential.usesProxy) {
-        NSString *endpoint = [NSString stringWithFormat:@"/SharedAccessSignatureService/containers?containerPrefix=%@", [containerName URLEncode]];
+        NSString *endpoint = [NSString stringWithFormat:@"/SharedAccessSignatureService/containers?containerPrefix=%@", [[containerName lowercaseString] URLEncode]];
         
         request = [_credential authenticatedRequestWithEndpoint:endpoint forStorageType:@"blob", nil];
         containerBlock = ^(xmlDocPtr doc) {
@@ -685,12 +685,19 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
     NSString *containerName = [[container.name lowercaseString] URLEncode];
     NSMutableString *endpoint = [NSMutableString string];
 	if(_credential.usesProxy) {
-        [endpoint appendFormat:@"/SharedAccessSignatureService/container/%@", containerName];
+        [endpoint appendFormat:@"/SharedAccessSignatureService/container/%@?createIfNotExists=%@&isPublic=%@", containerName, container.createIfNotExists ? @"true" : @"false", container.isPublic ? @"true" : @"false"];
+        request = [_credential authenticatedRequestWithEndpoint:endpoint forStorageType:@"blob" httpMethod:@"PUT" contentData:[NSData data] contentType:nil metadata:container.metadata, nil];
     } else {
         [endpoint appendFormat:@"/%@?restype=container", containerName];
+        if (container.isPublic) {
+            request = [_credential authenticatedRequestWithEndpoint:endpoint forStorageType:@"blob" httpMethod:@"PUT" contentData:[NSData data] contentType:nil metadata:container.metadata, @"x-ms-blob-public-access", @"container", nil];
+        } else {
+            request = [_credential authenticatedRequestWithEndpoint:endpoint forStorageType:@"blob" httpMethod:@"PUT" contentData:[NSData data] contentType:nil metadata:container.metadata, nil];
+        }
     }
     
-    request = [_credential authenticatedRequestWithEndpoint:endpoint forStorageType:@"blob" httpMethod:@"PUT" contentData:[NSData data] contentType:nil metadata:container.metadata, nil];
+    //TODO: Delete this code
+    //request = [_credential authenticatedRequestWithEndpoint:endpoint forStorageType:@"blob" httpMethod:@"PUT" contentData:[NSData data] contentType:nil metadata:container.metadata, nil];
     
 	[request fetchXMLWithCompletionHandler:^(WACloudURLRequest* request, xmlDocPtr doc, NSError* error) {
         if (error) {
@@ -832,14 +839,14 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
 {
     WACloudURLRequest* request = nil;
     NSArray*(^blobBlock)(xmlDocPtr, WABlobContainer *) = nil;
-    
+    NSString *containerName = [[fetchRequest.container.name lowercaseString] URLEncode];
     if (_credential.usesProxy) {
-        NSMutableString *endpoint = [NSMutableString stringWithFormat:@"/SharedAccessSignatureService/blob?containerName=%@", [fetchRequest.container.name URLEncode]];
+        NSMutableString *endpoint = [NSMutableString stringWithFormat:@"/SharedAccessSignatureService/blob?containerName=%@", containerName];
         if (fetchRequest.useFlatListing == YES) {
             [endpoint appendString:@"&useFlatBlobListing=true"];
         }
         if (fetchRequest.prefix != nil) {
-            [endpoint appendFormat:@"&blobPrefix=%%", fetchRequest.prefix];
+            [endpoint appendFormat:@"&blobPrefix=%@", fetchRequest.prefix];
         }
         request = [_credential authenticatedRequestWithEndpoint:endpoint forStorageType:@"blob",
                    @"x-ms-blob-type", @"BlockBlob", nil];
@@ -847,7 +854,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
             return [WABlobParser loadBlobsForProxy:doc forContainerName:container.name];
         };
     } else {
-        NSMutableString *endpoint = [NSMutableString stringWithFormat:@"/%@?comp=list&restype=container&include=metadata", [fetchRequest.container.name URLEncode]];
+        NSMutableString *endpoint = [NSMutableString stringWithFormat:@"/%@?comp=list&restype=container&include=metadata", containerName];
         if (fetchRequest.maxResult > 0) {
             [endpoint appendFormat:@"&maxresults=%d", fetchRequest.maxResult];
         }
