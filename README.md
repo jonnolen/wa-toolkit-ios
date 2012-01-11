@@ -16,10 +16,6 @@ To download the library, select a download package (e.g. v1.2.1).  The download 
 You can enable logging for the library when you are working with it in debug mode by setting an environment variable for your run.
 Go into your project schema and add the environment variable WALogging and set it to YES and logging information will print in the console.
 
-## Using the Sample Application
-
-The watoolkitios-samples project contains a working iPhone project sample located in the samples directory to demonstrate the functionality of the library.  To use this, download the XCode 4 project and compile.  Before running, be sure to enter your Windows Azure storage account name and access key in RootViewController.m.  Your account name and access key can be obtained from the Windows Azure portal.
-
 ## Using the Library in your application
 
 Xcode 4.x (library)
@@ -74,6 +70,17 @@ Please see the samples directory for details on utilizing the library.
 ## Documentation
 
 Install [appledoc](https://github.com/tomaz/appledoc) from gentlebytes github and run library/MakeDocumenation.  This will create a doc set and install it to Xcode. There are some issues with cross reference links that we are working to fix.
+
+## Samples
+
+The samples directory contains samples of using the Toolkit. Each sample has a readme that explains how to use it.
+
+## Other Projects
+
+The following are the other projects associated with this project:
+
+1. (Toolkit Configuration Utility)[[UIApplication sharedApplication]] - This utility helps when using the (Cloud Ready Packages)[https://github.com/microsoft-dpe/wa-toolkit-cloudreadypackages]. 
+1. (Cloud Ready Packages)[https://github.com/microsoft-dpe/wa-toolkit-cloudreadypackages] - These are the packages to upload to act as proxies between your application and Windows Azure.
 
 ## Contact
 

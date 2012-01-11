@@ -15,6 +15,7 @@
  */
 
 #import "WAAppDelegate.h"
+#import "WAConfiguration.h"
 
 @implementation WAAppDelegate
 
@@ -23,6 +24,16 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
+    WAConfiguration *config = [WAConfiguration sharedConfiguration];	
+	if(!config) {
+		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Configuration Error" 
+															message:@"You must update the ToolkitConfig section in the application's info.plist file before running the first time."
+														   delegate:self 
+												  cancelButtonTitle:@"Close" 
+												  otherButtonTitles:nil];
+		[alertView show];
+		return YES;
+	}
     return YES;
 }
 							

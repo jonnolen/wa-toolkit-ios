@@ -83,20 +83,10 @@
 					return;
 				}
 				
-                /*
-				UIActivityIndicatorView *activity = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
-				UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithCustomView:activity];
-				self.navigationController.navigationItem.rightBarButtonItem = item;
-				[activity startAnimating];
-				*/
-                
                 NSString *endpoint = [NSString stringWithString:@"/RegistrationService/validate"];
                 
 				[WAServiceCall getFromURL:[config proxyURL:endpoint] withStringCompletionHandler:^(NSString* value, NSError *error) {
-					//self.navigationItem.leftBarButtonItem.enabled = YES;
-					//self.navigationItem.rightBarButtonItem = nil;
-					
-					if (error) {
+                    if (error) {
 						UIAlertView *view = [[UIAlertView alloc] initWithTitle:@"Error Validating Account" 
 																	   message:[error localizedDescription] 
 																	  delegate:self

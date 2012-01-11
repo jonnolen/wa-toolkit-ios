@@ -20,7 +20,7 @@
 @class WABitlyCredential;
 @class WALocationHandler;
 
-@interface WAMainViewController : UITableViewController <UINavigationControllerDelegate, UITextFieldDelegate, UIImagePickerControllerDelegate, UIAlertViewDelegate, WALocationHandlerDelegate> {
+@interface WAMainViewController : UITableViewController <UINavigationControllerDelegate, UITextFieldDelegate, UIImagePickerControllerDelegate, UIAlertViewDelegate, WALocationHandlerDelegate, UIActionSheetDelegate> {
 @private
     WABlobTweet *_blobTweet;
     WABitlyCredential *_bitlyCredential;
@@ -28,6 +28,7 @@
     WAAuthenticationCredential *_authenticationCredential;
 }
 @property (weak, nonatomic) IBOutlet UITextField *containerNameTextField;
+@property (weak, nonatomic) IBOutlet UITextField *blobNameTextField;
 
 - (IBAction)selectImage:(id)sender;
 - (IBAction)tweetBlob:(id)sender;

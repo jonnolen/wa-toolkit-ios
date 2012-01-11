@@ -39,8 +39,13 @@ typedef enum {
 typedef enum { 
     kButtonIndexDone = 1,
     kButtonIndexCancel
-}
-ButtonIndexTYpes;
+} ButtonIndexTypes;
+
+typedef enum {
+    kButtonCamera = 0,
+    kButtonExisting,
+    kButtonCancel
+} ActionButtonIndexs;
 
 @interface WAMainViewController()
 
@@ -56,6 +61,7 @@ ButtonIndexTYpes;
 @implementation WAMainViewController
 
 @synthesize containerNameTextField = _containerNameTextField;
+@synthesize blobNameTextField = _blobNameTextField;
 
 #pragma mark - View lifecycle
 
@@ -63,27 +69,36 @@ ButtonIndexTYpes;
 {
     [super viewDidLoad];
     
-    _blobTweet = [[WABlobTweet alloc] init];
-    _bitlyCredential = [[WABitlyCredential alloc] init];
-    _locationHandler = [[WALocationHandler alloc] init];
-    _locationHandler.delegate = self;
-    [_locationHandler startUpdatingCurrentLocation];
+    if (_blobTweet == nil) {
+        _blobTweet = [[WABlobTweet alloc] init];
+    }
     
-    WALoginHandler *loginContoller = [[WALoginHandler alloc] initWithStoryBoard:self.storyboard navigationController:self.navigationController];
-    [loginContoller login:^(WAAuthenticationCredential *authenticationCredential) {
-        _authenticationCredential = authenticationCredential;
-        [self.containerNameTextField becomeFirstResponder];
-    }];
+    if (_bitlyCredential == nil) {
+        _bitlyCredential = [[WABitlyCredential alloc] init];
+    }
+    
+    if (_locationHandler == nil) {
+        _locationHandler = [[WALocationHandler alloc] init];
+        _locationHandler.delegate = self;
+        [_locationHandler startUpdatingCurrentLocation];
+    }
+    
+    if (_authenticationCredential == nil) {
+        WALoginHandler *loginContoller = [[WALoginHandler alloc] initWithStoryBoard:self.storyboard navigationController:self.navigationController];
+        [loginContoller login:^(WAAuthenticationCredential *authenticationCredential) {
+            _authenticationCredential = authenticationCredential;
+            [self.containerNameTextField becomeFirstResponder];
+        }];
+    }
+    
+    self.containerNameTextField.text = _blobTweet.containerName;
 }
 
 - (void)viewDidUnload
 {
-    _blobTweet = nil;
-    _bitlyCredential = nil;
-    _locationHandler.delegate = nil;
-    _locationHandler = nil;
-    
     [self setContainerNameTextField:nil];
+    [self setBlobNameTextField:nil];
+    
     [super viewDidUnload];
 }
 
@@ -162,6 +177,20 @@ ButtonIndexTYpes;
 	[self dismissModalViewControllerAnimated:YES];
 }
 
+#pragma mark - UIActionSheetDelegate Methods
+
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+	UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
+	imagePicker.delegate = self;
+	
+	if (buttonIndex == kButtonCamera) {
+		imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
+	}
+    
+	[self presentModalViewController:imagePicker animated:YES];
+}
+
 #pragma mark - UITextFieldDelegate methods
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
@@ -192,17 +221,9 @@ ButtonIndexTYpes;
 {
 	
 	NSString *newStr = [textField.text stringByReplacingCharactersInRange:range withString:string];
-	/*
-	if (!newStr.length) {
-		createButton.enabled = NO;
-        uploadDefaultImageButton.enabled = YES;
-		return YES;
-	}
-	*/
+	
 	if ([newStr rangeOfString:@"^[A-Za-z][A-Za-z0-9\\-\\_]*" 
                       options:NSRegularExpressionSearch].length == newStr.length) {
-		//createButton.enabled = YES;
-        //uploadDefaultImageButton.enabled = YES;
 		return YES;
 	}
     
@@ -222,6 +243,7 @@ ButtonIndexTYpes;
     } 
 }
 
+/*
 #pragma mark - WABitlyControllerDelegate methods
 
 - (void)requestSucceeded:(WABitlyHandler *)request forLongURL:(NSURL *)longURL withShortURLString:(NSString *)shortURLString responseData:(NSDictionary *)data 
@@ -235,7 +257,8 @@ ButtonIndexTYpes;
     [self displayAlert:statusText];
     [self unlockView];
 }
-
+*/
+ 
 #pragma mark - WALocationControllerDelegate methods
 
 - (void)locationController:(WALocationHandler *)locationController didSelectLocation:(CLLocationCoordinate2D)location
@@ -247,14 +270,17 @@ ButtonIndexTYpes;
 
 - (IBAction)selectImage:(id)sender 
 {
-    UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
-	imagePicker.delegate = self;
+    if (![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
+        [self actionSheet:nil didDismissWithButtonIndex:1];
+        return;
+    }
     
-    if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
-        imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
-    } 
-	
-	[self presentModalViewController:imagePicker animated:YES];
+    UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:nil 
+                                                       delegate:self 
+                                              cancelButtonTitle:@"Cancel"
+                                         destructiveButtonTitle:nil 
+                                              otherButtonTitles:@"Take Photo", @"Choose Existing", nil];
+    [sheet showInView:self.view];
 }
 
 - (IBAction)tweetBlob:(id)sender 
@@ -280,16 +306,22 @@ ButtonIndexTYpes;
 
 - (void)unlockView
 {
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Tweet" style:UIBarButtonItemStyleBordered target:self action:@selector(tweetBlob:)];
+    //self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Tweet" style:UIBarButtonItemStyleBordered target:self action:@selector(tweetBlob:)];
+    self.navigationItem.leftBarButtonItem.enabled = YES;
     self.navigationItem.rightBarButtonItem.enabled = YES;
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 }
 
 - (void)lockView
 {
+    /*
     UIActivityIndicatorView *view = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
 	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:view];
 	[view startAnimating];
+     */
+    self.navigationItem.leftBarButtonItem.enabled = NO;
     self.navigationItem.rightBarButtonItem.enabled = NO;
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
 }
 
 - (void)retrieveBitlyInformation 
@@ -365,6 +397,7 @@ ButtonIndexTYpes;
                     WABitlyHandler *bitlyHandler = [[WABitlyHandler alloc] initWithLongURL:blobToShorten.URL username:_bitlyCredential.login apiKey:_bitlyCredential.apiKey];
                     [bitlyHandler shortenUrlWithCompletionHandler:^(WABitlyResponse *response, NSError *error) {
                         if (error != nil) {
+                            [_bitlyCredential clear];
                             [self displayAlert:error.localizedDescription];
                             [self unlockView];
                             return;
@@ -386,7 +419,8 @@ ButtonIndexTYpes;
 {
     Class tweeterClass = NSClassFromString(@"TWTweetComposeViewController");
     
-    if(tweeterClass != nil) {   // check for Twitter integration
+    // check for Twitter integration
+    if(tweeterClass != nil) {   
         // check Twitter accessibility and at least one account is setup
         if([TWTweetComposeViewController canSendTweet]) {
             TWTweetComposeViewController *tweetViewController = [[TWTweetComposeViewController alloc] init];
@@ -396,7 +430,7 @@ ButtonIndexTYpes;
                     // the user finished composing a tweet
                     [_blobTweet clear];
                     self.navigationItem.leftBarButtonItem.enabled = [_blobTweet isValid];
-                    _containerNameTextField.text = @"";
+                    _blobNameTextField.text = @"";
                 } else if(result == TWTweetComposeViewControllerResultCancelled) {
                     // the user cancelled composing a tweet
                 }
@@ -406,10 +440,10 @@ ButtonIndexTYpes;
             [self presentViewController:tweetViewController animated:YES completion:nil];
         } else {
             // Twitter is not accessible or the user has not setup an account
-            [self displayAlert:NSLocalizedString(@"You can't send a tweet right now, make sure your device has an internet connection and you have at least one Twitter account setup.", @"")];
+            [self displayAlert:@"You can't send a tweet right now, make sure your device has an internet connection and you have at least one Twitter account setup."];
         }
     } else {
-        // no Twitter integration; default to third-party Twitter framework
+        // no Twitter integration could default to third-party Twitter framework
     }
 }
 

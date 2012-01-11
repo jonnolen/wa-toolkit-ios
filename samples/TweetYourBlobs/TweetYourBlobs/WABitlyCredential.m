@@ -51,4 +51,15 @@ static NSString * const kBitlyInfoSaved = @"bitlyinfosaved";
     _saved = YES;
 }
 
+- (void)clear
+{
+    [WAKeychainController createKeychainValue:@"" forIdentifier:kLogin];
+    [WAKeychainController createKeychainValue:@"" forIdentifier:kApiKey];
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kBitlyInfoSaved];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    _login = nil;
+    _apiKey = nil;
+    _saved = NO;
+}
+
 @end

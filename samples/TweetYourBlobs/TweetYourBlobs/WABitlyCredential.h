@@ -23,4 +23,5 @@
 @property (nonatomic, assign, readonly) BOOL saved;
 
 - (void)saveLogin:(NSString *)login apiKey:(NSString *)apiKey;
+- (void)clear;
 @end

@@ -17,12 +17,11 @@
 #import "WABlobTweet.h"
 
 static NSString * const kContainerName = @"containername";
-static NSString * const kBlobName = @"blobname";
 
 @implementation WABlobTweet
 
 @synthesize containerName = _containerName;
-@synthesize blobName = _blobName;
+@synthesize blobName;
 @synthesize shortUrl;
 @synthesize image;
 @synthesize includeLocationData;
@@ -34,7 +33,6 @@ static NSString * const kBlobName = @"blobname";
     self = [super init];
     if (self) {
         _containerName = [[NSUserDefaults standardUserDefaults] valueForKey:kContainerName];
-        _blobName = [[NSUserDefaults standardUserDefaults] valueForKey:kBlobName];
         _makeContainerPublic = YES;
     }
     return self;
@@ -49,13 +47,7 @@ static NSString * const kBlobName = @"blobname";
     return nil;
 }
 
-- (void)setBlobName:(NSString *)blobName
-{
-    _blobName = [blobName copy];
-    [[NSUserDefaults standardUserDefaults] setValue:_blobName forKey:kBlobName];
-}
-
-- (void)setContanerName:(NSString *)contanerName
+- (void)setContainerName:(NSString *)contanerName
 {
     _containerName = [contanerName copy];
     [[NSUserDefaults standardUserDefaults] setValue:_containerName forKey:kContainerName];
@@ -83,11 +75,9 @@ static NSString * const kBlobName = @"blobname";
 
 - (void)clear
 {
-    self.containerName = nil;
     self.blobName = nil;
     self.image = nil;
-    self.makeContainerPublic = YES;
-    self.includeLocationData = NO;
+    self.shortUrl = nil;
 }
 
 @end
