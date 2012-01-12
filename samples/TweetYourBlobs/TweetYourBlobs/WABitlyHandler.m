@@ -15,6 +15,7 @@
  */
 #import "WABitlyHandler.h"
 #import "WABitlyResponse.h"
+#import "UIApplication+WANetworkActivity.h"
 
 @interface WABitlyHandler()
 
@@ -59,6 +60,7 @@
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:requestString]];
     self.connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
     self.receivedData = [NSMutableData data];
+    [[UIApplication sharedApplication] wa_pushNetworkActivity];
     [self.connection start];
 }
 
@@ -80,18 +82,19 @@
     
     /*
     NSString *statusText = [NSString stringWithFormat:@"The connection failed with error:%@ %@", [error localizedDescription], [[error userInfo] objectForKey:NSURLErrorFailingURLStringErrorKey]];
-
-    [self.delegate request:self failedForLongURL:self.longURL statusCode:-1 statusText:statusText];
     */
     _block(nil, error);
+    
+    [[UIApplication sharedApplication] wa_popNetworkActivity];
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
+    [[UIApplication sharedApplication] wa_popNetworkActivity];
+    
     NSError *error = nil;
     NSDictionary *json = [NSJSONSerialization JSONObjectWithData:self.receivedData options:kNilOptions error:&error];    
     if (error) {
-        // [self.delegate request:self failedForLongURL:self.longURL statusCode:0 statusText:[error localizedDescription]];
         _block(nil, error);
     } else {
         NSDecimalNumber *statusCode = [json objectForKey:@"status_code"];
@@ -102,13 +105,11 @@
                                         code:statusCode.intValue
                                     userInfo:[NSDictionary dictionaryWithObject:statusText forKey:NSLocalizedDescriptionKey]];
             _block(nil, error);
-            //[self.delegate request:self failedForLongURL:self.longURL statusCode:statusCode.intValue statusText:statusText];
         } else {
             if (!data) { 
                 error = [NSError errorWithDomain:@"com.microsoft.WAToolkitConfig" 
                                             code:statusCode.intValue
                                         userInfo:[NSDictionary dictionaryWithObject:@"The response data was empty from the service." forKey:NSLocalizedDescriptionKey]];
-                //[self.delegate request:self failedForLongURL:self.longURL statusCode:statusCode.intValue statusText:@"The response data was empty from the service."];
                 _block(nil, error);
             } else {
                 NSString *url = [data objectForKey:@"url"];
@@ -116,12 +117,10 @@
                     error = [NSError errorWithDomain:@"com.microsoft.WAToolkitConfig" 
                                                 code:statusCode.intValue
                                             userInfo:[NSDictionary dictionaryWithObject:@"The service did not return a shortened url." forKey:NSLocalizedDescriptionKey]];
-                    //[self.delegate request:self failedForLongURL:self.longURL statusCode:statusCode.intValue statusText:@"The service did not return a shortened url."];
                     _block(nil, error);
                 } else {
                     WABitlyResponse *response = [[WABitlyResponse alloc] initWithShortUrl:[NSURL URLWithString:url] longURL:self.longURL responseData:data];
                     _block(response, nil);
-                    //[self.delegate requestSucceeded:self forLongURL:self.longURL withShortURLString:url responseData:data];
                 }
             }
         }
@@ -129,6 +128,8 @@
     
     self.connection = nil;
     self.receivedData = nil;
+    
+    [[UIApplication sharedApplication] wa_popNetworkActivity];
 }
 
 

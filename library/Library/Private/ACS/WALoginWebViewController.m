@@ -20,6 +20,7 @@
 #import "NSString+URLEncode.h"
 #import "Logging.h"
 #import "WACloudAccessToken.h"
+#import "UIApplication+WANetworkActivity.h"
 
 const NSString* ScriptNotify = @"<script type=\"text/javascript\">window.external = { 'Notify': function(s) { document.location = 'acs://settoken?token=' + s; }, 'notify': function(s) { document.location = 'acs://settoken?token=' + s; } };</script>";
 
@@ -211,7 +212,7 @@ const NSString* ScriptNotify = @"<script type=\"text/javascript\">window.externa
 
         return NO;
     }
-    
+    [[UIApplication sharedApplication] wa_pushNetworkActivity];
     [NSURLConnection connectionWithRequest:request delegate:self];
 	[self showProgress];
     
@@ -227,6 +228,7 @@ const NSString* ScriptNotify = @"<script type=\"text/javascript\">window.externa
         [_data release];
         _data = nil;
     }
+    [[UIApplication sharedApplication] wa_popNetworkActivity];
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
@@ -251,8 +253,8 @@ const NSString* ScriptNotify = @"<script type=\"text/javascript\">window.externa
 		
 		self.navigationItem.rightBarButtonItem = nil;
     }
+    
+    [[UIApplication sharedApplication] wa_popNetworkActivity];
 }
-
-#pragma mark -
 
 @end

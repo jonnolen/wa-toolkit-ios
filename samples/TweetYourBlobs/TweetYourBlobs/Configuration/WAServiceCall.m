@@ -17,6 +17,7 @@
 #import "WAServiceCall.h"
 #import <libxml/xmlwriter.h>
 #import "WAConfiguration.h"
+#import "UIApplication+WANetworkActivity.h"
 
 @interface WAServiceRequest : NSObject {
 @private
@@ -331,6 +332,7 @@
 
 - (void)start
 {
+    [[UIApplication sharedApplication] wa_pushNetworkActivity];
     _connection = [[NSURLConnection alloc] initWithRequest:_request delegate:self];
 }
 
@@ -361,11 +363,15 @@
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
-	_block(_statusCode, nil, error);
+    [[UIApplication sharedApplication] wa_popNetworkActivity];
+	
+    _block(_statusCode, nil, error);
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
+    [[UIApplication sharedApplication] wa_popNetworkActivity];
+    
 	NSError *error = nil;
     
 	if (_statusCode >= 300) {

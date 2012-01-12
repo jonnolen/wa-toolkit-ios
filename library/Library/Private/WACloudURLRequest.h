@@ -42,13 +42,13 @@ typedef void (^WANoResponseHandler)(WACloudURLRequest* request, NSError* err);
     NSString *_nextPartitionKey;
     NSString *_nextTableKey;
 #if USE_QUEUE
-    WACloudURLRequest* _next;
+    WACloudURLRequest  *_next;
 #endif
 }
 
-- (void) fetchNoResponseWithCompletionHandler:(WANoResponseHandler)block;
-- (void) fetchXMLWithCompletionHandler:(WAFetchXMLHandler)block;
-- (void) fetchDataWithCompletionHandler:(WAFetchDataHandler)block;
+- (void)fetchNoResponseWithCompletionHandler:(WANoResponseHandler)block;
+- (void)fetchXMLWithCompletionHandler:(WAFetchXMLHandler)block;
+- (void)fetchDataWithCompletionHandler:(WAFetchDataHandler)block;
 
 @property (nonatomic, readonly) NSString *nextRowKey;
 @property (nonatomic, readonly) NSString *nextPartitionKey;

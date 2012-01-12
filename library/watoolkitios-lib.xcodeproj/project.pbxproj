@@ -62,6 +62,8 @@
 		DE2DB885147DFB6500DE61C3 /* PeekQueueMessagesProxyTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DE2DB884147DFB6500DE61C3 /* PeekQueueMessagesProxyTests.m */; };
 		DE2DB88A147ED68100DE61C3 /* WAQueueMessageFetchRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = DE2DB887147DFD8F00DE61C3 /* WAQueueMessageFetchRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DE2DB88B147ED68A00DE61C3 /* WAQueueMessageFetchRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = DE2DB888147DFD8F00DE61C3 /* WAQueueMessageFetchRequest.m */; };
+		DE3753FF14BE77B8002F10CA /* UIApplication+WANetworkActivity.h in Headers */ = {isa = PBXBuildFile; fileRef = DE3753FD14BE77B8002F10CA /* UIApplication+WANetworkActivity.h */; };
+		DE37540014BE77B8002F10CA /* UIApplication+WANetworkActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = DE3753FE14BE77B8002F10CA /* UIApplication+WANetworkActivity.m */; };
 		DE410E381427077A008D6626 /* WAResultContinuation.h in Headers */ = {isa = PBXBuildFile; fileRef = DE410E361427077A008D6626 /* WAResultContinuation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DE410E391427077A008D6626 /* WAResultContinuation.m in Sources */ = {isa = PBXBuildFile; fileRef = DE410E371427077A008D6626 /* WAResultContinuation.m */; };
 		DE4BE1281481C3EF00393AD1 /* DeleteQueueMessageDirectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DE4BE1241481C3C600393AD1 /* DeleteQueueMessageDirectTests.m */; };
@@ -200,6 +202,8 @@
 		DE2DB884147DFB6500DE61C3 /* PeekQueueMessagesProxyTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PeekQueueMessagesProxyTests.m; sourceTree = "<group>"; };
 		DE2DB887147DFD8F00DE61C3 /* WAQueueMessageFetchRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WAQueueMessageFetchRequest.h; sourceTree = "<group>"; };
 		DE2DB888147DFD8F00DE61C3 /* WAQueueMessageFetchRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WAQueueMessageFetchRequest.m; sourceTree = "<group>"; };
+		DE3753FD14BE77B8002F10CA /* UIApplication+WANetworkActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIApplication+WANetworkActivity.h"; sourceTree = "<group>"; };
+		DE3753FE14BE77B8002F10CA /* UIApplication+WANetworkActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIApplication+WANetworkActivity.m"; sourceTree = "<group>"; };
 		DE410E361427077A008D6626 /* WAResultContinuation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WAResultContinuation.h; sourceTree = "<group>"; };
 		DE410E371427077A008D6626 /* WAResultContinuation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WAResultContinuation.m; sourceTree = "<group>"; };
 		DE4BE1231481C3C600393AD1 /* DeleteQueueMessageDirectTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeleteQueueMessageDirectTests.h; sourceTree = "<group>"; };
@@ -496,6 +500,8 @@
 				AAD7348A134D2C21000AB68A /* NSString+URLEncode.h */,
 				AA5E1B8C13DE3EA300171D07 /* Logging.h */,
 				AA5E1B8D13DE3EA300171D07 /* Logging.m */,
+				DE3753FD14BE77B8002F10CA /* UIApplication+WANetworkActivity.h */,
+				DE3753FE14BE77B8002F10CA /* UIApplication+WANetworkActivity.m */,
 			);
 			path = Private;
 			sourceTree = "<group>";
@@ -720,6 +726,7 @@
 				DECBE2FA147D6EFC001E37BB /* WAQueueFetchRequest.h in Headers */,
 				DE2DB88A147ED68100DE61C3 /* WAQueueMessageFetchRequest.h in Headers */,
 				DE2A05A91499AD1000721DA4 /* WACloudStorageClientDelegate.h in Headers */,
+				DE3753FF14BE77B8002F10CA /* UIApplication+WANetworkActivity.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -882,6 +889,7 @@
 				DECBE2F6147C8948001E37BB /* WABlobContainerFetchRequest.m in Sources */,
 				DECBE2FB147D6EFC001E37BB /* WAQueueFetchRequest.m in Sources */,
 				DE2DB88B147ED68A00DE61C3 /* WAQueueMessageFetchRequest.m in Sources */,
+				DE37540014BE77B8002F10CA /* UIApplication+WANetworkActivity.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

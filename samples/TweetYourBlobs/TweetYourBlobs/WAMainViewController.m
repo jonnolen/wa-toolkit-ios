@@ -91,6 +91,12 @@ typedef enum {
         }];
     }
     
+    if (_HUD == nil) {
+        _HUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
+        [self.navigationController.view addSubview:_HUD];
+        _HUD.labelText = @"Uploading picture";
+    }
+    
     self.containerNameTextField.text = _blobTweet.containerName;
 }
 
@@ -98,6 +104,8 @@ typedef enum {
 {
     [self setContainerNameTextField:nil];
     [self setBlobNameTextField:nil];
+    [_HUD removeFromSuperview];
+    _HUD = nil;
     
     [super viewDidUnload];
 }
@@ -306,22 +314,16 @@ typedef enum {
 
 - (void)unlockView
 {
-    //self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Tweet" style:UIBarButtonItemStyleBordered target:self action:@selector(tweetBlob:)];
     self.navigationItem.leftBarButtonItem.enabled = YES;
     self.navigationItem.rightBarButtonItem.enabled = YES;
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    [_HUD hide:YES];
 }
 
 - (void)lockView
 {
-    /*
-    UIActivityIndicatorView *view = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
-	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:view];
-	[view startAnimating];
-     */
     self.navigationItem.leftBarButtonItem.enabled = NO;
     self.navigationItem.rightBarButtonItem.enabled = NO;
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+    [_HUD show:YES];
 }
 
 - (void)retrieveBitlyInformation 
