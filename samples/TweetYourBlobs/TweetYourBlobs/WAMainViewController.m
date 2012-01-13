@@ -112,7 +112,7 @@ typedef enum {
 
 
 #pragma mark - UITableViewDelegate methods
-/*
+
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
     UIView *customView = [[UIView alloc] initWithFrame:CGRectMake(10, 3, tableView.bounds.size.width - 10, 40)];
@@ -129,7 +129,7 @@ typedef enum {
     label.textColor = [UIColor whiteColor];
     label.backgroundColor = [UIColor clearColor];
     label.font = [UIFont boldSystemFontOfSize:18];
-    label.frame = CGRectMake(13, 0,customView.bounds.size.width - 13, 40);
+    label.frame = CGRectMake(20, 0,customView.bounds.size.width - 20, 40);
     [customView addSubview:label];
     return customView;
 }
@@ -138,7 +138,7 @@ typedef enum {
 {
     return 40;
 }
-*/
+
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -251,22 +251,7 @@ typedef enum {
     } 
 }
 
-/*
-#pragma mark - WABitlyControllerDelegate methods
 
-- (void)requestSucceeded:(WABitlyHandler *)request forLongURL:(NSURL *)longURL withShortURLString:(NSString *)shortURLString responseData:(NSDictionary *)data 
-{
-    _blobTweet.shortUrl = [NSURL URLWithString:shortURLString];
-    [self postToBlobStorage];
-}
-
-- (void)request:(WABitlyHandler *)request failedForLongURL:(NSURL *)url statusCode:(NSInteger)statusCode statusText:(NSString *)statusText
-{
-    [self displayAlert:statusText];
-    [self unlockView];
-}
-*/
- 
 #pragma mark - WALocationControllerDelegate methods
 
 - (void)locationController:(WALocationHandler *)locationController didSelectLocation:(CLLocationCoordinate2D)location

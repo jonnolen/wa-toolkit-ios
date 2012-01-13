@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>Tweet Your Blobs</string>
+	<string>TweetBlob</string>
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleIconFiles</key>
@@ -71,7 +71,7 @@
 			<string>scottdeniossimplehost2</string>
 		</dict>
 		<key>ConnectionType</key>
-		<string>CloudReadySimple</string>
+		<string>Direct</string>
 		<key>Direct</key>
 		<dict>
 			<key>AccountName</key>

@@ -59,7 +59,7 @@
 		DE74EBAF14BAAE390007EC16 /* WABitlyResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WABitlyResponse.h; sourceTree = "<group>"; };
 		DE74EBB014BAAE390007EC16 /* WABitlyResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WABitlyResponse.m; sourceTree = "<group>"; };
 		DE74EBB214BB4F9A0007EC16 /* BlockTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlockTypes.h; sourceTree = "<group>"; };
-		DEC2BD5B14A5713500887739 /* TweetYourBlobs.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TweetYourBlobs.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		DEC2BD5B14A5713500887739 /* TweetBlob.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TweetBlob.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DEC2BD5F14A5713500887739 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		DEC2BD6114A5713500887739 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		DEC2BD6314A5713500887739 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -138,7 +138,7 @@
 		DEC2BD5C14A5713500887739 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				DEC2BD5B14A5713500887739 /* TweetYourBlobs.app */,
+				DEC2BD5B14A5713500887739 /* TweetBlob.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -242,7 +242,7 @@
 			);
 			name = TweetYourBlobs;
 			productName = TweetYourBlobs;
-			productReference = DEC2BD5B14A5713500887739 /* TweetYourBlobs.app */;
+			productReference = DEC2BD5B14A5713500887739 /* TweetBlob.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -395,7 +395,7 @@
 					"-ObjC",
 					"-all_load",
 				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = TweetBlob;
 				RUN_CLANG_STATIC_ANALYZER = YES;
 				WRAPPER_EXTENSION = app;
 			};
@@ -416,7 +416,7 @@
 					"-ObjC",
 					"-all_load",
 				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = TweetBlob;
 				RUN_CLANG_STATIC_ANALYZER = YES;
 				WRAPPER_EXTENSION = app;
 			};

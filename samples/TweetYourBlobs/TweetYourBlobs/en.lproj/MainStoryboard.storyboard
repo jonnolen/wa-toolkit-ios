@@ -12,7 +12,7 @@
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="singleLineEtched" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="h7M-hc-IUC">
                         <rect key="frame" x="0.0" y="64" width="320" height="416"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <color key="backgroundColor" white="0.25" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <sections>
                             <tableViewSection headerTitle="Container" id="kKP-fO-92C">
                                 <cells>
@@ -108,7 +108,7 @@
                             <outlet property="delegate" destination="kZS-83-itd" id="1qA-cP-cNk"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Tweet Your Blobs" id="HX7-6S-crQ">
+                    <navigationItem key="navigationItem" title="Tweet Blob" id="HX7-6S-crQ">
                         <barButtonItem key="leftBarButtonItem" enabled="NO" title="Tweet" id="E9U-Aw-Lym">
                             <connections>
                                 <action selector="tweetBlob:" destination="kZS-83-itd" id="JWo-8T-Npp"/>
