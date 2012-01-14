@@ -26,6 +26,8 @@ NSString * const WAContainerPropertyKeyLastModified = @"Last-Modified";
 @synthesize properties = _properties;
 @synthesize sharedAccessSigniture = _sharedAccessSigniture;
 @synthesize metadata = _metadata;
+@synthesize isPublic = _isPublic;
+@synthesize createIfNotExists = _createIfNotExists;
 
 - (id)initContainerWithName:(NSString *)name 
 {
@@ -67,7 +69,9 @@ NSString * const WAContainerPropertyKeyLastModified = @"Last-Modified";
 
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"BlobContainer { name = %@, url = %@, sharedAccessSigniture = %@, properties = %@, metadata %@}", _name, _URL, _sharedAccessSigniture, _properties.description, _metadata.description];
+    //return [NSString stringWithFormat:@"WAßBlobContainer { name = %@, url = %@, sharedAccessSigniture = %@, properties = %@, metadata = %@, isPublic = %@, createIfNotExists = %@ }", _name, _URL, _sharedAccessSigniture, _properties.description, _metadata.description, _isPublic ? @"YES" : @"NO", _createIfNotExists ? @"YES" : @"NO"];
+    
+    return [NSString stringWithFormat:@"WAßBlobContainer { name = %@, url = %@, sharedAccessSigniture = %@, properties = %@, metadata = %@ }", _name, _URL, _sharedAccessSigniture, _properties.description, _metadata.description];
 }
 
 - (void)setValue:(NSString *)value forMetadataKey:(NSString *)key

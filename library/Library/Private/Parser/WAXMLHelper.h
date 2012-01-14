@@ -28,7 +28,7 @@
 + (void)performXPath:(NSString *)xpath onNode:(xmlNodePtr)node block:(void (^)(xmlNodePtr))block;
 + (NSString *)getElementValue:(xmlNodePtr)parent name:(NSString*)name;
 + (NSString *)getStringErrorValue:(xmlDocPtr)doc;
-+ (NSError *)checkForError:(xmlDocPtr)doc;
++ (NSError *)checkForError:(xmlDocPtr)doc withStatusCode:(NSInteger)statusCode;
 + (void)parseAtomPub:(xmlDocPtr)doc block:(void (^)(WAAtomPubEntry *))entry;
 
 @end

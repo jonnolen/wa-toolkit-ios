@@ -45,6 +45,11 @@
     [super dealloc];
 }
 
+- (NSString *)description 
+{
+    return [NSString stringWithFormat:@"BlobFetchRequest { container = %@, prefix = %@, resultContinuation = %@, useFlatListing = %@, maxResut = %@ }", _container, _prefix, _resultContinuation, _useFlatListing, _maxResult];
+}
+
 + (WABlobFetchRequest *)fetchRequestWithContainer:(WABlobContainer *)container;
 {
     return [[[WABlobFetchRequest alloc] initWithContainer:container resultContinuation:nil] autorelease];

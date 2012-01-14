@@ -64,6 +64,7 @@ extern NSString * const WABlobPropertyKeySequenceNumber;
  
  @see WABlobContainer
  */
+// TODO: Remove this before release
 @property (readonly) WABlobContainer *container DEPRECATED_ATTRIBUTE;
 
 /**
@@ -122,6 +123,7 @@ extern NSString * const WABlobPropertyKeySequenceNumber;
  
  @see WABlobContainer
  */
+// TODO: Remove this before release
 - (id)initBlobWithName:(NSString *)name URL:(NSString *)URL container:(WABlobContainer *)container DEPRECATED_ATTRIBUTE;
 
 /**
@@ -147,6 +149,7 @@ extern NSString * const WABlobPropertyKeySequenceNumber;
  
  @see WABlobContainer
  */
+// TODO: Remove this before release
 - (id)initBlobWithName:(NSString *)name URL:(NSString *)URL container:(WABlobContainer *)container properties:(NSDictionary *)properties DEPRECATED_ATTRIBUTE;
 
 

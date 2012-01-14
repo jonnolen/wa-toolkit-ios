@@ -32,6 +32,16 @@ extern NSString * const WAContainerPropertyKeyLastModified;
 @property (copy) NSString *name;
 
 /**
+ Create the container if it doesn't exist.
+ */
+@property (assign) BOOL createIfNotExists;
+
+/**
+ Create the container as public.
+ */
+@property (assign) BOOL isPublic;
+
+/**
  The address of the container.
  */
 @property (readonly) NSURL *URL;
@@ -112,7 +122,7 @@ extern NSString * const WAContainerPropertyKeyLastModified;
  
  @param name The name of the container.
  @param URL The address of the container.
- @param sharedAccessSigniture The container's metadata.
+ @param sharedAccessSigniture The container's shared access signiture.
  @param properties The properties for the container.
  
  @discussion This sharedAccessSigniture is only valid when using a proxy

@@ -100,7 +100,7 @@
     return value;
 }
 
-+ (NSError *)checkForError:(xmlDocPtr)doc
++ (NSError *)checkForError:(xmlDocPtr)doc withStatusCode:(NSInteger)statusCode
 {
     if (!doc) {
         return nil;
@@ -108,12 +108,21 @@
     
     xmlNodePtr root = xmlDocGetRootElement(doc);
     if (xmlStrcmp(root->name, (xmlChar*)"Error") == 0) {
-        NSString* code = [self getElementValue:root name:@"Code"];
-        NSString* message = [self getElementValue:root name:@"Message"];
-        NSString* detail = [self getElementValue:root name:@"AuthenticationErrorDetail"];
+        NSString *code = [self getElementValue:root name:@"Code"];
+        NSString *message = [self getElementValue:root name:@"Message"];
+        NSString *detail = [self getElementValue:root name:@"AuthenticationErrorDetail"];
         
+        if (detail == nil) {
+            detail = [NSString stringWithString:@""];
+        }
+        
+        if (code == nil) {
+            code = [NSString stringWithString:@""];
+        }
+        
+        // NSLocalizedRecoverySuggestionErrorKey
         return [NSError errorWithDomain:@"com.microsoft.WAToolkit" 
-                                   code:-1 
+                                   code:statusCode 
                                userInfo:[NSDictionary dictionaryWithObjectsAndKeys:
                                          message, NSLocalizedDescriptionKey, 
                                          detail, NSLocalizedFailureReasonErrorKey, 
@@ -125,7 +134,7 @@
         NSString* message = [self getElementValue:root name:@"message"];
         
         return [NSError errorWithDomain:@"com.microsoft.WAToolkit" 
-                                   code:-1 
+                                   code:statusCode
                                userInfo:[NSDictionary dictionaryWithObjectsAndKeys:
                                          message, NSLocalizedDescriptionKey, 
                                          code, @"AzureReasonCode", nil]];

@@ -16,6 +16,13 @@
 
 #import <Foundation/Foundation.h>
 
+/**
+ The key in an NSError object that has the status code / error code from Windows Azure.
+ 
+ @see http://msdn.microsoft.com/en-us/library/windowsazure/dd179382.aspx
+ */
+extern NSString * const WAErrorReasonCodeKey;
+
 @class WAAuthenticationCredential;
 @class WABlob;
 @class WABlobContainer;
@@ -76,6 +83,7 @@
  @see delegate
  @see [WACloudStorageClientDelegate storageClient:didFetchBlobContainers:]
  */
+// TODO: Remove this before release
 - (void)fetchBlobContainers DEPRECATED_ATTRIBUTE;
 
 /**
@@ -89,6 +97,7 @@
  
  @see WABlobContainer
  */
+// TODO: Remove this before release
 - (void)fetchBlobContainersWithCompletionHandler:(void (^)(NSArray *containers, NSError *error))block DEPRECATED_ATTRIBUTE;
 
 /**
@@ -105,6 +114,7 @@
  @see delegate
  @see [WACloudStorageClientDelegate storageClient:didFetchBlobContainers:withResultContinuation:]
  */
+// TODO: Remove this before release
 - (void)fetchBlobContainersWithContinuation:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult DEPRECATED_ATTRIBUTE;
 
 /**
@@ -120,6 +130,7 @@
  
  @see WAResultContinuation
  */
+// TODO: Remove this before release
 - (void)fetchBlobContainersWithContinuation:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult usingCompletionHandler:(void (^)(NSArray *containers, WAResultContinuation *resultContinuation, NSError *error))block DEPRECATED_ATTRIBUTE;
 
 /**
@@ -186,6 +197,7 @@
  @see delegate
  @see [WACloudStorageClientDelegate storageClient:didAddBlobContainerNamed:]
  */
+// TODO: Remove this before release
 - (BOOL)addBlobContainerNamed:(NSString *)containerName  DEPRECATED_ATTRIBUTE;
 
 /**
@@ -200,6 +212,7 @@
  
  @warning *Deprecated*: now use addBlobContainer:withCompletionHandler:
  */
+// TODO: Remove this before release
 - (BOOL)addBlobContainerNamed:(NSString *)containerName withCompletionHandler:(void (^)(NSError *error))block DEPRECATED_ATTRIBUTE;
 
 /**
@@ -270,6 +283,7 @@
  @see delegate
  @see [WACloudStorageClientDelegate storageClient:didDeleteBlobContainerNamed:]
  */
+// TODO: Remove this before release
 - (BOOL)deleteBlobContainerNamed:(NSString *)containerName DEPRECATED_ATTRIBUTE;
 
 /**
@@ -284,6 +298,7 @@
  
  @warning *Deprecated*: now use deleteBlobContainer:withCompletionHandler:
  */
+// TODO: Remove this before release
 - (BOOL)deleteBlobContainerNamed:(NSString *)containerName withCompletionHandler:(void (^)(NSError *error))block DEPRECATED_ATTRIBUTE;
 
 /**
@@ -300,6 +315,7 @@
  @see WABlobContainer
  @see [WACloudStorageClientDelegate storageClient:didFetchBlobs:inContainer:]
  */
+// TODO: Remove this before release
 - (void)fetchBlobs:(WABlobContainer *)container DEPRECATED_ATTRIBUTE;
 
 /**
@@ -316,6 +332,7 @@
  @see WABlobContainer
  @see WABlob
  */
+// TODO: Remove this before release
 - (void)fetchBlobs:(WABlobContainer *)container withCompletionHandler:(void (^)(NSArray *blobs, NSError *error))block DEPRECATED_ATTRIBUTE;
 
 /**
@@ -333,6 +350,7 @@
  @see WABlobContainer
  @see [WACloudStorageClientDelegate storageClient:didFetchBlobs:inContainer:withResultContinuation:]
  */
+// TODO: Remove this before release
 - (void)fetchBlobsWithContinuation:(WABlobContainer *)container resultContinuation:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult DEPRECATED_ATTRIBUTE;
 
 /**
@@ -350,6 +368,7 @@
  @see WABlobContainer
  @see WAResultContinuation
  */
+// TODO: Remove this before release
 - (void)fetchBlobsWithContinuation:(WABlobContainer *)container resultContinuation:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult usingCompletionHandler:(void (^)(NSArray *blobs, WAResultContinuation *resultContinuation, NSError *error))block DEPRECATED_ATTRIBUTE;
 
 /**
@@ -442,6 +461,7 @@
  @see [WACloudStorageClient storageClient:didAddBlobToContainer:blobName:]
  @see WABlobContainer
  */
+// TODO: Remove this before release
 - (void)addBlobToContainer:(WABlobContainer *)container blobName:(NSString *)blobName contentData:(NSData *)contentData contentType:(NSString*)contentType DEPRECATED_ATTRIBUTE;
 
 /**
@@ -459,6 +479,7 @@
  
  @see WABlobContainer
  */
+// TODO: Remove this before release
 - (void)addBlobToContainer:(WABlobContainer *)container blobName:(NSString *)blobName contentData:(NSData *)contentData contentType:(NSString *)contentType withCompletionHandler:(void (^)(NSError *error))block DEPRECATED_ATTRIBUTE;
 
 /**
@@ -530,6 +551,7 @@
  @see delegate
  @see [WACloudStorageClientDelegate storageClient:didFetchQueues:]
  */
+// TODO: Remove this before release
 - (void)fetchQueues DEPRECATED_ATTRIBUTE;
 
 /**
@@ -543,6 +565,7 @@
  
  @see WAQueue
  */
+// TODO: Remove this before release
 - (void)fetchQueuesWithCompletionHandler:(void (^)(NSArray *queues, NSError *error))block DEPRECATED_ATTRIBUTE;
 
 /**
@@ -559,6 +582,7 @@
  @see [WACloudStorageClientDelegate storageClient:didFetchQueues:withResultContinuation:]
  @see WAResultContinuation
  */
+// TODO: Remove this before release
 - (void)fetchQueuesWithContinuation:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult DEPRECATED_ATTRIBUTE;
 
 /**
@@ -574,6 +598,7 @@
  
  @see WAResultContinuation
  */
+// TODO: Remove this before release
 - (void)fetchQueuesWithContinuation:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult usingCompletionHandler:(void (^)(NSArray *queues, WAResultContinuation *resultContinuation, NSError *error))block DEPRECATED_ATTRIBUTE;
 
 /**
@@ -680,6 +705,7 @@
  @see delegate
  @see [WACloudStorageClientDelegate storageClient:didFetchQueueMessages:]
  */
+// TODO: Remove this before release
 - (void)fetchQueueMessages:(NSString *)queueName DEPRECATED_ATTRIBUTE;
 
 /**
@@ -694,6 +720,7 @@
  
  @see WAQueueMessage
  */
+// TODO: Remove this before release
 - (void)fetchQueueMessages:(NSString *)queueName withCompletionHandler:(void (^)(NSArray *messages, NSError *error))block DEPRECATED_ATTRIBUTE;
 
 /**
@@ -709,6 +736,7 @@
  @see delegate
  @see [WACloudStorageClientDelegate storageClient:didFetchQueueMessages:]
  */
+// TODO: Remove this before release
 - (void)fetchQueueMessages:(NSString *)queueName fetchCount:(NSInteger)fetchCount DEPRECATED_ATTRIBUTE;
 
 /**
@@ -724,6 +752,7 @@
  
  @see WAQueueMessage
  */
+// TODO: Remove this before release
 - (void)fetchQueueMessages:(NSString *)queueName fetchCount:(NSInteger)fetchCount withCompletionHandler:(void (^)(NSArray *messages, NSError *error))block DEPRECATED_ATTRIBUTE;
 
 /**
@@ -959,6 +988,7 @@
  @see [WACloudStorageClientDelegate storageClient:didFetchEntities:fromTableNamed:]
  @see WATableFetchRequest
  */
+// TODO: Remove this before release
 - (void)fetchEntities:(WATableFetchRequest *)fetchRequest DEPRECATED_ATTRIBUTE;
 
 /**
@@ -974,6 +1004,7 @@
  @see WATableEntity
  @see WATableFetchRequest
  */
+// TODO: Remove this before release
 - (void)fetchEntities:(WATableFetchRequest *)fetchRequest withCompletionHandler:(void (^)(NSArray *entities, NSError *error))block DEPRECATED_ATTRIBUTE;
 
 /**
@@ -989,6 +1020,7 @@
  @see [WACloudStorageClientDelegate storageClient:didFetchEntities:fromTableNamed:withResultContinuation:]
  @see WATableFetchRequest
  */
+// TODO: Remove this before release
 - (void)fetchEntitiesWithContinuation:(WATableFetchRequest *)fetchRequest DEPRECATED_ATTRIBUTE;
 
 /**
@@ -1004,6 +1036,7 @@
  @see WAFetchRequest
  @see WATableEntity
  */
+// TODO: Remove this before release
 - (void)fetchEntitiesWithContinuation:(WATableFetchRequest *)fetchRequest usingCompletionHandler:(void (^)(NSArray *entities, WAResultContinuation *resultContinuation, NSError *error))block DEPRECATED_ATTRIBUTE;
 
 /**
