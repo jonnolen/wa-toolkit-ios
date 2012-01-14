@@ -25,7 +25,7 @@
 + (void)getFromURL:(NSString *)urlStr withCompletionHandler:(void (^)(NSData *data, NSError *error))block;
 + (void)getFromURL:(NSString *)urlStr withXmlCompletionHandler:(void (^)(xmlDocPtr doc, NSError *error))block;
 + (void)getFromURL:(NSString *)urlStr withStringCompletionHandler:(void (^)(NSString *value, NSError *error))block;
-+ (void)getFromURL:(NSString *)urlStr withDictionaryCompletionHandler:(void (^)(NSDictionary *values, NSError *error))block;
++(void)getFromURL:(NSString *)urlStr withDictionaryCompletionHandler:(void (^)(NSDictionary *values, NSError *error))block;
 
 + (void)postXmlToURL:(NSString *)urlStr body:(NSString *)body withCompletionHandler:(void (^)(NSData *data, NSError *error))block;
 + (void)postXmlToURL:(NSString *)urlStr body:(NSString *)body withXmlCompletionHandler:(void (^)(xmlDocPtr doc, NSError *error))block;

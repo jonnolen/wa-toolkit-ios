@@ -263,7 +263,8 @@ const int AUTHENTICATION_DELAY = 2;
     if (metadata != nil) {
     
         [metadata enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-            [authenticatedrequest setValue:obj forHTTPHeaderField:[NSString stringWithFormat:@"x-ms-meta-%@", key]];
+            NSString *lowerKey = [[NSString stringWithFormat:@"%@", key] lowercaseString];
+            [authenticatedrequest setValue:obj forHTTPHeaderField:[NSString stringWithFormat:@"x-ms-meta-%@", lowerKey]];
         }];
     }
     
@@ -347,7 +348,8 @@ const int AUTHENTICATION_DELAY = 2;
     [headers addObject:[NSString stringWithFormat:@"%@:%@", WAXMSVersion, WAXMSVersionDate]];
     if (metadata != nil) {
         [metadata enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-            [headers addObject:[NSString stringWithFormat:@"x-ms-meta-%@:%@", key, obj]];
+            NSString *lowerKey = [[NSString stringWithFormat:@"%@", key] lowercaseString];
+            [headers addObject:[NSString stringWithFormat:@"x-ms-meta-%@:%@", lowerKey, obj]];
         }];
     }
     [headers sortUsingSelector:@selector(compare:)];

@@ -293,7 +293,7 @@ void ignoreSSLErrorFor(NSString* host)
     NSError *error = nil;
     if (_data) {
         doc = xmlReadMemory([_data bytes], (int)[_data length], baseURL, encoding, (XML_PARSE_NOCDATA | XML_PARSE_NOBLANKS)); 
-        error = [WAXMLHelper checkForError:doc];
+        error = [WAXMLHelper checkForError:doc withStatusCode:_statusCode];
     }
     
     if (_statusCode == 401) {

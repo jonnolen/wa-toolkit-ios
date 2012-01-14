@@ -22,7 +22,9 @@
 #import "WALocationHandler.h"
 #import "WALoginHandler.h"
 #import "WABitlyResponse.h"
+#import "WATweetBlobHandler.h"
 #import <Twitter/Twitter.h>
+#import "SVProgressHUD.h"
 
 typedef enum {
     kTextFieldContainer = 0,
@@ -60,8 +62,8 @@ typedef enum {
 
 @implementation WAMainViewController
 
-@synthesize containerNameTextField = _containerNameTextField;
-@synthesize blobNameTextField = _blobNameTextField;
+@synthesize containerNameTextField;
+@synthesize blobNameTextField;
 
 #pragma mark - View lifecycle
 
@@ -90,13 +92,7 @@ typedef enum {
             [self.containerNameTextField becomeFirstResponder];
         }];
     }
-    
-    if (_HUD == nil) {
-        _HUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
-        [self.navigationController.view addSubview:_HUD];
-        _HUD.labelText = @"Uploading picture";
-    }
-    
+        
     self.containerNameTextField.text = _blobTweet.containerName;
 }
 
@@ -104,8 +100,6 @@ typedef enum {
 {
     [self setContainerNameTextField:nil];
     [self setBlobNameTextField:nil];
-    [_HUD removeFromSuperview];
-    _HUD = nil;
     
     [super viewDidUnload];
 }
@@ -301,14 +295,14 @@ typedef enum {
 {
     self.navigationItem.leftBarButtonItem.enabled = YES;
     self.navigationItem.rightBarButtonItem.enabled = YES;
-    [_HUD hide:YES];
+    [SVProgressHUD dismiss];
 }
 
 - (void)lockView
 {
     self.navigationItem.leftBarButtonItem.enabled = NO;
     self.navigationItem.rightBarButtonItem.enabled = NO;
-    [_HUD show:YES];
+    [SVProgressHUD showWithStatus:@"Uploading photo"];
 }
 
 - (void)retrieveBitlyInformation 
@@ -322,7 +316,7 @@ typedef enum {
     UITextField *nameField = [alertView textFieldAtIndex:0];
     nameField.autocapitalizationType = UITextAutocapitalizationTypeWords;
     nameField.placeholder = @"Name"; 
-    UITextField *apiKeyField = [alertView textFieldAtIndex:1]; // Capture the Password text field since there are 2 fields
+    UITextField *apiKeyField = [alertView textFieldAtIndex:1];
     apiKeyField.placeholder = @"Api Key";
     [alertView show];
 }
@@ -336,100 +330,42 @@ typedef enum {
     
     [self lockView];
     
-    WACloudStorageClient *addContainerClient = [WACloudStorageClient storageClientWithCredential:_authenticationCredential];
-    
-    WABlobContainer *containerToAdd = [[WABlobContainer alloc] initContainerWithName:_blobTweet.containerName];
-    containerToAdd.isPublic = _blobTweet.makeContainerPublic;
-    containerToAdd.createIfNotExists = YES;
-    [addContainerClient addBlobContainer:containerToAdd withCompletionHandler:^(NSError *error) {
+    WATweetBlobHandler *tweetBlobHandler = [[WATweetBlobHandler alloc] init];
+    [tweetBlobHandler postImageToBlob:_blobTweet withAuthenticationCredential:_authenticationCredential bitylyHandler:_bitlyCredential usingCompletionHandler:^(NSError *error){
         if (error != nil) {
             [self displayAlert:error.localizedDescription];
             [self unlockView];
             return;
         }
         
-        WACloudStorageClient *fetchContainerClient = [WACloudStorageClient storageClientWithCredential:_authenticationCredential];
-        [fetchContainerClient fetchBlobContainerNamed:containerToAdd.name withCompletionHandler:^(WABlobContainer *container, NSError *error) {
-            if (error != nil) {
-                [self displayAlert:error.localizedDescription];
-                [self unlockView];
-                return;
-            }
-            
-            WABlob *blob = [[WABlob alloc] initBlobWithName:_blobTweet.blobName  URL:nil containerName:container.name];
-            blob.contentType = @"image/jpeg";
-            blob.contentData = UIImageJPEGRepresentation(_blobTweet.image, 1.0); 
-            if (_blobTweet.includeLocationData) {
-                [blob setValue:_blobTweet.bingLocation forMetadataKey:@"ContentLocation"];
-            }
-            [blob setValue:@"image/jpeg" forMetadataKey:@"ImageType"];
-            WACloudStorageClient *addBlobClient = [WACloudStorageClient storageClientWithCredential:_authenticationCredential];
-            [addBlobClient addBlob:blob toContainer:container withCompletionHandler:^(NSError *error) {
-                if (error != nil) {
-                    [self displayAlert:error.localizedDescription];
-                    [self unlockView];
-                    return;
-                }
-                
-                WABlobFetchRequest *request = [WABlobFetchRequest fetchRequestWithContainer:container resultContinuation:nil];
-                request.prefix = blob.name;
-                WACloudStorageClient *fetchBlobClient = [WACloudStorageClient storageClientWithCredential:_authenticationCredential];
-                [fetchBlobClient fetchBlobsWithRequest:request usingCompletionHandler:^(NSArray *blobs, WAResultContinuation *resultContinuation, NSError *error){
-                    if (error != nil) {
-                        [self displayAlert:error.localizedDescription];
-                        [self unlockView];
-                        return;
-                    }
-                    WABlob *blobToShorten = [blobs objectAtIndex:0];
-                    WABitlyHandler *bitlyHandler = [[WABitlyHandler alloc] initWithLongURL:blobToShorten.URL username:_bitlyCredential.login apiKey:_bitlyCredential.apiKey];
-                    [bitlyHandler shortenUrlWithCompletionHandler:^(WABitlyResponse *response, NSError *error) {
-                        if (error != nil) {
-                            [_bitlyCredential clear];
-                            [self displayAlert:error.localizedDescription];
-                            [self unlockView];
-                            return;
-                        }
-                        
-                        _blobTweet.shortUrl = response.shortURL;
-                        // post to twitter
-                        [self tweet];
-                        [self unlockView];
-                    }];
-                    
-                }];
-            }];
-        }];
-    }];
+        [self tweet];
+        [self unlockView];
+    }];    
 }
 
 - (void)tweet
 {
     Class tweeterClass = NSClassFromString(@"TWTweetComposeViewController");
     
-    // check for Twitter integration
     if(tweeterClass != nil) {   
-        // check Twitter accessibility and at least one account is setup
         if([TWTweetComposeViewController canSendTweet]) {
             TWTweetComposeViewController *tweetViewController = [[TWTweetComposeViewController alloc] init];
             [tweetViewController addURL:_blobTweet.shortUrl];
             tweetViewController.completionHandler = ^(TWTweetComposeViewControllerResult result) {
                 if(result == TWTweetComposeViewControllerResultDone) {
-                    // the user finished composing a tweet
                     [_blobTweet clear];
                     self.navigationItem.leftBarButtonItem.enabled = [_blobTweet isValid];
-                    _blobNameTextField.text = @"";
-                } else if(result == TWTweetComposeViewControllerResultCancelled) {
-                    // the user cancelled composing a tweet
+                    self.blobNameTextField.text = @"";
+                    [self.blobNameTextField becomeFirstResponder];
                 }
                 [self dismissViewControllerAnimated:YES completion:nil];
             };
             
             [self presentViewController:tweetViewController animated:YES completion:nil];
         } else {
-            // Twitter is not accessible or the user has not setup an account
             [self displayAlert:@"You can't send a tweet right now, make sure your device has an internet connection and you have at least one Twitter account setup."];
         }
-    } else {
+    } else {		
         // no Twitter integration could default to third-party Twitter framework
     }
 }

@@ -68,16 +68,16 @@
 		<key>CloudReadySimple</key>
 		<dict>
 			<key>ProxyService</key>
-			<string>scottdeniossimplehost2</string>
+			<string>{the service name where the Membership Cloud Ready package is deployed}</string>
 		</dict>
 		<key>ConnectionType</key>
-		<string>Direct</string>
+		<string>{set to Direct or CloudReadySimple or CloudReadyACS}</string>
 		<key>Direct</key>
 		<dict>
 			<key>AccountName</key>
-			<string>scottdeniosdirect</string>
+			<string>{the name of the Windows Azure storage account}</string>
 			<key>DirectAccessKey</key>
-			<string>R/QlKCic6edh8yH9PC+eFyKV4uWFMjsygFmY1xQj1SoYwkMwd3DJhoTpndB/uhHzPzFmj5z6E8yHmfbzRjyEvQ==</string>
+			<string>{the access key for the storage account}</string>
 		</dict>
 	</dict>
 </dict>

@@ -15,20 +15,19 @@
  */
 
 #import "WALocationControllerDelegate.h"
-#import "MBProgressHUD.h"
 
 @class WABlobTweet;
 @class WABitlyCredential;
 @class WALocationHandler;
 
-@interface WAMainViewController : UITableViewController <UINavigationControllerDelegate, UITextFieldDelegate, UIImagePickerControllerDelegate, UIAlertViewDelegate, WALocationHandlerDelegate, UIActionSheetDelegate, MBProgressHUDDelegate> {
+@interface WAMainViewController : UITableViewController <UINavigationControllerDelegate, UITextFieldDelegate, UIImagePickerControllerDelegate, UIAlertViewDelegate, WALocationHandlerDelegate, UIActionSheetDelegate> {
 @private
     WABlobTweet *_blobTweet;
     WABitlyCredential *_bitlyCredential;
     WALocationHandler *_locationHandler;
     WAAuthenticationCredential *_authenticationCredential;
-    MBProgressHUD *_HUD;
 }
+
 @property (weak, nonatomic) IBOutlet UITextField *containerNameTextField;
 @property (weak, nonatomic) IBOutlet UITextField *blobNameTextField;
 

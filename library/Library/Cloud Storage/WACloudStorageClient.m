@@ -42,6 +42,8 @@
 #import "Logging.h"
 #import "WAAtomPubEntry.h"
 
+NSString * const WAErrorReasonCodeKey = @"AzureReasonCode";
+
 void ignoreSSLErrorFor(NSString* host);
 
 static NSString *CREATE_TABLE_REQUEST_STRING = @"<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?><entry xmlns:d=\"http://schemas.microsoft.com/ado/2007/08/dataservices\" xmlns:m=\"http://schemas.microsoft.com/ado/2007/08/dataservices/metadata\" xmlns=\"http://www.w3.org/2005/Atom\"><title /><updated>$UPDATEDDATE$</updated><author><name/></author><id/><content type=\"application/xml\"><m:properties><d:TableName>$TABLENAME$</d:TableName></m:properties></content></entry>";
@@ -862,7 +864,7 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
             [endpoint appendString:@"delimiter=%2F"];
         }
         if (fetchRequest.prefix != nil) {
-            [endpoint appendFormat:@"&prefix=%%", fetchRequest.prefix];
+            [endpoint appendFormat:@"&prefix=%@", fetchRequest.prefix];
         }
         if (fetchRequest.resultContinuation.nextMarker != nil) {
             [endpoint appendFormat:@"&marker=%@", fetchRequest.resultContinuation.nextMarker];

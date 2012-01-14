@@ -16,6 +16,13 @@
 
 #import <Foundation/Foundation.h>
 
+/**
+ The key in an NSError object that has the status code / error code from Windows Azure.
+ 
+ @see http://msdn.microsoft.com/en-us/library/windowsazure/dd179382.aspx
+ */
+extern NSString * const WAErrorReasonCodeKey;
+
 @class WAAuthenticationCredential;
 @class WABlob;
 @class WABlobContainer;

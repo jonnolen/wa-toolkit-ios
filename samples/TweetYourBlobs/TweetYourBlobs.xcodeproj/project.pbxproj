@@ -9,8 +9,8 @@
 /* Begin PBXBuildFile section */
 		DE3753EC14BD421B002F10CA /* Twitter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE3753EB14BD421B002F10CA /* Twitter.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		DE37540C14BEA026002F10CA /* UIApplication+WANetworkActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = DE37540B14BEA026002F10CA /* UIApplication+WANetworkActivity.m */; };
-		DE44C36214BEB2A100352E52 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = DE44C36114BEB2A100352E52 /* MBProgressHUD.m */; };
 		DE4C894214B35E56004858FC /* libwatoolkitios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DE4C894114B35E56004858FC /* libwatoolkitios.a */; };
+		DE5D6A2A14BFCF5300B80551 /* WATweetBlobHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = DE5D6A2914BFCF5300B80551 /* WATweetBlobHandler.m */; };
 		DE74EBA514B8EBCF0007EC16 /* WAAcsRegisterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE74EBA414B8EBCF0007EC16 /* WAAcsRegisterViewController.m */; };
 		DE74EBAC14B8ECF90007EC16 /* WALoginHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = DE74EBA714B8ECF80007EC16 /* WALoginHandler.m */; };
 		DE74EBAD14B8ECF90007EC16 /* WALoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE74EBA914B8ECF80007EC16 /* WALoginViewController.m */; };
@@ -39,15 +39,17 @@
 		DEC2BDCF14B2BC5E00887739 /* libxml2.2.7.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DEC2BDCE14B2BC5E00887739 /* libxml2.2.7.3.dylib */; };
 		DEC2BDDB14B2C07C00887739 /* WAServiceCall.m in Sources */ = {isa = PBXBuildFile; fileRef = DEC2BDD614B2C07C00887739 /* WAServiceCall.m */; };
 		DEC2BDDD14B2C07C00887739 /* WAConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = DEC2BDDA14B2C07C00887739 /* WAConfiguration.m */; };
+		DEFCC3BD14C22AFB005401A5 /* SVProgressHUD.bundle in Resources */ = {isa = PBXBuildFile; fileRef = DEFCC3BA14C22AFB005401A5 /* SVProgressHUD.bundle */; };
+		DEFCC3BE14C22AFB005401A5 /* SVProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = DEFCC3BC14C22AFB005401A5 /* SVProgressHUD.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		DE3753EB14BD421B002F10CA /* Twitter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Twitter.framework; path = System/Library/Frameworks/Twitter.framework; sourceTree = SDKROOT; };
 		DE37540A14BEA026002F10CA /* UIApplication+WANetworkActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIApplication+WANetworkActivity.h"; path = "../../../library/Library/Private/UIApplication+WANetworkActivity.h"; sourceTree = "<group>"; };
 		DE37540B14BEA026002F10CA /* UIApplication+WANetworkActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIApplication+WANetworkActivity.m"; path = "../../../library/Library/Private/UIApplication+WANetworkActivity.m"; sourceTree = "<group>"; };
-		DE44C36014BEB2A100352E52 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
-		DE44C36114BEB2A100352E52 /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
 		DE4C894114B35E56004858FC /* libwatoolkitios.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libwatoolkitios.a; path = "../../library/build/Debug-iphoneos/libwatoolkitios.a"; sourceTree = "<group>"; };
+		DE5D6A2814BFCF5300B80551 /* WATweetBlobHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WATweetBlobHandler.h; sourceTree = "<group>"; };
+		DE5D6A2914BFCF5300B80551 /* WATweetBlobHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WATweetBlobHandler.m; sourceTree = "<group>"; };
 		DE74EBA314B8EBCF0007EC16 /* WAAcsRegisterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WAAcsRegisterViewController.h; sourceTree = "<group>"; };
 		DE74EBA414B8EBCF0007EC16 /* WAAcsRegisterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WAAcsRegisterViewController.m; sourceTree = "<group>"; };
 		DE74EBA614B8ECF80007EC16 /* WALoginHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WALoginHandler.h; sourceTree = "<group>"; };
@@ -96,6 +98,9 @@
 		DEC2BDD914B2C07C00887739 /* WAConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WAConfiguration.h; sourceTree = "<group>"; };
 		DEC2BDDA14B2C07C00887739 /* WAConfiguration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WAConfiguration.m; sourceTree = "<group>"; };
 		DEC2BDDE14B2C3B900887739 /* Macros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Macros.h; sourceTree = "<group>"; };
+		DEFCC3BA14C22AFB005401A5 /* SVProgressHUD.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = SVProgressHUD.bundle; sourceTree = "<group>"; };
+		DEFCC3BB14C22AFB005401A5 /* SVProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVProgressHUD.h; sourceTree = "<group>"; };
+		DEFCC3BC14C22AFB005401A5 /* SVProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVProgressHUD.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,15 +122,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		DE44C35A14BEAF3500352E52 /* External */ = {
-			isa = PBXGroup;
-			children = (
-				DE44C36014BEB2A100352E52 /* MBProgressHUD.h */,
-				DE44C36114BEB2A100352E52 /* MBProgressHUD.m */,
-			);
-			name = External;
-			sourceTree = "<group>";
-		};
 		DEC2BD5014A5713500887739 = {
 			isa = PBXGroup;
 			children = (
@@ -161,7 +157,7 @@
 		DEC2BD6514A5713500887739 /* TweetYourBlobs */ = {
 			isa = PBXGroup;
 			children = (
-				DE44C35A14BEAF3500352E52 /* External */,
+				DEFCC3B914C22AFB005401A5 /* SVProgressHUD */,
 				DEC2BDD414B2C07B00887739 /* Configuration */,
 				DEC2BD6E14A5713500887739 /* WAAppDelegate.h */,
 				DEC2BD6F14A5713500887739 /* WAAppDelegate.m */,
@@ -170,6 +166,8 @@
 				DEC2BD7514A5713500887739 /* WAMainViewController.m */,
 				DEC2BDC114B23F4D00887739 /* WABlobTweet.h */,
 				DEC2BDC214B23F4D00887739 /* WABlobTweet.m */,
+				DE5D6A2814BFCF5300B80551 /* WATweetBlobHandler.h */,
+				DE5D6A2914BFCF5300B80551 /* WATweetBlobHandler.m */,
 				DEC2BD9D14ABCC5200887739 /* WAKeychainController.h */,
 				DEC2BD9E14ABCC5200887739 /* WAKeychainController.m */,
 				DEC2BDC814B28CB500887739 /* WALocationHandler.h */,
@@ -223,6 +221,16 @@
 				DE74EBB214BB4F9A0007EC16 /* BlockTypes.h */,
 			);
 			path = Configuration;
+			sourceTree = "<group>";
+		};
+		DEFCC3B914C22AFB005401A5 /* SVProgressHUD */ = {
+			isa = PBXGroup;
+			children = (
+				DEFCC3BA14C22AFB005401A5 /* SVProgressHUD.bundle */,
+				DEFCC3BB14C22AFB005401A5 /* SVProgressHUD.h */,
+				DEFCC3BC14C22AFB005401A5 /* SVProgressHUD.m */,
+			);
+			path = SVProgressHUD;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -283,6 +291,7 @@
 				DEC2BD9814ABC6D500887739 /* Default@2x.png in Resources */,
 				DEC2BDA114ABD0AD00887739 /* Icon.png in Resources */,
 				DEC2BDA314ABD0B500887739 /* Icon@2x.png in Resources */,
+				DEFCC3BD14C22AFB005401A5 /* SVProgressHUD.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -309,7 +318,8 @@
 				DE74EBAE14B8ECF90007EC16 /* WARegisterViewController.m in Sources */,
 				DE74EBB114BAAE3A0007EC16 /* WABitlyResponse.m in Sources */,
 				DE37540C14BEA026002F10CA /* UIApplication+WANetworkActivity.m in Sources */,
-				DE44C36214BEB2A100352E52 /* MBProgressHUD.m in Sources */,
+				DE5D6A2A14BFCF5300B80551 /* WATweetBlobHandler.m in Sources */,
+				DEFCC3BE14C22AFB005401A5 /* SVProgressHUD.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
