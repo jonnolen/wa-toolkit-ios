@@ -343,6 +343,16 @@ typedef enum {
     }];    
 }
 
+- (NSString *)urlEncode:(NSString *)string
+{
+    return (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes(
+                                                                                 NULL,
+                                                                                 (__bridge CFStringRef)string,
+                                                                                 NULL,
+                                                                                 (CFStringRef)@"!*'();:@&=+$,/?%#[]",
+                                                                                 kCFStringEncodingUTF8);
+}
+
 - (void)tweet
 {
     Class tweeterClass = NSClassFromString(@"TWTweetComposeViewController");
@@ -363,10 +373,19 @@ typedef enum {
             
             [self presentViewController:tweetViewController animated:YES completion:nil];
         } else {
+#if !(TARGET_IPHONE_SIMULATOR)
             [self displayAlert:@"You can't send a tweet right now, make sure your device has an internet connection and you have at least one Twitter account setup."];
+#else
+            NSString *tweetString = [NSString stringWithFormat:@"http://mobile.twitter.com/home?status=%@%@", [self urlEncode:@"Check out this awesome pic: "] ,[self urlEncode:[_blobTweet.shortUrl absoluteString]]];
+            NSURL *tweetURL = [NSURL URLWithString:tweetString];
+            if ([[UIApplication sharedApplication] canOpenURL:tweetURL]) { 
+                [[UIApplication sharedApplication] openURL:tweetURL]; 
+            }
+#endif
         }
     } else {		
         // no Twitter integration could default to third-party Twitter framework
+        
     }
 }
 
