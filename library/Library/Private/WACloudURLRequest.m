@@ -18,6 +18,7 @@
 #import "WAXMLHelper.h"
 #import "Logging.h"
 #import <libxml/parser.h>
+#import "UIApplication+WANetworkActivity.h"
 
 NSString * const WANextPartitionKeyHeader = @"X-Ms-Continuation-Nextpartitionkey";
 NSString * const WANextRowKeyHeader = @"X-Ms-Continuation-Nextrowkey";
@@ -52,7 +53,7 @@ void ignoreSSLErrorFor(NSString* host)
 #if USE_QUEUE
 #pragma mark Request Queuing support
 
-- (void) append:(WACloudURLRequest*)request
+- (void)append:(WACloudURLRequest*)request
 {
     _tail = _next = [request retain];
 }
@@ -62,7 +63,7 @@ void ignoreSSLErrorFor(NSString* host)
     return _next;
 }
 
-- (void) startNext
+- (void)startNext
 {
     [_lock lock];
     @try
@@ -72,6 +73,7 @@ void ignoreSSLErrorFor(NSString* host)
         if(next)
         {
             _head = next;
+            [[UIApplication sharedApplication] wa_pushNetworkActivity];
             [NSURLConnection connectionWithRequest:_head delegate:_head];
         }
         else
@@ -85,7 +87,7 @@ void ignoreSSLErrorFor(NSString* host)
     }
 }
 
-- (void) queueRequest
+- (void)queueRequest
 {
     if(!_lock)
     {
@@ -102,7 +104,7 @@ void ignoreSSLErrorFor(NSString* host)
         else
         {
             _head = _tail = [self retain];
-
+            [[UIApplication sharedApplication] wa_pushNetworkActivity];
             // if I'm the first in queue, start me right away
             [NSURLConnection connectionWithRequest:self delegate:self];
         }
@@ -116,7 +118,7 @@ void ignoreSSLErrorFor(NSString* host)
 #pragma mark -
 #endif
 
-- (void) fetchNoResponseWithCompletionHandler:(WANoResponseHandler)block
+- (void)fetchNoResponseWithCompletionHandler:(WANoResponseHandler)block
 {
     _noResponseBlock = [block copy];
 
@@ -127,11 +129,12 @@ void ignoreSSLErrorFor(NSString* host)
 #if USE_QUEUE
     [self queueRequest];
 #else
+    [[UIApplication sharedApplication] wa_pushNetworkActivity];
 	[NSURLConnection connectionWithRequest:self delegate:self];
 #endif
 }
 
-- (void) fetchXMLWithCompletionHandler:(WAFetchXMLHandler)block
+- (void)fetchXMLWithCompletionHandler:(WAFetchXMLHandler)block
 {
     _xmlBlock = [block copy];
 	
@@ -142,11 +145,12 @@ void ignoreSSLErrorFor(NSString* host)
 #if USE_QUEUE
     [self queueRequest];
 #else
+    [[UIApplication sharedApplication] wa_pushNetworkActivity];
 	[NSURLConnection connectionWithRequest:self delegate:self];
 #endif
 }
 
-- (void) fetchDataWithCompletionHandler:(WAFetchDataHandler)block
+- (void)fetchDataWithCompletionHandler:(WAFetchDataHandler)block
 {
     _dataBlock = [block copy];
 	
@@ -157,6 +161,7 @@ void ignoreSSLErrorFor(NSString* host)
 #if USE_QUEUE
     [self queueRequest];
 #else
+    [[UIApplication sharedApplication] wa_pushNetworkActivity];
 	[NSURLConnection connectionWithRequest:self delegate:self];
 #endif
 }
@@ -288,7 +293,7 @@ void ignoreSSLErrorFor(NSString* host)
     NSError *error = nil;
     if (_data) {
         doc = xmlReadMemory([_data bytes], (int)[_data length], baseURL, encoding, (XML_PARSE_NOCDATA | XML_PARSE_NOBLANKS)); 
-        error = [WAXMLHelper checkForError:doc];
+        error = [WAXMLHelper checkForError:doc withStatusCode:_statusCode];
     }
     
     if (_statusCode == 401) {
@@ -332,6 +337,9 @@ void ignoreSSLErrorFor(NSString* host)
     if (doc) {
         xmlFreeDoc(doc);
     }
+    
+    [[UIApplication sharedApplication] wa_popNetworkActivity];
+    
 #if USE_QUEUE
     if (continueToNext == YES) {
         [self startNext];
@@ -348,7 +356,8 @@ void ignoreSSLErrorFor(NSString* host)
     } else if(_dataBlock) {
         _dataBlock(self, nil, error);
     }
-
+    [[UIApplication sharedApplication] wa_popNetworkActivity];
+    
 #if USE_QUEUE
     [self startNext];
 #endif

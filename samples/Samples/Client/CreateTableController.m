@@ -79,6 +79,7 @@
 	} else if ([self.navigationItem.title hasSuffix:@"Blob"]) {
 		nameLabel.text = @"Blob Name:";
 		[createButton setTitle:@"Pick Image" forState:UIControlStateNormal];
+        [uploadDefaultImageButton setHidden:NO];
 	} else if ([self.navigationItem.title hasSuffix:@"Queue"]) {
 		nameLabel.text = @"Queue Name:";
 	} else if ([self.navigationItem.title hasSuffix:@"QueueMessage"]) {
@@ -109,12 +110,14 @@
 	
 	if (!newStr.length) {
 		createButton.enabled = NO;
+        uploadDefaultImageButton.enabled = YES;
 		return YES;
 	}
 	
 	if ([newStr rangeOfString:@"^[A-Za-z][A-Za-z0-9\\-\\_]*" 
 					 options:NSRegularExpressionSearch].length == newStr.length) {
 		createButton.enabled = YES;
+        uploadDefaultImageButton.enabled = YES;
 		return YES;
 	}
 		 
@@ -157,7 +160,9 @@
 	if ([self.navigationItem.title hasSuffix:@"Table"]) {
 		[storageClient createTableNamed:newItemName.text];
 	} else if ([self.navigationItem.title hasSuffix:@"Container"]) {
-		[storageClient addBlobContainerNamed:newItemName.text];
+        WABlobContainer *container = [[WABlobContainer alloc] initContainerWithName:newItemName.text];
+		[storageClient addBlobContainer:container];
+        [container release];
 	} else if ([self.navigationItem.title hasSuffix:@"Blob"]) {
 		if (![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
 			[self actionSheet:nil didDismissWithButtonIndex:1];
@@ -178,18 +183,19 @@
 
 - (IBAction)uploadDefaultImage:(id)sender
 {
-	[storageClient addBlobToContainer:self.selectedContainer 
-							 blobName:@"windows_azure.jpg" 
-						  contentData:UIImageJPEGRepresentation([UIImage imageNamed:@"windows_azure.jpg"], 1.0) 
-						  contentType:@"image/jpeg"
-                withCompletionHandler:^(NSError* error) {
-         if(error) {
-             [self showError:error];
-             return;
-         }
+    WABlob *blob = [[[WABlob alloc] initBlobWithName:@"windows_azure.jpg"  URL:nil containerName:self.selectedContainer.name] autorelease];
+    blob.contentType = @"image/jpeg";
+    blob.contentData = UIImageJPEGRepresentation([UIImage imageNamed:@"windows_azure.jpg"], 1.0);
+	[storageClient addBlob:blob
+               toContainer:self.selectedContainer 
+     withCompletionHandler:^(NSError* error) {
+        if(error) {
+            [self showError:error];
+            return;
+        }
          
-         [self.navigationController popViewControllerAnimated:YES];
-	 }];
+        [self.navigationController popViewControllerAnimated:YES];
+    }];
 }
 
 #pragma mark - UIActionSheetDelegate Methods
@@ -223,20 +229,20 @@
 	[self.navigationController popViewControllerAnimated:YES];
 }
 
-- (void)storageClient:(WACloudStorageClient *)client didAddBlobContainerNamed:(NSString *)name
+- (void)storageClient:(WACloudStorageClient *)client didAddBlobContainer:(WABlobContainer *)container
 {
 	self.navigationItem.rightBarButtonItem = nil;
-    if ([delegate respondsToSelector:@selector(createTableController:didAddContainerNamed:)]) {
-        [delegate createTableController:self didAddContainerNamed:name];
+    if ([delegate respondsToSelector:@selector(createTableController:didAddContainer:)]) {
+        [delegate createTableController:self didAddContainer:container];
     }
 	[self.navigationController popViewControllerAnimated:YES];
 }
 
-- (void)storageClient:(WACloudStorageClient *)client didAddBlobToContainer:(WABlobContainer *)container blobName:(NSString *)blobName
+- (void)storageClient:(WACloudStorageClient *)client didAddBlob:(WABlob *)blob toContainer:(WABlobContainer *)container
 {
 	self.navigationItem.rightBarButtonItem = nil;
-    if ([delegate respondsToSelector:@selector(createTableController:didAddBlobNamed:toContainerNamed:)]) {
-        [delegate createTableController:self didAddBlobNamed:blobName toContainerNamed:container.name];
+    if ([delegate respondsToSelector:@selector(createTableController:didAddBlob:toContainer:)]) {
+        [delegate createTableController:self didAddBlob:blob toContainer:container];
     }
 	[self.navigationController popViewControllerAnimated:YES];
 }
@@ -255,20 +261,23 @@
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingImage:(UIImage *)selectedImage editingInfo:(NSDictionary *)editingInfo
 {
     NSString *imageName = newItemName.text;
-    
-    [storageClient addBlobToContainer:self.selectedContainer 
-							 blobName:imageName 
-						  contentData:UIImageJPEGRepresentation(selectedImage, 1.0)
-						  contentType:@"image/jpeg" 
-                withCompletionHandler:^(NSError* error)  {
-                    if(error) {
-                        [self showError:error];
-                        return;
-                    }
+    WABlob *blob = [[[WABlob alloc] initBlobWithName:imageName URL:nil containerName:self.selectedContainer.name] autorelease];
+    blob.contentType = @"image/jpeg";
+    blob.contentData = UIImageJPEGRepresentation(selectedImage, 1.0);
+    [storageClient addBlob:blob
+               toContainer:self.selectedContainer
+     withCompletionHandler:^(NSError* error) {
+        if(error) {
+            [self showError:error];
+            return;
+        }
 		 
-                    [self dismissModalViewControllerAnimated:NO];
-                    [self.navigationController popViewControllerAnimated:YES];
-                }];
+        [self dismissModalViewControllerAnimated:NO];
+        if ([delegate respondsToSelector:@selector(createTableController:didAddBlob:toContainer:)]) {
+            [delegate createTableController:self didAddBlob:blob toContainer:self.selectedContainer];
+        }
+        [self.navigationController popViewControllerAnimated:YES];
+    }];
 }
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker

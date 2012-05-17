@@ -193,16 +193,24 @@ typedef enum {
             break;
         }
         case QueueStorage: {
-            [storageClient fetchQueuesWithContinuation:self.resultContinuation maxResult:MAX_ROWS];
+            WAQueueFetchRequest *fetchRequest = [WAQueueFetchRequest fetchRequestWithResultContinuation:self.resultContinuation];
+            fetchRequest.maxResult = MAX_ROWS;
+            [storageClient fetchQueuesWithRequest:fetchRequest];
             break;
         }
         case BlobStorage: {
-            [storageClient fetchBlobContainersWithContinuation:self.resultContinuation maxResult:MAX_ROWS];
+            WABlobContainerFetchRequest *fetchRequest = [WABlobContainerFetchRequest fetchRequestWithResultContinuation:self.resultContinuation];
+            fetchRequest.maxResult = MAX_ROWS;
+            [storageClient fetchBlobContainersWithRequest:fetchRequest];
+
             break;
         }
         default: {
             WABlobContainer *container = [[WABlobContainer alloc] initContainerWithName:self.navigationItem.title];
-            [storageClient fetchBlobsWithContinuation:container resultContinuation:self.resultContinuation maxResult:MAX_ROWS];
+            WABlobFetchRequest *fetchRequest = [WABlobFetchRequest fetchRequestWithContainer:container];
+            fetchRequest.maxResult = MAX_ROWS;
+            fetchRequest.resultContinuation = self.resultContinuation;
+            [storageClient fetchBlobsWithRequest:fetchRequest];
             [container release];
             break;
         }
@@ -494,15 +502,22 @@ typedef enum {
     }
 }
 
-- (void)createTableController:(CreateTableController *)controller didAddContainerNamed:(NSString *)name
+- (void)createTableController:(CreateTableController *)controller didAddContainer:(WABlobContainer *)container
 {
-    NSComparisonResult result = [self compareNameWithLastMarker:name];
+    NSComparisonResult result = [self compareNameWithLastMarker:container.name];
     if (result == NSOrderedAscending) {
-        WABlobContainer *container = [[WABlobContainer alloc] initContainerWithName:name];
         [self.localStorageList addObject:container];
-        [container release];
         [self.tableView reloadData];
     }
     
+}
+
+- (void)createTableController:(CreateTableController *)controller didAddBlob:(WABlob *)blob toContainer:(WABlobContainer *)container
+{
+    NSComparisonResult result = [self compareNameWithLastMarker:blob.name];
+    if (result == NSOrderedAscending) {
+        [self.localStorageList addObject:blob];
+        [self.tableView reloadData];
+    } 
 }
 @end

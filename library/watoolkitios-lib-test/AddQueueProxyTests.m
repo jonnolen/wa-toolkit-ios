@@ -45,7 +45,8 @@
     }];
     [proxyDelegate waitForResponse];
     
-    [proxyClient fetchQueuesWithCompletionHandler:^(NSArray *queues, NSError *error) {
+    WAQueueFetchRequest *fetchRequest = [WAQueueFetchRequest fetchRequest];
+    [proxyClient fetchQueuesWithRequest:fetchRequest usingCompletionHandler:^(NSArray *queues, WAResultContinuation *resultContinuation, NSError *error) {
         __block BOOL foundQueue = NO;
         [queues enumerateObjectsUsingBlock:^(id object, NSUInteger index, BOOL *stop) {
             WAQueue *queue = (WAQueue*)object;

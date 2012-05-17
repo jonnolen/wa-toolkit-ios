@@ -10,3 +10,4 @@ test-reports/*
 *.ipa
 xcuserdata
 *.xcworkspace
+library/build/*

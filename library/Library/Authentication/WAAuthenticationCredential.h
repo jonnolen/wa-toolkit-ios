@@ -18,7 +18,7 @@
 
 @class WACloudAccessToken;
 
-/*
+/**
  When used with the proxy service, the authentication delegate returns indication whether the login was successful. 
  */
 @protocol WAAuthenticationDelegate <NSObject>
@@ -54,8 +54,8 @@
 	NSString *_accessKey;
 	NSString *_username;
 	NSString *_password;
-	NSString *_tableServiceURL;
-	NSString *_blobServiceURL;
+	NSURL *_tableServiceURL;
+	NSURL *_blobServiceURL;
 	WACloudAccessToken *_accessToken;
 }
 
@@ -67,8 +67,6 @@
 
 /**
  The URL of the proxy service.
- 
- @see NSURL
  */
 @property (nonatomic, readonly) NSURL *proxyURL;
 
@@ -90,12 +88,12 @@
 /**
  The URL of the table service endpoint, if authenticating with a proxy service.
  */
-@property (nonatomic, readonly) NSString *tableServiceURL;
+@property (nonatomic, readonly) NSURL *tableServiceURL;
 
 /**
  The URL of the blob service endpoint, if authenticating with a proxy service.
  */
-@property (nonatomic, readonly) NSString *blobServiceURL;
+@property (nonatomic, readonly) NSURL *blobServiceURL;
 
 /**
  Initializes a newly created WAAuthenticationCredential with a specified account name and access key obtained from the Windows Azure portal.
@@ -116,9 +114,6 @@
  @param returnError An NSError object that will contain the error if the authentication fails.
  
  @returns The newly initialized WAAuthenticationCredential object.
- 
- @see NSURL
- @see NSError
  */
 + (WAAuthenticationCredential *)authenticateCredentialSynchronousWithProxyURL:(NSURL *)proxyURL user:(NSString *)user password:(NSString *)password error:(NSError **)returnError;
 
@@ -133,9 +128,6 @@
  @param returnError An NSError object that will contain the error if the authentication fails.
  
  @returns The newly initialized WAAuthenticationCredential object.
- 
- @see NSURL
- @see NSError
  */
 + (WAAuthenticationCredential *)authenticateCredentialSynchronousWithProxyURL:(NSURL *)proxyURL tableServiceURL:(NSURL *)tablesURL blobServiceURL:(NSURL *)blobsURL user:(NSString *)user password:(NSString *)password error:(NSError **)returnError;
 
@@ -150,7 +142,6 @@
  
  @returns The newly initialized WAAuthenticationCredential object.
  
- @see NSURL
  @see WAAuthenticationDelegate
  */
 + (WAAuthenticationCredential *)authenticateCredentialWithProxyURL:(NSURL *)proxyURL user:(NSString *)user password:(NSString *)password delegate:(id<WAAuthenticationDelegate>)delegate;
@@ -164,9 +155,6 @@
  @param block A block object that is called with the authentication completes. The block will contain an NSError
  
  @returns The newly initialized WAAuthenticationCredential object.
- 
- @see NSURL
- @see NSError
  */
 + (WAAuthenticationCredential *)authenticateCredentialWithProxyURL:(NSURL *)proxyURL user:(NSString *)user password:(NSString *)password withCompletionHandler:(void (^)(NSError *error))block;
 
@@ -178,7 +166,6 @@
  
  @returns The newly initialized WAAuthenticationCredential object.
  
- @see NSURL
  @see WACloudAccessToken
  */
 + (WAAuthenticationCredential *)authenticateCredentialWithProxyURL:(NSURL *)proxyURL accessToken:(WACloudAccessToken *)accessToken;

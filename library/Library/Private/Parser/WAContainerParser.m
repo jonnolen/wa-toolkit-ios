@@ -53,25 +53,48 @@
     
     [WAXMLHelper performXPath:@"/EnumerationResults/Containers/Container" 
                  onDocument:doc 
-                      block:^(xmlNodePtr node) {
+                      block:^(xmlNodePtr node) 
+    {
         NSString *name = [WAXMLHelper getElementValue:node name:@"Name"];
         NSString *url = [WAXMLHelper getElementValue:node name:@"Url"];
-        NSString *metadata = [WAXMLHelper getElementValue:node name:@"Metadata"];
         __block NSString *lastModified = nil;
         __block NSString *eTag = nil;
+        NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithCapacity:3];
          
         [WAXMLHelper performXPath:@"Properties" 
                             onNode:node 
-                             block:^(xmlNodePtr node) {
+                             block:^(xmlNodePtr node) 
+        {
             eTag = [WAXMLHelper getElementValue:node name:WAContainerPropertyKeyEtag]; 
             lastModified = [WAXMLHelper getElementValue:node name:WAContainerPropertyKeyLastModified];
         }];
          
-        WABlobContainer *container = [[WABlobContainer alloc] initContainerWithName:name URL:url metadata:metadata 
+        [WAXMLHelper performXPath:@"Metadata" 
+                           onNode:node 
+                            block:^(xmlNodePtr node) 
+         {
+             for (xmlNodePtr child = xmlFirstElementChild(node); child; child = xmlNextElementSibling(child)) {
+                 NSString *key = [[NSString alloc] initWithUTF8String:(const char*)child->name];
+                 xmlChar *value = xmlNodeGetContent(child);
+                 NSString *str = [[NSString alloc] initWithUTF8String:(const char*)value];
+                 xmlFree(value);
+                 [dictionary setObject:str forKey:key];
+                 [key release];
+                 [str release];
+             }
+         }];
+        
+        
+        WABlobContainer *container = [[WABlobContainer alloc] initContainerWithName:name URL:url sharedAccessSigniture:nil 
                                                                           properties:[NSDictionary dictionaryWithObjectsAndKeys:
                                                                                       eTag, WAContainerPropertyKeyEtag,
                                                                                       lastModified, WAContainerPropertyKeyLastModified,
                                                                                       nil]];
+        
+        [dictionary enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop)
+        {
+            [container setValue:key forMetadataKey:obj];
+        }];
         [containers addObject:container];
         [container release];
     }];
@@ -102,7 +125,7 @@
             lastModified = [WAXMLHelper getElementValue:node name:WAContainerPropertyKeyLastModified];
         }];
          
-        WABlobContainer *container = [[WABlobContainer alloc] initContainerWithName:name URL:url metadata:nil 
+        WABlobContainer *container = [[WABlobContainer alloc] initContainerWithName:name URL:url sharedAccessSigniture:nil 
                                                                           properties:[NSDictionary dictionaryWithObjectsAndKeys:
                                                                                       eTag, WAContainerPropertyKeyEtag,
                                                                                       lastModified, WAContainerPropertyKeyLastModified,
@@ -130,7 +153,7 @@
     [containerNameUri2 release];
     [containerNameUri release];
     
-    return [[[WABlobContainer alloc] initContainerWithName:containerName URL:tempURL metadata:sharedAccessSigniture] autorelease];
+    return [[[WABlobContainer alloc] initContainerWithName:containerName URL:tempURL sharedAccessSigniture:sharedAccessSigniture] autorelease];
 }
 
 @end

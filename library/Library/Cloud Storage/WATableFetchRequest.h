@@ -19,11 +19,9 @@
 @class WAResultContinuation;
 
 /**
- A class that represents a Windows Azure Storage fetch request.
+ A class that represents a Windows Azure Table Storage fetch request.
  
  The request is used with the WACloudStorageClient when working with tables.
- 
- @see WATableFetchRequest
  */
 @interface WATableFetchRequest : NSObject
 {
@@ -83,8 +81,6 @@
  @param error An NSError object that will be populated if the predicate is not valid.
  
  @returns The newly initialized WATableFetchRequest object.
- 
- @see NSPredicate
  */
 + (WATableFetchRequest *)fetchRequestForTable:(NSString *)tableName predicate:(NSPredicate *)predicate error:(NSError **)error;
 

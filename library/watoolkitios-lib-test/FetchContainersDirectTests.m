@@ -24,8 +24,8 @@
 - (void)setUp
 {
     [super setUp];
-    
-    [directClient addBlobContainerNamed:randomContainerNameString withCompletionHandler:^(NSError *error) {
+    WABlobContainer *container = [[[WABlobContainer alloc] initContainerWithName:randomContainerNameString] autorelease];
+    [directClient addBlobContainer:container withCompletionHandler:^(NSError *error) {
         STAssertNil(error, @"Error returned from addBlobContainer: %@",[error localizedDescription]);
         [directDelegate markAsComplete];
     }];
@@ -34,7 +34,8 @@
 
 - (void)tearDown
 {
-    [directClient deleteBlobContainerNamed:randomContainerNameString withCompletionHandler:^(NSError *error) {
+    WABlobContainer *container = [[[WABlobContainer alloc] initContainerWithName:randomContainerNameString] autorelease];
+    [directClient deleteBlobContainer:container withCompletionHandler:^(NSError *error) {
         STAssertNil(error, @"Error returned from deleteBlobContainer: %@",[error localizedDescription]);
         [directDelegate markAsComplete];
     }];
@@ -45,7 +46,9 @@
 
 - (void)testShouldFetchContainersWithContinuationUsingCompletionHandler
 {
-    [directClient fetchBlobContainersWithContinuation:nil maxResult:100 usingCompletionHandler:^(NSArray* containers, WAResultContinuation *resultContinuation, NSError* error) 
+    WABlobContainerFetchRequest *fetchRequest = [WABlobContainerFetchRequest fetchRequest];
+    fetchRequest.maxResult = 100;
+    [directClient fetchBlobContainersWithRequest:fetchRequest usingCompletionHandler:^(NSArray* containers, WAResultContinuation *resultContinuation, NSError* error) 
      {
          STAssertNil(error, @"Error returned by fetchBlobContainersSegmented: %@", [error localizedDescription]);
          STAssertNotNil(containers, @"fetchBlobContainersSegmented returned nil");
@@ -58,7 +61,8 @@
 
 - (void)testShouldFetchBlobContainersWithCompletionHandler
 {   
-    [directClient fetchBlobContainersWithCompletionHandler:^(NSArray *containers, NSError *error) {
+    WABlobContainerFetchRequest *fetchRequest = [WABlobContainerFetchRequest fetchRequest];
+    [directClient fetchBlobContainersWithRequest:fetchRequest usingCompletionHandler:^(NSArray *containers, WAResultContinuation *resultContinuation, NSError *error) {
         STAssertNil(error, @"Error returned from fetchBlobContainersWithCompletionHandler: %@",[error localizedDescription]);
         STAssertTrue([containers count] > 0, @"No containers were found under this account");  // assuming that this is an account with at least one container
         [directDelegate markAsComplete];

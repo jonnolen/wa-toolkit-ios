@@ -70,7 +70,7 @@
     WATableFetchRequest* fetchRequest = [WATableFetchRequest fetchRequestForTable:randomTableNameString predicate:predicate error:&error];
 	STAssertNil(error, @"Predicate parser error: %@", [error localizedDescription]);
     
-    [directClient fetchEntities:fetchRequest withCompletionHandler:^(NSArray *entities, NSError *error) {
+    [directClient fetchEntitiesWithRequest:fetchRequest usingCompletionHandler:^(NSArray *entities, WAResultContinuation *resultContinuation, NSError *error) {
         STAssertNil(error, @"Error returned by fetchEntities: %@", [error localizedDescription]);
         STAssertNotNil(entities, @"fetchEntities returned nil");
         STAssertEquals(entities.count, (NSUInteger)1, @"fetchEntities returned incorrect number of entities");

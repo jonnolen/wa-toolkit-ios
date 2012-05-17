@@ -70,8 +70,6 @@
  Signs the request and adds the OAuth token.
  
  @param request The request to sign.
- 
- @see NSMutableRequest
  */
 - (void)signRequest:(NSMutableURLRequest *)request;
 

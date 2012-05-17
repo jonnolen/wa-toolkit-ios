@@ -22,7 +22,12 @@
 #import "WAResultContinuation.h"
 
 #import "WACloudStorageClient.h"
+#import "WACloudStorageClientDelegate.h"
 #import "WATableFetchRequest.h"
+#import "WABlobFetchRequest.h"
+#import "WABlobContainerFetchRequest.h"
+#import "WAQueueFetchRequest.h"
+#import "WAQueueMessageFetchRequest.h"
 
 #import "WAAuthenticationCredential.h"
 #import "WACloudAccessControlClient.h"

@@ -41,7 +41,7 @@
         _created = [[dictionary objectForKey:@"created"] integerValue];
 		_identityProvider = [realm.name retain];
         
-        NSString* securityTokenXmlStr = [dictionary objectForKey:@"securityToken"];
+        NSString *securityTokenXmlStr = [dictionary objectForKey:@"securityToken"];
         
         securityTokenXmlStr = [securityTokenXmlStr stringByReplacingOccurrencesOfString:@"&quot;" withString:@"\""];
         securityTokenXmlStr = [securityTokenXmlStr stringByReplacingOccurrencesOfString:@"&apos;" withString:@"\'"];
@@ -59,7 +59,7 @@
             }
         }
         
-        NSData* data = [securityTokenXmlStr dataUsingEncoding:NSUTF8StringEncoding];
+        NSData *data = [securityTokenXmlStr dataUsingEncoding:NSUTF8StringEncoding];
         const char *baseURL = NULL;
         const char *encoding = NULL;
         
@@ -68,19 +68,18 @@
         if (doc != NULL) 
         {
             xmlNodePtr root = xmlFirstElementChild((xmlNodePtr) doc);
-            xmlChar* xmlValue = xmlNodeGetContent(root);
+            xmlChar *xmlValue = xmlNodeGetContent(root);
             
-            NSString* securityTokenEncoded = [NSString stringWithCString:(const char*)xmlValue encoding:NSUTF8StringEncoding];
-            NSData* securityTokenData = [securityTokenEncoded dataWithBase64DecodedString];
+            NSString *securityTokenEncoded = [NSString stringWithCString:(const char*)xmlValue encoding:NSUTF8StringEncoding];
+            NSData *securityTokenData = [securityTokenEncoded dataWithBase64DecodedString];
 			
 			xmlFree(xmlValue);
             
             _securityToken = [[NSString alloc] initWithData:securityTokenData encoding:NSUTF8StringEncoding];
 			
-			NSMutableDictionary* claims = [NSMutableDictionary dictionaryWithCapacity:10];
-			NSString* claimsPrefix = @"http://schemas.xmlsoap.org/ws/2005/05/identity/claims/";
+			NSMutableDictionary *claims = [NSMutableDictionary dictionaryWithCapacity:10];
 			
-			for(NSString* part in [_securityToken componentsSeparatedByString:@"&"])
+			for(NSString *part in [_securityToken componentsSeparatedByString:@"&"])
 			{
 				NSRange split = [part rangeOfString:@"="];
 				if(!split.length)
@@ -88,14 +87,10 @@
 					continue; // weird
 				}
 				
-				NSString* key = [[part substringToIndex:split.location] URLDecode];
-				NSString* value = [[part substringFromIndex:split.location + 1] URLDecode];
+				NSString *key = [[part substringToIndex:split.location] URLDecode];
+				NSString *value = [[part substringFromIndex:split.location + 1] URLDecode];
 				
-				if([key hasPrefix:claimsPrefix])
-				{
-					key = [key substringFromIndex:claimsPrefix.length];
-					[claims setObject:value forKey:key];
-				}
+                [claims setObject:value forKey:key];
 			}
 			
 			_claims = [claims copy];
@@ -136,7 +131,7 @@
 
 - (void)signRequest:(NSMutableURLRequest *)request
 {
-	NSString* authHeader = [NSString stringWithFormat:@"OAuth %@", _securityToken];
+	NSString *authHeader = [NSString stringWithFormat:@"OAuth %@", _securityToken];
 	[request setValue:authHeader forHTTPHeaderField:@"Authorization"];
 }
 
