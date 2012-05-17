@@ -79,8 +79,8 @@ The samples directory contains samples of using the Toolkit. Each sample has a r
 
 The following are the other projects associated with this project:
 
-1. (Toolkit Configuration Utility)[[UIApplication sharedApplication]] - This utility helps when using the (Cloud Ready Packages)[https://github.com/microsoft-dpe/wa-toolkit-cloudreadypackages]. 
-1. (Cloud Ready Packages)[https://github.com/microsoft-dpe/wa-toolkit-cloudreadypackages] - These are the packages to upload to act as proxies between your application and Windows Azure.
+1. [Toolkit Configuration Utility](https://github.com/microsoft-dpe/wa-toolkit-ios-configutility) - This utility helps when using the [Cloud Ready Packages](https://github.com/microsoft-dpe/wa-toolkit-cloudreadypackages). 
+1. [Cloud Ready Packages](https://github.com/windowsazure-toolkits/wa-toolkit-cloudreadypackages) - These are the packages to upload to act as proxies between your application and Windows Azure.
 
 ## Contact
 
