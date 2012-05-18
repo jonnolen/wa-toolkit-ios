@@ -84,4 +84,4 @@ The following are the other projects associated with this project:
 
 ## Contact
 
-For additional questions or feedback, please contact the [team](mailto:wwegner@microsoft.com).
+For additional questions or feedback, please contact the [team](mailto:chrisner@microsoft.com).
