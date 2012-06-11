@@ -40,7 +40,7 @@ Xcode 4.x (library)
 Xcode 4.x (Git Submodule)
 -------------------------
 
-1. Add the submodule: `git submodule add git@github.com:microsoft-dpe/watoolkitios-lib.git watoolkitios`
+1. Add the submodule: `git submodule add git://github.com/WindowsAzure-Toolkits/wa-toolkit-ios.git watoolkitios`
 1. Open the project you wish to add the Windows Azure iOS library to in Xcode.
 1. Focus your project and select the "View" menu > "Navigators" > "Project" to bring the project file list into view.
 1. Drag the **watoolkitios-ib.xcodeproj** file from the Finder and drop it on your "(Your Project's Name)".xcodeproj.
