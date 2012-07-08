@@ -135,6 +135,7 @@
 		DE55DEDD1482F2440046A577 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastUpgradeCheck = 0430;
 				ORGANIZATIONNAME = "Scott Densmore";
 			};
 			buildConfigurationList = DE55DEE01482F2440046A577 /* Build configuration list for PBXProject "FacebookSample" */;
@@ -256,6 +257,7 @@
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "FacebookSample/FacebookSample-Prefix.pch";
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = (
 					"$(BUILT_PRODUCTS_DIR)/**",
 					"/usr/include/libxml2/**",
@@ -280,6 +282,7 @@
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "FacebookSample/FacebookSample-Prefix.pch";
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = (
 					"$(BUILT_PRODUCTS_DIR)/**",
 					"/usr/include/libxml2/**",
