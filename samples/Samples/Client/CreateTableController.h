@@ -21,7 +21,7 @@
 @interface CreateTableController : UIViewController <WACloudStorageClientDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIActionSheetDelegate>
 {
 @private
-	UITextField *newItemName;
+	UITextField *itemName;
 	UIButton *createButton;
 	UIButton *uploadDefaultImageButton;
 	UILabel *nameLabel;
@@ -31,7 +31,7 @@
     id<CreateTableControllerDelegate> delegate;
 }
 
-@property (nonatomic, retain) IBOutlet UITextField *newItemName;
+@property (nonatomic, retain) IBOutlet UITextField *itemName;
 @property (nonatomic, retain) IBOutlet UIButton *createButton;
 @property (nonatomic, retain) IBOutlet UIButton *uploadDefaultImageButton;
 @property (nonatomic, retain) IBOutlet UILabel *nameLabel;

@@ -48,17 +48,6 @@
 ///---------------------------------------------------------------------------------------
 
 /**
- Sent when the client successfully returns a list of blob containers.
- 
- @param client The client that sent the request.
- @param containers The array of WABlobContainer objects returned from the request.
- 
- @see WABlobContainer
- */
-// TODO: Remove this before release
-- (void)storageClient:(WACloudStorageClient *)client didFetchBlobContainers:(NSArray *)containers DEPRECATED_ATTRIBUTE;
-
-/**
  Sent when the client successfully returns a list of blob containers and the result continuation that you can use when making future requests to get the next set of containers. 
  
  @param client The client that sent the request.
@@ -79,15 +68,6 @@
  @see WABlobContainer
  */
 - (void)storageClient:(WACloudStorageClient *)client didFetchBlobContainer:(WABlobContainer *)container;
-
-/**
- Sent when the client successsfully adds a new blob container.
- 
- @param client The client that sent the request.
- @param name The name that was added.
- */
-// TODO: Remove this before release
-- (void)storageClient:(WACloudStorageClient *)client didAddBlobContainerNamed:(NSString *)name DEPRECATED_ATTRIBUTE;
 
 /**
  Sent when the client successsfully adds a new blob container.
@@ -114,21 +94,6 @@
  @param name The name of the container that was deleted.
  */
 - (void)storageClient:(WACloudStorageClient *)client didDeleteBlobContainerNamed:(NSString *)name;
-
-/**
- Sent when the client successfully returns blobs from an existing container.
- 
- @param client The client that sent the request.
- @param blobs The array of WABlob objects returned from the request.
- @param container The WABlobContainer object for the blobs.
- 
- @deprecated Now use WACloudStorageClientDelegate#storageClient:didFetchBlobs:inContainer:withResultContinuation:
- 
- @see WABlob
- @see WABlobContainer
- */
-// TODO: Remove this before release
-- (void)storageClient:(WACloudStorageClient *)client didFetchBlobs:(NSArray *)blobs inContainer:(WABlobContainer *)container DEPRECATED_ATTRIBUTE;
 
 /**
  Sent when the client successfully returns blobs from an existing container.
@@ -168,21 +133,6 @@
  Sent when the client successfully adds a blob to a specified container.
  
  @param client The client that sent the request.
- @param container The container to add the blob.
- @param blobName The name of the blob
- 
- @warning *Deprecated*: now use WACloudStorageClientDelegate#storageClient:didAddBlob:toContainer:
- 
- @see WABlobContainer
- */
-// TODO: Remove this before release
-- (void)storageClient:(WACloudStorageClient *)client didAddBlobToContainer:(WABlobContainer *)container blobName:(NSString *)blobName DEPRECATED_ATTRIBUTE;
-
-
-/**
- Sent when the client successfully adds a blob to a specified container.
- 
- @param client The client that sent the request.
  @param blob The blob added.
  @param container The container the blob was added.
  
@@ -203,19 +153,6 @@
 ///---------------------------------------------------------------------------------------
 /// @name Queue Request Completion
 ///---------------------------------------------------------------------------------------
-
-/**
- Sent when the client successfully returns a list of queues.
- 
- @param client The client that sent the request
- @param queues An array of WAQueue objects.
- 
- @deprecated Now use WACloudStorageClientDelegate#storageClient:didFetchQueues:withResultContinuation:
- 
- @see WAQueue
- */
-// TODO: Remove this before release
-- (void)storageClient:(WACloudStorageClient *)client didFetchQueues:(NSArray *)queues DEPRECATED_ATTRIBUTE;
 
 /**
  Sent when the client successfully returns a list of queues with a result continuation.
@@ -341,20 +278,6 @@
  @param tableName The table name that was deleted.
  */
 - (void)storageClient:(WACloudStorageClient *)client didDeleteTableNamed:(NSString *)tableName;
-
-/**
- Sent when the client successfully returns a list of entities from a table.
- 
- @param client The client that sent the request.
- @param entities An array of WATableEntity objects.
- @param tableName The name of the table that contains the enties.
- 
- @deprecated Now use WACloudStorageClientDelegate#storageClient:didFetchEntities:fromTableNamed:withResultContinuation:
- 
- @see WATableEntity
- */
-// TODO: Remove this before release
-- (void)storageClient:(WACloudStorageClient *)client didFetchEntities:(NSArray *)entities fromTableNamed:(NSString *)tableName DEPRECATED_ATTRIBUTE;
 
 /**
  Sent when the client successfully returns a list of entities from a table.
