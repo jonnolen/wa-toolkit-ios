@@ -32,26 +32,12 @@ NSString * const WABlobPropertyKeySequenceNumber = @"x-ms-blob-sequence-number";
 
 @synthesize name = _name;
 @synthesize URL = _URL;
-@synthesize container = _container;
 @synthesize properties = _properties; 
 @synthesize metadata = _metadata;
 @synthesize contentData = _contentData;
 @synthesize contentType = _contentType;
 @synthesize containerName = _containerName;
 
-- (id)initBlobWithName:(NSString *)name URL:(NSString *)URL container:(WABlobContainer *)container properties:(NSDictionary *)properties
-{
-    if ((self = [super init])) {
-        _name = [name copy];
-        _URL = [[NSURL URLWithString:URL] retain];
-        _container = [container retain];
-        _properties = [properties retain];
-        _metadata = [[NSMutableDictionary alloc] initWithCapacity:5];
-        _containerName = [container.name copy];
-    }    
-    
-    return self;
-}
 
 - (id)initBlobWithName:(NSString *)name URL:(NSString *)URL containerName:(NSString *)containerName properties:(NSDictionary *)properties
 {
@@ -64,11 +50,6 @@ NSString * const WABlobPropertyKeySequenceNumber = @"x-ms-blob-sequence-number";
     }    
     
     return self;
-}
-
-- (id)initBlobWithName:(NSString *)name URL:(NSString *)URL container:(WABlobContainer*)container 
-{	
-     return [self initBlobWithName:name URL:URL container:container properties:nil];	
 }
 
 - (id)initBlobWithName:(NSString *)name URL:(NSString *)URL containerName:(NSString *)containerName
@@ -85,7 +66,6 @@ NSString * const WABlobPropertyKeySequenceNumber = @"x-ms-blob-sequence-number";
 {
     [_name release];
     [_URL release];
-    [_container release];
     [_properties release];
     [_metadata release];
     [_contentType release];

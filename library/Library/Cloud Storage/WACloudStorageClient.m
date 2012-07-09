@@ -112,57 +112,6 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
 #pragma mark -
 #pragma mark Queue API methods
 
-- (void)fetchQueues
-{
-    [self fetchQueuesWithCompletionHandler:nil];
-}
-
-- (void)fetchQueuesWithCompletionHandler:(void (^)(NSArray *, NSError *))block
-{
-    WACloudURLRequest *request;
-    if (_credential.usesProxy) {
-        // 100ns intervals since 1/1/1970
-        long long ticks = [[NSDate date] timeIntervalSince1970] * 10000000;
-        // adjust relative to 1/1/0001
-        ticks += 621355968000000000;                                        
-        NSString *endpoint = [NSString stringWithFormat:@"?comp=list&incrementalSeed=%llu", ticks];
-        request = [_credential authenticatedRequestWithEndpoint:endpoint forStorageType:@"queue", nil];
-    } else {
-        request = [_credential authenticatedRequestWithEndpoint:@"?comp=list" forStorageType:@"queue", nil];
-    }
-    
-    [request fetchXMLWithCompletionHandler:^(WACloudURLRequest *request, xmlDocPtr doc, NSError *error) {
-        if(error) {
-            if(block) {
-                block(nil, error);
-            } else if([_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)]) {
-                [_delegate storageClient:self didFailRequest:request withError:error];
-            }
-            return;
-        }
-         
-        NSArray *queues = [WAQueueParser loadQueues:doc];
-         
-        if (block) {
-            block(queues, nil);
-        } else if([_delegate respondsToSelector:@selector(storageClient:didFetchQueues:)]) {
-            [_delegate storageClient:self didFetchQueues:queues];
-        }
-    }];
-    
-}
-
-- (void)fetchQueuesWithContinuation:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult
-{
-    [self fetchQueuesWithContinuation:resultContinuation maxResult:maxResult usingCompletionHandler:nil];
-}
-
-- (void)fetchQueuesWithContinuation:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult usingCompletionHandler:(void (^)(NSArray *, WAResultContinuation *, NSError *))block
-{
-    WAQueueFetchRequest *fetchRequest = [WAQueueFetchRequest fetchRequestWithResultContinuation:resultContinuation];
-    [self fetchQueuesWithRequest:fetchRequest usingCompletionHandler:block];
-}
-
 - (void)fetchQueuesWithRequest:(WAQueueFetchRequest *)fetchRequest
 {
     [self fetchQueuesWithRequest:fetchRequest usingCompletionHandler:nil];
@@ -297,30 +246,6 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
 			}
 		}
     }];
-}
-
-- (void)fetchQueueMessages:(NSString *)queueName
-{
-    [self fetchQueueMessages:queueName withCompletionHandler:nil];
-}
-
-- (void)fetchQueueMessages:(NSString *)queueName withCompletionHandler:(void (^)(NSArray *, NSError *))block
-{
-    
-    WAQueueMessageFetchRequest *fetchRequest = [WAQueueMessageFetchRequest fetchRequestWithQueueName:queueName];
-    [self fetchQueueMessagesWithRequest:fetchRequest usingCompletionHandler:block];
-}
-
-- (void)fetchQueueMessages:(NSString *)queueName fetchCount:(NSInteger)fetchCount
-{
-    [self fetchQueueMessages:queueName fetchCount:fetchCount withCompletionHandler:nil];
-}
-
-- (void)fetchQueueMessages:(NSString *)queueName fetchCount:(NSInteger)fetchCount withCompletionHandler:(void (^)(NSArray *, NSError *))block
-{
-    WAQueueMessageFetchRequest *fetchRequest = [WAQueueMessageFetchRequest fetchRequestWithQueueName:queueName];
-    fetchRequest.fetchCount = fetchCount;
-    [self fetchQueueMessagesWithRequest:fetchRequest usingCompletionHandler:block];
 }
 
 - (void)fetchQueueMessagesWithRequest:(WAQueueMessageFetchRequest *)fetchRequest
@@ -495,61 +420,6 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
 #pragma mark -
 #pragma mark Blob API methods
 
-- (void)fetchBlobContainers
-{
-    [self fetchBlobContainersWithCompletionHandler:nil];
-}
-
-- (void)fetchBlobContainersWithCompletionHandler:(void (^)(NSArray *, NSError *))block
-{
-    WACloudURLRequest *request = nil;
-    NSArray*(^containerBlock)(xmlDocPtr) = nil;
-    
-    if (_credential.usesProxy) {
-        request = [_credential authenticatedRequestWithEndpoint:@"/SharedAccessSignatureService/containers" forStorageType:@"blob", nil];
-        containerBlock = ^(xmlDocPtr doc) {
-            return [WAContainerParser loadContainersForProxy:doc];
-        };
-    } else {
-        request = [_credential authenticatedRequestWithEndpoint:@"?comp=list&include=metadata" forStorageType:@"blob",
-                                    @"x-ms-blob-type", @"BlockBlob", nil];
-        containerBlock = ^(xmlDocPtr doc) {
-            return [WAContainerParser loadContainers:doc];
-        };
-    }
-    
-    [request fetchXMLWithCompletionHandler:^(WACloudURLRequest* request, xmlDocPtr doc, NSError* error) {
-        if (error) {
-            if (block) {
-                block(nil, error);
-            } else if ([_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)]) {
-                [_delegate storageClient:self didFailRequest:request withError:error];
-            }
-            return;
-        }
-         
-        NSArray *containers = containerBlock(doc);
-         
-        if (block) {
-            block(containers, nil);
-        } else if ([_delegate respondsToSelector:@selector(storageClient:didFetchBlobContainers:)]) {
-            [_delegate storageClient:self didFetchBlobContainers:containers];
-        }
-    }];
-}
-
-- (void)fetchBlobContainersWithContinuation:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult
-{
-    [self fetchBlobContainersWithContinuation:resultContinuation maxResult:maxResult usingCompletionHandler:nil];
-}
-
-- (void)fetchBlobContainersWithContinuation:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult usingCompletionHandler:(void (^)(NSArray*, WAResultContinuation *, NSError*))block
-{
-    WABlobContainerFetchRequest *fetchRequest = [WABlobContainerFetchRequest fetchRequestWithResultContinuation:resultContinuation];
-    [self fetchBlobContainersWithRequest:fetchRequest usingCompletionHandler:block];
-}
-
-
 - (void)fetchBlobContainersWithRequest:(WABlobContainerFetchRequest *)fetchRequest
 {
     [self fetchBlobContainersWithRequest:fetchRequest usingCompletionHandler:nil];
@@ -665,17 +535,6 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
     }];
 }
 
-- (BOOL)addBlobContainerNamed:(NSString *)containerName
-{
-    return [self addBlobContainerNamed:containerName withCompletionHandler:nil];
-}
-
-- (BOOL)addBlobContainerNamed:(NSString *)containerName withCompletionHandler:(void (^)(NSError*))block
-{
-    WABlobContainer *container = [[[WABlobContainer alloc] initContainerWithName:containerName] autorelease];
-    return [self addBlobContainer:container withCompletionHandler:block];
-}
-
 - (BOOL)addBlobContainer:(WABlobContainer *)container
 {
     return [self addBlobContainer:container withCompletionHandler:nil];
@@ -697,9 +556,6 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
             request = [_credential authenticatedRequestWithEndpoint:endpoint forStorageType:@"blob" httpMethod:@"PUT" contentData:[NSData data] contentType:nil metadata:container.metadata, nil];
         }
     }
-    
-    //TODO: Delete this code
-    //request = [_credential authenticatedRequestWithEndpoint:endpoint forStorageType:@"blob" httpMethod:@"PUT" contentData:[NSData data] contentType:nil metadata:container.metadata, nil];
     
 	[request fetchXMLWithCompletionHandler:^(WACloudURLRequest* request, xmlDocPtr doc, NSError* error) {
         if (error) {
@@ -761,81 +617,10 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
     return YES;
 }
 
-- (BOOL)deleteBlobContainerNamed:(NSString *)containerName
-{
-    return [self deleteBlobContainerNamed:containerName withCompletionHandler:nil];
-}
-
-- (BOOL)deleteBlobContainerNamed:(NSString *)containerName withCompletionHandler:(void (^)(NSError *))block
-{
-    WABlobContainer *container = [[[WABlobContainer alloc] initContainerWithName:containerName] autorelease];
-    return [self deleteBlobContainer:container withCompletionHandler:block];
-}
-
-- (void)fetchBlobs:(WABlobContainer *)container
-{
-    [self fetchBlobs:container withCompletionHandler:nil];
-}
-
-- (void)fetchBlobs:(WABlobContainer *)container withCompletionHandler:(void (^)(NSArray *, NSError *))block
-{
-    WACloudURLRequest *request = nil;
-    NSArray*(^blobBlock)(xmlDocPtr, WABlobContainer *) = nil;
-    
-    if (_credential.usesProxy) {
-        NSString *endpoint = [NSString stringWithFormat:@"/SharedAccessSignatureService/blob?containerName=%@", [container.name URLEncode]];
-        request = [_credential authenticatedRequestWithEndpoint:endpoint forStorageType:@"blob",
-                                    @"x-ms-blob-type", @"BlockBlob", nil];
-        blobBlock = ^(xmlDocPtr doc, WABlobContainer *container) {
-            return [WABlobParser loadBlobsForProxy:doc forContainerName:container.name];
-        };
-    } else {
-        NSString* containerName = container.name;
-        NSString* endpoint = [NSString stringWithFormat:@"/%@?comp=list&restype=container&include=metadata", [containerName URLEncode]];
-        request = [_credential authenticatedRequestWithEndpoint:endpoint forStorageType:@"blob",
-                                    @"x-ms-blob-type", @"BlockBlob", nil];
-        blobBlock = ^(xmlDocPtr doc, WABlobContainer *container) {
-            return [WABlobParser loadBlobs:doc forContainerName:container.name];
-        };
-    }
-    
-    [request fetchXMLWithCompletionHandler:^(WACloudURLRequest *request, xmlDocPtr doc, NSError *error) {
-         if (error) {
-             if (block) {
-                block(nil, error);
-             } else if([_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)]) {
-                [_delegate storageClient:self didFailRequest:request withError:error];
-             }
-             return;
-         }
-         
-         NSArray *items = blobBlock(doc, container);
-         
-         if (block) {
-            block(items, nil);
-         } else if([_delegate respondsToSelector:@selector(storageClient:didFetchBlobs:inContainer:)]) {
-            [_delegate storageClient:self didFetchBlobs:items inContainer:container];
-         }
-    }];
-}
-
-- (void)fetchBlobsWithContinuation:(WABlobContainer *)container resultContinuation:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult
-{
-    [self fetchBlobsWithContinuation:container resultContinuation:resultContinuation maxResult:maxResult usingCompletionHandler:nil];
-}
-
-- (void)fetchBlobsWithContinuation:(WABlobContainer *)container resultContinuation:(WAResultContinuation *)resultContinuation maxResult:(NSInteger)maxResult usingCompletionHandler:(void (^)(NSArray *, WAResultContinuation *, NSError *))block
-{
-    WABlobFetchRequest *request = [WABlobFetchRequest fetchRequestWithContainer:container resultContinuation:resultContinuation];
-    request.maxResult = maxResult;
-    [self fetchBlobsWithRequest:request usingCompletionHandler:block];
-}
-
 - (void)fetchBlobsWithRequest:(WABlobFetchRequest *)fetchRequest
 {
     [self fetchBlobsWithRequest:fetchRequest usingCompletionHandler:nil];
 }
-
 
 - (void)fetchBlobsWithRequest:(WABlobFetchRequest *)fetchRequest usingCompletionHandler:(void (^)(NSArray *blobs, WAResultContinuation *resultContinuation, NSError *error))block
 {
@@ -1003,21 +788,6 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
     
     return YES;
 }
-
-
-- (void)addBlobToContainer:(WABlobContainer *)container blobName:(NSString *)blobName contentData:(NSData *)contentData contentType:(NSString*)contentType
-{
-    [self addBlobToContainer:container blobName:blobName contentData:contentData contentType:contentType withCompletionHandler:nil];
-}
-
-- (void)addBlobToContainer:(WABlobContainer *)container blobName:(NSString *)blobName contentData:(NSData *)contentData contentType:(NSString*)contentType withCompletionHandler:(void (^)(NSError*))block
-{
-    WABlob *blob = [[[WABlob alloc] initBlobWithName:blobName URL:nil] autorelease];
-    blob.contentType = contentType;
-    blob.contentData = contentData;
-    [self addBlob:blob toContainer:container];
-}
-
 
 - (void)addBlob:(WABlob *)blob toContainer:(WABlobContainer *)container
 {
@@ -1318,64 +1088,6 @@ static NSString *TABLE_UPDATE_ENTITY_REQUEST_STRING = @"<?xml version=\"1.0\" en
             [_delegate storageClient:self didDeleteTableNamed:tableName];
         }
     }];
-}
-
-- (void)fetchEntities:(WATableFetchRequest*)fetchRequest
-{
-    [self fetchEntities:fetchRequest withCompletionHandler:nil];
-}
-
-- (void)fetchEntities:(WATableFetchRequest*)fetchRequest withCompletionHandler:(void (^)(NSArray*, NSError *))block
-{
-	NSString *endpoint = [fetchRequest endpoint];
-    WACloudURLRequest *request = [_credential authenticatedRequestWithEndpoint:endpoint forStorageType:@"table" httpMethod:@"GET", nil];
-	
-    WA_BEGIN_LOGGING
-        NSDictionary *dictionary = [request allHTTPHeaderFields];
-        NSLog(@"Request Headers: %@", [dictionary description]);
-    WA_END_LOGGING
-    
-    [self prepareTableRequest:request];
-    
-	[request fetchXMLWithCompletionHandler:^(WACloudURLRequest *request, xmlDocPtr doc, NSError *error) {
-        if (error) {
-            if (block) {
-                block (nil, error);
-            } else if ([(id)_delegate respondsToSelector:@selector(storageClient:didFailRequest:withError:)]) {
-                [_delegate storageClient:self didFailRequest:request withError:error];
-            }
-            return;
-        }
-         
-        NSMutableArray *entities = [NSMutableArray arrayWithCapacity:50];
-        [WAXMLHelper parseAtomPub:doc block:^(WAAtomPubEntry *entry) {
-            NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:10];
-              
-            [entry processContentPropertiesWithBlock:^(NSString *name, NSString *value) {
-                [dict setObject:value forKey:name];
-            }];
-              
-            WATableEntity *entity = [[WATableEntity alloc] initWithDictionary:dict fromTable:fetchRequest.tableName];
-            [entities addObject:entity];
-            [entity release];
-        }];
-         
-        if (block) {
-            block(entities, nil);
-        } else if ([(id)_delegate respondsToSelector:@selector(storageClient:didFetchEntities:fromTableNamed:)]) {
-            [_delegate storageClient:self didFetchEntities:entities fromTableNamed:fetchRequest.tableName];
-        }
-    }];
-}
-
-- (void)fetchEntitiesWithContinuation:(WATableFetchRequest*)fetchRequest
-{
-    [self fetchEntitiesWithContinuation:fetchRequest usingCompletionHandler:nil];
-}
-
-- (void)fetchEntitiesWithContinuation:(WATableFetchRequest*)fetchRequest usingCompletionHandler:(void (^)(NSArray *, WAResultContinuation *, NSError *))block
-{
-    [self fetchEntitiesWithRequest:fetchRequest usingCompletionHandler:block];
 }
 
 - (void)fetchEntitiesWithRequest:(WATableFetchRequest*)fetchRequest
