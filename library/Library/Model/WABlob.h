@@ -58,16 +58,6 @@ extern NSString * const WABlobPropertyKeySequenceNumber;
 @property (nonatomic, copy) NSString *contentType;
 
 /**
- A WABlobContainer object representing the blob's container.
- 
- @deprecated This will be deprecated in the next release.
- 
- @see WABlobContainer
- */
-// TODO: Remove this before release
-@property (readonly) WABlobContainer *container DEPRECATED_ATTRIBUTE;
-
-/**
  The container name of the blob.
  */
 @property (readonly) NSString *containerName;
@@ -112,19 +102,6 @@ extern NSString * const WABlobPropertyKeySequenceNumber;
  */
 - (id)initBlobWithName:(NSString *)name URL:(NSString *)URL;
 
-/**
- Initializes a newly created WABlob with a name, address URL and a container.
- 
- @param name The name of the blob.
- @param URL The address of the blob.
- @param container The container for the blob.
- 
- @returns The newly initialized WABlob object.
- 
- @see WABlobContainer
- */
-// TODO: Remove this before release
-- (id)initBlobWithName:(NSString *)name URL:(NSString *)URL container:(WABlobContainer *)container DEPRECATED_ATTRIBUTE;
 
 /**
  Initializes a newly created WABlob with a name, address URL and a container.
@@ -136,22 +113,6 @@ extern NSString * const WABlobPropertyKeySequenceNumber;
  @returns The newly initialized WABlob object.
  */
 - (id)initBlobWithName:(NSString *)name URL:(NSString *)URL containerName:(NSString *)containerName;
-
-/**
- Initializes a newly created WABlob with a name, address URL, the container and properties.
- 
- @param name The name of the blob.
- @param URL The address of the blob.
- @param container The container for the blob.
- @param properties The properties for the blob.
- 
- @returns The newly initialized WABlob object.
- 
- @see WABlobContainer
- */
-// TODO: Remove this before release
-- (id)initBlobWithName:(NSString *)name URL:(NSString *)URL container:(WABlobContainer *)container properties:(NSDictionary *)properties DEPRECATED_ATTRIBUTE;
-
 
 /**
  Initializes a newly created WABlob with a name, address URL, the container and properties.

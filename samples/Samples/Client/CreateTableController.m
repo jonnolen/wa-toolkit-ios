@@ -20,7 +20,7 @@
 
 @implementation CreateTableController
 
-@synthesize newItemName;
+@synthesize itemName;
 @synthesize createButton;
 @synthesize uploadDefaultImageButton;
 @synthesize nameLabel;
@@ -40,7 +40,7 @@
 - (void)dealloc
 {
     delegate = nil;
-    RELEASE(newItemName);
+    RELEASE(itemName);
     RELEASE(createButton);
     RELEASE(uploadDefaultImageButton);
     RELEASE(nameLabel);
@@ -86,7 +86,7 @@
 		nameLabel.text = @"Queue Message Name:";
 	}
 
-	[newItemName becomeFirstResponder];
+	[itemName becomeFirstResponder];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -126,7 +126,7 @@
 
 - (void)viewDidUnload
 {
-    self.newItemName = nil;
+    self.itemName = nil;
     self.createButton = nil;
     self.uploadDefaultImageButton = nil;
     self.nameLabel = nil;
@@ -144,9 +144,9 @@
 
 - (IBAction)createItem:(id)sender
 {
-    [newItemName resignFirstResponder];
+    [itemName resignFirstResponder];
 	
-	if ([[newItemName text] length] == 0) {
+	if ([[itemName text] length] == 0) {
 		return;
 	}
 	
@@ -158,9 +158,9 @@
 	}
 	
 	if ([self.navigationItem.title hasSuffix:@"Table"]) {
-		[storageClient createTableNamed:newItemName.text];
+		[storageClient createTableNamed:itemName.text];
 	} else if ([self.navigationItem.title hasSuffix:@"Container"]) {
-        WABlobContainer *container = [[WABlobContainer alloc] initContainerWithName:newItemName.text];
+        WABlobContainer *container = [[WABlobContainer alloc] initContainerWithName:itemName.text];
 		[storageClient addBlobContainer:container];
         [container release];
 	} else if ([self.navigationItem.title hasSuffix:@"Blob"]) {
@@ -177,7 +177,7 @@
 		[sheet showInView:self.view];
 		[sheet release];
 	} else if ([self.navigationItem.title hasSuffix:@"Queue"]) {
-		[storageClient addQueueNamed:newItemName.text];
+		[storageClient addQueueNamed:itemName.text];
 	}
 }
 
@@ -260,7 +260,7 @@
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingImage:(UIImage *)selectedImage editingInfo:(NSDictionary *)editingInfo
 {
-    NSString *imageName = newItemName.text;
+    NSString *imageName = itemName.text;
     WABlob *blob = [[[WABlob alloc] initBlobWithName:imageName URL:nil containerName:self.selectedContainer.name] autorelease];
     blob.contentType = @"image/jpeg";
     blob.contentData = UIImageJPEGRepresentation(selectedImage, 1.0);
