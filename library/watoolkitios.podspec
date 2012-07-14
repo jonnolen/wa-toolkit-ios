@@ -8,19 +8,20 @@
 #
 Pod::Spec.new do |s|
   s.name         = "watoolkitios"
-  s.version      = "0.0.1"
-  s.summary      = "A short description of watoolkitios."
+  s.version      = "1.4.0"
+  s.summary      = "The Windows Azure Toolkit for iOS is a toolkit for developers to make it easy to access Windows Azure storage services from native iOS applications."
   # s.description  = <<-DESC
   #                   An optional longer description of watoolkitios
   #
   #                   * Markdonw format.
   #                   * Don't worry about the indent, we strip it!
   #                  DESC
-  s.homepage     = "http://EXAMPLE/watoolkitios"
+  #s.homepage     = "https://github.com/WindowsAzure-Toolkits/wa-toolkit-ios"
+  s.homepage     = "https://github.com/scottdensmore/wa-toolkit-ios"
 
   # Specify the license type. CocoaPods detects automatically the license file if it is named
   # `LICENSE*.*', however if the name is different, specify it.
-  s.license      = 'MIT (example)'
+  s.license      = 'Ms-PL'
   # s.license      = { :type => 'MIT (example)', :file => 'FILE_LICENSE' }
   #
   # Only if no dedicated file is available include the full text of the license.
@@ -40,7 +41,7 @@ Pod::Spec.new do |s|
   # Specify the authors of the library, with email addresses. You can often find
   # the email addresses of the authors by using the SCM log. E.g. $ git log
   #
-  s.author       = { "Scott Densmore" => "scottdensmore@mac.com" }
+  s.author       = { "Microsoft" => "chrisner@microsoft.com" }
   # s.authors      = { "Scott Densmore" => "scottdensmore@mac.com", "other author" => "and email address" }
   #
   # If absolutely no email addresses are available, then you can use this form instead.
@@ -49,14 +50,15 @@ Pod::Spec.new do |s|
 
   # Specify the location from where the source should be retreived.
   #
-  s.source       = { :git => "http://EXAMPLE/watoolkitios.git", :tag => "0.0.1" }
+  # s.source       = { :git => "https://github.com/WindowsAzure-Toolkits/wa-toolkit-ios.git", :tag => "1.4.0" }
+  s.source       = { :git => "https://github.com/scottdensmore/wa-toolkit-ios.git", :tag => "1.4.0" }
   # s.source       = { :svn => 'http://EXAMPLE/watoolkitios/tags/1.0.0' }
   # s.source       = { :hg  => 'http://EXAMPLE/watoolkitios', :revision => '1.0.0' }
 
   # If this Pod runs only on iOS or OS X, then specify the platform and
   # the deployment target.
   #
-  # s.platform     = :ios, '5.0'
+  s.platform     = :ios
   # s.platform     = :ios
 
   # ――― MULTI-PLATFORM VALUES ――――――――――――――――――――――――――――――――――――――――――――――――― #
@@ -66,6 +68,7 @@ Pod::Spec.new do |s|
   #
   # s.ios.deployment_target = '5.0'
   # s.osx.deployment_target = '10.7'
+	s.ios.deployment_target = '4.0'
 
   # A list of file patterns which select the source files that should be
   # added to the Pods project. If the pattern is a directory then the
@@ -75,7 +78,7 @@ Pod::Spec.new do |s|
   # over the selected files.
   # (See http://rake.rubyforge.org/classes/Rake/FileList.html.)
   #
-  s.source_files = 'Classes', 'Classes/**/*.{h,m}'
+  s.source_files = 'Library', 'Library/**/*.{h,m}'
 
   # A list of resources included with the Pod. These are copied into the
   # target bundle with a build phase script.
@@ -97,12 +100,14 @@ Pod::Spec.new do |s|
   #
   # s.framework  = 'SomeFramework'
   # s.frameworks = 'SomeFramework', 'AnotherFramework'
+	s.framework = 'CoreGraphics'
 
   # Specify a list of libraries that the application needs to link
   # against for this Pod to work.
   #
   # s.library   = 'iconv'
   # s.libraries = 'iconv', 'xml2'
+	s.library   = 'xml2'
 
   # If this Pod uses ARC, specify it like so.
   #
@@ -112,6 +117,7 @@ Pod::Spec.new do |s|
   # xcconfig hash.
   #
   # s.xcconfig = { 'HEADER_SEARCH_PATHS' => '$(SDKROOT)/usr/include/libxml2' }
+	s.xcconfig = { 'HEADER_SEARCH_PATHS' => '$(SDKROOT)/usr/include/libxml2' }
 
   # Finally, specify any Pods that this Pod depends on.
   #
