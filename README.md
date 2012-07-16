@@ -18,6 +18,13 @@ Go into your project schema and add the environment variable WALogging and set i
 
 ## Using the Library in your application
 
+CocoaPods
+-------------------
+The toolkit can be installed using [CocoaPods](http://cocoapods.org/). See the site to get CocoaPods installed. Here is an example of a pod file for the toolkit:
+
+		platform :ios
+		pod 'watoolkitios', '~> 1.4'
+
 Xcode 4.x (library)
 -------------------
 1. Open the watoolkit-lib Xcode project.
