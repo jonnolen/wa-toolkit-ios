@@ -27,7 +27,7 @@
     if ((self = [super initWithStyle:UITableViewStylePlain])) 
     {
         _realms = [realms retain];
-		_block = [block retain];
+		_block = [block copy];
 		_allowsClose = allowsClose;
         
         self.title = @"Pick Login Method";
@@ -136,7 +136,10 @@
 
     WALoginWebViewController* webController = [[WALoginWebViewController alloc] initWithHomeRealm:realm
 																					  allowsClose:_allowsClose
-																			withCompletionHandler:_block];
+																			withCompletionHandler:^(WACloudAccessToken *accesstoken){
+                                                                                [self.navigationController popToViewController:self animated:NO];
+                                                                                _block(accesstoken);                                                                            
+                                                                            }];
     [self.navigationController pushViewController:webController animated:YES];
     [webController release];
 }

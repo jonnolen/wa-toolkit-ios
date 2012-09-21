@@ -43,7 +43,7 @@ const NSString* ScriptNotify = @"<script type=\"text/javascript\">window.externa
     if ((self = [super initWithNibName:nil bundle:nil]))
     {
         _realm = [realm retain];
-		_block = [block retain];
+		_block = [block copy];
 		_allowsClose = allowsClose;
     }
     return self;
@@ -202,11 +202,7 @@ const NSString* ScriptNotify = @"<script type=\"text/javascript\">window.externa
                 NSLog(@"Setting access token");
 			WA_END_LOGGING
 
-			[_block retain];
-            [self dismissModalViewControllerAnimated:YES];
-			
             _block(accessToken);
-			[_block release];
 			[accessToken release];
         }
 
