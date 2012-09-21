@@ -86,7 +86,10 @@ static WACloudAccessToken* _token = nil;
 
 - (void)showInViewController:(UIViewController *)controller allowsClose:(BOOL)allowsClose withCompletionHandler:(void (^)(BOOL authenticated))block
 {
-    UIViewController *progressController = [self createViewControllerAllowsClose:allowsClose withCompletionHandler:block];
+    UIViewController *progressController = [self createViewControllerAllowsClose:allowsClose withCompletionHandler:^(BOOL authenticated){
+        block(authenticated);
+        [controller dismissModalViewControllerAnimated:YES];
+    }];
     
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:progressController];
     navController.navigationBar.barStyle = UIBarStyleBlack;
